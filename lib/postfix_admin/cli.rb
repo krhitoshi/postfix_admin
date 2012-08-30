@@ -1,14 +1,14 @@
 require 'yaml'
 require 'postfix_admin'
 
-module PostfixAdmin
+class PostfixAdmin
   class CLI
     CONFIG_FILE = '.postfix_admin.conf'
     MIN_NUM_PASSWORD_CHARACTER = 5
 
     def initialize
       @config = load_config
-      @admin = PostfixAdmin::Base.new(@config)
+      @admin = PostfixAdmin.new(@config)
     end
     # ~/.postfix_adminrc
     # database: mysql://postfix:password@localhost/postfix
