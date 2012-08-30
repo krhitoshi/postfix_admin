@@ -8,8 +8,8 @@ Gem::Specification.new do |gem|
 
   gem.authors       = ["Hitoshi Kurokawa"]
   gem.email         = ["hitoshi@nextseed.jp"]
-  gem.description   = %q{TODO: Write a gem description}
-  gem.summary       = %q{TODO: Write a gem summary}
+  gem.description   = %q{Command Line Tools of PostfixAdmin}
+  gem.summary       = gem.description
   gem.homepage      = ""
 
   gem.files         = `git ls-files`.split($\)
