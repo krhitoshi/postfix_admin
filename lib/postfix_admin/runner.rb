@@ -94,4 +94,10 @@ class PostfixAdmin::Runner < Thor
       exit
     end
   end
+
+  desc "version", "Show postfix_admin version"
+  def version
+    require 'postfix_admin/version'
+    say "postfix_admin #{PostfixAdmin::VERSION}"
+  end
 end
