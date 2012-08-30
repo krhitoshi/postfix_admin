@@ -2,12 +2,12 @@
 
 require 'thor'
 require 'postfix_admin'
-require 'postfix_admin_cli'
+require 'postfix_admin/cli'
 
 class PostfixAdminCommand < Thor
   def initialize(*args)
     super
-    @cli = PostfixAdminCLI.new
+    @cli = PostfixAdmin::CLI.new
   end
   desc "show", "List of domains"
   def show(domain=nil)
