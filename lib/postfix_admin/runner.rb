@@ -25,8 +25,7 @@ class PostfixAdmin::Runner < Thor
       end
       @cli.show_domain
     else
-      puts "USAGE: #{$0} add_domain example.com"
-      exit
+      exit_with_usage('add_domain', 'example.com')
     end
   end
 
@@ -38,8 +37,7 @@ class PostfixAdmin::Runner < Thor
       end
       @cli.show_domain
     else
-      puts "USAGE: #{$0} delete_domain example.com"
-      exit
+      exit_with_usage('delete_domain', 'example.com')
     end
   end
 
@@ -51,8 +49,7 @@ class PostfixAdmin::Runner < Thor
       end
       @cli.show_domain_account(address.split(/@/)[1])
     else
-      puts "USAGE: #{$0} add_account user@example.com password"
-      exit
+      exit_with_usage('add_account', 'user@example.com password')
     end
   end
 
@@ -64,8 +61,7 @@ class PostfixAdmin::Runner < Thor
       end
       @cli.show_admin
     else
-      puts "USAGE: #{$0} add_admin user@example.com password"
-      exit
+      exit_with_usage('add_admin', 'user@example.com password')
     end
   end
 
@@ -77,8 +73,7 @@ class PostfixAdmin::Runner < Thor
       end
       @cli.show_admin_domain(user_name)
     else
-      puts "USAGE: #{$0} add_admin_domain user@example.com example.com"
-      exit
+      exit_with_usage('add_admin_domain', 'user@example.com example.com')
     end
   end
 
@@ -90,8 +85,7 @@ class PostfixAdmin::Runner < Thor
       end
       @cli.show_domain_account(address.split(/@/)[1])
     else
-      puts "USAGE: #{$0} add_alias user@example.com goto@example.com"
-      exit
+      exit_with_usage('add_alias', 'user@example.com goto@example.com')
     end
   end
 
@@ -99,5 +93,12 @@ class PostfixAdmin::Runner < Thor
   def version
     require 'postfix_admin/version'
     say "postfix_admin #{PostfixAdmin::VERSION}"
+  end
+
+  private
+
+  def exit_with_usage(subcommand, args)
+    say "Usage: postfix_admin #{subcommand} #{args}"
+    exit
   end
 end
