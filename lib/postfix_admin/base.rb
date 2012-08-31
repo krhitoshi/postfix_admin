@@ -137,23 +137,23 @@ class PostfixAdmin::Base
     Domain.all(:domain => domain).count != 0
   end
   def domains
-    Domain.all(:domain.not => 'ALL', :order => :domain)
+    PostfixAdmin::Domain.all(:domain.not => 'ALL', :order => :domain)
   end
   def admins
-    Admin.all(:order => 'username')
+    PostfixAdmin::Admin.all(:order => 'username')
   end
   def mailboxes(domain=nil)
     if domain
-      Mailbox.all(:domain => domain, :order => :username)
+      PostfixAdmin::Mailbox.all(:domain => domain, :order => :username)
     else
-      Mailbox.all(:order => :username)
+      PostfixAdmin::Mailbox.all(:order => :username)
     end
   end
   def admin_domains(username=nil)
     if username
-      DomainAdmin.all(:username => username, :order => :domain)
+      PostfixAdmin::DomainAdmin.all(:username => username, :order => :domain)
     else
-      DomainAdmin.all(:order => :domain)
+      PostfixAdmin::DomainAdmin.all(:order => :domain)
     end
   end
 end
