@@ -96,4 +96,35 @@ describe PostfixAdmin::Base do
       end.should be_true
     end
   end
+
+  describe "#delete_domain" do
+    before do
+      @base.add_domain('example.net')
+      @base.add_admin('admin@example.net', 'password')
+
+      @base.add_account('user@example.net', 'password')
+      @base.add_account('user2@example.net', 'password')
+      @base.add_account('user3@example.net', 'password')
+
+      @base.add_admin_domain('admin@example.net', 'example.net')
+
+      @base.delete_domain('example.net')
+    end
+
+    it "no domain" do
+      @base.domain_exist?('example.net').should be_false
+    end
+
+    it "no admin (admin@)" do
+      @base.admin_exist?('admin@example.net').should be_false
+    end
+
+    it "no maiboxes" do
+      @base.mailboxes('example.net').count.should be(0)
+    end
+
+    it "no admin_domain" do
+      @base.admin_domain_exist?('admin@example.net', 'example.net').should be_false
+    end
+  end
 end
