@@ -17,4 +17,10 @@ describe PostfixAdmin::Base do
     lambda { PostfixAdmin::Base.new({'database' => 'mysql://postfix:password@localhost/postfix'}) }.should_not raise_error
   end
 
+  it "Default configuration should be correct" do
+    @base.config[:aliases].should == 30
+    @base.config[:mailboxes].should == 30
+    @base.config[:maxquota].should == 100
+    @base.config[:mailbox_quota].should == 100 * 1024 * 1000
+  end
 end

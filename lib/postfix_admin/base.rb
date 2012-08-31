@@ -4,6 +4,8 @@ require 'date'
 require 'data_mapper'
 
 class PostfixAdmin::Base
+  attr_reader :config
+
   def initialize(config)
     DataMapper.setup(:default, config['database'])
     DataMapper.finalize
