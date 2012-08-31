@@ -125,16 +125,16 @@ class PostfixAdmin::Base
     Domain.all(:domain => domain).destroy
   end
   def admin_domain_exist?(username, domain)
-    DomainAdmin.all(:username => username, :domain => domain).count != 0
+    PostfixAdmin::DomainAdmin.all(:username => username, :domain => domain).count != 0
   end
   def admin_exist?(admin)
-    Admin.all(:username => admin).count != 0
+    PostfixAdmin::Admin.all(:username => admin).count != 0
   end
   def alias_exist?(address)
-    Alias.all(:address => address).count != 0
+    PostfixAdmin::Alias.all(:address => address).count != 0
   end
   def domain_exist?(domain)
-    Domain.all(:domain => domain).count != 0
+    PostfixAdmin::Domain.all(:domain => domain).count != 0
   end
   def domains
     PostfixAdmin::Domain.all(:domain.not => 'ALL', :order => :domain)

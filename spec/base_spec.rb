@@ -37,4 +37,21 @@ describe PostfixAdmin::Base do
     lambda { @base.admin_domains }.should_not raise_error
     lambda { @base.admin_domains('admin@example.com') }.should_not raise_error
   end
+
+  it "#domain_exist?" do
+    @base.domain_exist?('example.com').should be_true
+  end
+
+  it "#alias_exist?" do
+    @base.alias_exist?('user@example.com').should be_true
+  end
+
+  it "#admin_exist?" do
+    @base.admin_exist?('admin@example.com').should be_true
+  end
+
+  it "#admin_domain_exist?" do
+    @base.admin_domain_exist?('admin@example.com', 'example.com').should be_true
+  end
+
 end
