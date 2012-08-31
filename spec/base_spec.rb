@@ -33,6 +33,10 @@ describe PostfixAdmin::Base do
     lambda { @base.mailboxes('example.com') }.should_not raise_error
   end
 
+  it "#aliases" do
+    lambda { @base.aliases }.should_not raise_error
+    lambda { @base.aliases('example.com') }.should_not raise_error
+  end
   it "#admin_domains" do
     lambda { @base.admin_domains }.should_not raise_error
     lambda { @base.admin_domains('admin@example.com') }.should_not raise_error
@@ -54,4 +58,42 @@ describe PostfixAdmin::Base do
     @base.admin_domain_exist?('admin@example.com', 'example.com').should be_true
   end
 
+  it "#add_domain" do
+    num_domains = @base.domains.count
+    @base.add_domain('example.net')
+    (@base.domains.count - num_domains).should be(1)
+    @base.delete_domain('example.net')
+  end
+
+  describe "#add_domain" do
+    before do
+      @base.add_domain('example.net')
+    end
+
+    after do
+      @base.delete_domain('example.net')
+    end
+
+    it "#add_admin" do
+      num_admins = @base.admins.count
+      @base.add_admin('admin@example.net', 'password')
+      (@base.admins.count - num_admins).should be(1)
+    end
+
+    it "#add_account" do
+      num_mailboxes = @base.mailboxes.count
+      num_aliases   = @base.aliases.count
+      @base.add_account('user@example.net', 'password')
+      (@base.mailboxes.count - num_mailboxes).should be(1)
+      (@base.aliases.count - num_aliases).should be(1)
+    end
+
+    it "#add_admin_domain" do
+      @base.add_admin('admin@example.net', 'password')
+      @base.add_admin_domain('admin@example.net', 'example.net')
+      @base.admin_domains('admin@example.net').find do |admin_domain|
+        admin_domain.domain == 'example.net'
+      end.should be_true
+    end
+  end
 end

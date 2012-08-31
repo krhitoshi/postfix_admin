@@ -26,7 +26,7 @@ class PostfixAdmin::Base
       raise "Error: #{username} is already resistered as admin of #{domain}."
     end
 
-    domain_admin = DomainAdmin.new
+    domain_admin = PostfixAdmin::DomainAdmin.new
     domain_admin.attributes = {
       :username => username,
       :domain   => domain,
@@ -38,7 +38,7 @@ class PostfixAdmin::Base
     if admin_exist?(username)
       raise "Error: #{username} is already resistered as admin."
     end
-    admin = Admin.new
+    admin = PostfixAdmin::Admin.new
     admin.attributes = {
       :username => username,
       :password => password,
@@ -61,7 +61,7 @@ class PostfixAdmin::Base
     if alias_exist?(address)
       raise "Error: #{address} is already resistered."
     end
-    mail_alias = Alias.new
+    mail_alias = PostfixAdmin::Alias.new
     mail_alias.attributes = {
       :address  => address,
       :goto     => address,
@@ -71,7 +71,7 @@ class PostfixAdmin::Base
     }
     mail_alias.save
 
-    mailbox = Mailbox.new
+    mailbox = PostfixAdmin::Mailbox.new
     mailbox.attributes = {
       :username => address,
       :password => password,
@@ -101,7 +101,7 @@ class PostfixAdmin::Base
     if domain_exist?(domain_name)
       raise "Error: #{domain_name} is already registered!"
     end
-    domain = Domain.new
+    domain = PostfixAdmin::Domain.new
     domain.attributes = {
       :domain      => domain_name,
       :description => domain_name,
@@ -118,11 +118,11 @@ class PostfixAdmin::Base
       raise "Error: #{domain} is not found!"
     end
     username = "admin@#{domain}"
-    Admin.all(:username => username).destroy
-    DomainAdmin.all(:username => username).destroy
-    Mailbox.all(:domain => domain).destroy
-    Alias.all(:domain => domain).destroy
-    Domain.all(:domain => domain).destroy
+    PostfixAdmin::Admin.all(:username => username).destroy
+    PostfixAdmin::DomainAdmin.all(:username => username).destroy
+    PostfixAdmin::Mailbox.all(:domain => domain).destroy
+    PostfixAdmin::Alias.all(:domain => domain).destroy
+    PostfixAdmin::Domain.all(:domain => domain).destroy
   end
   def admin_domain_exist?(username, domain)
     PostfixAdmin::DomainAdmin.all(:username => username, :domain => domain).count != 0
@@ -147,6 +147,13 @@ class PostfixAdmin::Base
       PostfixAdmin::Mailbox.all(:domain => domain, :order => :username)
     else
       PostfixAdmin::Mailbox.all(:order => :username)
+    end
+  end
+  def aliases(domain=nil)
+    if domain
+      PostfixAdmin::Alias.all(:domain => domain, :order => :address)
+    else
+      PostfixAdmin::Alias.all(:order => :address)
     end
   end
   def admin_domains(username=nil)
