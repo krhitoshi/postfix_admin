@@ -8,40 +8,7 @@ class PostfixAdmin
 
     def initialize
       @config = load_config
-      @admin = PostfixAdmin.new(@config)
-    end
-    # ~/.postfix_adminrc
-    # database: mysql://postfix:password@localhost/postfix
-    # aliases: 30
-    # mailboxes: 30
-    # maxquota: 100
-    def load_config
-      unless File.exist?(config_file)
-        create_config
-        puts "configure file: #{config_file} was generated.\nPlease execute after edit it."
-        exit
-      end
-      open(config_file) do |f|
-        YAML.load(f.read)
-      end
-    end
-    def create_config
-      config = {
-        'database'  => 'mysql://postfix:password@localhost/postfix',
-        'aliases'   => 30,
-        'mailboxes' => 30,
-        'maxquota'  => 100
-      }
-      open(config_file, 'w') do |f|
-        f.write config.to_yaml
-      end
-      File.chmod(0600, config_file)
-    end
-    def config_file
-      File.expand_path(CONFIG_FILE, ENV['HOME'])
-    end
-    def print_line
-      puts "-"*85
+      @admin = PostfixAdmin::Base.new(@config)
     end
     def show_domain
       print_line
@@ -113,6 +80,42 @@ class PostfixAdmin
     end
     def delete_domain(domain)
       @admin.delete_domain(domain)
+    end
+
+    private
+
+    # ~/.postfix_adminrc
+    # database: mysql://postfix:password@localhost/postfix
+    # aliases: 30
+    # mailboxes: 30
+    # maxquota: 100
+    def load_config
+      unless File.exist?(config_file)
+        create_config
+        puts "configure file: #{config_file} was generated.\nPlease execute after edit it."
+        exit
+      end
+      open(config_file) do |f|
+        YAML.load(f.read)
+      end
+    end
+    def create_config
+      config = {
+        'database'  => 'mysql://postfix:password@localhost/postfix',
+        'aliases'   => 30,
+        'mailboxes' => 30,
+        'maxquota'  => 100
+      }
+      open(config_file, 'w') do |f|
+        f.write config.to_yaml
+      end
+      File.chmod(0600, config_file)
+    end
+    def config_file
+      File.expand_path(CONFIG_FILE, ENV['HOME'])
+    end
+    def print_line
+      puts "-"*85
     end
     def validate_password(password)
       if password.size < MIN_NUM_PASSWORD_CHARACTER
