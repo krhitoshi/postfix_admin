@@ -6,6 +6,13 @@ require 'data_mapper'
 class PostfixAdmin::Base
   attr_reader :config
 
+  DEFAULT_CONFIG = {
+        'database'  => 'mysql://postfix:password@localhost/postfix',
+        'aliases'   => 30,
+        'mailboxes' => 30,
+        'maxquota'  => 100
+  }
+
   def initialize(config)
     DataMapper.setup(:default, config['database'])
     DataMapper.finalize

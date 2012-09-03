@@ -5,6 +5,15 @@ describe PostfixAdmin::Base do
     @base = PostfixAdmin::Base.new({'database' => 'mysql://postfix:password@localhost/postfix'})
   end
 
+  it "DEFAULT_CONFIG" do
+    PostfixAdmin::Base::DEFAULT_CONFIG.should == {
+        'database'  => 'mysql://postfix:password@localhost/postfix',
+        'aliases'   => 30,
+        'mailboxes' => 30,
+        'maxquota'  => 100
+    }
+  end
+
   it "#new without config" do
     lambda { PostfixAdmin::Base.new }.should raise_error(ArgumentError)
   end

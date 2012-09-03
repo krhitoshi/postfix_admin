@@ -3,7 +3,7 @@ require 'postfix_admin'
 
 class PostfixAdmin
   class CLI
-    CONFIG_FILE = '.postfix_admin.conf'
+    CONFIG_FILE = '~/.postfix_admin.conf'
     MIN_NUM_PASSWORD_CHARACTER = 5
 
     def initialize
@@ -84,11 +84,6 @@ class PostfixAdmin
 
     private
 
-    # ~/.postfix_adminrc
-    # database: mysql://postfix:password@localhost/postfix
-    # aliases: 30
-    # mailboxes: 30
-    # maxquota: 100
     def load_config
       unless File.exist?(config_file)
         create_config
@@ -100,19 +95,13 @@ class PostfixAdmin
       end
     end
     def create_config
-      config = {
-        'database'  => 'mysql://postfix:password@localhost/postfix',
-        'aliases'   => 30,
-        'mailboxes' => 30,
-        'maxquota'  => 100
-      }
       open(config_file, 'w') do |f|
-        f.write config.to_yaml
+        f.write PostfixAdmin::Base::DEFAULT_CONFIG.to_yaml
       end
       File.chmod(0600, config_file)
     end
     def config_file
-      File.expand_path(CONFIG_FILE, ENV['HOME'])
+      File.expand_path(CONFIG_FILE)
     end
     def print_line
       puts "-"*85
