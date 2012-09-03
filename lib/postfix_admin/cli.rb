@@ -68,15 +68,15 @@ class PostfixAdmin
       validate_password(password)
       @admin.add_admin(user_name, password)
     end
+    def add_admin_domain(user_name, domain)
+      @admin.add_admin_domain(user_name, domain)
+    end
     def add_account(address, password)
       validate_password(password)
       @admin.add_account(address, password)
     end
     def add_alias(address, goto)
       @admin.add_alias(address, goto)
-    end
-    def add_admin_domain(user_name, domain)
-      @admin.add_admin_domain(user_name, domain)
     end
     def delete_domain(domain)
       @admin.delete_domain(domain)

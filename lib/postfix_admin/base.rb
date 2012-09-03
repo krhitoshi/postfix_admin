@@ -88,7 +88,7 @@ class PostfixAdmin::Base
   def add_alias(address, goto)
     if alias_exist?(address)
       goto_text = "#{address},#{goto}"
-      mail_alias = Alias.first(:address => address)
+      mail_alias = PostfixAdmin::Alias.first(:address => address)
       mail_alias.update(:goto => goto_text, :modified => DateTime.now)
     else
       raise "Error: Invalid mail address! #{address}"

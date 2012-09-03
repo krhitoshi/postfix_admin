@@ -80,12 +80,13 @@ describe PostfixAdmin::Base do
       (@base.admins.count - num_admins).should be(1)
     end
 
-    it "#add_account" do
+    it "#add_account, add_alias" do
       num_mailboxes = @base.mailboxes.count
       num_aliases   = @base.aliases.count
       @base.add_account('user@example.net', 'password')
       (@base.mailboxes.count - num_mailboxes).should be(1)
       (@base.aliases.count - num_aliases).should be(1)
+      lambda { @base.add_alias('user@example.net', 'goto@example.jp') }.should_not raise_error
     end
 
     it "#add_admin_domain" do
