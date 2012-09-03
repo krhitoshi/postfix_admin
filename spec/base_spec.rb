@@ -2,7 +2,7 @@ require 'postfix_admin/base'
 
 describe PostfixAdmin::Base do
   before do
-    @base = PostfixAdmin::Base.new({'database' => 'mysql://postfix:password@localhost/postfix'})
+    @base = PostfixAdmin::Base.new({'database' => 'mysql://postfix_test:password@localhost/postfix_test'})
   end
 
   it "DEFAULT_CONFIG" do

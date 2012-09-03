@@ -3,7 +3,7 @@ require 'postfix_admin/cli'
 
 describe PostfixAdmin::CLI do
   before do
-    @cli = PostfixAdmin::CLI.new
+    @cli = PostfixAdmin::CLI.new(File.join(File.dirname(__FILE__) , 'postfix_admin.conf'))
   end
 
   it "#show_domain" do
@@ -24,6 +24,7 @@ describe PostfixAdmin::CLI do
 
   it "add and delete methods" do
     lambda { @cli.add_domain('example.net') }.should_not raise_error
+
     lambda { @cli.add_admin('admin@example.net', 'password') }.should_not raise_error
     lambda { @cli.add_admin_domain('admin@example.net', 'example.net') }.should_not raise_error
 
