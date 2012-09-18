@@ -85,6 +85,7 @@ class PostfixAdmin
     private
 
     def load_config(config_file)
+      config_file = File.expand_path(config_file)
       unless File.exist?(config_file)
         create_config(config_file)
         puts "configure file: #{config_file} was generated.\nPlease execute after edit it."
@@ -94,7 +95,7 @@ class PostfixAdmin
         YAML.load(f.read)
       end
     end
-    def create_config
+    def create_config(config_file)
       open(config_file, 'w') do |f|
         f.write PostfixAdmin::Base::DEFAULT_CONFIG.to_yaml
       end
