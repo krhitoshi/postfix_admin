@@ -1,3 +1,8 @@
+
+class PostfixAdmin::CLI
+  CONFIG_FILE = File.join(File.dirname(__FILE__) , 'postfix_admin.conf')
+end
+
 RSpec.configure do |config|
   config.before do
     ARGV.replace []

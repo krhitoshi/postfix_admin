@@ -3,7 +3,7 @@ require 'postfix_admin/cli'
 
 describe PostfixAdmin::CLI do
   before do
-    @cli = PostfixAdmin::CLI.new(File.join(File.dirname(__FILE__) , 'postfix_admin.conf'))
+    @cli = PostfixAdmin::CLI.new
   end
 
   it "#show_domain" do
