@@ -1,6 +1,8 @@
 
 class PostfixAdmin::CLI
-  CONFIG_FILE = File.join(File.dirname(__FILE__) , 'postfix_admin.conf')
+  def config_file
+    File.join(File.dirname(__FILE__) , 'postfix_admin.conf')
+  end
 end
 
 RSpec.configure do |config|

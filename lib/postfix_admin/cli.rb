@@ -6,8 +6,8 @@ class PostfixAdmin
     CONFIG_FILE = '~/.postfix_admin.conf'
     MIN_NUM_PASSWORD_CHARACTER = 5
 
-    def initialize(config_file=nil)
-      @config = load_config(config_file || CONFIG_FILE)
+    def initialize
+      @config = load_config
       @admin = PostfixAdmin::Base.new(@config)
     end
     def show_domain
@@ -84,8 +84,11 @@ class PostfixAdmin
 
     private
 
-    def load_config(config_file)
-      config_file = File.expand_path(config_file)
+    def config_file
+      config_file = File.expand_path(CONFIG_FILE)
+    end
+
+    def load_config
       unless File.exist?(config_file)
         create_config(config_file)
         puts "configure file: #{config_file} was generated.\nPlease execute after edit it."
