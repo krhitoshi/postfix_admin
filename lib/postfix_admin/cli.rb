@@ -15,7 +15,7 @@ class PostfixAdmin
       puts " No.   domain             alias mail quota"
       print_line
       @admin.domains.each_with_index do |domain, i|
-        printf("%4d %-20s %4d %4d %4d\n", i+1, domain.domain, domain.aliases, domain.mailboxes, domain.maxquota)
+        puts "%4d %-20s %4d %4d %4d" % [i+1, domain.domain, domain.aliases, domain.mailboxes, domain.maxquota]
       end
       print_line
     end
@@ -29,7 +29,7 @@ class PostfixAdmin
       puts " No.   username           password"
       print_line
       admins.each_with_index do |admin, i|
-        printf("%4d %-20s %10s\n", i+1, admin.username, admin.password)
+        puts "%4d %-20s %10s" % [i+1, admin.username, admin.password]
       end
       print_line
     end
@@ -43,21 +43,21 @@ class PostfixAdmin
       puts " No.   address             password  quota(M) maildir"
       print_line
       mailboxes.each_with_index do |mailbox, i|
-        printf("%4d %-20s %10s %7.1f  %-30s\n", i+1, mailbox.username, mailbox.password, mailbox.quota.to_f/1024000.0, mailbox.maildir)
+        puts "%4d %-20s %10s %7.1f  %-30s" % [i+1, mailbox.username, mailbox.password, mailbox.quota.to_f/1024000.0, mailbox.maildir]
       end
       print_line
     end
     def show_admin_domain(user_name)
       domain_admins = @admin.admin_domains(user_name)
       if domain_admins.count == 0
-        puts "No domain in database\n"
+        puts "No domain in database"
         return
       end
       print_line
       puts " No.   domain"
       print_line
       domain_admins.each_with_index do |domain_admin, i|
-        printf("%4d %-20s\n", i+1, domain_admin.domain)
+        puts "%4d %-20s" % [i+1, domain_admin.domain]
       end
       print_line
     end
