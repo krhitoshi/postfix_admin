@@ -19,6 +19,9 @@ class PostfixAdmin
       end
       print_line
     end
+    def admin_exit?(admin)
+      @admin.admin_exist?(admin)
+    end
     def show_admin
       admins = @admin.admins
       if admins.count == 0

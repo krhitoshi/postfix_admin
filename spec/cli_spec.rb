@@ -22,6 +22,11 @@ describe PostfixAdmin::CLI do
     lambda { @cli.show_admin_domain('admin@example.com') }.should_not raise_error
   end
 
+  it "#admin_exit?" do
+    @cli.admin_exit?('admin@example.com').should be_true
+    @cli.admin_exit?('admin@example.net').should be_false
+  end
+
   it "add and delete methods" do
     lambda { @cli.add_domain('example.net') }.should_not raise_error
 
