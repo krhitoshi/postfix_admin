@@ -17,6 +17,18 @@ class PostfixAdmin::Runner < Thor
     end
   end
 
+  desc "setup", "setup a domain"
+  def setup_domain(domain=nil, password=nil)
+    if domain && password
+      admin = "admin@#{domain}"
+      add_domain(domain)
+      add_admin(admin, password)
+      add_admin_domain(admin, domain)
+    else
+      exit_with_usage('setup', 'example.com password')
+    end
+  end
+
   desc "add_domain", "add a domain"
   def add_domain(domain=nil)
     if domain

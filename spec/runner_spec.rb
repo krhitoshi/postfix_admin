@@ -12,6 +12,11 @@ describe PostfixAdmin::Runner do
     end
   end
 
+  it "#setup" do
+    capture(:stderr){ PostfixAdmin::Runner.start(['setup', 'example.net', 'password']) }.should_not =~ /Could not find task/
+    lambda { PostfixAdmin::Runner.start(['delete_domain', 'example.net']) }.should_not raise_error
+  end
+
   it "add and delete methods" do
     lambda { PostfixAdmin::Runner.start(['add_domain', 'example.net']) }.should_not raise_error
     lambda { PostfixAdmin::Runner.start(['add_admin', 'admin@example.net', 'password']) }.should_not raise_error
