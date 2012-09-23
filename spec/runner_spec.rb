@@ -11,4 +11,17 @@ describe PostfixAdmin::Runner do
       capture(:stdout){ PostfixAdmin::Runner.start(["show"]) }.should =~ /admin@example.com.+password/
     end
   end
+
+  it "add and delete methods" do
+    lambda { PostfixAdmin::Runner.start(['add_domain', 'example.net']) }.should_not raise_error
+    lambda { PostfixAdmin::Runner.start(['add_admin', 'admin@example.net', 'password']) }.should_not raise_error
+    lambda { PostfixAdmin::Runner.start(['add_admin_domain', 'admin@example.net', 'example.net']) }.should_not raise_error
+
+    lambda { PostfixAdmin::Runner.start(['add_account', 'user1@example.net', 'password']) }.should_not raise_error
+    lambda { PostfixAdmin::Runner.start(['add_account', 'user2@example.net', 'password']) }.should_not raise_error
+
+    lambda { PostfixAdmin::Runner.start(['add_alias', 'user1@example.net', 'goto@example.jp']) }.should_not raise_error
+
+    lambda { PostfixAdmin::Runner.start(['delete_domain', 'example.net']) }.should_not raise_error
+  end
 end
