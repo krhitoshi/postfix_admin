@@ -8,6 +8,8 @@ class PostfixAdmin
     property :created, DateTime
     property :modified, DateTime
 
+    has n, :domain_admins, :child_key => :username
+    has n, :domains, :model => 'Domain', :through => :domain_admins, :via => :p_domain
     storage_names[:default] = 'admin'
   end
 
@@ -21,15 +23,17 @@ class PostfixAdmin
     property :backupmx, Integer
     property :description, String
 
+    has n, :domain_admins, :child_key => :domain
+    has n, :admins, :model => 'Admin', :through => :domain_admins
     storage_names[:default] = 'domain'
   end
 
   class DomainAdmin
     include ::DataMapper::Resource
-    property :username, String, :key => true
-    property :domain, String, :key => true
-    property :created, DateTime
+    property :created, DateTime, :default => DateTime.now
 
+    belongs_to :p_domain, :model => 'Domain', :child_key => :domain, :key => true
+    belongs_to :admin, :model => 'Admin', :child_key => :username, :key => true
     storage_names[:default] = 'domain_admins'
   end
 

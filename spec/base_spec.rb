@@ -68,6 +68,9 @@ describe PostfixAdmin::Base do
   end
 
   it "#add_domain" do
+    if @base.domain_exist?('example.net')
+      @base.delete_domain('example.net')
+    end
     num_domains = @base.domains.count
     @base.add_domain('example.net')
     (@base.domains.count - num_domains).should be(1)
@@ -76,7 +79,9 @@ describe PostfixAdmin::Base do
 
   describe "#add_domain" do
     before do
-      @base.add_domain('example.net')
+      unless @base.domain_exist?('example.net')
+        @base.add_domain('example.net')
+      end
     end
 
     after do
@@ -86,6 +91,7 @@ describe PostfixAdmin::Base do
     it "#add_admin" do
       num_admins = @base.admins.count
       @base.add_admin('admin@example.net', 'password')
+      @base.admin_exist?('admin@example.net').should be_true
       (@base.admins.count - num_admins).should be(1)
     end
 
@@ -109,7 +115,9 @@ describe PostfixAdmin::Base do
 
   describe "#delete_domain" do
     before do
-      @base.add_domain('example.net')
+      unless @base.domain_exist?('example.net')
+        @base.add_domain('example.net')
+      end
       @base.add_admin('admin@example.net', 'password')
 
       @base.add_account('user@example.net', 'password')
@@ -117,9 +125,8 @@ describe PostfixAdmin::Base do
       @base.add_account('user3@example.net', 'password')
 
       @base.add_admin_domain('admin@example.net', 'example.net')
-
       @base.delete_domain('example.net')
-    end
+   end
 
     it "no domain" do
       @base.domain_exist?('example.net').should be_false

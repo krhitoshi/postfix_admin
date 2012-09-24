@@ -33,13 +33,10 @@ class PostfixAdmin::Base
       raise "Error: #{username} is already resistered as admin of #{domain}."
     end
 
-    domain_admin = PostfixAdmin::DomainAdmin.new
-    domain_admin.attributes = {
-      :username => username,
-      :domain   => domain,
-      :created  => DateTime.now
-    }
-    domain_admin.save
+    d_domain = PostfixAdmin::Domain.first(:domain => domain)
+    d_admin  = PostfixAdmin::Admin.first(:username => username)
+    d_admin.domains << d_domain
+    d_admin.save or raise "Error: Relation Error"
   end
   def add_admin(username, password)
     if admin_exist?(username)
@@ -124,12 +121,19 @@ class PostfixAdmin::Base
     unless domain_exist?(domain)
       raise "Error: #{domain} is not found!"
     end
-    username = "admin@#{domain}"
-    PostfixAdmin::Admin.all(:username => username).destroy
-    PostfixAdmin::DomainAdmin.all(:username => username).destroy
-    PostfixAdmin::Mailbox.all(:domain => domain).destroy
-    PostfixAdmin::Alias.all(:domain => domain).destroy
-    PostfixAdmin::Domain.all(:domain => domain).destroy
+
+    unnecessary_admins = PostfixAdmin::Admin.all.find do |admin|
+      admin.domains.size == 0
+    end
+    if unnecessary_admins
+      unnecessary_admins.destroy
+    end
+
+    PostfixAdmin::Mailbox.all(:domain => domain).destroy or raise "Error: Cannot destroy Mailbox"
+    PostfixAdmin::Alias.all(:domain => domain).destroy or raise "Error: Cannot destroy Alias"
+    d_domain = PostfixAdmin::Domain.first(:domain => domain)
+    d_domain.admins.destroy or raise "Error: Cannot destroy DomainAdmin"
+    d_domain.destroy or raise "Error: Cannot destroy Domain"
   end
   def admin_domain_exist?(username, domain)
     PostfixAdmin::DomainAdmin.all(:username => username, :domain => domain).count != 0
@@ -165,9 +169,9 @@ class PostfixAdmin::Base
   end
   def admin_domains(username=nil)
     if username
-      PostfixAdmin::DomainAdmin.all(:username => username, :order => :domain)
+      PostfixAdmin::Admin.first(:username => username).domains
     else
-      PostfixAdmin::DomainAdmin.all(:order => :domain)
+      nil
     end
   end
 end
