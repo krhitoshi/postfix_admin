@@ -126,7 +126,11 @@ class PostfixAdmin::Base
     PostfixAdmin::Alias.all(:domain => domain).destroy or raise "Error: Cannot destroy Alias"
     d_domain = PostfixAdmin::Domain.first(:domain => domain)
     PostfixAdmin::DomainAdmin.all(:domain => domain).destroy or raise "Error: Cannot destroy DomainAdmin"
+    delete_unnecessary_admins
 
+    d_domain.destroy or raise "Error: Cannot destroy Domain"
+  end
+  def delete_unnecessary_admins
     unnecessary_admins = PostfixAdmin::Admin.all.find_all do |admin|
       admin.domains.size == 0
     end
@@ -135,8 +139,6 @@ class PostfixAdmin::Base
         admin.destroy or raise "Error: Cannnot destroy Admin"
       end
     end
-
-    d_domain.destroy or raise "Error: Cannot destroy Domain"
   end
   def admin_domain_exist?(username, domain)
     PostfixAdmin::DomainAdmin.all(:username => username, :domain => domain).count != 0
