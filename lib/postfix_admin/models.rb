@@ -13,13 +13,9 @@ class PostfixAdmin
     storage_names[:default] = 'admin'
 
     def self.unnecessary
-      list = []
-      all.each do |admin|
-        if admin.domains.count == 0
-          list << admin
-        end
+      all.delete_if do |admin|
+        admin.domains.size > 0
       end
-      list
     end
   end
 

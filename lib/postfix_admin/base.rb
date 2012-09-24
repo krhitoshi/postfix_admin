@@ -131,9 +131,7 @@ class PostfixAdmin::Base
     d_domain.destroy or raise "Error: Cannot destroy Domain"
   end
   def delete_unnecessary_admins
-    PostfixAdmin::Admin.unnecessary.each do |admin|
-      admin.destroy or raise "Error: Cannnot destroy Admin"
-    end
+    PostfixAdmin::Admin.unnecessary.destroy or raise "Error: Cannnot destroy Admin"
   end
   def admin_domain_exist?(username, domain)
     PostfixAdmin::DomainAdmin.all(:username => username, :domain => domain).count != 0
