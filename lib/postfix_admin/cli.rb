@@ -19,7 +19,7 @@ class PostfixAdmin
       end
       print_line
     end
-    def admin_exit?(admin)
+    def admin_exist?(admin)
       @admin.admin_exist?(admin)
     end
     def show_admin

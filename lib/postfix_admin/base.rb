@@ -122,17 +122,20 @@ class PostfixAdmin::Base
       raise "Error: #{domain} is not found!"
     end
 
-    unnecessary_admins = PostfixAdmin::Admin.all.find do |admin|
-      admin.domains.size == 0
-    end
-    if unnecessary_admins
-      unnecessary_admins.destroy
-    end
-
     PostfixAdmin::Mailbox.all(:domain => domain).destroy or raise "Error: Cannot destroy Mailbox"
     PostfixAdmin::Alias.all(:domain => domain).destroy or raise "Error: Cannot destroy Alias"
     d_domain = PostfixAdmin::Domain.first(:domain => domain)
-    d_domain.admins.destroy or raise "Error: Cannot destroy DomainAdmin"
+    PostfixAdmin::DomainAdmin.all(:domain => domain).destroy or raise "Error: Cannot destroy DomainAdmin"
+
+    unnecessary_admins = PostfixAdmin::Admin.all.find_all do |admin|
+      admin.domains.size == 0
+    end
+    if unnecessary_admins
+      unnecessary_admins.each do |admin|
+        admin.destroy or raise "Error: Cannnot destroy Admin"
+      end
+    end
+
     d_domain.destroy or raise "Error: Cannot destroy Domain"
   end
   def admin_domain_exist?(username, domain)
