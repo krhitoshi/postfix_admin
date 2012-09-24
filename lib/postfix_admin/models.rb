@@ -11,6 +11,16 @@ class PostfixAdmin
     has n, :domain_admins, :child_key => :username
     has n, :domains, :model => 'Domain', :through => :domain_admins, :via => :p_domain
     storage_names[:default] = 'admin'
+
+    def self.unnecessary
+      list = []
+      all.each do |admin|
+        if admin.domains.count == 0
+          list << admin
+        end
+      end
+      list
+    end
   end
 
   class Domain
