@@ -8,7 +8,7 @@ describe PostfixAdmin::Runner do
     end
 
     it "#show shows information of admin@example.com" do
-      capture(:stdout){ PostfixAdmin::Runner.start(["show"]) }.should =~ /admin@example.com.+password/
+      capture(:stdout){ PostfixAdmin::Runner.start(["show"]) }.should =~ /admin@example.com.+password.+example.com/
     end
   end
 

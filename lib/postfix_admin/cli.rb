@@ -29,10 +29,13 @@ class PostfixAdmin
         return
       end
       print_line
-      puts " No.   username           password"
+      puts " No.   username           password  domains"
       print_line
       admins.each_with_index do |admin, i|
-        puts "%4d %-20s %10s" % [i+1, admin.username, admin.password]
+        domains = admin.domains.map do |domain|
+          domain.domain
+        end
+        puts "%4d %-20s %10s %s" % [i+1, admin.username, admin.password, domains.join(', ')]
       end
       print_line
     end
