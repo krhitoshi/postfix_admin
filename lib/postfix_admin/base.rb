@@ -125,7 +125,7 @@ class PostfixAdmin::Base
     PostfixAdmin::Mailbox.all(:domain => domain).destroy or raise "Error: Cannot destroy Mailbox"
     PostfixAdmin::Alias.all(:domain => domain).destroy or raise "Error: Cannot destroy Alias"
     d_domain = PostfixAdmin::Domain.first(:domain => domain)
-    PostfixAdmin::DomainAdmin.all(:domain => domain).destroy or raise "Error: Cannot destroy DomainAdmin"
+    d_domain.domain_admins.destroy or raise "Error: Cannot destroy DomainAdmin"
     delete_unnecessary_admins
 
     d_domain.destroy or raise "Error: Cannot destroy Domain"
