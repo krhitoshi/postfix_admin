@@ -54,6 +54,18 @@ class PostfixAdmin::Runner < Thor
     end
   end
 
+  desc "delete_admin", "delete an admin"
+  def delete_admin(user_name=nil)
+    if user_name
+      if @cli.delete_admin(user_name)
+        puts %Q!"#{user_name}" is successfully deleted.!
+      end
+      @cli.show_admin
+    else
+      exit_with_usage('delete_admin', 'admin@example.com')
+    end
+  end
+
   desc "add_account", "add an account"
   def add_account(address=nil,password=nil)
     if address && password

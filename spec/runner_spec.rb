@@ -17,10 +17,16 @@ describe PostfixAdmin::Runner do
     lambda { PostfixAdmin::Runner.start(['delete_domain', 'example.net']) }.should_not raise_error
   end
 
+  it "#add_admin and #delete_admin" do
+    capture(:stderr){ PostfixAdmin::Runner.start(['add_admin', 'admin@example.jp', 'password']) }.should_not =~ /Could not find task/
+    capture(:stderr){ PostfixAdmin::Runner.start(['add_admin_domain', 'admin@example.jp', 'example.com']) }.should_not =~ /Could not find task/
+    capture(:stderr){ PostfixAdmin::Runner.start(['delete_admin', 'admin@example.jp']) }.should_not =~ /Could not find task/
+  end
+
   it "add and delete methods" do
     lambda { PostfixAdmin::Runner.start(['add_domain', 'example.net']) }.should_not raise_error
-    lambda { PostfixAdmin::Runner.start(['add_admin', 'admin@example.net', 'password']) }.should_not raise_error
-    lambda { PostfixAdmin::Runner.start(['add_admin_domain', 'admin@example.net', 'example.net']) }.should_not raise_error
+    PostfixAdmin::Runner.start(['add_admin', 'admin@example.net', 'password'])
+    PostfixAdmin::Runner.start(['add_admin_domain', 'admin@example.net', 'example.net'])
 
     lambda { PostfixAdmin::Runner.start(['add_account', 'user1@example.net', 'password']) }.should_not raise_error
     lambda { PostfixAdmin::Runner.start(['add_account', 'user2@example.net', 'password']) }.should_not raise_error
