@@ -10,7 +10,7 @@ Gem::Specification.new do |gem|
   gem.email         = ["hitoshi@nextseed.jp"]
   gem.description   = %q{Command Line Tools of PostfixAdmin}
   gem.summary       = gem.description
-  gem.homepage      = ""
+  gem.homepage      = "https://github.com/krhitoshi/postfix_admin"
 
   gem.files         = `git ls-files`.split($\)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
