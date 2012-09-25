@@ -24,6 +24,7 @@ Or install it yourself as:
   postfix_admin add_admin_domain  # add admin_domain
   postfix_admin add_alias         # add an alias
   postfix_admin add_domain        # add a domain
+  postfix_admin delete_admin      # delete an admin
   postfix_admin delete_domain     # delete a domain
   postfix_admin help [TASK]       # Describe available tasks or one specific task
   postfix_admin setup             # setup a domain
