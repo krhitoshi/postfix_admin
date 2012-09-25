@@ -1,6 +1,6 @@
 # PostfixAdmin
 
-TODO: Write a gem description
+Command Line Tools of PostfixAdmin
 
 ## Installation
 
@@ -18,7 +18,16 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+  postfix_admin add_account       # add an account
+  postfix_admin add_admin         # add an admin user
+  postfix_admin add_admin_domain  # add admin_domain
+  postfix_admin add_alias         # add an alias
+  postfix_admin add_domain        # add a domain
+  postfix_admin delete_domain     # delete a domain
+  postfix_admin help [TASK]       # Describe available tasks or one specific task
+  postfix_admin setup             # setup a domain
+  postfix_admin show              # List of domains
+  postfix_admin version           # Show postfix_admin version
 
 ## Contributing
 
