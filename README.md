@@ -18,6 +18,7 @@ Or install it yourself as:
 
 ## Usage
 
+```
   postfix_admin add_account       # add an account
   postfix_admin add_admin         # add an admin user
   postfix_admin add_admin_domain  # add admin_domain
@@ -28,6 +29,7 @@ Or install it yourself as:
   postfix_admin setup             # setup a domain
   postfix_admin show              # List of domains
   postfix_admin version           # Show postfix_admin version
+```
 
 ## Contributing
 
