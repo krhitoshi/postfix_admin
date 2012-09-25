@@ -130,6 +130,16 @@ class PostfixAdmin::Base
 
     d_domain.destroy or raise "Error: Cannot destroy Domain"
   end
+
+  def delete_admin(user_name)
+    unless admin_exist?(user_name)
+      raise "admin #{user_name} is not found!"
+    end
+    admin = PostfixAdmin::Admin.first(:username => user_name)
+    admin.domain_admins.destroy or raise "Cannot destroy DomainAdmin"
+    admin.destroy or raise "Cannnot destroy Admin"
+  end
+
   def delete_unnecessary_admins
     PostfixAdmin::Admin.unnecessary.destroy or raise "Error: Cannnot destroy Admin"
   end

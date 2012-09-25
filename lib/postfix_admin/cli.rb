@@ -88,6 +88,10 @@ class PostfixAdmin
       @admin.delete_domain(domain)
     end
 
+    def delete_admin(user_name)
+      @admin.delete_admin(user_name)
+    end
+
     private
 
     def config_file
