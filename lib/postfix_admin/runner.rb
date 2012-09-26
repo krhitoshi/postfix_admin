@@ -66,6 +66,18 @@ class PostfixAdmin::Runner < Thor
     end
   end
 
+  desc "delete_account", "delete an account"
+  def delete_account(address=nil)
+    if address
+      if @cli.delete_account(address)
+        puts %Q!"#{address}" is successfully deleted.!
+      end
+      @cli.show_domain
+    else
+      exit_with_usage('delete_account', 'user@example.com')
+    end
+  end
+
   desc "add_account", "add an account"
   def add_account(address=nil,password=nil)
     if address && password

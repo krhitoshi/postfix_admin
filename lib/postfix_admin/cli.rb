@@ -92,6 +92,10 @@ class PostfixAdmin
       @admin.delete_admin(user_name)
     end
 
+    def delete_account(address)
+      @admin.delete_account(address)
+    end
+
     private
 
     def config_file

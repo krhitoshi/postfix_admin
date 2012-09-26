@@ -23,6 +23,11 @@ describe PostfixAdmin::Runner do
     capture(:stderr){ PostfixAdmin::Runner.start(['delete_admin', 'admin@example.jp']) }.should_not =~ /Could not find task/
   end
 
+  it "#add_account and #delete_account" do
+    capture(:stderr){ PostfixAdmin::Runner.start(['add_account', 'user2@example.com', 'password']) }.should_not =~ /Could not find task/
+    capture(:stderr){ PostfixAdmin::Runner.start(['delete_account', 'user2@example.com']) }.should_not =~ /Could not find task/
+  end
+
   it "add and delete methods" do
     lambda { PostfixAdmin::Runner.start(['add_domain', 'example.net']) }.should_not raise_error
     PostfixAdmin::Runner.start(['add_admin', 'admin@example.net', 'password'])
@@ -32,7 +37,6 @@ describe PostfixAdmin::Runner do
     lambda { PostfixAdmin::Runner.start(['add_account', 'user2@example.net', 'password']) }.should_not raise_error
 
     lambda { PostfixAdmin::Runner.start(['add_alias', 'user1@example.net', 'goto@example.jp']) }.should_not raise_error
-
     lambda { PostfixAdmin::Runner.start(['delete_domain', 'example.net']) }.should_not raise_error
   end
 end

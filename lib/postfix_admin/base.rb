@@ -145,6 +145,11 @@ class PostfixAdmin::Base
     admin.destroy or raise "Cannnot destroy Admin"
   end
 
+  def delete_account(address)
+    PostfixAdmin::Mailbox.all(:username => address).destroy or raise "Cannnot destroy Mailbox"
+    PostfixAdmin::Alias.all(:address => address).destroy or raise "Cannnot destroy Alias"
+  end
+
   def delete_unnecessary_admins
     PostfixAdmin::Admin.unnecessary.destroy or raise "Error: Cannnot destroy Admin"
   end
