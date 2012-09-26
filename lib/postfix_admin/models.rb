@@ -61,7 +61,7 @@ class PostfixAdmin
   class Alias
     include ::DataMapper::Resource
     property :address, String, :key => true
-    property :goto, Text, :key => true
+    property :goto, Text
     property :domain, String
     property :created, DateTime
     property :modified, DateTime

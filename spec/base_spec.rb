@@ -1,8 +1,9 @@
+require File.expand_path(File.dirname(__FILE__) + "/spec_helper")
 require 'postfix_admin/base'
 
 describe PostfixAdmin::Base do
   before do
-    @base = PostfixAdmin::Base.new({'database' => 'mysql://postfix_test:password@localhost/postfix_test'})
+    @base = PostfixAdmin::Base.new({'database' => 'sqlite::memory:'})
   end
 
   it "DEFAULT_CONFIG" do
