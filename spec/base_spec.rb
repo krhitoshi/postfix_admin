@@ -64,6 +64,10 @@ describe PostfixAdmin::Base do
     @base.admin_exist?('admin@example.com').should be_true
   end
 
+  it "#account_exist?" do
+    @base.account_exist?('user@example.com').should be_true
+  end
+
   it "#admin_domain_exist?" do
     @base.admin_domain_exist?('admin@example.com', 'example.com').should be_true
   end

@@ -162,6 +162,11 @@ class PostfixAdmin::Base
   def alias_exist?(address)
     PostfixAdmin::Alias.all(:address => address).count != 0
   end
+
+  def account_exist?(address)
+    alias_exist?(address) && PostfixAdmin::Mailbox.all(:username => address).count != 0
+  end
+
   def domain_exist?(domain)
     PostfixAdmin::Domain.all(:domain => domain).count != 0
   end
