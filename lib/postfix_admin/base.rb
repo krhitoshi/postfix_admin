@@ -14,14 +14,19 @@ class PostfixAdmin::Base
   }
 
   def initialize(config)
-    DataMapper.setup(:default, config['database'])
-    DataMapper.finalize
+    db_setup(config['database'])
     @config = {}
     @config[:aliases]   = config['aliases']   || 30
     @config[:mailboxes] = config['mailboxes'] || 30
     @config[:maxquota]  = config['maxquota']  || 100
     @config[:mailbox_quota] = @config[:maxquota] * 1024 * 1000
   end
+
+  def db_setup(database)
+    DataMapper.setup(:default, database)
+    DataMapper.finalize
+  end
+
   def add_admin_domain(username, domain)
     unless admin_exist?(username)
       raise "Error: #{username} is not resistered as admin."

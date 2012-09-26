@@ -4,7 +4,7 @@ require 'postfix_admin/runner'
 describe PostfixAdmin::Runner do
   describe "#show" do
     it "#show shows information of example.com" do
-     capture(:stdout){ PostfixAdmin::Runner.start(["show"]) }.should =~ /example.com.+100.+100.+100/
+     capture(:stdout){ PostfixAdmin::Runner.start(["show"]) }.should =~ /example.com.+30.+30.+100/
     end
 
     it "#show shows information of admin@example.com" do
