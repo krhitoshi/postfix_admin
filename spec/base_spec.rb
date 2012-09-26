@@ -60,6 +60,10 @@ describe PostfixAdmin::Base do
     @base.alias_exist?('user@example.com').should be_true
   end
 
+  it "#mailbox_exist?" do
+    @base.mailbox_exist?('user@example.com').should be_true
+  end
+
   it "#admin_exist?" do
     @base.admin_exist?('admin@example.com').should be_true
   end

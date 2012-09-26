@@ -159,12 +159,17 @@ class PostfixAdmin::Base
   def admin_exist?(admin)
     PostfixAdmin::Admin.all(:username => admin).count != 0
   end
+
+  def mailbox_exist?(address)
+    PostfixAdmin::Mailbox.all(:username => address).count != 0
+  end
+
   def alias_exist?(address)
     PostfixAdmin::Alias.all(:address => address).count != 0
   end
 
   def account_exist?(address)
-    alias_exist?(address) && PostfixAdmin::Mailbox.all(:username => address).count != 0
+    alias_exist?(address) && mailbox_exist?(address)
   end
 
   def domain_exist?(domain)
