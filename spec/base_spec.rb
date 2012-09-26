@@ -58,18 +58,22 @@ describe PostfixAdmin::Base do
 
   it "#alias_exist?" do
     @base.alias_exist?('user@example.com').should be_true
+    @base.alias_exist?('unknown@example.com').should be_false
   end
 
   it "#mailbox_exist?" do
     @base.mailbox_exist?('user@example.com').should be_true
+    @base.mailbox_exist?('unknown@example.com').should be_false
   end
 
   it "#admin_exist?" do
     @base.admin_exist?('admin@example.com').should be_true
+    @base.admin_exist?('unknown_admin@example.com').should be_false
   end
 
   it "#account_exist?" do
     @base.account_exist?('user@example.com').should be_true
+    @base.account_exist?('unknown@example.com').should be_false
   end
 
   it "#admin_domain_exist?" do
