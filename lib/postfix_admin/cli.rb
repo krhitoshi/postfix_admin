@@ -115,7 +115,7 @@ class PostfixAdmin
       File.chmod(0600, config_file)
     end
     def print_line
-      puts "-"*85
+      puts "-"*100
     end
     def validate_password(password)
       if password.size < MIN_NUM_PASSWORD_CHARACTER
