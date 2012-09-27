@@ -25,7 +25,7 @@ class PostfixAdmin
     def show_admin
       admins = @admin.admins
       if admins.count == 0
-        puts "No admin in database\n"
+        puts "No admin in database"
         return
       end
       print_line
@@ -42,7 +42,7 @@ class PostfixAdmin
     def show_domain_account(domain)
       mailboxes = @admin.mailboxes(domain)
       if mailboxes.count == 0
-        puts "No address in #{domain}\n"
+        puts "No address in #{domain}"
         return
       end
       print_line
