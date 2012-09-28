@@ -48,8 +48,6 @@ class PostfixAdmin::Runner < Thor
       if @cli.delete_domain(domain)
         puts %Q!"#{domain}" is successfully deleted.!
       end
-      @cli.show_domain
-      @cli.show_admin
     else
       exit_with_usage('delete_domain', 'example.com')
     end
