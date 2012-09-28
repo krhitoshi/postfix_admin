@@ -66,11 +66,11 @@ class PostfixAdmin
       end
       puts "\n[Aliases]"
       print_line
-      puts " No. Address              Go to"
+      puts " No. Address                        Go to"
       print_line
       aliases.each_with_index do |mail_alias, i|
         if mail_alias.address != mail_alias.goto
-          puts "%4d %-20s %-20s" % [i+1, mail_alias.address, mail_alias.goto]
+          puts "%4d %-30s %s" % [i+1, mail_alias.address, mail_alias.goto]
         end
       end
       print_line
