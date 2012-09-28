@@ -12,10 +12,10 @@ class PostfixAdmin
     end
     def show_domain
       print_line
-      puts " No. Domain               Aliases     Mailboxes Quota (MB)"
+      puts " No. Domain                Aliases   Mailboxes     Quota (MB)"
       print_line
       @admin.domains.each_with_index do |domain, i|
-        puts "%4d %-20s %3d / %3d %3d / %-3d %10d" % [i+1, domain.domain, @admin.aliases(domain.domain).size - @admin.mailboxes(domain.domain).size, domain.aliases, @admin.mailboxes(domain.domain).size, domain.mailboxes, domain.maxquota]
+        puts "%4d %-20s %3d /%3d   %3d /%3d %10d" % [i+1, domain.domain, @admin.aliases(domain.domain).size - @admin.mailboxes(domain.domain).size, domain.aliases, @admin.mailboxes(domain.domain).size, domain.mailboxes, domain.maxquota]
       end
       print_line
     end
@@ -46,10 +46,10 @@ class PostfixAdmin
         return
       end
       print_line
-      puts " No.   address             password  quota(M) maildir"
+      puts " No. Email               Password    Quota (MB) Mail Dir"
       print_line
       mailboxes.each_with_index do |mailbox, i|
-        puts "%4d %-20s %10s %7.1f  %-30s" % [i+1, mailbox.username, mailbox.password, mailbox.quota.to_f/1024000.0, mailbox.maildir]
+        puts "%4d %-20s  %-10s %10.1f  %-30s" % [i+1, mailbox.username, mailbox.password, mailbox.quota.to_f/1024000.0, mailbox.maildir]
       end
       print_line
     end
