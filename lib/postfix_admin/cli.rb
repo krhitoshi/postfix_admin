@@ -11,6 +11,7 @@ class PostfixAdmin
       @admin = PostfixAdmin::Base.new(@config)
     end
     def show_domain
+      puts "\n[Domains]"
       print_line
       puts " No. Domain                Aliases   Mailboxes     Quota (MB)"
       print_line
@@ -28,6 +29,7 @@ class PostfixAdmin
         puts "No admin in database"
         return
       end
+      puts "\n[Admins]"
       print_line
       puts " No. Admin                          Password            Domains"
       print_line
@@ -45,6 +47,8 @@ class PostfixAdmin
         puts "No address in #{domain}"
         return
       end
+
+      puts "\n[Accounts]"
       print_line
       puts " No. Email               Password    Quota (MB) Mail Dir"
       print_line
@@ -60,6 +64,7 @@ class PostfixAdmin
         puts "No aliases in #{domain}"
         return
       end
+      puts "\n[Aliases]"
       print_line
       puts " No. Address              Go to"
       print_line
