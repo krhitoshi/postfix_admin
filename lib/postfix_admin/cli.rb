@@ -53,6 +53,24 @@ class PostfixAdmin
       end
       print_line
     end
+
+    def show_domain_aliases(domain)
+      aliases = @admin.aliases(domain)
+      if aliases.count == 0
+        puts "No aliases in #{domain}"
+        return
+      end
+      print_line
+      puts " No. Address              Go to"
+      print_line
+      aliases.each_with_index do |mail_alias, i|
+        if mail_alias.address != mail_alias.goto
+          puts "%4d %-20s %-20s" % [i+1, mail_alias.address, mail_alias.goto]
+        end
+      end
+      print_line
+    end
+
     def show_admin_domain(user_name)
       domain_admins = @admin.admin_domains(user_name)
       if domain_admins.count == 0
