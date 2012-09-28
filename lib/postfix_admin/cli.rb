@@ -15,7 +15,7 @@ class PostfixAdmin
       puts " No. Domain               Aliases Mailboxes Quota (MB)"
       print_line
       @admin.domains.each_with_index do |domain, i|
-        puts "%4d %-20s %7d %9d %10d" % [i+1, domain.domain, domain.aliases, domain.mailboxes, domain.maxquota]
+        puts "%4d %-20s %7d %3d / %-3d %10d" % [i+1, domain.domain, domain.aliases, @admin.mailboxes(domain.domain).size, domain.mailboxes, domain.maxquota]
       end
       print_line
     end
