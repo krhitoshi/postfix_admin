@@ -98,13 +98,20 @@ class PostfixAdmin::Base
   end
 
   def add_alias(address, goto)
-    if alias_exist?(address)
-      goto_text = "#{address},#{goto}"
-      mail_alias = PostfixAdmin::Alias.first(:address => address)
-      mail_alias.update(:goto => goto_text, :modified => DateTime.now)
-    else
-      raise "Error: Invalid mail address! #{address}"
+    if mailbox_exist?(address)
+      raise "mailbox #{address} is already registered!"
     end
+    if alias_exist?(address)
+      raise "alias #{address} is already registered!"
+    end
+    user, domain = address.split(/@/)
+    new_alias = PostfixAdmin::Alias.new
+    new_alias.attributes = {
+      :address => address,
+      :goto    => goto,
+      :domain  => domain
+    }
+    new_alias.save or raise "Can not save Alias"
   end
 
   def add_domain(domain_name)
@@ -164,6 +171,10 @@ class PostfixAdmin::Base
 
   def alias_exist?(address)
     PostfixAdmin::Alias.all(:address => address).count != 0
+  end
+
+  def mailbox_exist?(user_name)
+    PostfixAdmin::Mailbox.all(:username => user_name).count != 0
   end
 
   def domain_exist?(domain)

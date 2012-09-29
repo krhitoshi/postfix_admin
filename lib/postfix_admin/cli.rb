@@ -36,6 +36,10 @@ class PostfixAdmin
       @admin.admin_exist?(admin)
     end
 
+    def alias_exist?(address)
+      @admin.alias_exist?(address)
+    end
+
     def show_admin
       admins = @admin.admins
       if admins.count == 0

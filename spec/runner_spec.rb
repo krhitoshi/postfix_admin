@@ -2,6 +2,9 @@ require File.expand_path(File.dirname(__FILE__) + "/spec_helper")
 require 'postfix_admin/runner'
 
 describe PostfixAdmin::Runner do
+  before do
+    db_initialize
+  end
 
   it "#summary" do
     capture(:stderr){ PostfixAdmin::Runner.start(["summary"]) }.should_not =~ /Could not find task/
@@ -22,6 +25,16 @@ describe PostfixAdmin::Runner do
     lambda { PostfixAdmin::Runner.start(['delete_domain', 'example.net']) }.should_not raise_error
   end
 
+  describe "#add_alias" do
+    it "You can add an new alias." do
+      lambda { PostfixAdmin::Runner.start(['add_alias', 'alias@example.com', 'goto@example.jp']) }.should_not raise_error
+    end
+
+    it "You can not add an alias for existed mailbox" do
+      lambda { PostfixAdmin::Runner.start(['add_alias', 'user@example.com', 'goto@example.jp']) }.should raise_error
+    end
+  end
+
   it "#add_admin and #delete_admin" do
     capture(:stderr){ PostfixAdmin::Runner.start(['add_admin', 'admin@example.jp', 'password']) }.should_not =~ /Could not find task/
     capture(:stderr){ PostfixAdmin::Runner.start(['add_admin_domain', 'admin@example.jp', 'example.com']) }.should_not =~ /Could not find task/
@@ -35,8 +48,6 @@ describe PostfixAdmin::Runner do
 
     lambda { PostfixAdmin::Runner.start(['add_account', 'user1@example.net', 'password']) }.should_not raise_error
     lambda { PostfixAdmin::Runner.start(['add_account', 'user2@example.net', 'password']) }.should_not raise_error
-
-    lambda { PostfixAdmin::Runner.start(['add_alias', 'user1@example.net', 'goto@example.jp']) }.should_not raise_error
 
     lambda { PostfixAdmin::Runner.start(['delete_domain', 'example.net']) }.should_not raise_error
   end

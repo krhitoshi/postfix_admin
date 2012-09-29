@@ -63,8 +63,8 @@ class PostfixAdmin
     property :address, String, :key => true
     property :goto, Text
     property :domain, String
-    property :created, DateTime
-    property :modified, DateTime
+    property :created, DateTime, :default => DateTime.now
+    property :modified, DateTime, :default => DateTime.now
 
     storage_names[:default] = 'alias'
   end

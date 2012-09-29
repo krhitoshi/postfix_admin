@@ -111,7 +111,7 @@ class PostfixAdmin::Runner < Thor
         puts %Q!"#{address}: #{goto}" is successfully registered as alias.!
       end
     else
-      exit_with_usage('add_alias', 'user@example.com goto@example.com')
+      exit_with_usage('add_alias', 'alias@example.com goto@example.com')
     end
   end
 
