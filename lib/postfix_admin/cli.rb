@@ -96,8 +96,9 @@ class PostfixAdmin
         puts "No domain in database"
         return
       end
+      puts "\n[Domains (#{user_name})]"
       print_line
-      puts " No.   domain"
+      puts " No. Domain"
       print_line
       domain_admins.each_with_index do |domain_admin, i|
         puts "%4d %-20s" % [i+1, domain_admin.domain]
