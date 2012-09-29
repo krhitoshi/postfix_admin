@@ -187,4 +187,8 @@ class PostfixAdmin::Base
       nil
     end
   end
+
+  def num_total_aliases(domain=nil)
+    aliases(domain).count - mailboxes(domain).count
+  end
 end

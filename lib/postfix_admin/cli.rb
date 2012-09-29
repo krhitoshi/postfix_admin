@@ -17,7 +17,7 @@ class PostfixAdmin
       puts "Domains   : %4d" % @admin.domains.count
       puts "Admins    : %4d" % @admin.admins.count
       puts "Mailboxes : %4d" % @admin.mailboxes.count
-      puts "Aliases   : %4d" % (@admin.aliases.count - @admin.mailboxes.count)
+      puts "Aliases   : %4d" % @admin.num_total_aliases
       print_line
     end
 
@@ -27,7 +27,7 @@ class PostfixAdmin
       puts " No. Domain                Aliases   Mailboxes     Quota (MB)"
       print_line
       @admin.domains.each_with_index do |domain, i|
-        puts "%4d %-20s %3d /%3d   %3d /%3d %10d" % [i+1, domain.domain, @admin.aliases(domain.domain).size - @admin.mailboxes(domain.domain).size, domain.aliases, @admin.mailboxes(domain.domain).size, domain.mailboxes, domain.maxquota]
+        puts "%4d %-20s %3d /%3d   %3d /%3d %10d" % [i+1, domain.domain, @admin.num_total_aliases(domain.domain), domain.aliases, @admin.mailboxes(domain.domain).size, domain.mailboxes, domain.maxquota]
       end
       print_line
     end
