@@ -44,13 +44,15 @@ class PostfixAdmin
       end
       puts "\n[Admins]"
       print_line
-      puts " No. Admin                          Password            Domains"
+      puts " No. Admin                              Domains Password"
       print_line
       admins.each_with_index do |admin, i|
-        domains = admin.domains.map do |domain|
-          domain.domain
-        end
-        puts "%4d %-30s %-20s %s" % [i+1, admin.username, admin.password, domains.join(', ')]
+        domains = if admin.domains.find{ |domain| domain.domain == 'ALL' }
+                       'Super admin'
+                     else
+                       admin.domains.count
+                     end
+        puts "%4d %-30s %11s %s" % [i+1, admin.username, domains, admin.password]
       end
       print_line
     end
