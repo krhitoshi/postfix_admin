@@ -10,6 +10,17 @@ class PostfixAdmin
       @config = load_config
       @admin = PostfixAdmin::Base.new(@config)
     end
+
+    def show_summary
+      puts "[Summary]"
+      print_line
+      puts "Domains   : %4d" % @admin.domains.count
+      puts "Admins    : %4d" % @admin.admins.count
+      puts "Mailboxes : %4d" % @admin.mailboxes.count
+      puts "Aliases   : %4d" % (@admin.aliases.count - @admin.mailboxes.count)
+      print_line
+    end
+
     def show_domain
       puts "\n[Domains]"
       print_line

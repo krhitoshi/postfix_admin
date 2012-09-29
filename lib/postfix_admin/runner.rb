@@ -7,6 +7,12 @@ class PostfixAdmin::Runner < Thor
     super
     @cli = PostfixAdmin::CLI.new
   end
+
+  desc "summary", "Summarize the usage of PostfixAdmin"
+  def summary
+    @cli.show_summary
+  end
+
   desc "show", "List of domains"
   def show(domain=nil)
     if domain

@@ -2,6 +2,11 @@ require File.expand_path(File.dirname(__FILE__) + "/spec_helper")
 require 'postfix_admin/runner'
 
 describe PostfixAdmin::Runner do
+
+  it "#summary" do
+    capture(:stderr){ PostfixAdmin::Runner.start(["summary"]) }.should_not =~ /Could not find task/
+  end
+
   describe "#show" do
     it "#show shows information of example.com" do
      capture(:stdout){ PostfixAdmin::Runner.start(["show"]) }.should =~ /example.com.+30.+30.+100/
