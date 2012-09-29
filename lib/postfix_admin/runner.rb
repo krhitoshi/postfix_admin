@@ -36,7 +36,6 @@ class PostfixAdmin::Runner < Thor
       if @cli.add_domain(domain)
         puts %Q!"#{domain}" is successfully registered.!
       end
-      @cli.show_domain
     else
       exit_with_usage('add_domain', 'example.com')
     end
@@ -59,7 +58,6 @@ class PostfixAdmin::Runner < Thor
       if @cli.delete_admin(user_name)
         puts %Q!"#{user_name}" is successfully deleted.!
       end
-      @cli.show_admin
     else
       exit_with_usage('delete_admin', 'admin@example.com')
     end
@@ -71,7 +69,6 @@ class PostfixAdmin::Runner < Thor
       if @cli.add_account(address, password)
         puts %Q!"#{address}" is successfully registered.!
       end
-      @cli.show_domain_account(address.split(/@/)[1])
     else
       exit_with_usage('add_account', 'user@example.com password')
     end
@@ -83,7 +80,6 @@ class PostfixAdmin::Runner < Thor
       if @cli.add_admin(user_name, password)
         puts %Q!"#{user_name}" is successfully registered as admin.!
       end
-      @cli.show_admin
     else
       exit_with_usage('add_admin', 'user@example.com password')
     end
@@ -95,7 +91,6 @@ class PostfixAdmin::Runner < Thor
       if @cli.add_admin_domain(user_name, domain)
         puts %Q!"#{domain}" is appended in the domains of #{user_name}.!
       end
-      @cli.show_admin_domain(user_name)
     else
       exit_with_usage('add_admin_domain', 'user@example.com example.com')
     end
@@ -107,7 +102,6 @@ class PostfixAdmin::Runner < Thor
       if @cli.add_alias(address, goto)
         puts %Q!"#{address}: #{goto}" is successfully registered as alias.!
       end
-      @cli.show_domain_account(address.split(/@/)[1])
     else
       exit_with_usage('add_alias', 'user@example.com goto@example.com')
     end
