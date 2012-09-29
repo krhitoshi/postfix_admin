@@ -43,6 +43,7 @@ class PostfixAdmin::Base
     d_admin.domains << d_domain
     d_admin.save or raise "Error: Relation Error"
   end
+
   def add_admin(username, password)
     if admin_exist?(username)
       raise "Error: #{username} is already resistered as admin."
@@ -56,6 +57,7 @@ class PostfixAdmin::Base
     }
     admin.save
   end
+
   def add_account(address, password)
     if address !~ /.+\@.+\..+/
       raise "Error: Invalid mail address! #{address}"
@@ -94,6 +96,7 @@ class PostfixAdmin::Base
     }
     mailbox.save
   end
+
   def add_alias(address, goto)
     if alias_exist?(address)
       goto_text = "#{address},#{goto}"
@@ -103,6 +106,7 @@ class PostfixAdmin::Base
       raise "Error: Invalid mail address! #{address}"
     end
   end
+
   def add_domain(domain_name)
     if domain_name !~ /.+\..+/
       raise "Error: Ivalid domain! #{domain_name}"
@@ -122,6 +126,7 @@ class PostfixAdmin::Base
     }
     domain.save
   end
+
   def delete_domain(domain)
     unless domain_exist?(domain)
       raise "Error: #{domain} is not found!"
@@ -148,24 +153,31 @@ class PostfixAdmin::Base
   def delete_unnecessary_admins
     PostfixAdmin::Admin.unnecessary.destroy or raise "Error: Cannnot destroy Admin"
   end
+
   def admin_domain_exist?(username, domain)
     PostfixAdmin::DomainAdmin.all(:username => username, :domain => domain).count != 0
   end
+
   def admin_exist?(admin)
     PostfixAdmin::Admin.all(:username => admin).count != 0
   end
+
   def alias_exist?(address)
     PostfixAdmin::Alias.all(:address => address).count != 0
   end
+
   def domain_exist?(domain)
     PostfixAdmin::Domain.all(:domain => domain).count != 0
   end
+
   def domains
     PostfixAdmin::Domain.all(:domain.not => 'ALL', :order => :domain)
   end
+
   def admins
     PostfixAdmin::Admin.all(:order => 'username')
   end
+
   def mailboxes(domain=nil)
     if domain
       PostfixAdmin::Mailbox.all(:domain => domain, :order => :username)
@@ -173,6 +185,7 @@ class PostfixAdmin::Base
       PostfixAdmin::Mailbox.all(:order => :username)
     end
   end
+
   def aliases(domain=nil)
     if domain
       PostfixAdmin::Alias.all(:domain => domain, :order => :address)
@@ -180,6 +193,7 @@ class PostfixAdmin::Base
       PostfixAdmin::Alias.all(:order => :address)
     end
   end
+
   def admin_domains(username=nil)
     if username
       PostfixAdmin::Admin.first(:username => username).domains
