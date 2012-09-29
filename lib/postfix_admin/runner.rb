@@ -16,6 +16,7 @@ class PostfixAdmin::Runner < Thor
   desc "show", "List of domains"
   def show(domain=nil)
     @cli.show_summary
+
     if domain
       @cli.show_domain_account(domain)
       @cli.show_domain_aliases(domain)
@@ -25,7 +26,7 @@ class PostfixAdmin::Runner < Thor
     end
   end
 
-  desc "setup", "setup a domain"
+  desc "setup", "Setup a domain"
   def setup_domain(domain=nil, password=nil)
     if domain && password
       admin = "admin@#{domain}"
@@ -37,7 +38,7 @@ class PostfixAdmin::Runner < Thor
     end
   end
 
-  desc "add_domain", "add a domain"
+  desc "add_domain", "Add a domain"
   def add_domain(domain=nil)
     if domain
       if @cli.add_domain(domain)
@@ -48,7 +49,7 @@ class PostfixAdmin::Runner < Thor
     end
   end
 
-  desc "delete_domain", "delete a domain"
+  desc "delete_domain", "Delete a domain"
   def delete_domain(domain=nil)
     if domain
       if @cli.delete_domain(domain)
@@ -59,7 +60,7 @@ class PostfixAdmin::Runner < Thor
     end
   end
 
-  desc "delete_admin", "delete an admin"
+  desc "delete_admin", "Delete an admin"
   def delete_admin(user_name=nil)
     if user_name
       if @cli.delete_admin(user_name)
@@ -70,7 +71,7 @@ class PostfixAdmin::Runner < Thor
     end
   end
 
-  desc "add_account", "add an account"
+  desc "add_account", "Add an account"
   def add_account(address=nil,password=nil)
     if address && password
       if @cli.add_account(address, password)
@@ -81,7 +82,7 @@ class PostfixAdmin::Runner < Thor
     end
   end
 
-  desc "add_admin", "add an admin user"
+  desc "add_admin", "Add an admin user"
   def add_admin(user_name=nil, password=nil)
     if user_name && password
       if @cli.add_admin(user_name, password)
@@ -92,7 +93,7 @@ class PostfixAdmin::Runner < Thor
     end
   end
 
-  desc "add_admin_domain", "add admin_domain"
+  desc "add_admin_domain", "Add admin_domain"
   def add_admin_domain(user_name=nil, domain=nil)
     if user_name && domain
       if @cli.add_admin_domain(user_name, domain)
@@ -103,7 +104,7 @@ class PostfixAdmin::Runner < Thor
     end
   end
 
-  desc "add_alias", "add an alias"
+  desc "add_alias", "Add an alias"
   def add_alias(address=nil, goto=nil)
     if address && goto
       if @cli.add_alias(address, goto)
