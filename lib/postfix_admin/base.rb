@@ -43,6 +43,7 @@ class PostfixAdmin::Base
     d_admin.domains << d_domain
     d_admin.save or raise "Error: Relation Error"
   end
+
   def add_admin(username, password)
     if admin_exist?(username)
       raise "Error: #{username} is already resistered as admin."
@@ -56,6 +57,7 @@ class PostfixAdmin::Base
     }
     admin.save
   end
+
   def add_account(address, password)
     if address !~ /.+\@.+\..+/
       raise "Error: Invalid mail address! #{address}"
@@ -94,15 +96,34 @@ class PostfixAdmin::Base
     }
     mailbox.save
   end
+
   def add_alias(address, goto)
-    if alias_exist?(address)
-      goto_text = "#{address},#{goto}"
-      mail_alias = PostfixAdmin::Alias.first(:address => address)
-      mail_alias.update(:goto => goto_text, :modified => DateTime.now)
-    else
-      raise "Error: Invalid mail address! #{address}"
+    if mailbox_exist?(address)
+      raise "mailbox #{address} is already registered!"
     end
+    if alias_exist?(address)
+      raise "alias #{address} is already registered!"
+    end
+    user, domain = address.split(/@/)
+    new_alias = PostfixAdmin::Alias.new
+    new_alias.attributes = {
+      :address => address,
+      :goto    => goto,
+      :domain  => domain
+    }
+    new_alias.save or raise "Can not save Alias"
   end
+
+  def delete_alias(address)
+    if mailbox_exist?(address)
+      raise "Can not delete mailbox by delete_alias. Use delete_account"
+    end
+    unless alias_exist?(address)
+      raise "#{address} is not found!"
+    end
+    PostfixAdmin::Alias.all(:address => address).destroy or raise "Can not destroy Alias"
+  end
+
   def add_domain(domain_name)
     if domain_name !~ /.+\..+/
       raise "Error: Ivalid domain! #{domain_name}"
@@ -122,6 +143,7 @@ class PostfixAdmin::Base
     }
     domain.save
   end
+
   def delete_domain(domain)
     unless domain_exist?(domain)
       raise "Error: #{domain} is not found!"
@@ -153,9 +175,11 @@ class PostfixAdmin::Base
   def delete_unnecessary_admins
     PostfixAdmin::Admin.unnecessary.destroy or raise "Error: Cannnot destroy Admin"
   end
+
   def admin_domain_exist?(username, domain)
     PostfixAdmin::DomainAdmin.all(:username => username, :domain => domain).count != 0
   end
+
   def admin_exist?(admin)
     PostfixAdmin::Admin.all(:username => admin).count != 0
   end
@@ -172,15 +196,22 @@ class PostfixAdmin::Base
     alias_exist?(address) && mailbox_exist?(address)
   end
 
+  def mailbox_exist?(user_name)
+    PostfixAdmin::Mailbox.all(:username => user_name).count != 0
+  end
+
   def domain_exist?(domain)
     PostfixAdmin::Domain.all(:domain => domain).count != 0
   end
+
   def domains
     PostfixAdmin::Domain.all(:domain.not => 'ALL', :order => :domain)
   end
+
   def admins
     PostfixAdmin::Admin.all(:order => 'username')
   end
+
   def mailboxes(domain=nil)
     if domain
       PostfixAdmin::Mailbox.all(:domain => domain, :order => :username)
@@ -188,6 +219,7 @@ class PostfixAdmin::Base
       PostfixAdmin::Mailbox.all(:order => :username)
     end
   end
+
   def aliases(domain=nil)
     if domain
       PostfixAdmin::Alias.all(:domain => domain, :order => :address)
@@ -195,11 +227,16 @@ class PostfixAdmin::Base
       PostfixAdmin::Alias.all(:order => :address)
     end
   end
+
   def admin_domains(username=nil)
     if username
       PostfixAdmin::Admin.first(:username => username).domains
     else
       nil
     end
+  end
+
+  def num_total_aliases(domain=nil)
+    aliases(domain).count - mailboxes(domain).count
   end
 end

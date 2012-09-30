@@ -2,19 +2,42 @@ require File.expand_path(File.dirname(__FILE__) + "/spec_helper")
 require 'postfix_admin/runner'
 
 describe PostfixAdmin::Runner do
+  before do
+    db_initialize
+  end
+
+  it "#summary" do
+    capture(:stderr){ PostfixAdmin::Runner.start(["summary"]) }.should_not =~ /Could not find task/
+  end
+
   describe "#show" do
     it "#show shows information of example.com" do
      capture(:stdout){ PostfixAdmin::Runner.start(["show"]) }.should =~ /example.com.+30.+30.+100/
     end
 
     it "#show shows information of admin@example.com" do
-      capture(:stdout){ PostfixAdmin::Runner.start(["show"]) }.should =~ /admin@example.com.+password.+example.com/
+      capture(:stdout){ PostfixAdmin::Runner.start(["show"]) }.should =~ /admin@example.com.+1.+password/
     end
   end
 
   it "#setup" do
     capture(:stderr){ PostfixAdmin::Runner.start(['setup', 'example.net', 'password']) }.should_not =~ /Could not find task/
     lambda { PostfixAdmin::Runner.start(['delete_domain', 'example.net']) }.should_not raise_error
+  end
+
+  describe "#add_alias and #delete_alias" do
+    it "You can add and delete an new alias." do
+      lambda { PostfixAdmin::Runner.start(['add_alias', 'alias@example.com', 'goto@example.jp']) }.should_not raise_error
+      lambda { PostfixAdmin::Runner.start(['delete_alias', 'alias@example.com']) }.should_not raise_error
+    end
+
+    it "You can not delete mailbox alias." do
+      lambda { PostfixAdmin::Runner.start(['delete_alias', 'user@example.com']) }.should raise_error
+    end
+
+    it "You can not add an alias for existed mailbox" do
+      lambda { PostfixAdmin::Runner.start(['add_alias', 'user@example.com', 'goto@example.jp']) }.should raise_error
+    end
   end
 
   it "#add_admin and #delete_admin" do
@@ -35,8 +58,6 @@ describe PostfixAdmin::Runner do
 
     lambda { PostfixAdmin::Runner.start(['add_account', 'user1@example.net', 'password']) }.should_not raise_error
     lambda { PostfixAdmin::Runner.start(['add_account', 'user2@example.net', 'password']) }.should_not raise_error
-
-    lambda { PostfixAdmin::Runner.start(['add_alias', 'user1@example.net', 'goto@example.jp']) }.should_not raise_error
     lambda { PostfixAdmin::Runner.start(['delete_domain', 'example.net']) }.should_not raise_error
   end
 end

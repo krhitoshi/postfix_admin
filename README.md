@@ -29,6 +29,7 @@ Or install it yourself as:
   postfix_admin help [TASK]       # Describe available tasks or one specific task
   postfix_admin setup             # setup a domain
   postfix_admin show              # List of domains
+  postfix_admin summary           # Summarize the usage of PostfixAdmin
   postfix_admin version           # Show postfix_admin version
 ```
 

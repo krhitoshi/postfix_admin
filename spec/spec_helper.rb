@@ -9,7 +9,21 @@ class PostfixAdmin::CLI
   end
 end
 
+# [fixtures]
+# example.com
+# admin@example.com
+# user@example.com
+
+def db_clear
+  PostfixAdmin::DomainAdmin.all.destroy
+  PostfixAdmin::Domain.all.destroy
+  PostfixAdmin::Admin.all.destroy
+  PostfixAdmin::Alias.all.destroy
+  PostfixAdmin::Mailbox.all.destroy
+end
+
 def db_initialize
+  db_clear
   domain_name = 'example.com'
   domain = PostfixAdmin::Domain.new
   domain.attributes = {
@@ -70,6 +84,7 @@ db_initialize
 
 class PostfixAdmin::Base
 
+  # without DataMapper setup
   def db_setup(database)
     unless database
       raise ArgumentError

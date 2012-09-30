@@ -3,6 +3,7 @@ require 'postfix_admin/cli'
 
 describe PostfixAdmin::CLI do
   before do
+    db_initialize
     @cli = PostfixAdmin::CLI.new
   end
 
@@ -27,11 +28,28 @@ describe PostfixAdmin::CLI do
     @cli.admin_exist?('admin@example.net').should be_false
   end
 
+  it "#alias_exit?" do
+    @cli.alias_exist?('user@example.com').should be_true
+    @cli.alias_exist?('unknown@example.com').should be_false
+  end
+
   it "#add_admin and #delete_admin" do
     lambda { @cli.add_admin('common@example.net', 'password') }.should_not raise_error
     @cli.admin_exist?('common@example.net').should be_true
     lambda { @cli.delete_admin('common@example.net') }.should_not raise_error
     @cli.admin_exist?('common@example.net').should be_false
+  end
+
+  it "#add_alias and #delete_alias" do
+    lambda { @cli.add_alias('user@example.com', 'goto@example.jp') }.should raise_error
+    lambda { @cli.delete_alias('user@example.com') }.should raise_error
+    lambda { @cli.delete_alias('unknown@example.com') }.should raise_error
+
+    lambda { @cli.add_alias('alias@example.com', 'goto@example.jp') }.should_not raise_error
+    @cli.alias_exist?('alias@example.com').should be_true
+
+    lambda { @cli.delete_alias('alias@example.com') }.should_not raise_error
+    @cli.alias_exist?('alias@example.com').should be_false
   end
 
   it "add and delete methods" do
@@ -56,7 +74,6 @@ describe PostfixAdmin::CLI do
     lambda { @cli.add_account('user1@example.net', 'password') }.should_not raise_error
     lambda { @cli.add_account('user2@example.net', 'password') }.should_not raise_error
 
-    lambda { @cli.add_alias('user1@example.net', 'goto@example.jp') }.should_not raise_error
     lambda { @cli.delete_domain('example.net') }.should_not raise_error
     @cli.admin_exist?('admin@example.net').should be_false
     @cli.admin_exist?('admin2@example.net').should be_false
