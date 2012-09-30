@@ -77,10 +77,11 @@ class PostfixAdmin
 
       puts "\n[Accounts]"
       print_line
-      puts " No. Email                           Password                Quota (MB)"
+      puts " No. Email                           Quota (MB) Password"
       print_line
       mailboxes.each_with_index do |mailbox, i|
-        puts "%4d %-30s  %-20s %10.1f" % [i+1, mailbox.username, mailbox.password, mailbox.quota.to_f/1024000.0]
+        quota = mailbox.quota.to_f/1024000.0
+        puts "%4d %-30s  %10.1f %s" % [i+1, mailbox.username, quota, mailbox.password]
       end
       print_line
     end
