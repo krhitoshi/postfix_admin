@@ -15,7 +15,7 @@ class PostfixAdmin::Runner < Thor
 
   desc "show", "List of domains"
   def show(domain=nil)
-    @cli.show_summary
+    @cli.show_summary(domain)
 
     if domain
       @cli.show_domain_account(domain)

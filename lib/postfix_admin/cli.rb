@@ -11,13 +11,20 @@ class PostfixAdmin
       @admin = PostfixAdmin::Base.new(@config)
     end
 
-    def show_summary
-      puts "[Summary]"
+    def show_summary(domain=nil)
+      if domain
+        puts "[Summary of #{domain}]"
+      else
+        puts "[Summary]"
+      end
       print_line
-      puts "Domains   : %4d" % @admin.domains.count
-      puts "Admins    : %4d" % @admin.admins.count
-      puts "Mailboxes : %4d" % @admin.mailboxes.count
-      puts "Aliases   : %4d" % @admin.num_total_aliases
+      unless domain
+        puts "Domains   : %4d" % @admin.domains.count
+        puts "Admins    : %4d" % @admin.admins.count
+      end
+
+      puts "Mailboxes : %4d" % @admin.mailboxes(domain).count
+      puts "Aliases   : %4d" % @admin.num_total_aliases(domain)
       print_line
     end
 
