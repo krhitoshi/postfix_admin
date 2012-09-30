@@ -142,6 +142,10 @@ class PostfixAdmin
       @admin.add_alias(address, goto)
     end
 
+    def delete_alias(address)
+      @admin.delete_alias(address)
+    end
+
     def delete_domain(domain)
       @admin.delete_domain(domain)
     end

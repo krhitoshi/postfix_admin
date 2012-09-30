@@ -114,6 +114,16 @@ class PostfixAdmin::Base
     new_alias.save or raise "Can not save Alias"
   end
 
+  def delete_alias(address)
+    if mailbox_exist?(address)
+      raise "Can not delete mailbox by delete_alias. Use delete_account"
+    end
+    unless alias_exist?(address)
+      raise "#{address} is not found!"
+    end
+    PostfixAdmin::Alias.all(:address => address).destroy or raise "Can not destroy Alias"
+  end
+
   def add_domain(domain_name)
     if domain_name !~ /.+\..+/
       raise "Error: Ivalid domain! #{domain_name}"

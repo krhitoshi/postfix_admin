@@ -25,9 +25,14 @@ describe PostfixAdmin::Runner do
     lambda { PostfixAdmin::Runner.start(['delete_domain', 'example.net']) }.should_not raise_error
   end
 
-  describe "#add_alias" do
-    it "You can add an new alias." do
+  describe "#add_alias and #delete_alias" do
+    it "You can add and delete an new alias." do
       lambda { PostfixAdmin::Runner.start(['add_alias', 'alias@example.com', 'goto@example.jp']) }.should_not raise_error
+      lambda { PostfixAdmin::Runner.start(['delete_alias', 'alias@example.com']) }.should_not raise_error
+    end
+
+    it "You can not delete mailbox alias." do
+      lambda { PostfixAdmin::Runner.start(['delete_alias', 'user@example.com']) }.should raise_error
     end
 
     it "You can not add an alias for existed mailbox" do
