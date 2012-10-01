@@ -52,8 +52,8 @@ class PostfixAdmin
     property :maildir, String
     property :quota, Integer
     #  property :local_part, String
-    property :created, DateTime
-    property :modified, DateTime
+    property :created, DateTime, :default => DateTime.now
+    property :modified, DateTime, :default => DateTime.now
 
     storage_names[:default] = 'mailbox'
   end
