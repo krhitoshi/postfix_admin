@@ -13,6 +13,9 @@ class PostfixAdmin
 
     def show_summary(domain=nil)
       if domain
+        unless @admin.domain_exist?(domain)
+          raise %Q!Could not find domain "#{domain}"!
+        end
         puts "[Summary of #{domain}]"
       else
         puts "[Summary]"
