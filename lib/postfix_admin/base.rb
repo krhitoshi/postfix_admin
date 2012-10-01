@@ -53,8 +53,6 @@ class PostfixAdmin
       admin.attributes = {
         :username => username,
         :password => password,
-        :created  => DateTime.now,
-        :modified => DateTime.now
       }
       admin.save
     end
