@@ -80,8 +80,6 @@ class PostfixAdmin
         :address  => address,
         :goto     => address,
         :domain   => domain_name,
-        :created  => DateTime.now,
-        :modified => DateTime.now
       }
       mail_alias.save
 
@@ -93,8 +91,6 @@ class PostfixAdmin
         :maildir  => path,
         :quota    => @config[:mailbox_quota],
         # :local_part => user,
-        :created  => DateTime.now,
-        :modified => DateTime.now
       }
       domain.has_mailboxes << mailbox
       domain.save or raise "Could not save Domain"
