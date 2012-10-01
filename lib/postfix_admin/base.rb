@@ -79,7 +79,7 @@ class PostfixAdmin
         :goto     => address,
         :domain   => domain_name,
       }
-      mail_alias.save
+      domain.has_aliases << mail_alias
 
       mailbox = Mailbox.new
       mailbox.attributes = {
@@ -101,14 +101,20 @@ class PostfixAdmin
       if alias_exist?(address)
         raise "alias #{address} is already registered!"
       end
-      user, domain = address.split(/@/)
+      user, domain_name = address.split(/@/)
+      unless domain_exist?(domain_name)
+        raise "Invalid domain! #{domain_name}"
+      end
+      domain = Domain.find(domain_name)
+
       new_alias = Alias.new
       new_alias.attributes = {
         :address => address,
         :goto    => goto,
         :domain  => domain
       }
-      new_alias.save or raise "Can not save Alias"
+      domain.has_aliases << new_alias
+      domain.save or raise "Could not save Alias"
     end
 
     def delete_alias(address)
@@ -141,18 +147,18 @@ class PostfixAdmin
       domain.save
     end
 
-    def delete_domain(domain)
-      unless domain_exist?(domain)
+    def delete_domain(domain_name)
+      unless domain_exist?(domain_name)
         raise "#{domain} is not found!"
       end
 
-      Alias.all(:domain => domain).destroy or raise "Cannot destroy Alias"
-      d_domain = Domain.find(domain)
-      d_domain.has_mailboxes.destroy or raise "Cannot destroy Mailbox"
-      d_domain.domain_admins.destroy or raise "Cannot destroy DomainAdmin"
+      domain = Domain.find(domain_name)
+      domain.has_mailboxes.destroy or raise "Cannot destroy Mailbox"
+      domain.has_aliases.destroy or raise "Cannot destroy Alias"
+      domain.domain_admins.destroy or raise "Cannot destroy DomainAdmin"
       delete_unnecessary_admins
 
-      d_domain.destroy or raise "Cannot destroy Domain"
+      domain.destroy or raise "Cannot destroy Domain"
     end
 
     def delete_admin(user_name)
