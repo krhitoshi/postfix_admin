@@ -215,7 +215,7 @@ class PostfixAdmin
       if domain_name
         domain = Domain.first(:domain => domain_name)
         if domain
-          domain.has_mailboxes
+          domain.has_mailboxes(:order => :username)
         else
           []
         end
