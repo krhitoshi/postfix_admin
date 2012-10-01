@@ -50,7 +50,7 @@ class PostfixAdmin
     def show_admin
       admins = @admin.admins
       if admins.count == 0
-        puts "No admin in database"
+        puts "\nNo admin in database"
         return
       end
       puts "\n[Admins]"
@@ -71,7 +71,7 @@ class PostfixAdmin
     def show_domain_account(domain)
       mailboxes = @admin.mailboxes(domain)
       if mailboxes.count == 0
-        puts "No address in #{domain}"
+        puts "\nNo address in #{domain}"
         return
       end
 
@@ -92,7 +92,7 @@ class PostfixAdmin
       end
 
       if aliases.count == 0
-        puts "No aliases in #{domain}"
+        puts "\nNo aliases in #{domain}"
         return
       end
       puts "\n[Aliases]"
@@ -108,7 +108,7 @@ class PostfixAdmin
     def show_admin_domain(user_name)
       domain_admins = @admin.admin_domains(user_name)
       if domain_admins.count == 0
-        puts "No domain in database"
+        puts "\nNo domain in database"
         return
       end
       puts "\n[Domains (#{user_name})]"
