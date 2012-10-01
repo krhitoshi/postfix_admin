@@ -63,21 +63,23 @@ class PostfixAdmin
       if address !~ /.+\@.+\..+/
         raise "Invalid mail address! #{address}"
       end
-      user, domain = address.split(/@/)
-      path = "#{domain}/#{address}/"
+      user, domain_name = address.split(/@/)
+      path = "#{domain_name}/#{address}/"
 
-      unless domain_exist?(domain)
+      unless domain_exist?(domain_name)
         raise "Invalid domain! #{address}"
       end
 
       if alias_exist?(address)
         raise "#{address} is already resistered."
       end
+
+      domain = Domain.first(:domain => domain_name)
       mail_alias = Alias.new
       mail_alias.attributes = {
         :address  => address,
         :goto     => address,
-        :domain   => domain,
+        :domain   => domain_name,
         :created  => DateTime.now,
         :modified => DateTime.now
       }
@@ -90,12 +92,12 @@ class PostfixAdmin
         :name     => '',
         :maildir  => path,
         :quota    => @config[:mailbox_quota],
-        :domain   => domain,
         # :local_part => user,
         :created  => DateTime.now,
         :modified => DateTime.now
       }
-      mailbox.save
+      domain.has_mailboxes << mailbox
+      domain.save or raise "Could not save Domain"
     end
 
     def add_alias(address, goto)
