@@ -81,7 +81,7 @@ class PostfixAdmin::Runner < Thor
     end
   end
 
-  desc "delete_account", "delete an account"
+  desc "delete_account", "Delete an account"
   def delete_account(address=nil)
     runner do
       if address
