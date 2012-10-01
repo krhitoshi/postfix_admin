@@ -149,9 +149,9 @@ class PostfixAdmin::Base
       raise "#{domain} is not found!"
     end
 
-    PostfixAdmin::Mailbox.all(:domain => domain).destroy or raise "Cannot destroy Mailbox"
     PostfixAdmin::Alias.all(:domain => domain).destroy or raise "Cannot destroy Alias"
     d_domain = PostfixAdmin::Domain.first(:domain => domain)
+    d_domain.has_mailboxes.destroy or raise "Cannot destroy Mailbox"
     d_domain.domain_admins.destroy or raise "Cannot destroy DomainAdmin"
     delete_unnecessary_admins
 
@@ -212,9 +212,14 @@ class PostfixAdmin::Base
     PostfixAdmin::Admin.all(:order => 'username')
   end
 
-  def mailboxes(domain=nil)
-    if domain
-      PostfixAdmin::Mailbox.all(:domain => domain, :order => :username)
+  def mailboxes(domain_name=nil)
+    if domain_name
+      domain = PostfixAdmin::Domain.first(:domain => domain_name)
+      if domain
+        domain.has_mailboxes
+      else
+        []
+      end
     else
       PostfixAdmin::Mailbox.all(:order => :username)
     end
