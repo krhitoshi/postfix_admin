@@ -39,7 +39,7 @@ class PostfixAdmin
         raise "#{username} is already resistered as admin of #{domain}."
       end
 
-      d_domain = Domain.first(:domain => domain)
+      d_domain = Domain.find(domain)
       d_admin  = Admin.first(:username => username)
       d_admin.domains << d_domain
       d_admin.save or raise "Relation Error"
@@ -74,7 +74,7 @@ class PostfixAdmin
         raise "#{address} is already resistered."
       end
 
-      domain = Domain.first(:domain => domain_name)
+      domain = Domain.find(domain_name)
       mail_alias = Alias.new
       mail_alias.attributes = {
         :address  => address,
@@ -149,7 +149,7 @@ class PostfixAdmin
       end
 
       Alias.all(:domain => domain).destroy or raise "Cannot destroy Alias"
-      d_domain = Domain.first(:domain => domain)
+      d_domain = Domain.find(domain)
       d_domain.has_mailboxes.destroy or raise "Cannot destroy Mailbox"
       d_domain.domain_admins.destroy or raise "Cannot destroy DomainAdmin"
       delete_unnecessary_admins
@@ -213,7 +213,7 @@ class PostfixAdmin
 
     def mailboxes(domain_name=nil)
       if domain_name
-        domain = Domain.first(:domain => domain_name)
+        domain = Domain.find(domain_name)
         if domain
           domain.has_mailboxes(:order => :username)
         else
@@ -226,7 +226,7 @@ class PostfixAdmin
 
     def aliases(domain_name=nil)
       if domain_name
-        domain = Domain.first(:domain => domain_name)
+        domain = Domain.find(domain_name)
         if domain
           domain.has_aliases(:order => :address)
         else

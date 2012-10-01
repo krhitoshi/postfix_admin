@@ -35,6 +35,10 @@ class PostfixAdmin
     has n, :has_mailboxes, :model => 'Mailbox', :child_key => :domain
     has n, :has_aliases, :model => 'Alias', :child_key => :domain
     storage_names[:default] = 'domain'
+
+    def self.find(domain)
+      Domain.first(:domain => domain)
+    end
   end
 
   class DomainAdmin
