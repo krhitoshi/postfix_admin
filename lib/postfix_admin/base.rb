@@ -124,7 +124,7 @@ class PostfixAdmin
       unless alias_exist?(address)
         raise "#{address} is not found!"
       end
-      Alias.all(:address => address).destroy or raise "Can not destroy Alias"
+      Alias.all(:address => address).destroy or raise "Could not destroy Alias"
     end
 
     def add_domain(domain_name)
