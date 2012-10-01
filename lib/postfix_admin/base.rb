@@ -40,7 +40,7 @@ class PostfixAdmin
       end
 
       d_domain = Domain.find(domain)
-      d_admin  = Admin.first(:username => username)
+      d_admin  = Admin.find(username)
       d_admin.domains << d_domain
       d_admin.save or raise "Relation Error"
     end
@@ -165,7 +165,7 @@ class PostfixAdmin
       unless admin_exist?(user_name)
         raise "admin #{user_name} is not found!"
       end
-      admin = Admin.first(:username => user_name)
+      admin = Admin.find(user_name)
       admin.domain_admins.destroy or raise "Could not destroy DomainAdmin"
       admin.destroy or raise "Could not destroy Admin"
     end
@@ -243,7 +243,7 @@ class PostfixAdmin
 
     def admin_domains(username=nil)
       if username
-        Admin.first(:username => username).domains
+        Admin.find(username).domains
       else
         nil
       end

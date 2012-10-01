@@ -12,6 +12,10 @@ class PostfixAdmin
     has n, :domains, :model => 'Domain', :through => :domain_admins, :via => :p_domain
     storage_names[:default] = 'admin'
 
+    def self.find(username)
+      Admin.first(:username => username)
+    end
+
     def self.unnecessary
       all.delete_if do |admin|
         admin.domains.size > 0
