@@ -61,7 +61,7 @@ class PostfixAdmin
       if address !~ /.+\@.+\..+/
         raise "Invalid mail address! #{address}"
       end
-      user, domain_name = address.split(/@/)
+      user, domain_name = address_split(address)
       path = "#{domain_name}/#{address}/"
 
       unless domain_exist?(domain_name)
@@ -101,7 +101,7 @@ class PostfixAdmin
       if alias_exist?(address)
         raise "alias #{address} is already registered!"
       end
-      user, domain_name = address.split(/@/)
+      user, domain_name = address_split(address)
       unless domain_exist?(domain_name)
         raise "Invalid domain! #{domain_name}"
       end
@@ -251,6 +251,10 @@ class PostfixAdmin
 
     def num_total_aliases(domain=nil)
       aliases(domain).count - mailboxes(domain).count
+    end
+
+    def address_split(address)
+      address.split('@')
     end
   end
 end

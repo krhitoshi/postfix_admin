@@ -15,6 +15,10 @@ describe PostfixAdmin::Base do
     }
   end
 
+  it "#address_split" do
+    @base.address_split('user@example.com').should == ['user', 'example.com']
+  end
+
   it "#new without config" do
     lambda { PostfixAdmin::Base.new }.should raise_error(ArgumentError)
   end
