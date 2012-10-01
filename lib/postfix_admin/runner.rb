@@ -15,7 +15,7 @@ class PostfixAdmin::Runner < Thor
 
   desc "show", "List of domains"
   def show(domain=nil)
-    begin
+    runner do
       @cli.show_summary(domain)
 
       if domain
@@ -25,8 +25,6 @@ class PostfixAdmin::Runner < Thor
         @cli.show_domain
         @cli.show_admin
       end
-    rescue => e
-      puts e.message
     end
   end
 
@@ -154,5 +152,13 @@ class PostfixAdmin::Runner < Thor
   def exit_with_usage(subcommand, args)
     say "Usage: postfix_admin #{subcommand} #{args}"
     exit
+  end
+
+  def runner
+    begin
+      yield
+    rescue => e
+      puts e.message
+    end
   end
 end
