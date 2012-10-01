@@ -29,24 +29,24 @@ class PostfixAdmin::Base
 
   def add_admin_domain(username, domain)
     unless admin_exist?(username)
-      raise "Error: #{username} is not resistered as admin."
+      raise "#{username} is not resistered as admin."
     end
     unless domain_exist?(domain)
-      raise "Error: Invalid domain #{domain}!"
+      raise "Invalid domain #{domain}!"
     end
     if admin_domain_exist?(username, domain)
-      raise "Error: #{username} is already resistered as admin of #{domain}."
+      raise "#{username} is already resistered as admin of #{domain}."
     end
 
     d_domain = PostfixAdmin::Domain.first(:domain => domain)
     d_admin  = PostfixAdmin::Admin.first(:username => username)
     d_admin.domains << d_domain
-    d_admin.save or raise "Error: Relation Error"
+    d_admin.save or raise "Relation Error"
   end
 
   def add_admin(username, password)
     if admin_exist?(username)
-      raise "Error: #{username} is already resistered as admin."
+      raise "#{username} is already resistered as admin."
     end
     admin = PostfixAdmin::Admin.new
     admin.attributes = {
@@ -60,17 +60,17 @@ class PostfixAdmin::Base
 
   def add_account(address, password)
     if address !~ /.+\@.+\..+/
-      raise "Error: Invalid mail address! #{address}"
+      raise "Invalid mail address! #{address}"
     end
     user, domain = address.split(/@/)
     path = "#{domain}/#{address}/"
 
     unless domain_exist?(domain)
-      raise "Error: Invalid domain! #{address}"
+      raise "Invalid domain! #{address}"
     end
 
     if alias_exist?(address)
-      raise "Error: #{address} is already resistered."
+      raise "#{address} is already resistered."
     end
     mail_alias = PostfixAdmin::Alias.new
     mail_alias.attributes = {
@@ -126,10 +126,10 @@ class PostfixAdmin::Base
 
   def add_domain(domain_name)
     if domain_name !~ /.+\..+/
-      raise "Error: Ivalid domain! #{domain_name}"
+      raise "Ivalid domain! #{domain_name}"
     end
     if domain_exist?(domain_name)
-      raise "Error: #{domain_name} is already registered!"
+      raise "#{domain_name} is already registered!"
     end
     domain = PostfixAdmin::Domain.new
     domain.attributes = {
@@ -146,16 +146,16 @@ class PostfixAdmin::Base
 
   def delete_domain(domain)
     unless domain_exist?(domain)
-      raise "Error: #{domain} is not found!"
+      raise "#{domain} is not found!"
     end
 
-    PostfixAdmin::Mailbox.all(:domain => domain).destroy or raise "Error: Cannot destroy Mailbox"
-    PostfixAdmin::Alias.all(:domain => domain).destroy or raise "Error: Cannot destroy Alias"
+    PostfixAdmin::Mailbox.all(:domain => domain).destroy or raise "Cannot destroy Mailbox"
+    PostfixAdmin::Alias.all(:domain => domain).destroy or raise "Cannot destroy Alias"
     d_domain = PostfixAdmin::Domain.first(:domain => domain)
-    d_domain.domain_admins.destroy or raise "Error: Cannot destroy DomainAdmin"
+    d_domain.domain_admins.destroy or raise "Cannot destroy DomainAdmin"
     delete_unnecessary_admins
 
-    d_domain.destroy or raise "Error: Cannot destroy Domain"
+    d_domain.destroy or raise "Cannot destroy Domain"
   end
 
   def delete_admin(user_name)
@@ -173,7 +173,7 @@ class PostfixAdmin::Base
   end
 
   def delete_unnecessary_admins
-    PostfixAdmin::Admin.unnecessary.destroy or raise "Error: Cannnot destroy Admin"
+    PostfixAdmin::Admin.unnecessary.destroy or raise "Cannnot destroy Admin"
   end
 
   def admin_domain_exist?(username, domain)
