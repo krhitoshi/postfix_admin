@@ -69,12 +69,12 @@ def db_initialize
     :name     => '',
     :maildir  => path,
     :quota    => 100 * 1024 * 1000,
-    :domain   => domain_name,
     # :local_part => user,
     :created  => DateTime.now,
     :modified => DateTime.now
   }
-  mailbox.save
+  domain.has_mailboxes << mailbox
+  domain.save
 end
 
 DataMapper.setup(:default, 'sqlite::memory:')
