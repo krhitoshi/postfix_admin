@@ -153,12 +153,12 @@ class PostfixAdmin
       end
 
       domain = Domain.find(domain_name)
-      domain.has_mailboxes.destroy or raise "Cannot destroy Mailbox"
-      domain.has_aliases.destroy or raise "Cannot destroy Alias"
-      domain.domain_admins.destroy or raise "Cannot destroy DomainAdmin"
+      domain.has_mailboxes.destroy or raise "Could not destroy Mailbox"
+      domain.has_aliases.destroy or raise "Could not destroy Alias"
+      domain.domain_admins.destroy or raise "Could not destroy DomainAdmin"
       delete_unnecessary_admins
 
-      domain.destroy or raise "Cannot destroy Domain"
+      domain.destroy or raise "Could not destroy Domain"
     end
 
     def delete_admin(user_name)
@@ -166,17 +166,17 @@ class PostfixAdmin
         raise "admin #{user_name} is not found!"
       end
       admin = Admin.first(:username => user_name)
-      admin.domain_admins.destroy or raise "Cannot destroy DomainAdmin"
-      admin.destroy or raise "Cannnot destroy Admin"
+      admin.domain_admins.destroy or raise "Could not destroy DomainAdmin"
+      admin.destroy or raise "Could not destroy Admin"
     end
 
     def delete_account(address)
-      Mailbox.all(:username => address).destroy or raise "Cannnot destroy Mailbox"
-      Alias.all(:address => address).destroy or raise "Cannnot destroy Alias"
+      Mailbox.all(:username => address).destroy or raise "Could not destroy Mailbox"
+      Alias.all(:address => address).destroy or raise "Could not destroy Alias"
     end
 
     def delete_unnecessary_admins
-      Admin.unnecessary.destroy or raise "Cannnot destroy Admin"
+      Admin.unnecessary.destroy or raise "Could not destroy Admin"
     end
 
     def admin_domain_exist?(username, domain)
