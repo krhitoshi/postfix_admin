@@ -5,8 +5,8 @@ class PostfixAdmin
     include ::DataMapper::Resource
     property :username, String, :key => true
     property :password, String
-    property :created, DateTime
-    property :modified, DateTime
+    property :created, DateTime, :default => DateTime.now
+    property :modified, DateTime, :default => DateTime.now
 
     has n, :domain_admins, :child_key => :username
     has n, :domains, :model => 'Domain', :through => :domain_admins, :via => :p_domain
