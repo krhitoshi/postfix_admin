@@ -16,10 +16,10 @@ end
 
 def db_clear
   PostfixAdmin::DomainAdmin.all.destroy
+  PostfixAdmin::Mailbox.all.destroy
   PostfixAdmin::Domain.all.destroy
   PostfixAdmin::Admin.all.destroy
   PostfixAdmin::Alias.all.destroy
-  PostfixAdmin::Mailbox.all.destroy
 end
 
 def db_initialize

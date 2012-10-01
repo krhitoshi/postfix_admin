@@ -31,6 +31,8 @@ class PostfixAdmin
 
     has n, :domain_admins, :child_key => :domain
     has n, :admins, :model => 'Admin', :through => :domain_admins
+
+    has n, :has_mailboxes, :model => 'Mailbox', :child_key => :domain
     storage_names[:default] = 'domain'
   end
 
@@ -54,6 +56,8 @@ class PostfixAdmin
     #  property :local_part, String
     property :created, DateTime, :default => DateTime.now
     property :modified, DateTime, :default => DateTime.now
+
+    belongs_to :p_domain, :model => 'Domain', :child_key => :domain
 
     storage_names[:default] = 'mailbox'
   end
