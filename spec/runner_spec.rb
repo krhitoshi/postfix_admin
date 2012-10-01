@@ -32,11 +32,11 @@ describe PostfixAdmin::Runner do
     end
 
     it "You can not delete mailbox alias." do
-      lambda { PostfixAdmin::Runner.start(['delete_alias', 'user@example.com']) }.should raise_error
+      capture(:stderr){ PostfixAdmin::Runner.start(['delete_alias', 'user@example.com']) }.should =~ /Can not delete mailbox/
     end
 
     it "You can not add an alias for existed mailbox" do
-      lambda { PostfixAdmin::Runner.start(['add_alias', 'user@example.com', 'goto@example.jp']) }.should raise_error
+      capture(:stderr){ PostfixAdmin::Runner.start(['add_alias', 'user@example.com', 'goto@example.jp']) }.should =~ /mailbox user@example.com is already registered!/
     end
   end
 
