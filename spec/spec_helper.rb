@@ -42,8 +42,6 @@ def db_initialize
   admin.attributes = {
     :username => username,
     :password => 'password',
-    :created  => DateTime.now,
-    :modified => DateTime.now
   }
   admin.save
 
@@ -56,8 +54,6 @@ def db_initialize
     :address  => address,
     :goto     => address,
     :domain   => domain_name,
-    :created  => DateTime.now,
-    :modified => DateTime.now
   }
   mail_alias.save
 
@@ -70,8 +66,6 @@ def db_initialize
     :maildir  => path,
     :quota    => 100 * 1024 * 1000,
     # :local_part => user,
-    :created  => DateTime.now,
-    :modified => DateTime.now
   }
   domain.has_mailboxes << mailbox
   domain.save
