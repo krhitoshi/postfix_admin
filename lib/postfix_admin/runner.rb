@@ -47,13 +47,7 @@ module PostfixAdmin
     desc "delete_admin", "Delete an admin"
     def delete_admin(user_name=nil)
       runner do
-        if user_name
-          if @cli.delete_admin(user_name)
-            puts %Q!"#{user_name}" is successfully deleted.!
-          end
-        else
-          exit_with_usage('delete_admin', 'admin@example.com')
-        end
+        @cli.delete_admin(user_name)
       end
     end
 
