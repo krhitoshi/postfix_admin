@@ -1,4 +1,5 @@
 require 'postfix_admin/models'
+require 'postfix_admin/error'
 
 require 'date'
 require 'data_mapper'
@@ -132,7 +133,7 @@ module PostfixAdmin
         raise "Ivalid domain! #{domain_name}"
       end
       if domain_exist?(domain_name)
-        raise "#{domain_name} is already registered!"
+        raise Error, "#{domain_name} is already registered!"
       end
       domain = Domain.new
       domain.attributes = {

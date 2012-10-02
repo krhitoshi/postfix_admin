@@ -85,6 +85,7 @@ describe PostfixAdmin::Base do
   end
 
   it "#add_domain" do
+    lambda{ @base.add_domain('example.com') }.should raise_error Error
     if @base.domain_exist?('example.net')
       @base.delete_domain('example.net')
     end
