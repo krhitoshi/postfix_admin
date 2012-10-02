@@ -46,7 +46,7 @@ module PostfixAdmin
     def setup_domain(domain, password)
       if domain && password
         admin = "admin@#{domain}"
-        add_domain(domain)
+        @admin.add_domain(domain)
         add_admin(admin, password)
         add_admin_domain(admin, domain)
       else
@@ -63,6 +63,16 @@ module PostfixAdmin
         puts "%4d %-20s %3d /%3d   %3d /%3d %10d" % [i+1, domain.domain, @admin.num_total_aliases(domain.domain), domain.aliases, @admin.mailboxes(domain.domain).size, domain.mailboxes, domain.maxquota]
       end
       print_line
+    end
+
+    def add_domain(domain)
+      if domain
+        if @admin.add_domain(domain)
+          puts %Q!"#{domain}" is successfully registered.!
+        end
+      else
+        exit_with_usage('add_domain', 'example.com')
+      end
     end
 
     def admin_exist?(admin)
@@ -145,10 +155,6 @@ module PostfixAdmin
         puts "%4d %-20s" % [i+1, domain_admin.domain]
       end
       print_line
-    end
-
-    def add_domain(domain)
-      @admin.add_domain(domain)
     end
 
     def add_admin(user_name, password)

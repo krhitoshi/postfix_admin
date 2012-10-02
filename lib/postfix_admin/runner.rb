@@ -33,13 +33,7 @@ module PostfixAdmin
     desc "add_domain", "Add a domain"
     def add_domain(domain=nil)
       runner do
-        if domain
-          if @cli.add_domain(domain)
-            puts %Q!"#{domain}" is successfully registered.!
-          end
-        else
-          exit_with_usage('add_domain', 'example.com')
-        end
+        @cli.add_domain(domain)
       end
     end
 
