@@ -90,7 +90,8 @@ module PostfixAdmin
   end
 end
 
-EX_DELETED = /successfully deleted/
+EX_DELETED    = /successfully deleted/
+EX_REGISTERED = /successfully registered/
 
 RSpec.configure do |config|
   config.before do
