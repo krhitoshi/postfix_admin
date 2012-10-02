@@ -89,13 +89,7 @@ module PostfixAdmin
     desc "delete_alias", "Delete an alias"
     def delete_alias(address=nil)
       runner do
-        if address
-          if @cli.delete_alias(address)
-            puts %Q!"#{address}" is successfully deleted.!
-          end
-        else
-          exit_with_usage('delete_alias', 'alias@example.com')
-        end
+        @cli.delete_alias(address)
       end
     end
 
