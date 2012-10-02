@@ -44,8 +44,8 @@ module PostfixAdmin
       end
     end
 
-    desc "delete_admin", "Delete an admin"
-    def delete_admin(user_name=nil)
+    desc "delete_admin admin@example.com", "Delete an admin"
+    def delete_admin(user_name)
       runner do
         @cli.delete_admin(user_name)
       end

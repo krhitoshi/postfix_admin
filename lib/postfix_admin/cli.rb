@@ -208,12 +208,8 @@ module PostfixAdmin
     end
 
     def delete_admin(user_name)
-      if user_name
-        if @admin.delete_admin(user_name)
-          puts %Q!"#{user_name}" is successfully deleted.!
-        end
-      else
-        exit_with_usage('delete_admin', 'admin@example.com')
+      if @admin.delete_admin(user_name)
+        puts %Q!"#{user_name}" is successfully deleted.!
       end
     end
 
