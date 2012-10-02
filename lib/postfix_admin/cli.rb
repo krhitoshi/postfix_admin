@@ -200,7 +200,13 @@ module PostfixAdmin
     end
 
     def add_alias(address, goto)
-      @admin.add_alias(address, goto)
+      if address && goto
+        if @admin.add_alias(address, goto)
+          puts %Q!"#{address}: #{goto}" is successfully registered as alias.!
+        end
+      else
+        exit_with_usage('add_alias', 'alias@example.com goto@example.com')
+      end
     end
 
     def delete_alias(address)

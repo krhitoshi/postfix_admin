@@ -31,7 +31,7 @@ describe PostfixAdmin::Runner do
 
   describe "#add_alias and #delete_alias" do
     it "You can add and delete an new alias." do
-      lambda { PostfixAdmin::Runner.start(['add_alias', 'alias@example.com', 'goto@example.jp']) }.should_not raise_error
+      capture(:stdout){ PostfixAdmin::Runner.start(['add_alias', 'alias@example.com', 'goto@example.jp']) }.should =~ /successfully registered/
       lambda { PostfixAdmin::Runner.start(['delete_alias', 'alias@example.com']) }.should_not raise_error
     end
 
