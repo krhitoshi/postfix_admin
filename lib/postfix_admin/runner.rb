@@ -79,8 +79,8 @@ module PostfixAdmin
       end
     end
 
-    desc "add_alias", "Add an alias"
-    def add_alias(address=nil, goto=nil)
+    desc "add_alias alias@example.com goto@example.net", "Add an alias"
+    def add_alias(address, goto)
       runner do
         @cli.add_alias(address, goto)
       end
