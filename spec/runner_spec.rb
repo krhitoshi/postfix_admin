@@ -52,7 +52,7 @@ describe PostfixAdmin::Runner do
 
   it "#add_account and #delete_account" do
     capture(:stdout){ PostfixAdmin::Runner.start(['add_account', 'user2@example.com', 'password']) }.should =~ /successfully registered/
-    capture(:stdout){ PostfixAdmin::Runner.start(['delete_account', 'user2@example.com']) }.should =~ /uccessfully deleted/
+    capture(:stdout){ PostfixAdmin::Runner.start(['delete_account', 'user2@example.com']) }.should =~ /successfully deleted/
   end
 
   it "add and delete methods" do
