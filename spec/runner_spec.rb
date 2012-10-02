@@ -6,6 +6,10 @@ describe PostfixAdmin::Runner do
     db_initialize
   end
 
+  it "#version" do
+    capture(:stdout){ PostfixAdmin::Runner.start(["version"]) }.should =~ /postfix_admin \d+\.\d+\.\d/
+  end
+
   it "#summary" do
     capture(:stderr){ PostfixAdmin::Runner.start(["summary"]) }.should_not =~ /Could not find task/
   end
