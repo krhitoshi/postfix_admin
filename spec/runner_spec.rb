@@ -11,7 +11,7 @@ describe PostfixAdmin::Runner do
   end
 
   it "#summary" do
-    capture(:stderr){ PostfixAdmin::Runner.start(["summary"]) }.should_not =~ /Could not find task/
+    capture(:stdout){ PostfixAdmin::Runner.start(["summary"]) }.should =~ /\[Summary\]/
   end
 
   describe "#show" do
