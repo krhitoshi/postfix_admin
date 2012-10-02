@@ -11,6 +11,18 @@ class PostfixAdmin
       @admin = PostfixAdmin::Base.new(@config)
     end
 
+    def show(domain)
+      show_summary(domain)
+
+      if domain
+        show_domain_account(domain)
+        show_domain_aliases(domain)
+      else
+        show_domain
+        show_admin
+      end
+    end
+
     def show_summary(domain=nil)
       if domain
         unless @admin.domain_exist?(domain)

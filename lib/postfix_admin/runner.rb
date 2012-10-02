@@ -17,15 +17,7 @@ class PostfixAdmin
     desc "show", "List of domains"
     def show(domain=nil)
       runner do
-        @cli.show_summary(domain)
-
-        if domain
-          @cli.show_domain_account(domain)
-          @cli.show_domain_aliases(domain)
-        else
-          @cli.show_domain
-          @cli.show_admin
-        end
+        @cli.show(domain)
       end
     end
 
