@@ -68,13 +68,7 @@ module PostfixAdmin
     desc "add_admin", "Add an admin user"
     def add_admin(user_name=nil, password=nil)
       runner do
-        if user_name && password
-          if @cli.add_admin(user_name, password)
-            puts %Q!"#{user_name}" is successfully registered as admin.!
-          end
-        else
-          exit_with_usage('add_admin', 'user@example.com password')
-        end
+        @cli.add_admin(user_name, password)
       end
     end
 

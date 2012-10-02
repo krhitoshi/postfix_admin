@@ -168,8 +168,14 @@ module PostfixAdmin
     end
 
     def add_admin(user_name, password)
-      validate_password(password)
-      @admin.add_admin(user_name, password)
+      if user_name && password
+        validate_password(password)
+        if @admin.add_admin(user_name, password)
+          puts %Q!"#{user_name}" is successfully registered as admin.!
+        end
+      else
+        exit_with_usage('add_admin', 'user@example.com password')
+      end
     end
 
     def add_admin_domain(user_name, domain)
