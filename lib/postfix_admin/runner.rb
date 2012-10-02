@@ -86,8 +86,8 @@ module PostfixAdmin
       end
     end
 
-    desc "delete_alias", "Delete an alias"
-    def delete_alias(address=nil)
+    desc "delete_alias alias@example.com", "Delete an alias"
+    def delete_alias(address)
       runner do
         @cli.delete_alias(address)
       end

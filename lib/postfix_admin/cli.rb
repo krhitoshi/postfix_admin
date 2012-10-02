@@ -194,12 +194,8 @@ module PostfixAdmin
     end
 
     def delete_alias(address)
-      if address
-        if @admin.delete_alias(address)
-          puts %Q!"#{address}" is successfully deleted.!
-        end
-      else
-        exit_with_usage('delete_alias', 'alias@example.com')
+      if @admin.delete_alias(address)
+        puts %Q!"#{address}" is successfully deleted.!
       end
     end
 
