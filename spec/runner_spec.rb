@@ -25,7 +25,7 @@ describe PostfixAdmin::Runner do
   end
 
   it "#setup" do
-    capture(:stderr){ PostfixAdmin::Runner.start(['setup', 'example.net', 'password']) }.should_not =~ /Could not find task/
+    capture(:stdout){ PostfixAdmin::Runner.start(['setup', 'example.net', 'password']) }.should =~ /successfully registered/
     capture(:stdout){ PostfixAdmin::Runner.start(['delete_domain', 'example.net']) }.should =~ /successfully deleted/
   end
 

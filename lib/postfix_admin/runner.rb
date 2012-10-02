@@ -40,13 +40,7 @@ module PostfixAdmin
     desc "delete_domain", "Delete a domain"
     def delete_domain(domain=nil)
       runner do
-        if domain
-          if @cli.delete_domain(domain)
-            puts %Q!"#{domain}" is successfully deleted.!
-          end
-        else
-          exit_with_usage('delete_domain', 'example.com')
-        end
+        @cli.delete_domain(domain)
       end
     end
 

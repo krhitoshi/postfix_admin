@@ -46,7 +46,7 @@ module PostfixAdmin
     def setup_domain(domain, password)
       if domain && password
         admin = "admin@#{domain}"
-        @admin.add_domain(domain)
+        add_domain(domain)
         add_admin(admin, password)
         add_admin_domain(admin, domain)
       else
@@ -72,6 +72,16 @@ module PostfixAdmin
         end
       else
         exit_with_usage('add_domain', 'example.com')
+      end
+    end
+
+    def delete_domain(domain)
+      if domain
+        if @admin.delete_domain(domain)
+          puts %Q!"#{domain}" is successfully deleted.!
+        end
+      else
+        exit_with_usage('delete_domain', 'example.com')
       end
     end
 
@@ -177,10 +187,6 @@ module PostfixAdmin
 
     def delete_alias(address)
       @admin.delete_alias(address)
-    end
-
-    def delete_domain(domain)
-      @admin.delete_domain(domain)
     end
 
     def delete_admin(user_name)

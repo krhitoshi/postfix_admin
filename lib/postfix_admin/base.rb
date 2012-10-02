@@ -149,7 +149,7 @@ module PostfixAdmin
 
     def delete_domain(domain_name)
       unless domain_exist?(domain_name)
-        raise "#{domain} is not found!"
+        raise "#{domain_name} is not found!"
       end
 
       domain = Domain.find(domain_name)
