@@ -51,8 +51,8 @@ module PostfixAdmin
       end
     end
 
-    desc "delete_account", "Delete an account"
-    def delete_account(address=nil)
+    desc "delete_account user@example.com", "Delete an account"
+    def delete_account(address)
       runner do
         @cli.delete_account(address)
       end
