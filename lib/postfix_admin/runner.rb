@@ -101,11 +101,6 @@ module PostfixAdmin
 
     private
 
-    def exit_with_usage(subcommand, args)
-      say "Usage: postfix_admin #{subcommand} #{args}"
-      exit
-    end
-
     def runner
       begin
         yield
