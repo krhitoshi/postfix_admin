@@ -90,6 +90,8 @@ module PostfixAdmin
   end
 end
 
+EX_DELETED = /successfully deleted/
+
 RSpec.configure do |config|
   config.before do
     ARGV.replace []

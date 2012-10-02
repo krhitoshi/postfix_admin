@@ -26,13 +26,13 @@ describe PostfixAdmin::Runner do
 
   it "#setup" do
     capture(:stdout){ PostfixAdmin::Runner.start(['setup', 'example.net', 'password']) }.should =~ /successfully registered/
-    capture(:stdout){ PostfixAdmin::Runner.start(['delete_domain', 'example.net']) }.should =~ /successfully deleted/
+    capture(:stdout){ PostfixAdmin::Runner.start(['delete_domain', 'example.net']) }.should =~ EX_DELETED
   end
 
   describe "#add_alias and #delete_alias" do
     it "You can add and delete an new alias." do
       capture(:stdout){ PostfixAdmin::Runner.start(['add_alias', 'alias@example.com', 'goto@example.jp']) }.should =~ /successfully registered/
-      capture(:stdout){ PostfixAdmin::Runner.start(['delete_alias', 'alias@example.com']) }.should =~ /successfully deleted/
+      capture(:stdout){ PostfixAdmin::Runner.start(['delete_alias', 'alias@example.com']) }.should =~ EX_DELETED
     end
 
     it "You can not delete mailbox alias." do
@@ -47,12 +47,12 @@ describe PostfixAdmin::Runner do
   it "#add_admin and #delete_admin" do
     capture(:stdout){ PostfixAdmin::Runner.start(['add_admin', 'admin@example.jp', 'password']) }.should =~ /successfully registered/
     capture(:stdout){ PostfixAdmin::Runner.start(['add_admin_domain', 'admin@example.jp', 'example.com']) }.should =~ /successfully registered/
-    capture(:stdout){ PostfixAdmin::Runner.start(['delete_admin', 'admin@example.jp']) }.should =~ /successfully deleted/
+    capture(:stdout){ PostfixAdmin::Runner.start(['delete_admin', 'admin@example.jp']) }.should =~ EX_DELETED
   end
 
   it "#add_account and #delete_account" do
     capture(:stdout){ PostfixAdmin::Runner.start(['add_account', 'user2@example.com', 'password']) }.should =~ /successfully registered/
-    capture(:stdout){ PostfixAdmin::Runner.start(['delete_account', 'user2@example.com']) }.should =~ /successfully deleted/
+    capture(:stdout){ PostfixAdmin::Runner.start(['delete_account', 'user2@example.com']) }.should =~ EX_DELETED
   end
 
   it "add and delete methods" do
