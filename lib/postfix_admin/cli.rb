@@ -66,22 +66,14 @@ module PostfixAdmin
     end
 
     def add_domain(domain)
-      if domain
-        if @admin.add_domain(domain)
-          puts %Q!"#{domain}" is successfully registered.!
-        end
-      else
-        exit_with_usage('add_domain', 'example.com')
+      if @admin.add_domain(domain)
+        puts %Q!"#{domain}" is successfully registered.!
       end
     end
 
     def delete_domain(domain)
-      if domain
-        if @admin.delete_domain(domain)
-          puts %Q!"#{domain}" is successfully deleted.!
-        end
-      else
-        exit_with_usage('delete_domain', 'example.com')
+      if @admin.delete_domain(domain)
+        puts %Q!"#{domain}" is successfully deleted.!
       end
     end
 

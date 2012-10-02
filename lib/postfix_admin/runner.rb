@@ -30,15 +30,15 @@ module PostfixAdmin
       end
     end
 
-    desc "add_domain", "Add a domain"
-    def add_domain(domain=nil)
+    desc "add_domain example.com", "Add a domain"
+    def add_domain(domain)
       runner do
         @cli.add_domain(domain)
       end
     end
 
-    desc "delete_domain", "Delete a domain"
-    def delete_domain(domain=nil)
+    desc "delete_domain example.com", "Delete a domain"
+    def delete_domain(domain)
       runner do
         @cli.delete_domain(domain)
       end
