@@ -200,7 +200,13 @@ module PostfixAdmin
     end
 
     def delete_account(address)
-      @admin.delete_account(address)
+      if address
+        if @admin.delete_account(address)
+          puts %Q!"#{address}" is successfully deleted.!
+        end
+      else
+        exit_with_usage('delete_account', 'user@example.com')
+      end
     end
 
     private

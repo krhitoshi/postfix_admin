@@ -54,14 +54,7 @@ module PostfixAdmin
     desc "delete_account", "Delete an account"
     def delete_account(address=nil)
       runner do
-        if address
-          if @cli.delete_account(address)
-            puts %Q!"#{address}" is successfully deleted.!
-          end
-          @cli.show_domain
-        else
-          exit_with_usage('delete_account', 'user@example.com')
-        end
+        @cli.delete_account(address)
       end
     end
 
