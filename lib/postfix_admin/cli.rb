@@ -233,11 +233,5 @@ module PostfixAdmin
       end
     end
 
-    private
-
-    def exit_with_usage(subcommand, args)
-      puts "Usage: postfix_admin #{subcommand} #{args}"
-      exit
-    end
   end
 end
