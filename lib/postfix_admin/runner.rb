@@ -11,7 +11,9 @@ class PostfixAdmin
 
     desc "summary", "Summarize the usage of PostfixAdmin"
     def summary
-      @cli.show_summary
+      runner do
+        @cli.show_summary
+      end
     end
 
     desc "show", "List of domains"
