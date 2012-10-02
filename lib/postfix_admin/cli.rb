@@ -158,7 +158,7 @@ module PostfixAdmin
     def add_admin(user_name, password)
       validate_password(password)
       if @base.add_admin(user_name, password)
-        puts %Q!"#{user_name}" was successfully registered as admin.!
+        puts %Q!"#{user_name}" was successfully registered as an admin.!
       end
     end
 
@@ -171,35 +171,33 @@ module PostfixAdmin
     def add_account(address, password)
       validate_password(password)
       if @base.add_account(address, password)
-        puts %Q!"#{address}" was successfully registered.!
+        puts %Q!"#{address}" was successfully registered as an account.!
       end
     end
 
     def add_alias(address, goto)
       if @base.add_alias(address, goto)
-        puts %Q!"#{address}: #{goto}" was successfully registered as alias.!
+        puts %Q!"#{address}: #{goto}" was successfully registered as an alias.!
       end
     end
 
     def delete_alias(address)
-      if @base.delete_alias(address)
-        puts %Q!"#{address}" was successfully deleted.!
-      end
+      puts_deleted(address) if @base.delete_alias(address)
     end
 
     def delete_admin(user_name)
-      if @base.delete_admin(user_name)
-        puts %Q!"#{user_name}" was successfully deleted.!
-      end
+      puts_deleted(user_name) if @base.delete_admin(user_name)
     end
 
     def delete_account(address)
-      if @base.delete_account(address)
-        puts %Q!"#{address}" was successfully deleted.!
-      end
+      puts_deleted(address) if @base.delete_account(address)
     end
 
     private
+
+    def puts_deleted(name)
+      puts %Q!"#{name}" was successfully deleted.!
+    end
 
     def config_file
       config_file = File.expand_path(CONFIG_FILE)
