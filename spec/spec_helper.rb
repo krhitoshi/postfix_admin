@@ -11,23 +11,25 @@ module PostfixAdmin
   end
 end
 
+include PostfixAdmin
+
 # [fixtures]
 # example.com
 # admin@example.com
 # user@example.com
 
 def db_clear
-  PostfixAdmin::DomainAdmin.all.destroy
-  PostfixAdmin::Mailbox.all.destroy
-  PostfixAdmin::Alias.all.destroy
-  PostfixAdmin::Domain.all.destroy
-  PostfixAdmin::Admin.all.destroy
+  DomainAdmin.all.destroy
+  Mailbox.all.destroy
+  Alias.all.destroy
+  Domain.all.destroy
+  Admin.all.destroy
 end
 
 def db_initialize
   db_clear
   domain_name = 'example.com'
-  domain = PostfixAdmin::Domain.new
+  domain = Domain.new
   domain.attributes = {
     :domain      => domain_name,
     :description => domain_name,
@@ -40,7 +42,7 @@ def db_initialize
   domain.save
 
   username = "admin@#{domain_name}"
-  admin = PostfixAdmin::Admin.new
+  admin = Admin.new
   admin.attributes = {
     :username => username,
     :password => 'password',
@@ -51,7 +53,7 @@ def db_initialize
   domain.save
 
   address = "user@#{domain_name}"
-  mail_alias = PostfixAdmin::Alias.new
+  mail_alias = Alias.new
   mail_alias.attributes = {
     :address  => address,
     :goto     => address,
@@ -60,7 +62,7 @@ def db_initialize
   mail_alias.save
 
   path = "#{domain_name}/#{address}/"
-  mailbox = PostfixAdmin::Mailbox.new
+  mailbox = Mailbox.new
   mailbox.attributes = {
     :username => address,
     :password => 'password',
