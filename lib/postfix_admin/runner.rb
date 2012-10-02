@@ -75,13 +75,7 @@ module PostfixAdmin
     desc "add_admin_domain", "Add admin_domain"
     def add_admin_domain(user_name=nil, domain=nil)
       runner do
-        if user_name && domain
-          if @cli.add_admin_domain(user_name, domain)
-            puts %Q!"#{domain}" is appended in the domains of #{user_name}.!
-          end
-        else
-          exit_with_usage('add_admin_domain', 'user@example.com example.com')
-        end
+        @cli.add_admin_domain(user_name, domain)
       end
     end
 

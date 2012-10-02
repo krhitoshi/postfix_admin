@@ -179,7 +179,13 @@ module PostfixAdmin
     end
 
     def add_admin_domain(user_name, domain)
-      @admin.add_admin_domain(user_name, domain)
+      if user_name && domain
+        if @admin.add_admin_domain(user_name, domain)
+          puts %Q!"#{domain}" is successfully registered as a domain of #{user_name}.!
+        end
+      else
+        exit_with_usage('add_admin_domain', 'user@example.com example.com')
+      end
     end
 
     def add_account(address, password)

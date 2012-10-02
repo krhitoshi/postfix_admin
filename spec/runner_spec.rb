@@ -46,7 +46,7 @@ describe PostfixAdmin::Runner do
 
   it "#add_admin and #delete_admin" do
     capture(:stdout){ PostfixAdmin::Runner.start(['add_admin', 'admin@example.jp', 'password']) }.should =~ /successfully registered/
-    capture(:stderr){ PostfixAdmin::Runner.start(['add_admin_domain', 'admin@example.jp', 'example.com']) }.should_not =~ /Could not find task/
+    capture(:stdout){ PostfixAdmin::Runner.start(['add_admin_domain', 'admin@example.jp', 'example.com']) }.should =~ /successfully registered/
     capture(:stdout){ PostfixAdmin::Runner.start(['delete_admin', 'admin@example.jp']) }.should =~ /successfully deleted/
   end
 
