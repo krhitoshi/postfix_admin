@@ -156,34 +156,22 @@ module PostfixAdmin
     end
 
     def add_admin(user_name, password)
-      if user_name && password
-        validate_password(password)
-        if @admin.add_admin(user_name, password)
-          puts %Q!"#{user_name}" is successfully registered as admin.!
-        end
-      else
-        exit_with_usage('add_admin', 'user@example.com password')
+      validate_password(password)
+      if @admin.add_admin(user_name, password)
+        puts %Q!"#{user_name}" is successfully registered as admin.!
       end
     end
 
     def add_admin_domain(user_name, domain)
-      if user_name && domain
-        if @admin.add_admin_domain(user_name, domain)
-          puts %Q!"#{domain}" is successfully registered as a domain of #{user_name}.!
-        end
-      else
-        exit_with_usage('add_admin_domain', 'user@example.com example.com')
+      if @admin.add_admin_domain(user_name, domain)
+        puts %Q!"#{domain}" is successfully registered as a domain of #{user_name}.!
       end
     end
 
     def add_account(address, password)
-      if address && password
-        validate_password(password)
-        if @admin.add_account(address, password)
-          puts %Q!"#{address}" is successfully registered.!
-        end
-      else
-        exit_with_usage('add_account', 'user@example.com password')
+      validate_password(password)
+      if @admin.add_account(address, password)
+        puts %Q!"#{address}" is successfully registered.!
       end
     end
 

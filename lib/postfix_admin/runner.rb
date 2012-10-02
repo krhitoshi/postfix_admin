@@ -58,22 +58,22 @@ module PostfixAdmin
       end
     end
 
-    desc "add_account", "Add an account"
-    def add_account(address=nil,password=nil)
+    desc "add_account user@example.com password", "Add an account"
+    def add_account(address, password)
       runner do
         @cli.add_account(address, password)
       end
     end
 
-    desc "add_admin", "Add an admin user"
-    def add_admin(user_name=nil, password=nil)
+    desc "add_admin admin@example.com password", "Add an admin user"
+    def add_admin(user_name, password)
       runner do
         @cli.add_admin(user_name, password)
       end
     end
 
-    desc "add_admin_domain", "Add admin_domain"
-    def add_admin_domain(user_name=nil, domain=nil)
+    desc "add_admin_domain admin@example.com example.com", "Add admin_domain"
+    def add_admin_domain(user_name, domain)
       runner do
         @cli.add_admin_domain(user_name, domain)
       end
