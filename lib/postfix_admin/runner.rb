@@ -26,14 +26,7 @@ module PostfixAdmin
     desc "setup", "Setup a domain"
     def setup_domain(domain=nil, password=nil)
       runner do
-        if domain && password
-          admin = "admin@#{domain}"
-          add_domain(domain)
-          add_admin(admin, password)
-          add_admin_domain(admin, domain)
-        else
-          exit_with_usage('setup', 'example.com password')
-        end
+        @cli.setup_domain(domain, password)
       end
     end
 

@@ -26,7 +26,7 @@ describe PostfixAdmin::Runner do
 
   it "#setup" do
     capture(:stderr){ PostfixAdmin::Runner.start(['setup', 'example.net', 'password']) }.should_not =~ /Could not find task/
-    lambda { PostfixAdmin::Runner.start(['delete_domain', 'example.net']) }.should_not raise_error
+    capture(:stdout){ PostfixAdmin::Runner.start(['delete_domain', 'example.net']) }.should =~ /successfully deleted/
   end
 
   describe "#add_alias and #delete_alias" do

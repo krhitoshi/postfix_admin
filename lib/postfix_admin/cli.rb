@@ -43,6 +43,17 @@ module PostfixAdmin
       print_line
     end
 
+    def setup_domain(domain, password)
+      if domain && password
+        admin = "admin@#{domain}"
+        add_domain(domain)
+        add_admin(admin, password)
+        add_admin_domain(admin, domain)
+      else
+        exit_with_usage('setup', 'example.com password')
+      end
+    end
+
     def show_domain
       puts "\n[Domains]"
       print_line
@@ -206,6 +217,13 @@ module PostfixAdmin
       if password.size < MIN_NUM_PASSWORD_CHARACTER
         raise "Password is too short. It should be larger than #{MIN_NUM_PASSWORD_CHARACTER}"
       end
+    end
+
+    private
+
+    def exit_with_usage(subcommand, args)
+      puts "Usage: postfix_admin #{subcommand} #{args}"
+      exit
     end
   end
 end
