@@ -23,8 +23,8 @@ module PostfixAdmin
       end
     end
 
-    desc "setup", "Setup a domain"
-    def setup_domain(domain=nil, password=nil)
+    desc "setup example.com password", "Setup a domain"
+    def setup_domain(domain, password)
       runner do
         @cli.setup_domain(domain, password)
       end

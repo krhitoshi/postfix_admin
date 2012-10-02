@@ -44,14 +44,10 @@ module PostfixAdmin
     end
 
     def setup_domain(domain, password)
-      if domain && password
-        admin = "admin@#{domain}"
-        add_domain(domain)
-        add_admin(admin, password)
-        add_admin_domain(admin, domain)
-      else
-        exit_with_usage('setup', 'example.com password')
-      end
+      admin = "admin@#{domain}"
+      add_domain(domain)
+      add_admin(admin, password)
+      add_admin_domain(admin, domain)
     end
 
     def show_domain
