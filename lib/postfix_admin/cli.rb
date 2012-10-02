@@ -177,8 +177,14 @@ module PostfixAdmin
     end
 
     def add_account(address, password)
-      validate_password(password)
-      @admin.add_account(address, password)
+      if address && password
+        validate_password(password)
+        if @admin.add_account(address, password)
+          puts %Q!"#{address}" is successfully registered.!
+        end
+      else
+        exit_with_usage('add_account', 'user@example.com password')
+      end
     end
 
     def add_alias(address, goto)

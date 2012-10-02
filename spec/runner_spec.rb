@@ -51,7 +51,7 @@ describe PostfixAdmin::Runner do
   end
 
   it "#add_account and #delete_account" do
-    capture(:stderr){ PostfixAdmin::Runner.start(['add_account', 'user2@example.com', 'password']) }.should_not =~ /Could not find task/
+    capture(:stdout){ PostfixAdmin::Runner.start(['add_account', 'user2@example.com', 'password']) }.should =~ /successfully registered/
     capture(:stdout){ PostfixAdmin::Runner.start(['delete_account', 'user2@example.com']) }.should =~ /uccessfully deleted/
   end
 

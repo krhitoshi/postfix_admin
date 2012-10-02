@@ -58,17 +58,10 @@ module PostfixAdmin
       end
     end
 
-
     desc "add_account", "Add an account"
     def add_account(address=nil,password=nil)
       runner do
-        if address && password
-          if @cli.add_account(address, password)
-            puts %Q!"#{address}" is successfully registered.!
-          end
-        else
-          exit_with_usage('add_account', 'user@example.com password')
-        end
+        @cli.add_account(address, password)
       end
     end
 
