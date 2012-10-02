@@ -8,7 +8,7 @@ module PostfixAdmin
 
     def initialize
       @config = load_config
-      @admin = PostfixAdmin::Base.new(@config)
+      @base = PostfixAdmin::Base.new(@config)
     end
 
     def show(domain)
@@ -25,7 +25,7 @@ module PostfixAdmin
 
     def show_summary(domain=nil)
       if domain
-        unless @admin.domain_exist?(domain)
+        unless @base.domain_exist?(domain)
           raise %Q!Could not find domain "#{domain}"!
         end
         puts "[Summary of #{domain}]"
@@ -34,12 +34,12 @@ module PostfixAdmin
       end
       print_line
       unless domain
-        puts "Domains   : %4d" % @admin.domains.count
-        puts "Admins    : %4d" % @admin.admins.count
+        puts "Domains   : %4d" % @base.domains.count
+        puts "Admins    : %4d" % @base.admins.count
       end
 
-      puts "Mailboxes : %4d" % @admin.mailboxes(domain).count
-      puts "Aliases   : %4d" % @admin.num_total_aliases(domain)
+      puts "Mailboxes : %4d" % @base.mailboxes(domain).count
+      puts "Aliases   : %4d" % @base.num_total_aliases(domain)
       print_line
     end
 
@@ -55,34 +55,34 @@ module PostfixAdmin
       print_line
       puts " No. Domain                Aliases   Mailboxes     Quota (MB)"
       print_line
-      @admin.domains.each_with_index do |domain, i|
-        puts "%4d %-20s %3d /%3d   %3d /%3d %10d" % [i+1, domain.domain, @admin.num_total_aliases(domain.domain), domain.aliases, @admin.mailboxes(domain.domain).size, domain.mailboxes, domain.maxquota]
+      @base.domains.each_with_index do |domain, i|
+        puts "%4d %-20s %3d /%3d   %3d /%3d %10d" % [i+1, domain.domain, @base.num_total_aliases(domain.domain), domain.aliases, @base.mailboxes(domain.domain).size, domain.mailboxes, domain.maxquota]
       end
       print_line
     end
 
     def add_domain(domain)
-      if @admin.add_domain(domain)
+      if @base.add_domain(domain)
         puts %Q!"#{domain}" is successfully registered.!
       end
     end
 
     def delete_domain(domain)
-      if @admin.delete_domain(domain)
+      if @base.delete_domain(domain)
         puts %Q!"#{domain}" is successfully deleted.!
       end
     end
 
     def admin_exist?(admin)
-      @admin.admin_exist?(admin)
+      @base.admin_exist?(admin)
     end
 
     def alias_exist?(address)
-      @admin.alias_exist?(address)
+      @base.alias_exist?(address)
     end
 
     def show_admin
-      admins = @admin.admins
+      admins = @base.admins
       if admins.count == 0
         puts "\nNo admin in database"
         return
@@ -103,7 +103,7 @@ module PostfixAdmin
     end
 
     def show_domain_account(domain)
-      mailboxes = @admin.mailboxes(domain)
+      mailboxes = @base.mailboxes(domain)
       if mailboxes.count == 0
         puts "\nNo address in #{domain}"
         return
@@ -121,7 +121,7 @@ module PostfixAdmin
     end
 
     def show_domain_aliases(domain)
-      aliases = @admin.aliases(domain).find_all do |mail_alias|
+      aliases = @base.aliases(domain).find_all do |mail_alias|
         mail_alias.address != mail_alias.goto
       end
 
@@ -140,7 +140,7 @@ module PostfixAdmin
     end
 
     def show_admin_domain(user_name)
-      domain_admins = @admin.admin_domains(user_name)
+      domain_admins = @base.admin_domains(user_name)
       if domain_admins.count == 0
         puts "\nNo domain in database"
         return
@@ -157,44 +157,44 @@ module PostfixAdmin
 
     def add_admin(user_name, password)
       validate_password(password)
-      if @admin.add_admin(user_name, password)
+      if @base.add_admin(user_name, password)
         puts %Q!"#{user_name}" is successfully registered as admin.!
       end
     end
 
     def add_admin_domain(user_name, domain)
-      if @admin.add_admin_domain(user_name, domain)
+      if @base.add_admin_domain(user_name, domain)
         puts %Q!"#{domain}" is successfully registered as a domain of #{user_name}.!
       end
     end
 
     def add_account(address, password)
       validate_password(password)
-      if @admin.add_account(address, password)
+      if @base.add_account(address, password)
         puts %Q!"#{address}" is successfully registered.!
       end
     end
 
     def add_alias(address, goto)
-      if @admin.add_alias(address, goto)
+      if @base.add_alias(address, goto)
         puts %Q!"#{address}: #{goto}" is successfully registered as alias.!
       end
     end
 
     def delete_alias(address)
-      if @admin.delete_alias(address)
+      if @base.delete_alias(address)
         puts %Q!"#{address}" is successfully deleted.!
       end
     end
 
     def delete_admin(user_name)
-      if @admin.delete_admin(user_name)
+      if @base.delete_admin(user_name)
         puts %Q!"#{user_name}" is successfully deleted.!
       end
     end
 
     def delete_account(address)
-      if @admin.delete_account(address)
+      if @base.delete_account(address)
         puts %Q!"#{address}" is successfully deleted.!
       end
     end
