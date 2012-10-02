@@ -63,13 +63,13 @@ module PostfixAdmin
 
     def add_domain(domain)
       if @base.add_domain(domain)
-        puts %Q!"#{domain}" is successfully registered.!
+        puts %Q!"#{domain}" was successfully registered.!
       end
     end
 
     def delete_domain(domain)
       if @base.delete_domain(domain)
-        puts %Q!"#{domain}" is successfully deleted.!
+        puts %Q!"#{domain}" was successfully deleted.!
       end
     end
 
@@ -158,44 +158,44 @@ module PostfixAdmin
     def add_admin(user_name, password)
       validate_password(password)
       if @base.add_admin(user_name, password)
-        puts %Q!"#{user_name}" is successfully registered as admin.!
+        puts %Q!"#{user_name}" was successfully registered as admin.!
       end
     end
 
     def add_admin_domain(user_name, domain)
       if @base.add_admin_domain(user_name, domain)
-        puts %Q!"#{domain}" is successfully registered as a domain of #{user_name}.!
+        puts %Q!"#{domain}" was successfully registered as a domain of #{user_name}.!
       end
     end
 
     def add_account(address, password)
       validate_password(password)
       if @base.add_account(address, password)
-        puts %Q!"#{address}" is successfully registered.!
+        puts %Q!"#{address}" was successfully registered.!
       end
     end
 
     def add_alias(address, goto)
       if @base.add_alias(address, goto)
-        puts %Q!"#{address}: #{goto}" is successfully registered as alias.!
+        puts %Q!"#{address}: #{goto}" was successfully registered as alias.!
       end
     end
 
     def delete_alias(address)
       if @base.delete_alias(address)
-        puts %Q!"#{address}" is successfully deleted.!
+        puts %Q!"#{address}" was successfully deleted.!
       end
     end
 
     def delete_admin(user_name)
       if @base.delete_admin(user_name)
-        puts %Q!"#{user_name}" is successfully deleted.!
+        puts %Q!"#{user_name}" was successfully deleted.!
       end
     end
 
     def delete_account(address)
       if @base.delete_account(address)
-        puts %Q!"#{address}" is successfully deleted.!
+        puts %Q!"#{address}" was successfully deleted.!
       end
     end
 
