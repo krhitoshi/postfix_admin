@@ -2,7 +2,7 @@ require 'thor'
 require 'postfix_admin'
 require 'postfix_admin/cli'
 
-class PostfixAdmin
+module PostfixAdmin
   class Runner < Thor
     def initialize(*args)
       super

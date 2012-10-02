@@ -1,7 +1,7 @@
 require 'yaml'
 require 'postfix_admin'
 
-class PostfixAdmin
+module PostfixAdmin
   class CLI
     CONFIG_FILE = '~/.postfix_admin.conf'
     MIN_NUM_PASSWORD_CHARACTER = 5

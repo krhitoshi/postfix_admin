@@ -3,9 +3,11 @@ $:.unshift(File.join(File.dirname(__FILE__), "..", "lib"))
 
 require 'postfix_admin'
 
-class PostfixAdmin::CLI
-  def config_file
-    File.join(File.dirname(__FILE__) , 'postfix_admin.conf')
+module PostfixAdmin
+  class CLI
+    def config_file
+      File.join(File.dirname(__FILE__) , 'postfix_admin.conf')
+    end
   end
 end
 
@@ -76,12 +78,14 @@ DataMapper.finalize
 DataMapper.auto_migrate!
 db_initialize
 
-class PostfixAdmin::Base
+module PostfixAdmin
+  class Base
 
-  # without DataMapper setup
-  def db_setup(database)
-    unless database
-      raise ArgumentError
+    # without DataMapper setup
+    def db_setup(database)
+      unless database
+        raise ArgumentError
+      end
     end
   end
 end

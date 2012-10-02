@@ -3,7 +3,7 @@ require 'postfix_admin/models'
 require 'date'
 require 'data_mapper'
 
-class PostfixAdmin
+module PostfixAdmin
   class Base
     attr_reader :config
 

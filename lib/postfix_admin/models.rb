@@ -1,6 +1,6 @@
 require 'data_mapper'
 
-class PostfixAdmin
+module PostfixAdmin
   class Admin
     include ::DataMapper::Resource
     property :username, String, :key => true
