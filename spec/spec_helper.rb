@@ -14,10 +14,15 @@ end
 include PostfixAdmin
 
 # [fixtures]
-# example.com
-# example.org
-# admin@example.com
-# user@example.com
+# Domain:
+#  example.com
+#  example.org
+#
+# Admin:
+#  admin@example.com
+#
+# Mailbox, Alias:
+#  user@example.com
 
 def db_clear
   DomainAdmin.all.destroy
