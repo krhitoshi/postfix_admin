@@ -234,4 +234,17 @@ describe PostfixAdmin::Base do
       lambda{ @base.delete_admin('unknown_admin@example.com') }.should raise_error Error
     end
   end
+
+  describe "#delete_account" do
+    it "can delete an account" do
+      lambda{ @base.delete_account('user@example.com') }.should_not raise_error
+      @base.account_exist?('user@example.com').should be_false
+      @base.mailbox_exist?('user@example.com').should be_false
+      @base.alias_exist?('user@example.com').should be_false
+    end
+
+    it "can not delete unknown account" do
+      lambda{ @base.delete_account('unknown@example.com') }.should raise_error Error
+    end
+  end
 end

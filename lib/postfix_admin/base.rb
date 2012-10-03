@@ -170,6 +170,10 @@ module PostfixAdmin
     end
 
     def delete_account(address)
+      unless account_exist?(address)
+        raise Error, "Could not find account #{address}"
+      end
+
       Mailbox.all(:username => address).destroy or raise "Could not destroy Mailbox"
       Alias.all(:address => address).destroy or raise "Could not destroy Alias"
     end
