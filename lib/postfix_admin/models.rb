@@ -22,9 +22,7 @@ module PostfixAdmin
     end
 
     def super_admin?
-      !!domains.find do |domain|
-        domain.domain == 'ALL'
-      end
+      !!domains.find{ |domain| domain.domain == 'ALL' }
     end
 
     def self.find(username)

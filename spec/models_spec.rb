@@ -7,15 +7,15 @@ describe PostfixAdmin::Admin do
   end
 
   it "#super_admin?" do
-    Admin.find('admin@example.com').super_admin?.should be_false
-    Admin.find('all@example.com').super_admin?.should be_true
+    Admin.find('admin@example.com').super_admin?.should === false
+    Admin.find('all@example.com').super_admin?.should === true
   end
 
   it "#super_admin=" do
     Admin.find('admin@example.com').super_admin = true
-    Admin.find('admin@example.com').super_admin?.should be_true
+    Admin.find('admin@example.com').super_admin?.should === true
 
     Admin.find('all@example.com').super_admin = false
-    Admin.find('all@example.com').super_admin?.should be_false
+    Admin.find('all@example.com').super_admin?.should === false
   end
 end
