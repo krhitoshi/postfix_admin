@@ -148,7 +148,7 @@ module PostfixAdmin
 
     def delete_domain(domain_name)
       unless domain_exist?(domain_name)
-        raise "#{domain_name} is not found!"
+        raise Error, "Could not find domain #{domain_name}"
       end
 
       domain = Domain.find(domain_name)
@@ -162,7 +162,7 @@ module PostfixAdmin
 
     def delete_admin(user_name)
       unless admin_exist?(user_name)
-        raise "admin #{user_name} is not found!"
+        raise Error, "Could not find admin #{user_name}"
       end
       admin = Admin.find(user_name)
       admin.domain_admins.destroy or raise "Could not destroy DomainAdmin"

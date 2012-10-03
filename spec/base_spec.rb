@@ -200,33 +200,38 @@ describe PostfixAdmin::Base do
 
   describe "#delete_domain" do
     before do
-      unless @base.domain_exist?('example.net')
-        @base.add_domain('example.net')
-      end
-      @base.add_admin('admin@example.net', 'password')
+      @base.add_account('user2@example.com', 'password')
+      @base.add_account('user3@example.com', 'password')
 
-      @base.add_account('user@example.net', 'password')
-      @base.add_account('user2@example.net', 'password')
-      @base.add_account('user3@example.net', 'password')
-
-      @base.add_admin_domain('admin@example.net', 'example.net')
-      @base.delete_domain('example.net')
-   end
-
-    it "no domain" do
-      @base.domain_exist?('example.net').should be_false
+      @base.add_alias('alias2@example.com', 'goto2@example.jp')
+      @base.add_alias('alias3@example.com', 'goto3@example.jp')
     end
 
-    it "no admin (admin@)" do
-      @base.admin_exist?('admin@example.net').should be_false
+    it "can delete a domain" do
+      lambda{ @base.delete_domain('example.com') }.should_not raise_error
+
+      @base.domain_exist?('example.com').should be_false
+      @base.admin_exist?('admin@example.com').should be_false
+
+      @base.aliases('example.com').count.should be(0)
+      @base.mailboxes('example.com').count.should be(0)
+
+      @base.admin_domain_exist?('admin@example.com', 'example.com').should be_false
     end
 
-    it "no maiboxes" do
-      @base.mailboxes('example.net').count.should be(0)
+    it "can not delete unknown domain" do
+      lambda{ @base.delete_domain('unknown.example.com') }.should raise_error Error
+    end
+  end
+
+  describe "#delete_admin" do
+    it "can delete an admin" do
+      lambda{ @base.delete_admin('admin@example.com') }.should_not raise_error
+      @base.admin_exist?('admin@example.com').should be_false
     end
 
-    it "no admin_domain" do
-      @base.admin_domain_exist?('admin@example.net', 'example.net').should be_false
+    it "can not delete unknown admin" do
+      lambda{ @base.delete_admin('unknown_admin@example.com') }.should raise_error Error
     end
   end
 end
