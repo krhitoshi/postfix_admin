@@ -70,7 +70,7 @@ module PostfixAdmin
       end
 
       if alias_exist?(address)
-        raise "#{address} is already resistered."
+        raise Error, "#{address} is already resistered."
       end
 
       domain = Domain.find(domain_name)

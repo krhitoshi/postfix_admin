@@ -116,7 +116,15 @@ describe PostfixAdmin::Base do
 
     it "can not add account for unknown domain" do
       lambda{ @base.add_account('user@unknown.example.com', 'password') }.should raise_error Error
-      end
+    end
+
+    it "can not add account which has same address as exist mailbox" do
+      lambda{ @base.add_account('user@example.com', 'password') }.should raise_error Error
+    end
+
+    it "can not add account which has same address as exist alias" do
+      lambda{ @base.add_account('alias@example.com', 'password') }.should raise_error Error
+    end
   end
 
   describe "#add_admin" do
