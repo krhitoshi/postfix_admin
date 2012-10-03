@@ -130,7 +130,7 @@ module PostfixAdmin
 
     def add_domain(domain_name)
       if domain_name !~ /.+\..+/
-        raise "Ivalid domain! #{domain_name}"
+        raise Error, "Ivalid domain! #{domain_name}"
       end
       if domain_exist?(domain_name)
         raise Error, "#{domain_name} is already registered!"

@@ -85,23 +85,25 @@ describe PostfixAdmin::Base do
     @base.admin_domain_exist?('admin@example.com', 'example.com').should be_true
   end
 
-  it "#add_domain" do
-    lambda{ @base.add_domain('example.com') }.should raise_error Error
-    num_domains = @base.domains.count
-    @base.add_domain('example.net')
-    (@base.domains.count - num_domains).should be(1)
-    @base.delete_domain('example.net')
-  end
-
   describe "#add_domain" do
-    before do
-      unless @base.domain_exist?('example.net')
-        @base.add_domain('example.net')
-      end
+    it "You can add a new domain" do
+      num_domains = @base.domains.count
+      @base.add_domain('example.net')
+      (@base.domains.count - num_domains).should be(1)
     end
 
-    after do
-      @base.delete_domain('example.net')
+    it "You can not add exist domain" do
+      lambda{ @base.add_domain('example.com') }.should raise_error Error
+    end
+
+    it "You can not add invalid domain" do
+      lambda{ @base.add_domain('localhost') }.should raise_error Error
+    end
+  end
+
+  describe "add methods" do
+    before do
+      @base.add_domain('example.net')
     end
 
     it "#add_admin" do
@@ -119,14 +121,6 @@ describe PostfixAdmin::Base do
       (@base.aliases.count - num_aliases).should be(1)
     end
 
-    it "#add_alias" do
-      lambda { @base.add_alias('user@example.com', 'goto@example.jp') }.should raise_error Error
-      lambda { @base.add_alias('alias@example.com', 'goto@example.jp') }.should_not raise_error
-      lambda { @base.add_alias('alias@example.com', 'goto@example.jp') }.should raise_error Error
-
-      lambda { @base.add_alias('alias@unknown.example.com', 'goto@example.jp') }.should raise_error Error
-    end
-
     it "#add_admin_domain" do
       @base.add_admin('admin@example.net', 'password')
       @base.add_admin_domain('admin@example.net', 'example.net')
@@ -136,7 +130,36 @@ describe PostfixAdmin::Base do
     end
   end
 
+  describe "#add_alias" do
+    it "You can add a new alias" do
+      num_aliases   = @base.aliases.count
+      lambda { @base.add_alias('alias@example.com', 'goto@example.jp') }.should_not raise_error
+      (@base.aliases.count - num_aliases).should be(1)
+    end
+
+    it "You can not add an alias which has a same name as a mailbox" do
+      lambda { @base.add_alias('user@example.com', 'goto@example.jp') }.should raise_error Error
+    end
+
+    it "You can not add an alias which has a sama name as other alias" do
+      @base.add_alias('alias@example.com', 'goto@example.jp')
+      lambda { @base.add_alias('alias@example.com', 'goto@example.jp') }.should raise_error Error
+    end
+
+    it "You can not add an alias of unknown domain" do
+      lambda { @base.add_alias('alias@unknown.example.com', 'goto@example.jp') }.should raise_error Error
+    end
+  end
+
   describe "#delete_alias" do
+    before do
+      @base.add_alias('alias@example.com', 'goto@example.jp')
+    end
+
+    it "You can delete an alias" do
+      lambda{ @base.delete_alias('alias@example.com') }.should_not raise_error
+    end
+
     it "You can not delete mailbox" do
       lambda{ @base.delete_alias('user@example.com') }.should raise_error Error
     end
