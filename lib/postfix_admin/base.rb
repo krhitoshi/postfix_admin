@@ -97,14 +97,14 @@ module PostfixAdmin
 
     def add_alias(address, goto)
       if mailbox_exist?(address)
-        raise "mailbox #{address} is already registered!"
+        raise Error, "mailbox #{address} is already registered!"
       end
       if alias_exist?(address)
-        raise "alias #{address} is already registered!"
+        raise Error, "alias #{address} is already registered!"
       end
       user, domain_name = address_split(address)
       unless domain_exist?(domain_name)
-        raise "Invalid domain! #{domain_name}"
+        raise Error, "Invalid domain! #{domain_name}"
       end
       domain = Domain.find(domain_name)
 
@@ -120,10 +120,10 @@ module PostfixAdmin
 
     def delete_alias(address)
       if mailbox_exist?(address)
-        raise "Can not delete mailbox by delete_alias. Use delete_account"
+        raise Error, "Can not delete mailbox by delete_alias. Use delete_account"
       end
       unless alias_exist?(address)
-        raise "#{address} is not found!"
+        raise Error, "#{address} is not found!"
       end
       Alias.all(:address => address).destroy or raise "Could not destroy Alias"
     end

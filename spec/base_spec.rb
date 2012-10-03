@@ -3,6 +3,7 @@ require 'postfix_admin/base'
 
 describe PostfixAdmin::Base do
   before do
+    db_initialize
     @base = PostfixAdmin::Base.new({'database' => 'sqlite::memory:'})
   end
 
@@ -86,9 +87,6 @@ describe PostfixAdmin::Base do
 
   it "#add_domain" do
     lambda{ @base.add_domain('example.com') }.should raise_error Error
-    if @base.domain_exist?('example.net')
-      @base.delete_domain('example.net')
-    end
     num_domains = @base.domains.count
     @base.add_domain('example.net')
     (@base.domains.count - num_domains).should be(1)
@@ -122,8 +120,11 @@ describe PostfixAdmin::Base do
     end
 
     it "#add_alias" do
-      lambda { @base.add_alias('user@example.com', 'goto@example.jp') }.should raise_error
+      lambda { @base.add_alias('user@example.com', 'goto@example.jp') }.should raise_error Error
       lambda { @base.add_alias('alias@example.com', 'goto@example.jp') }.should_not raise_error
+      lambda { @base.add_alias('alias@example.com', 'goto@example.jp') }.should raise_error Error
+
+      lambda { @base.add_alias('alias@unknown.example.com', 'goto@example.jp') }.should raise_error Error
     end
 
     it "#add_admin_domain" do
@@ -132,6 +133,16 @@ describe PostfixAdmin::Base do
       @base.admin_domains('admin@example.net').find do |admin_domain|
         admin_domain.domain == 'example.net'
       end.should be_true
+    end
+  end
+
+  describe "#delete_alias" do
+    it "You can not delete mailbox" do
+      lambda{ @base.delete_alias('user@example.com') }.should raise_error Error
+    end
+
+    it "You can not delete unknown alias" do
+      lambda{ @base.delete_alias('unknown@example.com') }.should raise_error Error
     end
   end
 
