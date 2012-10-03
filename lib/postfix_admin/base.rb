@@ -43,7 +43,7 @@ module PostfixAdmin
       d_domain = Domain.find(domain)
       d_admin  = Admin.find(username)
       d_admin.domains << d_domain
-      d_admin.save or raise "Relation Error"
+      d_admin.save or raise "Relation Error: Domain of Admin"
     end
 
     def add_admin(username, password)
@@ -55,7 +55,7 @@ module PostfixAdmin
         :username => username,
         :password => password,
       }
-      admin.save
+      admin.save or raise "Could not save Admin"
     end
 
     def add_account(address, password)
@@ -145,7 +145,7 @@ module PostfixAdmin
         :transport   => "virtual",
         :backupmx    => 0
       }
-      domain.save
+      domain.save or raise "Could not save Domain"
     end
 
     def delete_domain(domain_name)
