@@ -12,6 +12,15 @@ module PostfixAdmin
     has n, :domains, :model => 'Domain', :through => :domain_admins, :via => :p_domain
     storage_names[:default] = 'admin'
 
+    def super_admin=(value)
+      if value
+        domains << Domain.find('ALL')
+        self.save
+      else
+        domains(:domain => 'ALL').destroy
+      end
+    end
+
     def super_admin?
       !!domains.find do |domain|
         domain.domain == 'ALL'
