@@ -160,29 +160,29 @@ module PostfixAdmin
       if @base.add_admin(user_name, password)
         if super_admin
           Admin.find(user_name).super_admin = true
-          puts %Q!"#{user_name}" was successfully registered as a super admin.!
+          puts_registered(user_name, "a super admin")
         else
-          puts %Q!"#{user_name}" was successfully registered as an admin.!
+          puts_registered(user_name, "an admin")
         end
       end
     end
 
     def add_admin_domain(user_name, domain)
       if @base.add_admin_domain(user_name, domain)
-        puts %Q!"#{domain}" was successfully registered as a domain of #{user_name}.!
+        puts_registered(domain, "a domain of #{user_name}")
       end
     end
 
     def add_account(address, password)
       validate_password(password)
       if @base.add_account(address, password)
-        puts %Q!"#{address}" was successfully registered as an account.!
+        puts_registered(address, "an account")
       end
     end
 
     def add_alias(address, goto)
       if @base.add_alias(address, goto)
-        puts %Q!"#{address}: #{goto}" was successfully registered as an alias.!
+        puts_registered("#{address}: #{goto}", "an alias")
       end
     end
 
@@ -199,6 +199,10 @@ module PostfixAdmin
     end
 
     private
+
+    def puts_registered(name, as_str)
+      puts %Q!"#{name}" was successfully registered as #{as_str}.!
+    end
 
     def puts_deleted(name)
       puts %Q!"#{name}" was successfully deleted.!
