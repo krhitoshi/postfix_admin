@@ -83,6 +83,24 @@ describe PostfixAdmin::Base do
 
   it "#admin_domain_exist?" do
     @base.admin_domain_exist?('admin@example.com', 'example.com').should be_true
+    @base.admin_domain_exist?('admin@example.com', 'example.org').should be_false
+    @base.admin_domain_exist?('unknown@example.com', 'example.com').should be_false
+  end
+
+  describe "#num_total_aliases" do
+    it "when only alias@example.com" do
+      @base.num_total_aliases.should be(1)
+    end
+
+    it "should increase one if you add an alias" do
+      @base.add_alias('new_alias@example.com', 'goto@example.jp')
+      @base.num_total_aliases.should be(2)
+    end
+
+    it "should not increase if you add an account" do
+      @base.add_account('user2@example.com', 'password')
+      @base.num_total_aliases.should be(1)
+    end
   end
 
   describe "#add_domain" do
