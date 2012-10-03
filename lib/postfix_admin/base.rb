@@ -31,13 +31,13 @@ module PostfixAdmin
 
     def add_admin_domain(username, domain)
       unless admin_exist?(username)
-        raise "#{username} is not resistered as admin."
+        raise Error, "#{username} is not resistered as admin."
       end
       unless domain_exist?(domain)
-        raise "Invalid domain #{domain}!"
+        raise Error, "Could not find domain #{domain}"
       end
       if admin_domain_exist?(username, domain)
-        raise "#{username} is already resistered as admin of #{domain}."
+        raise Error, "#{username} is already resistered as admin of #{domain}."
       end
 
       d_domain = Domain.find(domain)

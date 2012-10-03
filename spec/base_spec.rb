@@ -121,12 +121,25 @@ describe PostfixAdmin::Base do
       (@base.aliases.count - num_aliases).should be(1)
     end
 
-    it "#add_admin_domain" do
-      @base.add_admin('admin@example.net', 'password')
-      @base.add_admin_domain('admin@example.net', 'example.net')
-      @base.admin_domains('admin@example.net').find do |admin_domain|
-        admin_domain.domain == 'example.net'
-      end.should be_true
+    describe "#add_admin_domain" do
+      it "#add_admin_domain" do
+        @base.add_admin_domain('admin@example.com', 'example.net')
+        @base.admin_domains('admin@example.com').find do |admin_domain|
+          admin_domain.domain == 'example.net'
+        end.should be_true
+      end
+
+      it "can not add unknown domain for an admin" do
+        lambda{ @base.add_admin_domain('admin@example.com', 'unknown.example.com') }.should raise_error Error
+      end
+
+      it "can not add domain for unknown admin" do
+        lambda{ @base.add_admin_domain('unknown_admin@example.com', 'example.net') }.should raise_error Error
+      end
+
+      it "can not add a domain which the admin has already privileges for" do
+        lambda{ @base.add_admin_domain('admin@example.com', 'example.com') }.should raise_error Error
+      end
     end
   end
 
