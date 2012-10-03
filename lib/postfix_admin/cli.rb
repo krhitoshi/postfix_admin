@@ -158,10 +158,12 @@ module PostfixAdmin
     def add_admin(user_name, password, super_admin=false)
       validate_password(password)
       if @base.add_admin(user_name, password)
-        puts %Q!"#{user_name}" was successfully registered as an admin.!
-      end
-      if super_admin
-        Admin.find(user_name).super_admin = true
+        if super_admin
+          Admin.find(user_name).super_admin = true
+          puts %Q!"#{user_name}" was successfully registered as a super admin.!
+        else
+          puts %Q!"#{user_name}" was successfully registered as an admin.!
+        end
       end
     end
 

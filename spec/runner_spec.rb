@@ -44,10 +44,22 @@ describe PostfixAdmin::Runner do
     end
   end
 
-  it "#add_admin and #delete_admin" do
-    capture(:stdout){ Runner.start(['add_admin', 'admin@example.jp', 'password']) }.should =~ EX_REGISTERED
-    capture(:stdout){ Runner.start(['add_admin_domain', 'admin@example.jp', 'example.com']) }.should =~ EX_REGISTERED
-    capture(:stdout){ Runner.start(['delete_admin', 'admin@example.jp']) }.should =~ EX_DELETED
+  describe "#add_admin" do
+    it "can add an new admin" do
+      capture(:stdout){ Runner.start(['add_admin', 'admin@example.jp', 'password']) }.should =~ EX_REGISTERED
+    end
+
+    it "--super option" do
+      capture(:stdout){ Runner.start(['add_admin', 'admin@example.jp', 'password', '--super']) }.should =~ /registered as a super admin/
+    end
+  end
+
+  it "#add_admin_domain" do
+    capture(:stdout){ Runner.start(['add_admin_domain', 'admin@example.com', 'example.org']) }.should =~ EX_REGISTERED
+  end
+
+  it "#delete_admin" do
+    capture(:stdout){ Runner.start(['delete_admin', 'admin@example.com']) }.should =~ EX_DELETED
   end
 
   it "#add_account and #delete_account" do
