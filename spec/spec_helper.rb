@@ -15,10 +15,12 @@ include PostfixAdmin
 
 # [fixtures]
 # Domain:
+#  ALL
 #  example.com
 #  example.org
 #
 # Admin:
+#  all@example.com   Super Admin
 #  admin@example.com
 #
 # Mailbox, Alias:
@@ -50,6 +52,7 @@ end
 def db_initialize
   db_clear
 
+  create_domain('ALL')
   create_domain('example.com')
   create_domain('example.org')
 
@@ -64,6 +67,17 @@ def db_initialize
   domain = Domain.find('example.com')
   domain.admins << admin
   domain.save
+
+  all_admin = Admin.new
+  all_admin.attributes = {
+    :username => 'all@example.com',
+    :password => 'password',
+  }
+  all_admin.save
+
+  all_domain = Domain.find('ALL')
+  all_domain.admins << all_admin
+  all_domain.save
 
   address = "user@example.com"
   mail_alias = Alias.new
