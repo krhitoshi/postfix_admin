@@ -101,45 +101,55 @@ describe PostfixAdmin::Base do
     end
   end
 
-  describe "add methods" do
-    before do
-      @base.add_domain('example.net')
+  describe "#add_account" do
+    it "can add a new account" do
+      num_mailboxes = @base.mailboxes.count
+      num_aliases   = @base.aliases.count
+      @base.add_account('new_user@example.com', 'password')
+      (@base.mailboxes.count - num_mailboxes).should be(1)
+        (@base.aliases.count - num_aliases).should be(1)
     end
 
-    it "#add_admin" do
+    it "can not add account which hsas invalid address" do
+      lambda{ @base.add_account('invalid.example.com', 'password') }.should raise_error Error
+    end
+
+    it "can not add account for unknown domain" do
+      lambda{ @base.add_account('user@unknown.example.com', 'password') }.should raise_error Error
+      end
+  end
+
+  describe "#add_admin" do
+    it "can add an new admin" do
       num_admins = @base.admins.count
       @base.add_admin('admin@example.net', 'password')
       @base.admin_exist?('admin@example.net').should be_true
       (@base.admins.count - num_admins).should be(1)
     end
 
-    it "#add_account" do
-      num_mailboxes = @base.mailboxes.count
-      num_aliases   = @base.aliases.count
-      @base.add_account('user@example.net', 'password')
-      (@base.mailboxes.count - num_mailboxes).should be(1)
-      (@base.aliases.count - num_aliases).should be(1)
+    it "can not add exist admin" do
+      lambda{ @base.add_admin('admin@example.com', 'password') }.should raise_error Error
+    end
+  end
+
+  describe "#add_admin_domain" do
+    it "#add_admin_domain" do
+      @base.add_admin_domain('admin@example.com', 'example.org')
+      @base.admin_domains('admin@example.com').find do |admin_domain|
+        admin_domain.domain == 'example.org'
+      end.should be_true
     end
 
-    describe "#add_admin_domain" do
-      it "#add_admin_domain" do
-        @base.add_admin_domain('admin@example.com', 'example.net')
-        @base.admin_domains('admin@example.com').find do |admin_domain|
-          admin_domain.domain == 'example.net'
-        end.should be_true
-      end
+    it "can not add unknown domain for an admin" do
+      lambda{ @base.add_admin_domain('admin@example.com', 'unknown.example.com') }.should raise_error Error
+    end
 
-      it "can not add unknown domain for an admin" do
-        lambda{ @base.add_admin_domain('admin@example.com', 'unknown.example.com') }.should raise_error Error
-      end
+    it "can not add domain for unknown admin" do
+      lambda{ @base.add_admin_domain('unknown_admin@example.com', 'example.net') }.should raise_error Error
+    end
 
-      it "can not add domain for unknown admin" do
-        lambda{ @base.add_admin_domain('unknown_admin@example.com', 'example.net') }.should raise_error Error
-      end
-
-      it "can not add a domain which the admin has already privileges for" do
-        lambda{ @base.add_admin_domain('admin@example.com', 'example.com') }.should raise_error Error
-      end
+    it "can not add a domain which the admin has already privileges for" do
+      lambda{ @base.add_admin_domain('admin@example.com', 'example.com') }.should raise_error Error
     end
   end
 

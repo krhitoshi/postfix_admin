@@ -48,7 +48,7 @@ module PostfixAdmin
 
     def add_admin(username, password)
       if admin_exist?(username)
-        raise "#{username} is already resistered as admin."
+        raise Error, "#{username} is already resistered as admin."
       end
       admin = Admin.new
       admin.attributes = {
@@ -60,13 +60,13 @@ module PostfixAdmin
 
     def add_account(address, password)
       if address !~ /.+\@.+\..+/
-        raise "Invalid mail address! #{address}"
+        raise Error, "Invalid mail address #{address}"
       end
       user, domain_name = address_split(address)
       path = "#{domain_name}/#{address}/"
 
       unless domain_exist?(domain_name)
-        raise "Invalid domain! #{address}"
+        raise Error, "Could not find domain #{domain_name}"
       end
 
       if alias_exist?(address)

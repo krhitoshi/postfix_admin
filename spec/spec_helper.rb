@@ -15,6 +15,7 @@ include PostfixAdmin
 
 # [fixtures]
 # example.com
+# example.org
 # admin@example.com
 # user@example.com
 
@@ -26,9 +27,7 @@ def db_clear
   Admin.all.destroy
 end
 
-def db_initialize
-  db_clear
-  domain_name = 'example.com'
+def create_domain(domain_name)
   domain = Domain.new
   domain.attributes = {
     :domain      => domain_name,
@@ -36,12 +35,17 @@ def db_initialize
     :aliases     => 30,
     :mailboxes   => 30,
     :maxquota    => 100,
-    :transport   => "virtual",
-    :backupmx    => 0
   }
   domain.save
+end
 
-  username = "admin@#{domain_name}"
+def db_initialize
+  db_clear
+
+  create_domain('example.com')
+  create_domain('example.org')
+
+  username = "admin@example.com"
   admin = Admin.new
   admin.attributes = {
     :username => username,
@@ -49,19 +53,20 @@ def db_initialize
   }
   admin.save
 
+  domain = Domain.find('example.com')
   domain.admins << admin
   domain.save
 
-  address = "user@#{domain_name}"
+  address = "user@example.com"
   mail_alias = Alias.new
   mail_alias.attributes = {
     :address  => address,
     :goto     => address,
-    :domain   => domain_name,
   }
-  mail_alias.save
+  domain.has_aliases << mail_alias
+  domain.save
 
-  path = "#{domain_name}/#{address}/"
+  path = "example.com/user@example.com/"
   mailbox = Mailbox.new
   mailbox.attributes = {
     :username => address,
