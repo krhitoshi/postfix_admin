@@ -11,6 +11,11 @@ describe PostfixAdmin::CLI do
     lambda { @cli.show_domain }.should_not raise_error
   end
 
+  it "#show_summary" do
+    lambda { @cli.show_summary }.should_not raise_error
+    lambda { @cli.show_summary('unknown.example.com') }.should raise_error Error
+  end
+
   it "#show_admin" do
     lambda { @cli.show_admin }.should_not raise_error
   end

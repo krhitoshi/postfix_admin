@@ -26,7 +26,7 @@ module PostfixAdmin
     def show_summary(domain=nil)
       if domain
         unless @base.domain_exist?(domain)
-          raise %Q!Could not find domain "#{domain}"!
+          raise Error, %Q!Could not find domain "#{domain}"!
         end
         puts "[Summary of #{domain}]"
       else
@@ -227,7 +227,7 @@ module PostfixAdmin
 
     def validate_password(password)
       if password.size < MIN_NUM_PASSWORD_CHARACTER
-        raise "Password is too short. It should be larger than #{MIN_NUM_PASSWORD_CHARACTER}"
+        raise Error, "Password is too short. It should be larger than #{MIN_NUM_PASSWORD_CHARACTER}"
       end
     end
 
