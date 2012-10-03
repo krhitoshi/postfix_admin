@@ -161,7 +161,7 @@ module PostfixAdmin
         puts %Q!"#{user_name}" was successfully registered as an admin.!
       end
       if super_admin
-        add_admin_domain(user_name, 'ALL')
+        Admin.find(user_name).super_admin = true
       end
     end
 
