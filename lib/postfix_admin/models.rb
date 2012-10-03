@@ -29,9 +29,11 @@ module PostfixAdmin
     property :aliases, Integer
     property :mailboxes, Integer
     property :maxquota, Integer
-    property :transport, String
-    property :backupmx, Integer
+    property :transport, String, :default => 'virtual'
+    property :backupmx, Integer, :default => 0
     property :description, String
+    property :created,  DateTime, :default => DateTime.now
+    property :modified, DateTime, :default => DateTime.now
 
     has n, :domain_admins, :child_key => :domain
     has n, :admins, :model => 'Admin', :through => :domain_admins

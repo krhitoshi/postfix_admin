@@ -142,8 +142,6 @@ module PostfixAdmin
         :aliases     => @config[:aliases],
         :mailboxes   => @config[:mailboxes],
         :maxquota    => @config[:maxquota],
-        :transport   => "virtual",
-        :backupmx    => 0
       }
       domain.save or raise "Could not save Domain"
     end
