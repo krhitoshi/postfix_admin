@@ -23,6 +23,9 @@ include PostfixAdmin
 #
 # Mailbox, Alias:
 #  user@example.com
+#
+# Alias:
+#  alias@example.com
 
 def db_clear
   DomainAdmin.all.destroy
@@ -69,6 +72,14 @@ def db_initialize
     :goto     => address,
   }
   domain.has_aliases << mail_alias
+
+  forward = Alias.new
+  forward.attributes = {
+    :address  => 'alias@example.com',
+    :goto     => 'example.jp',
+  }
+  domain.has_aliases << forward
+
   domain.save
 
   path = "example.com/user@example.com/"

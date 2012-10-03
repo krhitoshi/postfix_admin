@@ -156,8 +156,9 @@ describe PostfixAdmin::Base do
   describe "#add_alias" do
     it "can add a new alias" do
       num_aliases   = @base.aliases.count
-      lambda { @base.add_alias('alias@example.com', 'goto@example.jp') }.should_not raise_error
+      lambda { @base.add_alias('new_alias@example.com', 'goto@example.jp') }.should_not raise_error
       (@base.aliases.count - num_aliases).should be(1)
+      @base.alias_exist?('new_alias@example.com').should be_true
     end
 
     it "can not add an alias which has a same name as a mailbox" do
@@ -165,22 +166,19 @@ describe PostfixAdmin::Base do
     end
 
     it "can not add an alias which has a sama name as other alias" do
-      @base.add_alias('alias@example.com', 'goto@example.jp')
-      lambda { @base.add_alias('alias@example.com', 'goto@example.jp') }.should raise_error Error
+      @base.add_alias('new_alias@example.com', 'goto@example.jp')
+      lambda { @base.add_alias('new_alias@example.com', 'goto@example.jp') }.should raise_error Error
     end
 
     it "can not add an alias of unknown domain" do
-      lambda { @base.add_alias('alias@unknown.example.com', 'goto@example.jp') }.should raise_error Error
+      lambda { @base.add_alias('new_alias@unknown.example.com', 'goto@example.jp') }.should raise_error Error
     end
   end
 
   describe "#delete_alias" do
-    before do
-      @base.add_alias('alias@example.com', 'goto@example.jp')
-    end
-
     it "can delete an alias" do
       lambda{ @base.delete_alias('alias@example.com') }.should_not raise_error
+      @base.alias_exist?('alias@example.com').should be_false
     end
 
     it "can not delete mailbox" do
