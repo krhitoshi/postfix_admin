@@ -86,17 +86,17 @@ describe PostfixAdmin::Base do
   end
 
   describe "#add_domain" do
-    it "You can add a new domain" do
+    it "can add a new domain" do
       num_domains = @base.domains.count
       @base.add_domain('example.net')
       (@base.domains.count - num_domains).should be(1)
     end
 
-    it "You can not add exist domain" do
+    it "can not add exist domain" do
       lambda{ @base.add_domain('example.com') }.should raise_error Error
     end
 
-    it "You can not add invalid domain" do
+    it "can not add invalid domain" do
       lambda{ @base.add_domain('localhost') }.should raise_error Error
     end
   end
@@ -144,22 +144,22 @@ describe PostfixAdmin::Base do
   end
 
   describe "#add_alias" do
-    it "You can add a new alias" do
+    it "can add a new alias" do
       num_aliases   = @base.aliases.count
       lambda { @base.add_alias('alias@example.com', 'goto@example.jp') }.should_not raise_error
       (@base.aliases.count - num_aliases).should be(1)
     end
 
-    it "You can not add an alias which has a same name as a mailbox" do
+    it "can not add an alias which has a same name as a mailbox" do
       lambda { @base.add_alias('user@example.com', 'goto@example.jp') }.should raise_error Error
     end
 
-    it "You can not add an alias which has a sama name as other alias" do
+    it "can not add an alias which has a sama name as other alias" do
       @base.add_alias('alias@example.com', 'goto@example.jp')
       lambda { @base.add_alias('alias@example.com', 'goto@example.jp') }.should raise_error Error
     end
 
-    it "You can not add an alias of unknown domain" do
+    it "can not add an alias of unknown domain" do
       lambda { @base.add_alias('alias@unknown.example.com', 'goto@example.jp') }.should raise_error Error
     end
   end
@@ -169,15 +169,15 @@ describe PostfixAdmin::Base do
       @base.add_alias('alias@example.com', 'goto@example.jp')
     end
 
-    it "You can delete an alias" do
+    it "can delete an alias" do
       lambda{ @base.delete_alias('alias@example.com') }.should_not raise_error
     end
 
-    it "You can not delete mailbox" do
+    it "can not delete mailbox" do
       lambda{ @base.delete_alias('user@example.com') }.should raise_error Error
     end
 
-    it "You can not delete unknown alias" do
+    it "can not delete unknown alias" do
       lambda{ @base.delete_alias('unknown@example.com') }.should raise_error Error
     end
   end

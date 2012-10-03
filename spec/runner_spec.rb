@@ -30,16 +30,16 @@ describe PostfixAdmin::Runner do
   end
 
   describe "#add_alias and #delete_alias" do
-    it "You can add and delete an new alias." do
+    it "can add and delete an new alias." do
       capture(:stdout){ Runner.start(['add_alias', 'alias@example.com', 'goto@example.jp']) }.should =~ EX_REGISTERED
       capture(:stdout){ Runner.start(['delete_alias', 'alias@example.com']) }.should =~ EX_DELETED
     end
 
-    it "You can not delete mailbox alias." do
+    it "can not delete mailbox alias." do
       capture(:stderr){ Runner.start(['delete_alias', 'user@example.com']) }.should =~ /Can not delete mailbox/
     end
 
-    it "You can not add an alias for existed mailbox" do
+    it "can not add an alias for existed mailbox" do
       capture(:stderr){ Runner.start(['add_alias', 'user@example.com', 'goto@example.jp']) }.should =~ /mailbox user@example.com is already registered!/
     end
   end
