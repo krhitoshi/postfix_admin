@@ -52,6 +52,10 @@ describe PostfixAdmin::Runner do
     it "--super option" do
       capture(:stdout){ Runner.start(['add_admin', 'admin@example.jp', 'password', '--super']) }.should =~ /registered as a super admin/
     end
+
+    it "-s (--super) option" do
+      capture(:stdout){ Runner.start(['add_admin', 'admin@example.jp', 'password', '-s']) }.should =~ /registered as a super admin/
+    end
   end
 
   it "#add_admin_domain" do

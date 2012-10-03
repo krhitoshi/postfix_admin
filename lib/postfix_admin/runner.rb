@@ -66,7 +66,7 @@ module PostfixAdmin
     end
 
     desc "add_admin admin@example.com password", "Add an admin user"
-    method_options :super => :boolean
+    method_option :super, :type => :boolean, :aliases => "-s", :desc => "register as a super admin"
     def add_admin(user_name, password)
       runner do
         @cli.add_admin(user_name, password, options[:super])
