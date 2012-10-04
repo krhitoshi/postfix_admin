@@ -78,7 +78,6 @@ module PostfixAdmin
       mail_alias.attributes = {
         :address     => address,
         :goto        => address,
-        :domain_name => domain_name,
       }
       domain.has_aliases << mail_alias
 
