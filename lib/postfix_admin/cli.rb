@@ -25,9 +25,7 @@ module PostfixAdmin
 
     def show_summary(domain_name=nil)
       if domain_name
-        unless @base.domain_exist?(domain_name)
-          raise Error, %Q!Could not find domain "#{domain_name}"!
-        end
+        domain_check(domain_name)
         puts "[Summary of #{domain_name}]"
       else
         puts "[Summary]"
@@ -106,6 +104,8 @@ module PostfixAdmin
     end
 
     def show_domain_account(domain)
+      domain_check(domain)
+
       mailboxes = Domain.find(domain).mailboxes
       if mailboxes.count == 0
         puts "\nNo address in #{domain}"
@@ -124,7 +124,9 @@ module PostfixAdmin
     end
 
     def show_domain_aliases(domain)
-      aliases = @base.aliases(domain).find_all do |mail_alias|
+      domain_check(domain)
+
+      aliases = Domain.find(domain).aliases.find_all do |mail_alias|
         mail_alias.address != mail_alias.goto
       end
 
@@ -235,6 +237,12 @@ module PostfixAdmin
 
     def print_line
       puts "-"*100
+    end
+
+    def domain_check(domain_name)
+      unless @base.domain_exist?(domain_name)
+        raise Error, %Q!Could not find domain "#{domain_name}"!
+      end
     end
 
     def validate_password(password)

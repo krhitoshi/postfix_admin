@@ -35,10 +35,6 @@ describe PostfixAdmin::Base do
     @base.config[:mailbox_quota].should == 100 * 1024 * 1000
   end
 
-  it "#aliases" do
-    lambda { @base.aliases }.should_not raise_error
-    lambda { @base.aliases('example.com') }.should_not raise_error
-  end
   it "#admin_domains" do
     lambda { @base.admin_domains }.should_not raise_error
     lambda { @base.admin_domains('admin@example.com') }.should_not raise_error
@@ -152,9 +148,9 @@ describe PostfixAdmin::Base do
 
   describe "#add_alias" do
     it "can add a new alias" do
-      num_aliases   = @base.aliases.count
+      num_aliases   = Alias.count
       lambda { @base.add_alias('new_alias@example.com', 'goto@example.jp') }.should_not raise_error
-      (@base.aliases.count - num_aliases).should be(1)
+      (Alias.count - num_aliases).should be(1)
       @base.alias_exist?('new_alias@example.com').should be_true
     end
 

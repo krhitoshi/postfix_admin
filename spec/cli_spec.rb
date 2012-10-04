@@ -23,10 +23,16 @@ describe PostfixAdmin::CLI do
 
   it "#show_domain_account" do
     lambda { @cli.show_domain_account('example.com') }.should_not raise_error
+    lambda { @cli.show_domain_account('unknown.example.com') }.should raise_error Error
   end
 
   it "#show_admin_domain" do
     lambda { @cli.show_admin_domain('admin@example.com') }.should_not raise_error
+  end
+
+  it "#show_domain_aliases" do
+    lambda { @cli.show_domain_aliases('example.com') }.should_not raise_error
+    lambda { @cli.show_domain_aliases('unknown.example.com') }.should raise_error Error
   end
 
   it "#admin_exist?" do
