@@ -56,7 +56,7 @@ module PostfixAdmin
       puts " No. Domain                Aliases   Mailboxes     Quota (MB)"
       print_line
       @base.domains.each_with_index do |domain, i|
-        puts "%4d %-20s %3d /%3d   %3d /%3d %10d" % [i+1, domain.domain, @base.num_total_aliases(domain.domain), domain.aliases, @base.mailboxes(domain.domain).size, domain.mailboxes, domain.maxquota]
+        puts "%4d %-20s %3d /%3d   %3d /%3d %10d" % [i+1, domain.domain_name, @base.num_total_aliases(domain.domain_name), domain.aliases, @base.mailboxes(domain.domain_name).size, domain.mailboxes, domain.maxquota]
       end
       print_line
     end
@@ -92,11 +92,11 @@ module PostfixAdmin
       puts " No. Admin                              Domains Password"
       print_line
       admins.each_with_index do |admin, i|
-        domains = if admin.domains.find{ |domain| domain.domain == 'ALL' }
-                       'Super admin'
-                     else
-                       admin.domains.count
-                     end
+        domains = if admin.super_admin?
+                    'Super admin'
+                  else
+                    admin.domains.count
+                  end
         puts "%4d %-30s %11s %s" % [i+1, admin.username, domains, admin.password]
       end
       print_line
@@ -140,8 +140,8 @@ module PostfixAdmin
     end
 
     def show_admin_domain(user_name)
-      domain_admins = @base.admin_domains(user_name)
-      if domain_admins.count == 0
+      admin = Admin.find(user_name)
+      if admin.domains.count == 0
         puts "\nNo domain in database"
         return
       end
@@ -149,8 +149,8 @@ module PostfixAdmin
       print_line
       puts " No. Domain"
       print_line
-      domain_admins.each_with_index do |domain_admin, i|
-        puts "%4d %-20s" % [i+1, domain_admin.domain]
+      admin.domains.each_with_index do |domain, i|
+        puts "%4d %-20s" % [i+1, domain.domain_name]
       end
       print_line
     end

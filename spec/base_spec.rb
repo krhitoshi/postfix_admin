@@ -162,7 +162,7 @@ describe PostfixAdmin::Base do
     it "#add_admin_domain" do
       @base.add_admin_domain('admin@example.com', 'example.org')
       @base.admin_domains('admin@example.com').find do |admin_domain|
-        admin_domain.domain == 'example.org'
+        admin_domain.domain_name == 'example.org'
       end.should be_true
     end
 

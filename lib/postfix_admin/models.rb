@@ -17,12 +17,12 @@ module PostfixAdmin
         domains << Domain.find('ALL')
         self.save
       else
-        domains(:domain => 'ALL').destroy
+        domains(:domain_name => 'ALL').destroy
       end
     end
 
     def super_admin?
-      !!domains.find{ |domain| domain.domain == 'ALL' }
+      !!domains.find{ |domain| domain.domain_name == 'ALL' }
     end
 
     def self.find(username)
@@ -38,7 +38,7 @@ module PostfixAdmin
 
   class Domain
     include ::DataMapper::Resource
-    property :domain, String, :key => true
+    property :domain_name, String, :field => 'domain', :key => true
     property :aliases, Integer
     property :mailboxes, Integer
     property :maxquota, Integer
@@ -48,15 +48,15 @@ module PostfixAdmin
     property :created,  DateTime, :default => DateTime.now
     property :modified, DateTime, :default => DateTime.now
 
-    has n, :domain_admins, :child_key => :domain
+    has n, :domain_admins, :child_key => :domain_name
     has n, :admins, :model => 'Admin', :through => :domain_admins
 
-    has n, :has_mailboxes, :model => 'Mailbox', :child_key => :domain
-    has n, :has_aliases, :model => 'Alias', :child_key => :domain
+    has n, :has_mailboxes, :model => 'Mailbox', :child_key => :domain_name
+    has n, :has_aliases, :model => 'Alias', :child_key => :domain_name
     storage_names[:default] = 'domain'
 
     def self.find(domain)
-      Domain.first(:domain => domain)
+      Domain.first(:domain_name => domain)
     end
   end
 
@@ -64,7 +64,7 @@ module PostfixAdmin
     include ::DataMapper::Resource
     property :created, DateTime, :default => DateTime.now
 
-    belongs_to :p_domain, :model => 'Domain', :child_key => :domain, :key => true
+    belongs_to :p_domain, :model => 'Domain', :child_key => :domain_name, :key => true
     belongs_to :admin, :model => 'Admin', :child_key => :username, :key => true
     storage_names[:default] = 'domain_admins'
   end
@@ -73,15 +73,15 @@ module PostfixAdmin
     include ::DataMapper::Resource
     property :username, String, :key => true
     property :name, String
+    property :domain_name, String, :field => 'domain'
     property :password, String
-    property :domain, String
     property :maildir, String
     property :quota, Integer
     #  property :local_part, String
     property :created, DateTime, :default => DateTime.now
     property :modified, DateTime, :default => DateTime.now
 
-    belongs_to :p_domain, :model => 'Domain', :child_key => :domain
+    belongs_to :p_domain, :model => 'Domain', :child_key => :domain_name
 
     storage_names[:default] = 'mailbox'
   end
@@ -90,11 +90,11 @@ module PostfixAdmin
     include ::DataMapper::Resource
     property :address, String, :key => true
     property :goto, Text
-    property :domain, String
+    property :domain_name, String, :field => 'domain'
     property :created, DateTime, :default => DateTime.now
     property :modified, DateTime, :default => DateTime.now
 
-    belongs_to :p_domain, :model => 'Domain', :child_key => :domain
+    belongs_to :p_domain, :model => 'Domain', :child_key => :domain_name
 
     storage_names[:default] = 'alias'
   end

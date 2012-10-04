@@ -40,7 +40,7 @@ end
 def create_domain(domain_name)
   domain = Domain.new
   domain.attributes = {
-    :domain      => domain_name,
+    :domain_name      => domain_name,
     :description => domain_name,
     :aliases     => 30,
     :mailboxes   => 30,

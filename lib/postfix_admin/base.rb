@@ -76,9 +76,9 @@ module PostfixAdmin
       domain = Domain.find(domain_name)
       mail_alias = Alias.new
       mail_alias.attributes = {
-        :address  => address,
-        :goto     => address,
-        :domain   => domain_name,
+        :address     => address,
+        :goto        => address,
+        :domain_name => domain_name,
       }
       domain.has_aliases << mail_alias
 
@@ -112,7 +112,7 @@ module PostfixAdmin
       new_alias.attributes = {
         :address => address,
         :goto    => goto,
-        :domain  => domain
+        :domain_name  => domain
       }
       domain.has_aliases << new_alias
       domain.save or raise "Could not save Alias"
@@ -137,7 +137,7 @@ module PostfixAdmin
       end
       domain = Domain.new
       domain.attributes = {
-        :domain      => domain_name,
+        :domain_name => domain_name,
         :description => domain_name,
         :aliases     => @config[:aliases],
         :mailboxes   => @config[:mailboxes],
@@ -183,7 +183,7 @@ module PostfixAdmin
     end
 
     def admin_domain_exist?(username, domain)
-      DomainAdmin.all(:username => username, :domain => domain).count != 0
+      DomainAdmin.all(:username => username, :domain_name => domain).count != 0
     end
 
     def admin_exist?(admin)
@@ -207,11 +207,11 @@ module PostfixAdmin
     end
 
     def domain_exist?(domain)
-      Domain.all(:domain => domain).count != 0
+      Domain.all(:domain_name => domain).count != 0
     end
 
     def domains
-      Domain.all(:domain.not => 'ALL', :order => :domain)
+      Domain.all(:domain_name.not => 'ALL', :order => :domain_name)
     end
 
     def admins
