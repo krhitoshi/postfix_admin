@@ -9,7 +9,7 @@ module PostfixAdmin
     property :modified, DateTime, :default => DateTime.now
 
     has n, :domain_admins, :child_key => :username
-    has n, :domains, :model => 'Domain', :through => :domain_admins, :via => :p_domain
+    has n, :domains, :model => 'Domain', :through => :domain_admins, :via => :domain
     storage_names[:default] = 'admin'
 
     def super_admin=(value)
@@ -63,9 +63,11 @@ module PostfixAdmin
   class DomainAdmin
     include ::DataMapper::Resource
     property :created, DateTime, :default => DateTime.now
+    property :domain_name, String, :field => 'domain', :key => true
+    property :username, String, :key => true
 
-    belongs_to :p_domain, :model => 'Domain', :child_key => :domain_name, :key => true
-    belongs_to :admin, :model => 'Admin', :child_key => :username, :key => true
+    belongs_to :domain, :model => 'Domain', :child_key => :domain_name
+    belongs_to :admin, :model => 'Admin', :child_key => :username
     storage_names[:default] = 'domain_admins'
   end
 
@@ -81,7 +83,7 @@ module PostfixAdmin
     property :created, DateTime, :default => DateTime.now
     property :modified, DateTime, :default => DateTime.now
 
-    belongs_to :p_domain, :model => 'Domain', :child_key => :domain_name
+    belongs_to :domain, :model => 'Domain', :child_key => :domain_name
 
     storage_names[:default] = 'mailbox'
   end
@@ -94,7 +96,7 @@ module PostfixAdmin
     property :created, DateTime, :default => DateTime.now
     property :modified, DateTime, :default => DateTime.now
 
-    belongs_to :p_domain, :model => 'Domain', :child_key => :domain_name
+    belongs_to :domain, :model => 'Domain', :child_key => :domain_name
 
     storage_names[:default] = 'alias'
   end
