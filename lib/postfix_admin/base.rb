@@ -33,7 +33,7 @@ module PostfixAdmin
       unless admin_exist?(username)
         raise Error, "#{username} is not resistered as admin."
       end
-      unless domain_exist?(domain)
+      unless Domain.exist?(domain)
         raise Error, "Could not find domain #{domain}"
       end
       if admin_domain_exist?(username, domain)
@@ -65,7 +65,7 @@ module PostfixAdmin
       user, domain_name = address_split(address)
       path = "#{domain_name}/#{address}/"
 
-      unless domain_exist?(domain_name)
+      unless Domain.exist?(domain_name)
         raise Error, "Could not find domain #{domain_name}"
       end
 
@@ -102,7 +102,7 @@ module PostfixAdmin
         raise Error, "alias #{address} is already registered!"
       end
       user, domain_name = address_split(address)
-      unless domain_exist?(domain_name)
+      unless Domain.exist?(domain_name)
         raise Error, "Invalid domain! #{domain_name}"
       end
       domain = Domain.find(domain_name)
@@ -131,7 +131,7 @@ module PostfixAdmin
       if domain_name !~ /.+\..+/
         raise Error, "Ivalid domain! #{domain_name}"
       end
-      if domain_exist?(domain_name)
+      if Domain.exist?(domain_name)
         raise Error, "#{domain_name} is already registered!"
       end
       domain = Domain.new
@@ -146,7 +146,7 @@ module PostfixAdmin
     end
 
     def delete_domain(domain_name)
-      unless domain_exist?(domain_name)
+      unless Domain.exist?(domain_name)
         raise Error, "Could not find domain #{domain_name}"
       end
 
@@ -203,10 +203,6 @@ module PostfixAdmin
 
     def mailbox_exist?(user_name)
       Mailbox.all(:username => user_name).count != 0
-    end
-
-    def domain_exist?(domain)
-      Domain.all(:domain_name => domain).count != 0
     end
 
     def admin_domains(username=nil)

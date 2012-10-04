@@ -41,7 +41,7 @@ describe PostfixAdmin::Base do
   end
 
   it "#domain_exist?" do
-    @base.domain_exist?('example.com').should be_true
+    Domain.exist?('example.com').should be_true
   end
 
   it "#alias_exist?" do
@@ -195,7 +195,7 @@ describe PostfixAdmin::Base do
     it "can delete a domain" do
       lambda{ @base.delete_domain('example.com') }.should_not raise_error
 
-      @base.domain_exist?('example.com').should be_false
+      Domain.exist?('example.com').should be_false
       @base.admin_exist?('admin@example.com').should be_false
 
       Alias.all(:domain_name => 'example.com').count.should be(0)

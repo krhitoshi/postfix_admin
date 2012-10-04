@@ -26,6 +26,12 @@ describe PostfixAdmin::Domain do
     @base = PostfixAdmin::Base.new({'database' => 'sqlite::memory:'})
   end
 
+  it "#exist?" do
+    Domain.exist?('example.com').should === true
+    Domain.exist?('example.org').should === true
+    Domain.exist?('unknown.example.com').should === false
+  end
+
   describe "#num_total_aliases and .num_total_aliases" do
     it "when only alias@example.com" do
       Domain.num_total_aliases.should be(1)

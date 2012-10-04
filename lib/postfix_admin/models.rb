@@ -63,6 +63,10 @@ module PostfixAdmin
       Domain.first(:domain_name => domain)
     end
 
+    def self.exist?(domain)
+      !!Domain.find(domain)
+    end
+
     def self.num_total_aliases
       Alias.count - Mailbox.count
     end

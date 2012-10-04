@@ -240,7 +240,7 @@ module PostfixAdmin
     end
 
     def domain_check(domain_name)
-      unless @base.domain_exist?(domain_name)
+      unless Domain.exist?(domain_name)
         raise Error, %Q!Could not find domain "#{domain_name}"!
       end
     end
