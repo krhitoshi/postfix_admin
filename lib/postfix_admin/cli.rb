@@ -56,7 +56,7 @@ module PostfixAdmin
       puts " No. Domain                Aliases   Mailboxes     Quota (MB)"
       print_line
       @base.domains.each_with_index do |domain, i|
-        puts "%4d %-20s %3d /%3d   %3d /%3d %10d" % [i+1, domain.domain_name, @base.num_total_aliases(domain.domain_name), domain.maxaliases, @base.mailboxes(domain.domain_name).size, domain.mailboxes, domain.maxquota]
+        puts "%4d %-20s %3d /%3d   %3d /%3d %10d" % [i+1, domain.domain_name, @base.num_total_aliases(domain.domain_name), domain.maxaliases, @base.mailboxes(domain.domain_name).size, domain.maxmailboxes, domain.maxquota]
       end
       print_line
     end

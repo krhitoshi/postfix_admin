@@ -136,11 +136,11 @@ module PostfixAdmin
       end
       domain = Domain.new
       domain.attributes = {
-        :domain_name => domain_name,
-        :description => domain_name,
-        :maxaliases  => @config[:aliases],
-        :mailboxes   => @config[:mailboxes],
-        :maxquota    => @config[:maxquota],
+        :domain_name  => domain_name,
+        :description  => domain_name,
+        :maxaliases   => @config[:aliases],
+        :maxmailboxes => @config[:mailboxes],
+        :maxquota     => @config[:maxquota],
       }
       domain.save or raise "Could not save Domain"
     end

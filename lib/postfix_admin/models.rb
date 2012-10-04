@@ -40,7 +40,7 @@ module PostfixAdmin
     include ::DataMapper::Resource
     property :domain_name, String, :field => 'domain', :key => true
     property :maxaliases, Integer, :field => 'aliases'
-    property :mailboxes, Integer
+    property :maxmailboxes, Integer, :field => 'mailboxes'
     property :maxquota, Integer
     property :transport, String, :default => 'virtual'
     property :backupmx, Integer, :default => 0
