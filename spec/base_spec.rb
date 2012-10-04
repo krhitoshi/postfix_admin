@@ -35,10 +35,6 @@ describe PostfixAdmin::Base do
     @base.config[:mailbox_quota].should == 100 * 1024 * 1000
   end
 
-  it "#domains" do
-    lambda { @base.domains }.should_not raise_error
-  end
-
   it "#admins" do
     lambda { @base.admins }.should_not raise_error
   end
@@ -105,9 +101,9 @@ describe PostfixAdmin::Base do
 
   describe "#add_domain" do
     it "can add a new domain" do
-      num_domains = @base.domains.count
+      num_domains = Domain.all.count
       @base.add_domain('example.net')
-      (@base.domains.count - num_domains).should be(1)
+      (Domain.all.count - num_domains).should be(1)
     end
 
     it "can not add exist domain" do

@@ -9,6 +9,7 @@ describe PostfixAdmin::CLI do
 
   it "#show_domain" do
     lambda { @cli.show_domain }.should_not raise_error
+    capture(:stdout){ @cli.show_domain }.should_not =~ /ALL/
   end
 
   it "#show_summary" do

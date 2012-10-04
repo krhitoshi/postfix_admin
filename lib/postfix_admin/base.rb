@@ -209,10 +209,6 @@ module PostfixAdmin
       Domain.all(:domain_name => domain).count != 0
     end
 
-    def domains
-      Domain.all(:domain_name.not => 'ALL', :order => :domain_name)
-    end
-
     def admins
       Admin.all(:order => 'username')
     end
