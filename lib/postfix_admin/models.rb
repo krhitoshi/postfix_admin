@@ -62,6 +62,14 @@ module PostfixAdmin
     def self.find(domain)
       Domain.first(:domain_name => domain)
     end
+
+    def self.num_total_aliases
+      Alias.all.count - Mailbox.all.count
+    end
+
+    def num_total_aliases
+      aliases.count - mailboxes.count
+    end
   end
 
   class DomainAdmin

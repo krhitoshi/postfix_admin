@@ -234,19 +234,6 @@ module PostfixAdmin
       end
     end
 
-    def num_total_aliases(domain_name=nil)
-      if domain_name
-        domain = Domain.find(domain_name)
-        if domain
-          domain.aliases.count - domain.mailboxes.count
-        else
-          nil
-        end
-      else
-        Alias.all.count - Mailbox.all.count
-      end
-    end
-
     def address_split(address)
       address.split('@')
     end

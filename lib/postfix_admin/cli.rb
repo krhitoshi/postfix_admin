@@ -23,25 +23,27 @@ module PostfixAdmin
       end
     end
 
-    def show_summary(domain=nil)
-      if domain
-        unless @base.domain_exist?(domain)
-          raise Error, %Q!Could not find domain "#{domain}"!
+    def show_summary(domain_name=nil)
+      if domain_name
+        unless @base.domain_exist?(domain_name)
+          raise Error, %Q!Could not find domain "#{domain_name}"!
         end
-        puts "[Summary of #{domain}]"
+        puts "[Summary of #{domain_name}]"
       else
         puts "[Summary]"
       end
       print_line
-      unless domain
+      if domain_name
+        domain = Domain.find(domain_name)
+        puts "Mailboxes : %4d" % domain.mailboxes.count
+        puts "Aliases   : %4d" % domain.num_total_aliases
+      else
         puts "Domains   : %4d" % Domain.all_without_special_domain.count
         puts "Admins    : %4d" % @base.admins.count
         puts "Mailboxes : %4d" % Mailbox.all.count
-      else
-        puts "Mailboxes : %4d" % Domain.find(domain).mailboxes.count
+        puts "Aliases   : %4d" % Domain.num_total_aliases
       end
 
-      puts "Aliases   : %4d" % @base.num_total_aliases(domain)
       print_line
     end
 
@@ -58,7 +60,7 @@ module PostfixAdmin
       puts " No. Domain                Aliases   Mailboxes     Quota (MB)"
       print_line
       Domain.all_without_special_domain.each_with_index do |domain, i|
-        puts "%4d %-20s %3d /%3d   %3d /%3d %10d" % [i+1, domain.domain_name, @base.num_total_aliases(domain.domain_name), domain.maxaliases, domain.mailboxes.count, domain.maxmailboxes, domain.maxquota]
+        puts "%4d %-20s %3d /%3d   %3d /%3d %10d" % [i+1, domain.domain_name, domain.num_total_aliases, domain.maxaliases, domain.mailboxes.count, domain.maxmailboxes, domain.maxquota]
       end
       print_line
     end
