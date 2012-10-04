@@ -79,7 +79,7 @@ module PostfixAdmin
         :address     => address,
         :goto        => address,
       }
-      domain.has_aliases << mail_alias
+      domain.aliases << mail_alias
 
       mailbox = Mailbox.new
       mailbox.attributes = {
@@ -113,7 +113,7 @@ module PostfixAdmin
         :goto    => goto,
         :domain_name  => domain
       }
-      domain.has_aliases << new_alias
+      domain.aliases << new_alias
       domain.save or raise "Could not save Alias"
     end
 
@@ -152,7 +152,7 @@ module PostfixAdmin
 
       domain = Domain.find(domain_name)
       domain.has_mailboxes.destroy or raise "Could not destroy Mailbox"
-      domain.has_aliases.destroy or raise "Could not destroy Alias"
+      domain.aliases.destroy or raise "Could not destroy Alias"
       domain.domain_admins.destroy or raise "Could not destroy DomainAdmin"
       delete_unnecessary_admins
 
@@ -234,7 +234,7 @@ module PostfixAdmin
       if domain_name
         domain = Domain.find(domain_name)
         if domain
-          domain.has_aliases(:order => :address)
+          domain.aliases(:order => :address)
         else
           []
         end

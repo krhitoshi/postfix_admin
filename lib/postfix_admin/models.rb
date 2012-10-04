@@ -52,7 +52,7 @@ module PostfixAdmin
     has n, :admins, :model => 'Admin', :through => :domain_admins
 
     has n, :has_mailboxes, :model => 'Mailbox', :child_key => :domain_name
-    has n, :has_aliases, :model => 'Alias', :child_key => :domain_name
+    has n, :aliases, :model => 'Alias', :child_key => :domain_name
     storage_names[:default] = 'domain'
 
     def self.find(domain)

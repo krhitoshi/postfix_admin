@@ -85,14 +85,14 @@ def db_initialize
     :address  => address,
     :goto     => address,
   }
-  domain.has_aliases << mail_alias
+  domain.aliases << mail_alias
 
   forward = Alias.new
   forward.attributes = {
     :address  => 'alias@example.com',
     :goto     => 'example.jp',
   }
-  domain.has_aliases << forward
+  domain.aliases << forward
 
   domain.save
 
