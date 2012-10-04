@@ -209,10 +209,6 @@ module PostfixAdmin
       Domain.all(:domain_name => domain).count != 0
     end
 
-    def admins
-      Admin.all(:order => 'username')
-    end
-
     def aliases(domain_name=nil)
       if domain_name
         domain = Domain.find(domain_name)

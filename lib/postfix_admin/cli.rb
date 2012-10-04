@@ -39,8 +39,8 @@ module PostfixAdmin
         puts "Aliases   : %4d" % domain.num_total_aliases
       else
         puts "Domains   : %4d" % Domain.all_without_special_domain.count
-        puts "Admins    : %4d" % @base.admins.count
-        puts "Mailboxes : %4d" % Mailbox.all.count
+        puts "Admins    : %4d" % Admin.count
+        puts "Mailboxes : %4d" % Mailbox.count
         puts "Aliases   : %4d" % Domain.num_total_aliases
       end
 
@@ -86,8 +86,7 @@ module PostfixAdmin
     end
 
     def show_admin
-      admins = @base.admins
-      if admins.count == 0
+      if Admin.count == 0
         puts "\nNo admin in database"
         return
       end
@@ -95,7 +94,7 @@ module PostfixAdmin
       print_line
       puts " No. Admin                              Domains Password"
       print_line
-      admins.each_with_index do |admin, i|
+      Admin.all.each_with_index do |admin, i|
         domains = if admin.super_admin?
                     'Super admin'
                   else

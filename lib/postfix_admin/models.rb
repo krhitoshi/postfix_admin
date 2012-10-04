@@ -64,7 +64,7 @@ module PostfixAdmin
     end
 
     def self.num_total_aliases
-      Alias.all.count - Mailbox.all.count
+      Alias.count - Mailbox.count
     end
 
     def num_total_aliases

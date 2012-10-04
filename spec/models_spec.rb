@@ -26,19 +26,31 @@ describe PostfixAdmin::Domain do
     @base = PostfixAdmin::Base.new({'database' => 'sqlite::memory:'})
   end
 
-  describe "#num_total_aliases" do
+  describe "#num_total_aliases and .num_total_aliases" do
     it "when only alias@example.com" do
       Domain.num_total_aliases.should be(1)
+      Domain.find('example.com').num_total_aliases.should be(1)
     end
 
     it "should increase one if you add an alias" do
       @base.add_alias('new_alias@example.com', 'goto@example.jp')
       Domain.num_total_aliases.should be(2)
+      Domain.find('example.com').num_total_aliases.should be(2)
     end
 
     it "should not increase if you add an account" do
       @base.add_account('user2@example.com', 'password')
       Domain.num_total_aliases.should be(1)
+      Domain.find('example.com').num_total_aliases.should be(1)
+    end
+
+    it ".num_total_aliases should not increase if you add an account and an aliase for other domain" do
+      @base.add_account('user@example.org', 'password')
+      Domain.num_total_aliases.should be(1)
+      Domain.find('example.com').num_total_aliases.should be(1)
+      @base.add_alias('new_alias@example.org', 'goto@example.jp')
+      Domain.num_total_aliases.should be(2)
+      Domain.find('example.com').num_total_aliases.should be(1)
     end
   end
 end
