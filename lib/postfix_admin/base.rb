@@ -90,7 +90,7 @@ module PostfixAdmin
         :quota    => @config[:mailbox_quota],
         # :local_part => user,
       }
-      domain.has_mailboxes << mailbox
+      domain.mailboxes << mailbox
       domain.save or raise "Could not save Domain"
     end
 
@@ -151,7 +151,7 @@ module PostfixAdmin
       end
 
       domain = Domain.find(domain_name)
-      domain.has_mailboxes.destroy or raise "Could not destroy Mailbox"
+      domain.mailboxes.destroy or raise "Could not destroy Mailbox"
       domain.aliases.destroy or raise "Could not destroy Alias"
       domain.domain_admins.destroy or raise "Could not destroy DomainAdmin"
       delete_unnecessary_admins
@@ -221,7 +221,7 @@ module PostfixAdmin
       if domain_name
         domain = Domain.find(domain_name)
         if domain
-          domain.has_mailboxes(:order => :username)
+          domain.mailboxes(:order => :username)
         else
           []
         end

@@ -106,7 +106,7 @@ def db_initialize
     :quota    => 100 * 1024 * 1000,
     # :local_part => user,
   }
-  domain.has_mailboxes << mailbox
+  domain.mailboxes << mailbox
   domain.save
 end
 

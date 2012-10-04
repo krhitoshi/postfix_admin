@@ -51,7 +51,7 @@ module PostfixAdmin
     has n, :domain_admins, :child_key => :domain_name
     has n, :admins, :model => 'Admin', :through => :domain_admins
 
-    has n, :has_mailboxes, :model => 'Mailbox', :child_key => :domain_name
+    has n, :mailboxes, :model => 'Mailbox', :child_key => :domain_name
     has n, :aliases, :model => 'Alias', :child_key => :domain_name
     storage_names[:default] = 'domain'
 
