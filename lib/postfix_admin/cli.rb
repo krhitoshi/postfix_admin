@@ -34,7 +34,7 @@ module PostfixAdmin
       end
       print_line
       unless domain
-        puts "Domains   : %4d" % Domain.all.count
+        puts "Domains   : %4d" % Domain.all_without_special_domain.count
         puts "Admins    : %4d" % @base.admins.count
       end
 
@@ -55,9 +55,8 @@ module PostfixAdmin
       print_line
       puts " No. Domain                Aliases   Mailboxes     Quota (MB)"
       print_line
-      Domain.all.each_with_index do |domain, i|
-        next if domain.domain_name == 'ALL'
-        puts "%4d %-20s %3d /%3d   %3d /%3d %10d" % [i+1, domain.domain_name, @base.num_total_aliases(domain.domain_name), domain.maxaliases, @base.mailboxes(domain.domain_name).size, domain.maxmailboxes, domain.maxquota]
+      Domain.all_without_special_domain.each_with_index do |domain, i|
+        puts "%4d %-20s %3d /%3d   %3d /%3d %10d" % [i+1, domain.domain_name, @base.num_total_aliases(domain.domain_name), domain.maxaliases, domain.mailboxes.count, domain.maxmailboxes, domain.maxquota]
       end
       print_line
     end

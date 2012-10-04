@@ -55,6 +55,10 @@ module PostfixAdmin
     has n, :aliases, :model => 'Alias', :child_key => :domain_name
     storage_names[:default] = 'domain'
 
+    def self.all_without_special_domain
+      Domain.all(:domain_name.not => 'ALL')
+    end
+
     def self.find(domain)
       Domain.first(:domain_name => domain)
     end
