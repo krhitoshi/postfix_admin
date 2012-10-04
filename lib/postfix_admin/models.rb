@@ -39,7 +39,7 @@ module PostfixAdmin
   class Domain
     include ::DataMapper::Resource
     property :domain_name, String, :field => 'domain', :key => true
-    property :aliases, Integer
+    property :maxaliases, Integer, :field => 'aliases'
     property :mailboxes, Integer
     property :maxquota, Integer
     property :transport, String, :default => 'virtual'

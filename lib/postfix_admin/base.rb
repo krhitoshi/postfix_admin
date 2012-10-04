@@ -138,7 +138,7 @@ module PostfixAdmin
       domain.attributes = {
         :domain_name => domain_name,
         :description => domain_name,
-        :aliases     => @config[:aliases],
+        :maxaliases  => @config[:aliases],
         :mailboxes   => @config[:mailboxes],
         :maxquota    => @config[:maxquota],
       }
