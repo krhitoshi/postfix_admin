@@ -36,9 +36,11 @@ module PostfixAdmin
       unless domain
         puts "Domains   : %4d" % Domain.all_without_special_domain.count
         puts "Admins    : %4d" % @base.admins.count
+        puts "Mailboxes : %4d" % Mailbox.all.count
+      else
+        puts "Mailboxes : %4d" % Domain.find(domain).mailboxes.count
       end
 
-      puts "Mailboxes : %4d" % @base.mailboxes(domain).count
       puts "Aliases   : %4d" % @base.num_total_aliases(domain)
       print_line
     end
@@ -103,7 +105,7 @@ module PostfixAdmin
     end
 
     def show_domain_account(domain)
-      mailboxes = @base.mailboxes(domain)
+      mailboxes = Domain.find(domain).mailboxes
       if mailboxes.count == 0
         puts "\nNo address in #{domain}"
         return

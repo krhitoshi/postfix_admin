@@ -39,11 +39,6 @@ describe PostfixAdmin::Base do
     lambda { @base.admins }.should_not raise_error
   end
 
-  it "#mailboxes" do
-    lambda { @base.mailboxes }.should_not raise_error
-    lambda { @base.mailboxes('example.com') }.should_not raise_error
-  end
-
   it "#aliases" do
     lambda { @base.aliases }.should_not raise_error
     lambda { @base.aliases('example.com') }.should_not raise_error
@@ -117,11 +112,11 @@ describe PostfixAdmin::Base do
 
   describe "#add_account" do
     it "can add a new account" do
-      num_mailboxes = @base.mailboxes.count
-      num_aliases   = @base.aliases.count
+      num_mailboxes = Mailbox.all.count
+      num_aliases   = Alias.all.count
       @base.add_account('new_user@example.com', 'password')
-      (@base.mailboxes.count - num_mailboxes).should be(1)
-        (@base.aliases.count - num_aliases).should be(1)
+      (Mailbox.all.count - num_mailboxes).should be(1)
+        (Alias.all.count - num_aliases).should be(1)
     end
 
     it "can not add account which hsas invalid address" do
@@ -227,8 +222,8 @@ describe PostfixAdmin::Base do
       @base.domain_exist?('example.com').should be_false
       @base.admin_exist?('admin@example.com').should be_false
 
-      @base.aliases('example.com').count.should be(0)
-      @base.mailboxes('example.com').count.should be(0)
+      Alias.all(:domain_name => 'example.com').count.should be(0)
+      Mailbox.all(:domain_name => 'example.com').count.should be(0)
 
       @base.admin_domain_exist?('admin@example.com', 'example.com').should be_false
     end
