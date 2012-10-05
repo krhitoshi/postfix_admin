@@ -73,6 +73,8 @@ module PostfixAdmin
       unless Admin.exist?(user_name)
         raise Error, "Could not find admin #{user_name}"
       end
+      validate_password(password)
+
       admin = Admin.find(user_name)
       admin.password = password
       if admin.save
