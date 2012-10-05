@@ -31,9 +31,10 @@ module PostfixAdmin
     end
 
     desc "super_admin admin@example.com", "Enable super admin flag of an admin"
+    method_option :disable, :type => :boolean, :aliases => "-d", :desc => "Disable super admin flag"
     def super_admin(user_name)
       runner do
-        @cli.super_admin(user_name)
+        @cli.super_admin(user_name, options[:disable])
       end
     end
 
