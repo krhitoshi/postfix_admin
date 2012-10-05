@@ -36,8 +36,8 @@ describe PostfixAdmin::CLI do
   end
 
   it "#admin_exist?" do
-    @cli.admin_exist?('admin@example.com').should be_true
-    @cli.admin_exist?('admin@example.net').should be_false
+    Admin.exist?('admin@example.com').should be_true
+    Admin.exist?('admin@example.net').should be_false
   end
 
   it "#alias_exit?" do
@@ -47,9 +47,9 @@ describe PostfixAdmin::CLI do
 
   it "#add_admin and #delete_admin" do
     lambda { @cli.add_admin('common@example.net', 'password') }.should_not raise_error
-    @cli.admin_exist?('common@example.net').should be_true
+    Admin.exist?('common@example.net').should be_true
     lambda { @cli.delete_admin('common@example.net') }.should_not raise_error
-    @cli.admin_exist?('common@example.net').should be_false
+    Admin.exist?('common@example.net').should be_false
   end
 
   it "#add_alias and #delete_alias" do
@@ -77,7 +77,7 @@ describe PostfixAdmin::CLI do
     @cli.add_admin_domain('common@example.net', 'example.com')
     @cli.add_admin_domain('common@example.net', 'example.net')
     lambda { @cli.delete_admin('common@example.net') }.should_not raise_error
-    @cli.admin_exist?('common@example.net').should be_false
+    Admin.exist?('common@example.net').should be_false
 
     @cli.add_admin('common@example.net', 'password')
     @cli.add_admin_domain('common@example.net', 'example.com')
@@ -87,11 +87,11 @@ describe PostfixAdmin::CLI do
     lambda { @cli.add_account('user2@example.net', 'password') }.should_not raise_error
 
     lambda { @cli.delete_domain('example.net') }.should_not raise_error
-    @cli.admin_exist?('admin@example.net').should be_false
-    @cli.admin_exist?('admin2@example.net').should be_false
+    Admin.exist?('admin@example.net').should be_false
+    Admin.exist?('admin2@example.net').should be_false
 
-    @cli.admin_exist?('common@example.net').should be_true
+    Admin.exist?('common@example.net').should be_true
     lambda { @cli.delete_admin('common@example.net') }.should_not raise_error
-    @cli.admin_exist?('common@example.net').should be_false
+    Admin.exist?('common@example.net').should be_false
   end
 end

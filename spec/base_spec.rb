@@ -50,8 +50,8 @@ describe PostfixAdmin::Base do
   end
 
   it "#admin_exist?" do
-    @base.admin_exist?('admin@example.com').should be_true
-    @base.admin_exist?('unknown_admin@example.com').should be_false
+    Admin.exist?('admin@example.com').should be_true
+    Admin.exist?('unknown_admin@example.com').should be_false
   end
 
   it "#account_exist?" do
@@ -111,7 +111,7 @@ describe PostfixAdmin::Base do
     it "can add an new admin" do
       num_admins = Admin.count
       @base.add_admin('admin@example.net', 'password')
-      @base.admin_exist?('admin@example.net').should be_true
+      Admin.exist?('admin@example.net').should be_true
       (Admin.count - num_admins).should be(1)
     end
 
@@ -191,7 +191,7 @@ describe PostfixAdmin::Base do
       lambda{ @base.delete_domain('example.com') }.should_not raise_error
 
       Domain.exist?('example.com').should be_false
-      @base.admin_exist?('admin@example.com').should be_false
+      Admin.exist?('admin@example.com').should be_false
 
       Alias.all(:domain_name => 'example.com').count.should be(0)
       Mailbox.all(:domain_name => 'example.com').count.should be(0)
@@ -207,7 +207,7 @@ describe PostfixAdmin::Base do
   describe "#delete_admin" do
     it "can delete an admin" do
       lambda{ @base.delete_admin('admin@example.com') }.should_not raise_error
-      @base.admin_exist?('admin@example.com').should be_false
+      Admin.exist?('admin@example.com').should be_false
     end
 
     it "can not delete unknown admin" do

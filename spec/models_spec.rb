@@ -6,6 +6,12 @@ describe PostfixAdmin::Admin do
     db_initialize
   end
 
+  it ".exist?" do
+    Admin.exist?('admin@example.com').should === true
+    Admin.exist?('all@example.com').should === true
+    Admin.exist?('unknown@example.com').should === false
+  end
+
   it "#super_admin?" do
     Admin.find('admin@example.com').super_admin?.should === false
     Admin.find('all@example.com').super_admin?.should === true
@@ -26,7 +32,7 @@ describe PostfixAdmin::Domain do
     @base = PostfixAdmin::Base.new({'database' => 'sqlite::memory:'})
   end
 
-  it "#exist?" do
+  it ".exist?" do
     Domain.exist?('example.com').should === true
     Domain.exist?('example.org').should === true
     Domain.exist?('unknown.example.com').should === false

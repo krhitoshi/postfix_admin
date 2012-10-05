@@ -30,7 +30,7 @@ module PostfixAdmin
     end
 
     def add_admin_domain(username, domain)
-      unless admin_exist?(username)
+      unless Admin.exist?(username)
         raise Error, "#{username} is not resistered as admin."
       end
       unless Domain.exist?(domain)
@@ -47,7 +47,7 @@ module PostfixAdmin
     end
 
     def add_admin(username, password)
-      if admin_exist?(username)
+      if Admin.exist?(username)
         raise Error, "#{username} is already resistered as admin."
       end
       admin = Admin.new
@@ -160,7 +160,7 @@ module PostfixAdmin
     end
 
     def delete_admin(user_name)
-      unless admin_exist?(user_name)
+      unless Admin.exist?(user_name)
         raise Error, "Could not find admin #{user_name}"
       end
       admin = Admin.find(user_name)
@@ -183,10 +183,6 @@ module PostfixAdmin
 
     def admin_domain_exist?(username, domain)
       DomainAdmin.all(:username => username, :domain_name => domain).count != 0
-    end
-
-    def admin_exist?(admin)
-      Admin.all(:username => admin).count != 0
     end
 
     def mailbox_exist?(address)

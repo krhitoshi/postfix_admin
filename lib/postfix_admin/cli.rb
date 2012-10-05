@@ -75,10 +75,6 @@ module PostfixAdmin
       end
     end
 
-    def admin_exist?(admin)
-      @base.admin_exist?(admin)
-    end
-
     def alias_exist?(address)
       @base.alias_exist?(address)
     end

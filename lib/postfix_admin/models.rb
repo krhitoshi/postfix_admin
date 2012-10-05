@@ -29,6 +29,10 @@ module PostfixAdmin
       Admin.first(:username => username)
     end
 
+    def self.exist?(username)
+      !!Admin.find(username)
+    end
+
     def self.unnecessary
       all.delete_if do |admin|
         admin.domains.size > 0
