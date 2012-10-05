@@ -170,7 +170,7 @@ module PostfixAdmin
     end
 
     def delete_account(address)
-      unless account_exist?(address)
+      unless Alias.exist?(address) && Mailbox.exist?(address)
         raise Error, "Could not find account #{address}"
       end
 
@@ -180,10 +180,6 @@ module PostfixAdmin
 
     def delete_unnecessary_admins
       Admin.unnecessary.destroy or raise "Could not destroy Admin"
-    end
-
-    def account_exist?(address)
-      Alias.exist?(address) && Mailbox.exist?(address)
     end
 
     def address_split(address)

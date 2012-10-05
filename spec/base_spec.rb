@@ -54,11 +54,6 @@ describe PostfixAdmin::Base do
     Admin.exist?('unknown_admin@example.com').should be_false
   end
 
-  it "#account_exist?" do
-    @base.account_exist?('user@example.com').should be_true
-    @base.account_exist?('unknown@example.com').should be_false
-  end
-
   describe "#add_domain" do
     it "can add a new domain" do
       num_domains = Domain.count
@@ -212,7 +207,6 @@ describe PostfixAdmin::Base do
   describe "#delete_account" do
     it "can delete an account" do
       lambda{ @base.delete_account('user@example.com') }.should_not raise_error
-      @base.account_exist?('user@example.com').should be_false
       Mailbox.exist?('user@example.com').should be_false
       Alias.exist?('user@example.com').should be_false
     end
