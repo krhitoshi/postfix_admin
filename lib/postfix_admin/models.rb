@@ -25,7 +25,7 @@ module PostfixAdmin
         domains << Domain.find('ALL')
         save or raise "Could not save ALL domain for Admin"
       else
-        domain_admins(:domain_name => 'ALL').destroy
+        domain_admins(:domain_name => 'ALL').destroy or raise "Could not destroy DoaminAdmin for Admin"
       end
     end
 
