@@ -25,7 +25,7 @@ Install postfix_admin as:
   postfix_admin help [TASK]                                     # Describe available tasks or one specific task
   postfix_admin setup example.com password                      # Setup a domain
   postfix_admin show                                            # List of domains
-  postfix_admin summary                                         # Summarize the usage of PostfixAdmin
+  postfix_admin summary [example.com]                           # Summarize the usage of PostfixAdmin
   postfix_admin super_admin admin@example.com                   # Enable super admin flag of an admin
   postfix_admin version                                         # Show postfix_admin version
 ```
