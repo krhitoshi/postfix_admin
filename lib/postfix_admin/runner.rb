@@ -16,7 +16,7 @@ module PostfixAdmin
       end
     end
 
-    desc "show", "List of domains"
+    desc "show [example.com]", "List of domains"
     def show(domain=nil)
       runner do
         @cli.show(domain)
@@ -24,7 +24,7 @@ module PostfixAdmin
     end
 
     desc "setup example.com password", "Setup a domain"
-    def setup_domain(domain, password)
+    def setup(domain, password)
       runner do
         @cli.setup_domain(domain, password)
       end
