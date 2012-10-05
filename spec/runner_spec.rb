@@ -35,7 +35,7 @@ describe PostfixAdmin::Runner do
     end
 
     it "can not use too short password (< 5)" do
-      capture(:stderr){ Runner.start(['admin_passwd', 'admin@example.com', '123']) }.should =~ /too short/
+      capture(:stderr){ Runner.start(['admin_passwd', 'admin@example.com', '124']) }.should =~ /too short/
     end
 
     it "can not use for unknown admin" do
@@ -49,7 +49,7 @@ describe PostfixAdmin::Runner do
     end
 
     it "can not use too short password (< 5)" do
-      capture(:stderr){ Runner.start(['account_passwd', 'user@example.com', '123']) }.should =~ /too short/
+      capture(:stderr){ Runner.start(['account_passwd', 'user@example.com', '1234']) }.should =~ /too short/
     end
 
     it "can not use for unknown account" do
