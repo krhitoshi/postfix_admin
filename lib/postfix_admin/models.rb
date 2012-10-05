@@ -16,7 +16,7 @@ module PostfixAdmin
       if super_admin?
         Domain.exist?(domain_name)
       else
-        !!domains.find{ |domain| domain.domain_name == domain_name }
+        exist_domain?(domain_name)
       end
     end
 
@@ -30,7 +30,7 @@ module PostfixAdmin
     end
 
     def super_admin?
-      !!domains.find{ |domain| domain.domain_name == 'ALL' }
+      exist_domain?('ALL')
     end
 
     def self.find(username)
@@ -45,6 +45,12 @@ module PostfixAdmin
       all.delete_if do |admin|
         admin.domains.size > 0
       end
+    end
+
+    private
+
+    def exist_domain?(domain_name)
+      !!domains.find{ |domain| domain.domain_name == domain_name }
     end
   end
 
