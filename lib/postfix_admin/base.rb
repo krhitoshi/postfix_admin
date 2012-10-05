@@ -29,21 +29,22 @@ module PostfixAdmin
       DataMapper.finalize
     end
 
-    def add_admin_domain(username, domain)
+    def add_admin_domain(username, domain_name)
       unless Admin.exist?(username)
         raise Error, "#{username} is not resistered as admin."
       end
-      unless Domain.exist?(domain)
-        raise Error, "Could not find domain #{domain}"
-      end
-      if admin_domain_exist?(username, domain)
-        raise Error, "#{username} is already resistered as admin of #{domain}."
+      unless Domain.exist?(domain_name)
+        raise Error, "Could not find domain #{domain_name}"
       end
 
-      d_domain = Domain.find(domain)
-      d_admin  = Admin.find(username)
-      d_admin.domains << d_domain
-      d_admin.save or raise "Relation Error: Domain of Admin"
+      admin  = Admin.find(username)
+      if admin.has_domain?(domain_name)
+        raise Error, "#{username} is already resistered as admin of #{domain_name}."
+      end
+
+      domain = Domain.find(domain_name)
+      admin.domains << domain
+      admin.save or raise "Relation Error: Domain of Admin"
     end
 
     def add_admin(username, password)
@@ -179,10 +180,6 @@ module PostfixAdmin
 
     def delete_unnecessary_admins
       Admin.unnecessary.destroy or raise "Could not destroy Admin"
-    end
-
-    def admin_domain_exist?(username, domain)
-      DomainAdmin.all(:username => username, :domain_name => domain).count != 0
     end
 
     def account_exist?(address)

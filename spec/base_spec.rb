@@ -59,12 +59,6 @@ describe PostfixAdmin::Base do
     @base.account_exist?('unknown@example.com').should be_false
   end
 
-  it "#admin_domain_exist?" do
-    @base.admin_domain_exist?('admin@example.com', 'example.com').should be_true
-    @base.admin_domain_exist?('admin@example.com', 'example.org').should be_false
-    @base.admin_domain_exist?('unknown@example.com', 'example.com').should be_false
-  end
-
   describe "#add_domain" do
     it "can add a new domain" do
       num_domains = Domain.count
@@ -196,7 +190,7 @@ describe PostfixAdmin::Base do
       Alias.all(:domain_name => 'example.com').count.should be(0)
       Mailbox.all(:domain_name => 'example.com').count.should be(0)
 
-      @base.admin_domain_exist?('admin@example.com', 'example.com').should be_false
+      DomainAdmin.all(:username => 'admin@example.com', :domain_name => 'example.com').count.should be(0)
     end
 
     it "can not delete unknown domain" do
