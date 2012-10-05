@@ -9,10 +9,10 @@ module PostfixAdmin
       @cli = CLI.new
     end
 
-    desc "summary", "Summarize the usage of PostfixAdmin"
-    def summary
+    desc "summary [example.com]", "Summarize the usage of PostfixAdmin"
+    def summary(domain_name=nil)
       runner do
-        @cli.show_summary
+        @cli.show_summary(domain_name)
       end
     end
 

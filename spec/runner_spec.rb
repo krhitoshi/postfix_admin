@@ -12,6 +12,7 @@ describe PostfixAdmin::Runner do
 
   it "#summary" do
     capture(:stdout){ Runner.start(["summary"]) }.should =~ /\[Summary\]/
+    capture(:stdout){ Runner.start(["summary", "example.com"]) }.should =~ /\[Summary of example.com\]/
   end
 
   describe "#show" do
