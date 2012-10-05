@@ -43,6 +43,12 @@ describe PostfixAdmin::Runner do
     end
   end
 
+  describe "account_passwd" do
+    it "can change password of an account" do
+      capture(:stdout){ Runner.start(['account_passwd', 'user@example.com', 'new_password']) }.should =~ /successfully changed/
+    end
+  end
+
   describe "#add_alias and #delete_alias" do
     it "can add and delete an new alias." do
       capture(:stdout){ Runner.start(['add_alias', 'new_alias@example.com', 'goto@example.jp']) }.should =~ EX_REGISTERED

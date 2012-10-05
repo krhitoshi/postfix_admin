@@ -84,6 +84,16 @@ module PostfixAdmin
       end
     end
 
+    def change_account_password(user_name, password)
+      mailbox = Mailbox.find(user_name)
+      mailbox.password = password
+      if mailbox.save
+        puts "the password of #{user_name} was successfully changed."
+      else
+        raise "Could not change password of Mailbox"
+      end
+    end
+
     def delete_domain(domain)
       if @base.delete_domain(domain)
         puts %Q!"#{domain}" was successfully deleted.!
