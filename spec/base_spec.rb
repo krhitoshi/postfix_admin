@@ -45,8 +45,8 @@ describe PostfixAdmin::Base do
   end
 
   it "#mailbox_exist?" do
-    @base.mailbox_exist?('user@example.com').should be_true
-    @base.mailbox_exist?('unknown@example.com').should be_false
+    Mailbox.exist?('user@example.com').should be_true
+    Mailbox.exist?('unknown@example.com').should be_false
   end
 
   it "#admin_exist?" do
@@ -219,7 +219,7 @@ describe PostfixAdmin::Base do
     it "can delete an account" do
       lambda{ @base.delete_account('user@example.com') }.should_not raise_error
       @base.account_exist?('user@example.com').should be_false
-      @base.mailbox_exist?('user@example.com').should be_false
+      Mailbox.exist?('user@example.com').should be_false
       @base.alias_exist?('user@example.com').should be_false
     end
 

@@ -95,7 +95,7 @@ module PostfixAdmin
     end
 
     def add_alias(address, goto)
-      if mailbox_exist?(address)
+      if Mailbox.exist?(address)
         raise Error, "mailbox #{address} is already registered!"
       end
       if alias_exist?(address)
@@ -118,7 +118,7 @@ module PostfixAdmin
     end
 
     def delete_alias(address)
-      if mailbox_exist?(address)
+      if Mailbox.exist?(address)
         raise Error, "Can not delete mailbox by delete_alias. Use delete_account"
       end
       unless alias_exist?(address)
@@ -185,20 +185,12 @@ module PostfixAdmin
       DomainAdmin.all(:username => username, :domain_name => domain).count != 0
     end
 
-    def mailbox_exist?(address)
-      Mailbox.all(:username => address).count != 0
-    end
-
     def alias_exist?(address)
       Alias.all(:address => address).count != 0
     end
 
     def account_exist?(address)
-      alias_exist?(address) && mailbox_exist?(address)
-    end
-
-    def mailbox_exist?(user_name)
-      Mailbox.all(:username => user_name).count != 0
+      alias_exist?(address) && Mailbox.exist?(address)
     end
 
     def address_split(address)

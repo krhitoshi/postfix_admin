@@ -66,3 +66,15 @@ describe PostfixAdmin::Domain do
     end
   end
 end
+
+describe PostfixAdmin::Mailbox do
+  before do
+    db_initialize
+  end
+
+  it ".exist?" do
+    Mailbox.exist?('user@example.com').should === true
+    Mailbox.exist?('alias@example.com').should === false
+    Mailbox.exist?('unknown@unknown.example.com').should === false
+  end
+end
