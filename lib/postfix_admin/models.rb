@@ -13,7 +13,11 @@ module PostfixAdmin
     storage_names[:default] = 'admin'
 
     def has_domain?(domain_name)
-      !!domains.find{ |domain| domain.domain_name == domain_name }
+      if super_admin?
+        Domain.exist?(domain_name)
+      else
+        !!domains.find{ |domain| domain.domain_name == domain_name }
+      end
     end
 
     def super_admin=(value)

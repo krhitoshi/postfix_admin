@@ -37,6 +37,14 @@ describe PostfixAdmin::Admin do
     it "returns false when unknown domain" do
       Admin.find('admin@example.com').has_domain?('unknown.example.com').should === false
     end
+
+    it "returns true when super admin and exist domain" do
+      Admin.find('all@example.com').has_domain?('example.com').should === true
+    end
+
+    it "returns false when super admin and unknown domain" do
+      Admin.find('all@example.com').has_domain?('unknown.example.com').should === false
+    end
   end
 end
 
