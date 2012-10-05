@@ -72,10 +72,18 @@ describe PostfixAdmin::Mailbox do
     db_initialize
   end
 
-  it ".exist?" do
-    Mailbox.exist?('user@example.com').should === true
-    Mailbox.exist?('alias@example.com').should === false
-    Mailbox.exist?('unknown@unknown.example.com').should === false
+  describe ".exist?" do
+    it "returns true for exist account (mailbox)" do
+      Mailbox.exist?('user@example.com').should === true
+    end
+
+    it "returns false for alias" do
+      Mailbox.exist?('alias@example.com').should === false
+    end
+
+    it "returns false for unknown account (mailbox)" do
+      Mailbox.exist?('unknown@unknown.example.com').should === false
+    end
   end
 end
 
