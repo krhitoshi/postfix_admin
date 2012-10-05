@@ -24,6 +24,20 @@ describe PostfixAdmin::Admin do
     Admin.find('all@example.com').super_admin = false
     Admin.find('all@example.com').super_admin?.should === false
   end
+
+  describe "#has_domain?" do
+    it "returns true when the admin has privileges for the domain" do
+      Admin.find('admin@example.com').has_domain?('example.com').should === true
+    end
+
+    it "returns false when the admin does not have privileges for the domain" do
+      Admin.find('admin@example.com').has_domain?('example.org').should === false
+    end
+
+    it "returns false when unknown domain" do
+      Admin.find('admin@example.com').has_domain?('unknown.example.com').should === false
+    end
+  end
 end
 
 describe PostfixAdmin::Domain do

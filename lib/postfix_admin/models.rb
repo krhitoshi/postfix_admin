@@ -12,6 +12,10 @@ module PostfixAdmin
     has n, :domains, :model => 'Domain', :through => :domain_admins, :via => :domain
     storage_names[:default] = 'admin'
 
+    def has_domain?(domain_name)
+      !!domains.find{ |domain| domain.domain_name == domain_name }
+    end
+
     def super_admin=(value)
       if value
         domains << Domain.find('ALL')
