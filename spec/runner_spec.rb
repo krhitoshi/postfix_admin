@@ -15,16 +15,16 @@ describe PostfixAdmin::Runner do
   end
 
   describe "#show" do
-    it "#show shows information of example.com" do
+    it "shows information of example.com" do
      capture(:stdout){ Runner.start(["show"]) }.should =~ /example.com.+30.+30.+100/
     end
 
-    it "#show shows information of admin@example.com" do
+    it "shows information of admin@example.com" do
       capture(:stdout){ Runner.start(["show"]) }.should =~ /admin@example.com.+1.+password/
     end
   end
 
-  it "#setup" do
+  it "setup" do
     capture(:stdout){ Runner.start(['setup', 'example.net', 'password']) }.should =~ EX_REGISTERED
     capture(:stdout){ Runner.start(['delete_domain', 'example.net']) }.should =~ EX_DELETED
   end
@@ -63,7 +63,7 @@ describe PostfixAdmin::Runner do
     end
   end
 
-  describe "#add_alias and #delete_alias" do
+  describe "add_alias and delete_alias" do
     it "can add and delete an new alias." do
       capture(:stdout){ Runner.start(['add_alias', 'new_alias@example.com', 'goto@example.jp']) }.should =~ EX_REGISTERED
       capture(:stdout){ Runner.start(['delete_alias', 'new_alias@example.com']) }.should =~ EX_DELETED
@@ -78,7 +78,7 @@ describe PostfixAdmin::Runner do
     end
   end
 
-  describe "#add_admin" do
+  describe "add_admin" do
     it "can add an new admin" do
       capture(:stdout){ Runner.start(['add_admin', 'admin@example.jp', 'password']) }.should =~ EX_REGISTERED
     end
@@ -92,15 +92,15 @@ describe PostfixAdmin::Runner do
     end
   end
 
-  it "#add_admin_domain" do
+  it "add_admin_domain" do
     capture(:stdout){ Runner.start(['add_admin_domain', 'admin@example.com', 'example.org']) }.should =~ EX_REGISTERED
   end
 
-  it "#delete_admin" do
+  it "delete_admin" do
     capture(:stdout){ Runner.start(['delete_admin', 'admin@example.com']) }.should =~ EX_DELETED
   end
 
-  it "#add_account and #delete_account" do
+  it "add_account and delete_account" do
     capture(:stdout){ Runner.start(['add_account', 'user2@example.com', 'password']) }.should =~ EX_REGISTERED
     capture(:stdout){ Runner.start(['delete_account', 'user2@example.com']) }.should =~ EX_DELETED
   end
