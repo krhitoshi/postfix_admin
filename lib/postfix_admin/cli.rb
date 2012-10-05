@@ -85,6 +85,11 @@ module PostfixAdmin
     end
 
     def change_account_password(user_name, password)
+      unless Mailbox.exist?(user_name)
+        raise Error, "Could not find account #{user_name}"
+      end
+      validate_password(password)
+
       mailbox = Mailbox.find(user_name)
       mailbox.password = password
       if mailbox.save

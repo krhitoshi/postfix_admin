@@ -43,6 +43,13 @@ describe PostfixAdmin::CLI do
     lambda { @cli.change_admin_password('admin@example.com', '123') }.should raise_error Error
   end
 
+  it "#change_account_password" do
+    lambda { @cli.change_account_password('user@example.com', 'new_password') }.should_not raise_error
+    Mailbox.find('user@example.com').password.should == 'new_password'
+    lambda { @cli.change_account_password('unknown@example.com', 'new_password') }.should raise_error Error
+    lambda { @cli.change_account_password('user@example.com', '123') }.should raise_error Error
+  end
+
   it "#add_admin and #delete_admin" do
     lambda { @cli.add_admin('common@example.net', 'password') }.should_not raise_error
     Admin.exist?('common@example.net').should be_true
