@@ -84,33 +84,11 @@ module PostfixAdmin
     end
 
     def change_admin_password(user_name, password)
-      unless Admin.exist?(user_name)
-        raise Error, "Could not find admin #{user_name}"
-      end
-      validate_password(password)
-
-      admin = Admin.find(user_name)
-      admin.password = password
-      if admin.save
-        puts "the password of #{user_name} was successfully changed."
-      else
-        raise "Could not change password of Admin"
-      end
+      change_password(Admin, user_name, password)
     end
 
     def change_account_password(user_name, password)
-      unless Mailbox.exist?(user_name)
-        raise Error, "Could not find account #{user_name}"
-      end
-      validate_password(password)
-
-      mailbox = Mailbox.find(user_name)
-      mailbox.password = password
-      if mailbox.save
-        puts "the password of #{user_name} was successfully changed."
-      else
-        raise "Could not change password of Mailbox"
-      end
+      change_password(Mailbox, user_name, password)
     end
 
     def delete_domain(domain)
@@ -280,6 +258,21 @@ module PostfixAdmin
     def validate_password(password)
       if password.size < MIN_NUM_PASSWORD_CHARACTER
         raise Error, "Password is too short. It should be larger than #{MIN_NUM_PASSWORD_CHARACTER}"
+      end
+    end
+
+    def change_password(klass, user_name, password)
+      unless klass.exist?(user_name)
+        raise Error, "Could not find account #{user_name}"
+      end
+      validate_password(password)
+
+      obj = klass.find(user_name)
+      obj.password = password
+      if obj.save
+        puts "the password of #{user_name} was successfully changed."
+      else
+        raise "Could not change password of #{klass.name}"
       end
     end
 
