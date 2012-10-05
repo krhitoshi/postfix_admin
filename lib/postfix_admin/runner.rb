@@ -17,16 +17,16 @@ module PostfixAdmin
     end
 
     desc "show [example.com]", "List of domains"
-    def show(domain=nil)
+    def show(domain_name=nil)
       runner do
-        @cli.show(domain)
+        @cli.show(domain_name)
       end
     end
 
     desc "setup example.com password", "Setup a domain"
-    def setup(domain, password)
+    def setup(domain_name, password)
       runner do
-        @cli.setup_domain(domain, password)
+        @cli.setup_domain(domain_name, password)
       end
     end
 
@@ -53,16 +53,16 @@ module PostfixAdmin
     end
 
     desc "add_domain example.com", "Add a domain"
-    def add_domain(domain)
+    def add_domain(domain_name)
       runner do
-        @cli.add_domain(domain)
+        @cli.add_domain(domain_name)
       end
     end
 
     desc "delete_domain example.com", "Delete a domain"
-    def delete_domain(domain)
+    def delete_domain(domain_name)
       runner do
-        @cli.delete_domain(domain)
+        @cli.delete_domain(domain_name)
       end
     end
 
@@ -96,9 +96,9 @@ module PostfixAdmin
     end
 
     desc "add_admin_domain admin@example.com example.com", "Add admin_domain"
-    def add_admin_domain(user_name, domain)
+    def add_admin_domain(user_name, domain_name)
       runner do
-        @cli.add_admin_domain(user_name, domain)
+        @cli.add_admin_domain(user_name, domain_name)
       end
     end
 
