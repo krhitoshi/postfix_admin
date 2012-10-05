@@ -112,7 +112,6 @@ module PostfixAdmin
       new_alias.attributes = {
         :address => address,
         :goto    => goto,
-        :domain_name  => domain
       }
       domain.aliases << new_alias
       domain.save or raise "Could not save Alias"
