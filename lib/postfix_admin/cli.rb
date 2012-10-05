@@ -129,11 +129,7 @@ module PostfixAdmin
       puts " No. Admin                              Domains Password"
       print_line
       Admin.all.each_with_index do |admin, i|
-        domains = if admin.super_admin?
-                    'Super admin'
-                  else
-                    admin.domains.count
-                  end
+        domains = admin.super_admin? ? 'Super admin' : admin.domains.count
         puts "%4d %-30s %11s %s" % [i+1, admin.username, domains, admin.password]
       end
       print_line
