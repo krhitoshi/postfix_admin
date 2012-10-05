@@ -41,8 +41,8 @@ describe PostfixAdmin::CLI do
   end
 
   it "#alias_exit?" do
-    @cli.alias_exist?('user@example.com').should be_true
-    @cli.alias_exist?('unknown@example.com').should be_false
+    Alias.exist?('user@example.com').should be_true
+    Alias.exist?('unknown@example.com').should be_false
   end
 
   it "#add_admin and #delete_admin" do
@@ -58,10 +58,10 @@ describe PostfixAdmin::CLI do
     lambda { @cli.delete_alias('unknown@example.com') }.should raise_error
 
     lambda { @cli.add_alias('new_alias@example.com', 'goto@example.jp') }.should_not raise_error
-    @cli.alias_exist?('new_alias@example.com').should be_true
+    Alias.exist?('new_alias@example.com').should be_true
 
     lambda { @cli.delete_alias('new_alias@example.com') }.should_not raise_error
-    @cli.alias_exist?('new_alias@example.com').should be_false
+    Alias.exist?('new_alias@example.com').should be_false
   end
 
   it "add and delete methods" do

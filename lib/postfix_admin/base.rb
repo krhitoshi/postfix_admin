@@ -69,7 +69,7 @@ module PostfixAdmin
         raise Error, "Could not find domain #{domain_name}"
       end
 
-      if alias_exist?(address)
+      if Alias.exist?(address)
         raise Error, "#{address} is already resistered."
       end
 
@@ -98,7 +98,7 @@ module PostfixAdmin
       if Mailbox.exist?(address)
         raise Error, "mailbox #{address} is already registered!"
       end
-      if alias_exist?(address)
+      if Alias.exist?(address)
         raise Error, "alias #{address} is already registered!"
       end
       user, domain_name = address_split(address)
@@ -121,7 +121,7 @@ module PostfixAdmin
       if Mailbox.exist?(address)
         raise Error, "Can not delete mailbox by delete_alias. Use delete_account"
       end
-      unless alias_exist?(address)
+      unless Alias.exist?(address)
         raise Error, "#{address} is not found!"
       end
       Alias.all(:address => address).destroy or raise "Could not destroy Alias"
@@ -185,12 +185,8 @@ module PostfixAdmin
       DomainAdmin.all(:username => username, :domain_name => domain).count != 0
     end
 
-    def alias_exist?(address)
-      Alias.all(:address => address).count != 0
-    end
-
     def account_exist?(address)
-      alias_exist?(address) && Mailbox.exist?(address)
+      Alias.exist?(address) && Mailbox.exist?(address)
     end
 
     def address_split(address)

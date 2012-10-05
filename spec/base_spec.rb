@@ -40,8 +40,8 @@ describe PostfixAdmin::Base do
   end
 
   it "#alias_exist?" do
-    @base.alias_exist?('user@example.com').should be_true
-    @base.alias_exist?('unknown@example.com').should be_false
+    Alias.exist?('user@example.com').should be_true
+    Alias.exist?('unknown@example.com').should be_false
   end
 
   it "#mailbox_exist?" do
@@ -146,7 +146,7 @@ describe PostfixAdmin::Base do
       num_aliases   = Alias.count
       lambda { @base.add_alias('new_alias@example.com', 'goto@example.jp') }.should_not raise_error
       (Alias.count - num_aliases).should be(1)
-      @base.alias_exist?('new_alias@example.com').should be_true
+      Alias.exist?('new_alias@example.com').should be_true
     end
 
     it "can not add an alias which has a same name as a mailbox" do
@@ -166,7 +166,7 @@ describe PostfixAdmin::Base do
   describe "#delete_alias" do
     it "can delete an alias" do
       lambda{ @base.delete_alias('alias@example.com') }.should_not raise_error
-      @base.alias_exist?('alias@example.com').should be_false
+      Alias.exist?('alias@example.com').should be_false
     end
 
     it "can not delete mailbox" do
@@ -220,7 +220,7 @@ describe PostfixAdmin::Base do
       lambda{ @base.delete_account('user@example.com') }.should_not raise_error
       @base.account_exist?('user@example.com').should be_false
       Mailbox.exist?('user@example.com').should be_false
-      @base.alias_exist?('user@example.com').should be_false
+      Alias.exist?('user@example.com').should be_false
     end
 
     it "can not delete unknown account" do
