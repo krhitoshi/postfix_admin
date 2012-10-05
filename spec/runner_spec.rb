@@ -30,7 +30,17 @@ describe PostfixAdmin::Runner do
   end
 
   describe "admin_passwd" do
-    capture(:stdout){ Runner.start(['admin_passwd', 'admin@example.com', 'new_password']) }.should =~ /successfully changed/
+    it "can change password of an admin" do
+      capture(:stdout){ Runner.start(['admin_passwd', 'admin@example.com', 'new_password']) }.should =~ /successfully changed/
+    end
+
+    it "can not use too short password (< 5)" do
+      capture(:stderr){ Runner.start(['admin_passwd', 'admin@example.com', '123']) }.should =~ /too short/
+    end
+
+    it "can not use for unknown admin" do
+      capture(:stderr){ Runner.start(['admin_passwd', 'unknown@example.com', 'new_password']) }.should =~ /Could not find/
+    end
   end
 
   describe "#add_alias and #delete_alias" do
