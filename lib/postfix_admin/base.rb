@@ -205,14 +205,6 @@ module PostfixAdmin
       Mailbox.all(:username => user_name).count != 0
     end
 
-    def admin_domains(username=nil)
-      if username
-        Admin.find(username).domains
-      else
-        nil
-      end
-    end
-
     def address_split(address)
       address.split('@')
     end

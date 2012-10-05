@@ -35,11 +35,6 @@ describe PostfixAdmin::Base do
     @base.config[:mailbox_quota].should == 100 * 1024 * 1000
   end
 
-  it "#admin_domains" do
-    lambda { @base.admin_domains }.should_not raise_error
-    lambda { @base.admin_domains('admin@example.com') }.should_not raise_error
-  end
-
   it "#domain_exist?" do
     Domain.exist?('example.com').should be_true
   end
@@ -128,8 +123,8 @@ describe PostfixAdmin::Base do
   describe "#add_admin_domain" do
     it "#add_admin_domain" do
       @base.add_admin_domain('admin@example.com', 'example.org')
-      @base.admin_domains('admin@example.com').find do |admin_domain|
-        admin_domain.domain_name == 'example.org'
+      Admin.find('admin@example.com').domains.find do |domain|
+        domain.domain_name == 'example.org'
       end.should be_true
     end
 
