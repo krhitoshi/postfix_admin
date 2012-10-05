@@ -127,5 +127,13 @@ module PostfixAdmin
     belongs_to :domain, :model => 'Domain', :child_key => :domain_name
 
     storage_names[:default] = 'alias'
+
+    def self.find(address)
+      Alias.first(:address => address)
+    end
+
+    def self.exist?(address)
+      !!Alias.find(address)
+    end
   end
 end
