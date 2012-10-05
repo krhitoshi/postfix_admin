@@ -50,7 +50,7 @@ module PostfixAdmin
     private
 
     def exist_domain?(domain_name)
-      !!domains.find{ |domain| domain.domain_name == domain_name }
+      !!domains.first(:domain_name => domain_name)
     end
   end
 
