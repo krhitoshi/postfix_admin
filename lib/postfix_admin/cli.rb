@@ -85,10 +85,6 @@ module PostfixAdmin
       end
     end
 
-    def alias_exist?(address)
-      @base.alias_exist?(address)
-    end
-
     def show_admin
       if Admin.count == 0
         puts "\nNo admin in database"

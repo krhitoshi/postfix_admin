@@ -35,16 +35,6 @@ describe PostfixAdmin::CLI do
     lambda { @cli.show_domain_aliases('unknown.example.com') }.should raise_error Error
   end
 
-  it "#admin_exist?" do
-    Admin.exist?('admin@example.com').should be_true
-    Admin.exist?('admin@example.net').should be_false
-  end
-
-  it "#alias_exit?" do
-    Alias.exist?('user@example.com').should be_true
-    Alias.exist?('unknown@example.com').should be_false
-  end
-
   it "#add_admin and #delete_admin" do
     lambda { @cli.add_admin('common@example.net', 'password') }.should_not raise_error
     Admin.exist?('common@example.net').should be_true
