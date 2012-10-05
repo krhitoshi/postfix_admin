@@ -80,7 +80,7 @@ module PostfixAdmin
       if admin.save
         puts "the password of #{user_name} was successfully changed."
       else
-        raise "Could not change passsword of Admin"
+        raise "Could not change password of Admin"
       end
     end
 
