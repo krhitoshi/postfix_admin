@@ -70,6 +70,10 @@ module PostfixAdmin
     end
 
     def super_admin(user_name, disable)
+      unless Admin.exist?(user_name)
+        raise Error, "Could not find admin #{user_name}"
+      end
+
       if disable
         Admin.find(user_name).super_admin = false
         puts "Successfully disabled super admin flag of #{user_name}"

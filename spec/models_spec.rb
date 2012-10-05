@@ -18,11 +18,13 @@ describe PostfixAdmin::Admin do
   end
 
   it "#super_admin=" do
-    Admin.find('admin@example.com').super_admin = true
-    Admin.find('admin@example.com').super_admin?.should === true
-
-    Admin.find('all@example.com').super_admin = false
+    lambda{ Admin.find('all@example.com').super_admin = false }.should_not raise_error
     Admin.find('all@example.com').super_admin?.should === false
+
+    Domain.exist?('ALL').should be_true
+
+    lambda{ Admin.find('admin@example.com').super_admin = true }.should_not raise_error
+    Admin.find('admin@example.com').super_admin?.should === true
   end
 
   describe "#has_domain?" do

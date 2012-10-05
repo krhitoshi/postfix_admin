@@ -23,9 +23,9 @@ module PostfixAdmin
     def super_admin=(value)
       if value
         domains << Domain.find('ALL')
-        self.save
+        save or raise "Could not save ALL domain for Admin"
       else
-        domains(:domain_name => 'ALL').destroy
+        domain_admins(:domain_name => 'ALL').destroy
       end
     end
 

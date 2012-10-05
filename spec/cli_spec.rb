@@ -35,6 +35,22 @@ describe PostfixAdmin::CLI do
     lambda { @cli.show_domain_aliases('unknown.example.com') }.should raise_error Error
   end
 
+  describe "#super_admin" do
+    it "enables super admin flag of an admin" do
+      lambda{ @cli.super_admin('admin@example.com', false) }.should_not raise_error
+      Admin.find('admin@example.com').super_admin?.should be_true
+    end
+
+    it "disable super admin flag of an admin" do
+      lambda{ @cli.super_admin('all@example.com', true) }.should_not raise_error
+      Admin.find('all@example.com').super_admin?.should be_false
+    end
+
+    it "can not user for unknown admin" do
+      lambda{ @cli.super_admin('unknown_admin@example.com', false) }.should raise_error Error
+    end
+  end
+
   it "#change_admin_password" do
     lambda { @cli.change_admin_password('admin@example.com', 'new_password') }.should_not raise_error
     Admin.find('admin@example.com').password.should == 'new_password'
