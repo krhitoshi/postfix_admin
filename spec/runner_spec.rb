@@ -34,8 +34,12 @@ describe PostfixAdmin::Runner do
       capture(:stdout){ Runner.start(['super', 'admin@example.com']) }.should =~ /Successfully enabled/
     end
 
-    it "can disable super admin flag of an admin" do
+    it "can disable super admin flag of an admin (--disable)" do
       capture(:stdout){ Runner.start(['super', 'admin@example.com', '--disable']) }.should =~ /Successfully disabled/
+    end
+
+    it "can use -d option as --disable" do
+      capture(:stdout){ Runner.start(['super', 'admin@example.com', '-d']) }.should =~ /Successfully disabled/
     end
   end
 
