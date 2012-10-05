@@ -30,6 +30,13 @@ module PostfixAdmin
       end
     end
 
+    desc "super_admin admin@example.com", "Enable super admin flag of an admin"
+    def super_admin(user_name)
+      runner do
+        @cli.super_admin(user_name)
+      end
+    end
+
     desc "admin_passwd admin@example.com new_password", "Change password of admin"
     def admin_passwd(user_name, password)
       runner do

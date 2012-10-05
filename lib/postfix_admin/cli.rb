@@ -69,6 +69,11 @@ module PostfixAdmin
       end
     end
 
+    def super_admin(user_name)
+      Admin.find(user_name).super_admin = true
+      puts "Successfully enabled super admin flag of #{user_name}"
+    end
+
     def change_admin_password(user_name, password)
       unless Admin.exist?(user_name)
         raise Error, "Could not find admin #{user_name}"
