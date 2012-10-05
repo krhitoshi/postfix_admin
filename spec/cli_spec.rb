@@ -35,6 +35,12 @@ describe PostfixAdmin::CLI do
     lambda { @cli.show_domain_aliases('unknown.example.com') }.should raise_error Error
   end
 
+  it "#change_admin_password" do
+    lambda { @cli.change_admin_password('admin@example.com', 'new_password') }.should_not raise_error
+    Admin.find('admin@example.com').password.should == 'new_password'
+    lambda { @cli.change_admin_password('unknown_admin@example.com', 'new_password') }.should raise_error Error
+  end
+
   it "#add_admin and #delete_admin" do
     lambda { @cli.add_admin('common@example.net', 'password') }.should_not raise_error
     Admin.exist?('common@example.net').should be_true

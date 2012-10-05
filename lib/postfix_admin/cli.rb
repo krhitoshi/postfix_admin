@@ -70,6 +70,9 @@ module PostfixAdmin
     end
 
     def change_admin_password(user_name, password)
+      unless Admin.exist?(user_name)
+        raise Error, "Could not find admin #{user_name}"
+      end
       admin = Admin.find(user_name)
       admin.password = password
       if admin.save
