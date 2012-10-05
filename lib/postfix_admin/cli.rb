@@ -69,6 +69,16 @@ module PostfixAdmin
       end
     end
 
+    def change_admin_password(user_name, password)
+      admin = Admin.find(user_name)
+      admin.password = password
+      if admin.save
+        puts "the password of #{user_name} was successfully changed."
+      else
+        raise "Could not change passsword of Admin"
+      end
+    end
+
     def delete_domain(domain)
       if @base.delete_domain(domain)
         puts %Q!"#{domain}" was successfully deleted.!

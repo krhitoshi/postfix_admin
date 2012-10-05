@@ -29,6 +29,10 @@ describe PostfixAdmin::Runner do
     capture(:stdout){ Runner.start(['delete_domain', 'example.net']) }.should =~ EX_DELETED
   end
 
+  describe "admin_passwd" do
+    capture(:stdout){ Runner.start(['admin_passwd', 'admin@example.com', 'new_password']) }.should =~ /successfully changed/
+  end
+
   describe "#add_alias and #delete_alias" do
     it "can add and delete an new alias." do
       capture(:stdout){ Runner.start(['add_alias', 'new_alias@example.com', 'goto@example.jp']) }.should =~ EX_REGISTERED

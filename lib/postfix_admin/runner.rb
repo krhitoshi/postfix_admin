@@ -30,6 +30,13 @@ module PostfixAdmin
       end
     end
 
+    desc "admin_passwd admin@example.com new_password", "Change password of admin"
+    def admin_passwd(user_name, password)
+      runner do
+        @cli.change_admin_password(user_name, password)
+      end
+    end
+
     desc "add_domain example.com", "Add a domain"
     def add_domain(domain)
       runner do
