@@ -17,11 +17,11 @@ describe PostfixAdmin::Runner do
 
   describe "show" do
     it "shows information of example.com" do
-     capture(:stdout){ Runner.start(["show"]) }.should =~ /example.com.+30.+30.+100/
+     capture(:stdout){ Runner.start(["show"]) }.should =~ /example.com\s+1\s+\/\s+30\s+1\s+\/\s+30\s+100/
     end
 
     it "shows information of admin@example.com" do
-      capture(:stdout){ Runner.start(["show"]) }.should =~ /admin@example.com.+1.+password/
+      capture(:stdout){ Runner.start(["show"]) }.should =~ /admin@example.com\s+1\s+password/
     end
 
     it "show the detail of example.com" do
