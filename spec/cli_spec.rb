@@ -56,21 +56,40 @@ describe PostfixAdmin::CLI do
     Admin.find('admin@example.com').password.should == 'new_password'
     lambda { @cli.change_admin_password('unknown_admin@example.com', 'new_password') }.should raise_error Error
 
-    lambda { @cli.change_admin_password('admin@example.com', '1234') }.should raise_error Error
+    lambda { @cli.change_admin_password('admin@example.com', '1234') }.should raise_error ArgumentError
   end
 
   it "#change_account_password" do
     lambda { @cli.change_account_password('user@example.com', 'new_password') }.should_not raise_error
     Mailbox.find('user@example.com').password.should == 'new_password'
     lambda { @cli.change_account_password('unknown@example.com', 'new_password') }.should raise_error Error
-    lambda { @cli.change_account_password('user@example.com', '1234') }.should raise_error Error
+    lambda { @cli.change_account_password('user@example.com', '1234') }.should raise_error ArgumentError
   end
 
-  it "#add_admin and #delete_admin" do
-    lambda { @cli.add_admin('common@example.net', 'password') }.should_not raise_error
-    Admin.exist?('common@example.net').should be_true
-    lambda { @cli.delete_admin('common@example.net') }.should_not raise_error
-    Admin.exist?('common@example.net').should be_false
+  describe "#add_admin" do
+    it "can add a new admin" do
+      lambda { @cli.add_admin('new_admin@example.com', 'password') }.should_not raise_error
+      Admin.exist?('new_admin@example.com').should be_true
+    end
+
+    it "can not add exist admin" do
+      lambda { @cli.add_admin('admin@example.com', 'password') }.should raise_error Error
+    end
+
+    it "does not allow too short password (<5)" do
+      lambda { @cli.add_admin('admin@example.com', '1234') }.should raise_error ArgumentError
+    end
+  end
+
+  describe "#delete_admin" do
+    it "can delete an admin" do
+      lambda { @cli.delete_admin('admin@example.com') }.should_not raise_error
+      Admin.exist?('admin@example.com').should be_false
+    end
+
+    it "can not delete unknown admin" do
+      lambda { @cli.delete_admin('unknown_admin@example.com') }.should raise_error Error
+    end
   end
 
   it "#add_alias and #delete_alias" do
@@ -83,6 +102,34 @@ describe PostfixAdmin::CLI do
 
     lambda { @cli.delete_alias('new_alias@example.com') }.should_not raise_error
     Alias.exist?('new_alias@example.com').should be_false
+  end
+
+  describe "#add_account" do
+    it "can add an account" do
+      lambda { @cli.add_account('new_user@example.com', 'password') }.should_not raise_error
+      Mailbox.exist?('new_user@example.com').should be_true
+      Alias.exist?('new_user@example.com').should be_true
+    end
+
+    it "can not add account of unknown domain" do
+      lambda { @cli.add_account('user@unknown.example.com', 'password') }.should raise_error Error
+    end
+
+    it "does not allow too short password (<5)" do
+      lambda { @cli.add_account('new_user@example.com', '1234') }.should raise_error ArgumentError
+    end
+  end
+
+  describe "#delete_accont" do
+    it "can delete an account" do
+      lambda { @cli.delete_account('user@example.com') }.should_not raise_error
+      Mailbox.exist?('user@example.com').should be_false
+      Alias.exist?('user@example.com').should be_false
+    end
+
+    it "can not delete unknown account" do
+      lambda { @cli.delete_account('unknown@example.com') }.should raise_error Error
+    end
   end
 
   it "add and delete methods" do

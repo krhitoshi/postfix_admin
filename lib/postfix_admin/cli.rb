@@ -257,7 +257,7 @@ module PostfixAdmin
 
     def validate_password(password)
       if password.size < MIN_NUM_PASSWORD_CHARACTER
-        raise Error, "Password is too short. It should be larger than #{MIN_NUM_PASSWORD_CHARACTER}"
+        raise ArgumentError, "Password is too short. It should be larger than #{MIN_NUM_PASSWORD_CHARACTER}"
       end
     end
 
