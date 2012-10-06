@@ -6,16 +6,16 @@ describe PostfixAdmin::Runner do
     db_initialize
   end
 
-  it "#version" do
+  it "version" do
     capture(:stdout){ Runner.start(["version"]) }.should =~ /postfix_admin \d+\.\d+\.\d/
   end
 
-  it "#summary" do
+  it "summary" do
     capture(:stdout){ Runner.start(["summary"]) }.should =~ /\[Summary\]/
     capture(:stdout){ Runner.start(["summary", "example.com"]) }.should =~ /\[Summary of example.com\]/
   end
 
-  describe "#show" do
+  describe "show" do
     it "shows information of example.com" do
      capture(:stdout){ Runner.start(["show"]) }.should =~ /example.com.+30.+30.+100/
     end
