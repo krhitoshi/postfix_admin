@@ -23,6 +23,10 @@ describe PostfixAdmin::Runner do
     it "shows information of admin@example.com" do
       capture(:stdout){ Runner.start(["show"]) }.should =~ /admin@example.com.+1.+password/
     end
+
+    it "show the detail of example.com" do
+      capture(:stdout){ Runner.start(["show", "example.com"]) }.should =~ /user@example.com\s+100.0\s+password/
+    end
   end
 
   it "setup" do
