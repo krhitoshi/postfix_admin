@@ -28,8 +28,10 @@ describe PostfixAdmin::Runner do
       capture(:stdout){ Runner.start(["show", "example.com"]) }.should =~ /user@example.com\s+100.0\s+password/
     end
 
-    it "when no aliases and no addresses" do
+    it "when no admins, no aliases and no addresses" do
+      Admin.find('all@example.com').super_admin = false
       out = capture(:stdout){ Runner.start(["show", "example.org"]) }
+      out.should =~ /No admins/
       out.should =~ /No addresses/
       out.should =~ /No aliases/
     end

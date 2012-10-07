@@ -100,18 +100,18 @@ module PostfixAdmin
 
     def show_admin(domain=nil)
       admins = domain ? Admin.select{|a| a.has_domain?(domain)} : Admin.all
-      if admins.count == 0
-        puts "\nNo admin in database"
-        return
-      end
-
       index = " No. Admin                              Domains Password"
-      report("Admin", index) do
-        admins.each_with_index do |a, i|
-          domains = a.super_admin? ? 'Super admin' : a.domains.count
-          puts "%4d %-30s %11s %s" % [i+1, a.username, domains, a.password]
+      report("Admins", index) do
+        if admins.count == 0
+          puts " No admins"
+        else
+          admins.each_with_index do |a, i|
+            domains = a.super_admin? ? 'Super admin' : a.domains.count
+            puts "%4d %-30s %11s %s" % [i+1, a.username, domains, a.password]
+          end
         end
       end
+
     end
 
     def show_address(domain)
