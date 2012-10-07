@@ -247,7 +247,7 @@ module PostfixAdmin
 
     def create_config(config_file)
       open(config_file, 'w') do |f|
-        f.write PostfixAdmin::Base::DEFAULT_CONFIG.to_yaml
+        f.write Base::DEFAULT_CONFIG.to_yaml
       end
       File.chmod(0600, config_file)
     end

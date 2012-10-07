@@ -5,7 +5,7 @@ describe PostfixAdmin::CLI do
   before do
     db_initialize
     config_initialize
-    @cli = PostfixAdmin::CLI.new
+    @cli = CLI.new
   end
 
   it "::config_file#=" do
