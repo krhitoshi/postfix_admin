@@ -4,7 +4,13 @@ require 'postfix_admin/cli'
 describe PostfixAdmin::CLI do
   before do
     db_initialize
+    config_initialize
     @cli = PostfixAdmin::CLI.new
+  end
+
+  it "::config_file#=" do
+    CLI.config_file = '/tmp/postfix_admin.conf'
+    CLI.config_file.should == '/tmp/postfix_admin.conf'
   end
 
   it "#show_domain" do

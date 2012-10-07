@@ -2,14 +2,8 @@
 $:.unshift(File.join(File.dirname(__FILE__), "..", "lib"))
 
 require 'postfix_admin'
+require 'postfix_admin/cli'
 
-module PostfixAdmin
-  class CLI
-    def config_file
-      File.join(File.dirname(__FILE__) , 'postfix_admin.conf')
-    end
-  end
-end
 
 include PostfixAdmin
 
@@ -28,6 +22,10 @@ include PostfixAdmin
 #
 # Alias:
 #  alias@example.com
+
+def config_initialize
+  CLI.config_file = File.join(File.dirname(__FILE__) , 'postfix_admin.conf')
+end
 
 def db_clear
   DomainAdmin.all.destroy
@@ -114,6 +112,7 @@ DataMapper.setup(:default, 'sqlite::memory:')
 DataMapper.finalize
 DataMapper.auto_migrate!
 db_initialize
+config_initialize
 
 module PostfixAdmin
   class Base

@@ -3,12 +3,20 @@ require 'postfix_admin'
 
 module PostfixAdmin
   class CLI
-    CONFIG_FILE = '~/.postfix_admin.conf'
+    @config_file = '~/.postfix_admin.conf'
     MIN_NUM_PASSWORD_CHARACTER = 5
 
     def initialize
       @config = load_config
       @base = PostfixAdmin::Base.new(@config)
+    end
+
+    def self.config_file
+      @config_file
+    end
+
+    def self.config_file=(value)
+      @config_file = value
     end
 
     def show(domain)
@@ -223,7 +231,7 @@ module PostfixAdmin
     end
 
     def config_file
-      config_file = File.expand_path(CONFIG_FILE)
+      config_file = File.expand_path(CLI.config_file)
     end
 
     def load_config
