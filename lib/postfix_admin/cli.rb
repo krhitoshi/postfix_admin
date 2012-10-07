@@ -118,18 +118,18 @@ module PostfixAdmin
       domain_check(domain)
 
       mailboxes = Domain.find(domain).mailboxes
-      if mailboxes.count == 0
-        puts "\nNo address in #{domain}"
-        return
-      end
-
       index = " No. Email                           Quota (MB) Password"
-      report("Accounts", index) do
-        mailboxes.each_with_index do |m, i|
-          quota = m.quota.to_f/1024000.0
-          puts "%4d %-30s  %10.1f %s" % [i+1, m.username, quota, m.password]
+      report("Addresses", index) do
+        if mailboxes.count == 0
+          puts " No addresses"
+        else
+          mailboxes.each_with_index do |m, i|
+            quota = m.quota.to_f/1024000.0
+            puts "%4d %-30s  %10.1f %s" % [i+1, m.username, quota, m.password]
+          end
         end
       end
+
     end
 
     def show_domain_aliases(domain)
@@ -139,16 +139,17 @@ module PostfixAdmin
         mail_alias.address != mail_alias.goto
       end
 
-      if aliases.count == 0
-        puts "\nNo aliases in #{domain}"
-        return
-      end
       index = " No. Address                        Go to"
       report("Aliases", index) do
-        aliases.each_with_index do |a, i|
-          puts "%4d %-30s %s" % [i+1, a.address, a.goto]
+        if aliases.count == 0
+          puts " No aliases"
+        else
+          aliases.each_with_index do |a, i|
+            puts "%4d %-30s %s" % [i+1, a.address, a.goto]
+          end
         end
       end
+
     end
 
     def show_admin_domain(user_name)
