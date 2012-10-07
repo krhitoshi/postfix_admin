@@ -15,8 +15,8 @@ module PostfixAdmin
       show_summary(domain)
 
       if domain
-        show_domain_account(domain)
         show_admin(domain)
+        show_domain_account(domain)
         show_domain_aliases(domain)
       else
         show_domain
