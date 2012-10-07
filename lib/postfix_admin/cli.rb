@@ -60,9 +60,9 @@ module PostfixAdmin
           puts " No domains"
         else
           Domain.all_without_special_domain.each_with_index do |d, i|
-            puts "%4d %-20s %3d /%3d   %3d /%3d %10d" %
-              [i+1, d.domain_name, d.num_total_aliases, d.maxaliases,
-               d.mailboxes.count, d.maxmailboxes, d.maxquota]
+            puts "%4d %-20s %3d /%3s   %3d /%3s %10d" %
+              [i+1, d.domain_name, d.num_total_aliases, max_str(d.maxaliases),
+               d.mailboxes.count, max_str(d.maxmailboxes), d.maxquota]
           end
         end
       end
@@ -281,6 +281,17 @@ module PostfixAdmin
         puts "the password of #{user_name} was successfully changed."
       else
         raise "Could not change password of #{klass.name}"
+      end
+    end
+
+    def max_str(value)
+      case value
+      when 0
+        '--'
+      when -1
+        '0'
+      else
+        value.to_s
       end
     end
 
