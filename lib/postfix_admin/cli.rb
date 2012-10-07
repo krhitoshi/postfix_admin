@@ -35,6 +35,7 @@ module PostfixAdmin
         domain = Domain.find(domain_name)
         puts "Mailboxes : %4d" % domain.mailboxes.count
         puts "Aliases   : %4d" % domain.num_total_aliases
+        puts "Quota     : %4d MB" % domain.maxquota
       else
         puts "Domains   : %4d" % Domain.all_without_special_domain.count
         puts "Admins    : %4d" % Admin.count
