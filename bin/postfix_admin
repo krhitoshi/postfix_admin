@@ -2,4 +2,8 @@
 
 require 'postfix_admin/runner'
 
-PostfixAdmin::Runner.start
+begin
+  PostfixAdmin::Runner.start
+rescue => e
+  warn e.message
+end
