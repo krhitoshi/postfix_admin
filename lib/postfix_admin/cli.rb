@@ -56,10 +56,14 @@ module PostfixAdmin
     def show_domain
       index = " No. Domain                Aliases   Mailboxes     Quota (MB)"
       report('Domains', index) do
-        Domain.all_without_special_domain.each_with_index do |d, i|
-          puts "%4d %-20s %3d /%3d   %3d /%3d %10d" %
-            [i+1, d.domain_name, d.num_total_aliases, d.maxaliases,
-             d.mailboxes.count, d.maxmailboxes, d.maxquota]
+        if Domain.all_without_special_domain.count == 0
+          puts " No domains"
+        else
+          Domain.all_without_special_domain.each_with_index do |d, i|
+            puts "%4d %-20s %3d /%3d   %3d /%3d %10d" %
+              [i+1, d.domain_name, d.num_total_aliases, d.maxaliases,
+               d.mailboxes.count, d.maxmailboxes, d.maxquota]
+          end
         end
       end
     end
