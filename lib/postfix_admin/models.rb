@@ -1,5 +1,19 @@
 require 'data_mapper'
 
+class DateTime
+  class << self
+
+    alias org_new new
+    def new(year = -4712, mon = 1, mday = 1, hour = 0, min = 0, sec = 0, offset = 0, start = Date::ITALY)
+      if year == 0
+        nil
+      else
+        org_new(year, mon, mday, hour, min, sec, offset, start)
+      end
+    end
+  end
+end
+
 module PostfixAdmin
   class Admin
     include ::DataMapper::Resource
