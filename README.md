@@ -4,7 +4,9 @@ Command Line Tools of Postfix Admin
 
 ## Description
 
-Postfix Admin http://sourceforge.net/projects/postfixadmin/
+Postfix Admin Web Site http://postfixadmin.sourceforge.net/
+
+Sourceforge page http://sourceforge.net/projects/postfixadmin/
 
 This software supports only MySQL as database for Postfix Admin.
 PostgreSQL is not supported.
