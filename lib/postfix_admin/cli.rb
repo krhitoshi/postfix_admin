@@ -54,14 +54,11 @@ module PostfixAdmin
     end
 
     def show_domain
-      puts "\n[Domains]"
-      print_line
-      puts " No. Domain                Aliases   Mailboxes     Quota (MB)"
-      print_line
-      Domain.all_without_special_domain.each_with_index do |domain, i|
-        puts "%4d %-20s %3d /%3d   %3d /%3d %10d" % [i+1, domain.domain_name, domain.num_total_aliases, domain.maxaliases, domain.mailboxes.count, domain.maxmailboxes, domain.maxquota]
+      report('Domains', " No. Domain                Aliases   Mailboxes     Quota (MB)") do
+        Domain.all_without_special_domain.each_with_index do |domain, i|
+          puts "%4d %-20s %3d /%3d   %3d /%3d %10d" % [i+1, domain.domain_name, domain.num_total_aliases, domain.maxaliases, domain.mailboxes.count, domain.maxmailboxes, domain.maxquota]
+        end
       end
-      print_line
     end
 
     def add_domain(domain)
@@ -248,6 +245,15 @@ module PostfixAdmin
 
     def print_line
       puts "-"*100
+    end
+
+    def report(title, index)
+      puts "\n[#{title}]"
+      print_line
+      puts index
+      print_line
+      yield
+      print_line
     end
 
     def domain_check(domain_name)
