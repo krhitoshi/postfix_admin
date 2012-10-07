@@ -16,8 +16,8 @@ module PostfixAdmin
 
       if domain
         show_admin(domain)
-        show_domain_account(domain)
-        show_domain_aliases(domain)
+        show_address(domain)
+        show_alias(domain)
       else
         show_domain
         show_admin
@@ -114,7 +114,7 @@ module PostfixAdmin
       end
     end
 
-    def show_domain_account(domain)
+    def show_address(domain)
       domain_check(domain)
 
       mailboxes = Domain.find(domain).mailboxes
@@ -132,7 +132,7 @@ module PostfixAdmin
 
     end
 
-    def show_domain_aliases(domain)
+    def show_alias(domain)
       domain_check(domain)
 
       aliases = Domain.find(domain).aliases.find_all do |mail_alias|
