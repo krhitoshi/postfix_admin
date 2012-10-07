@@ -1,5 +1,9 @@
 require 'data_mapper'
 
+#
+# This extension is to avoid 'ArgumentError: invalid date' when datetime value of
+# MySQL is '0000-00-00 00:00:00'.
+#
 class DateTime
   class << self
 
