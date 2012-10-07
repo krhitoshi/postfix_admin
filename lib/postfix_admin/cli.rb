@@ -16,6 +16,7 @@ module PostfixAdmin
 
       if domain
         show_domain_account(domain)
+        show_admin(domain)
         show_domain_aliases(domain)
       else
         show_domain
@@ -97,15 +98,16 @@ module PostfixAdmin
       end
     end
 
-    def show_admin
-      if Admin.count == 0
+    def show_admin(domain=nil)
+      admins = domain ? Admin.select{|a| a.has_domain?(domain)} : Admin.all
+      if admins.count == 0
         puts "\nNo admin in database"
         return
       end
 
       index = " No. Admin                              Domains Password"
       report("Admin", index) do
-        Admin.all.each_with_index do |a, i|
+        admins.each_with_index do |a, i|
           domains = a.super_admin? ? 'Super admin' : a.domains.count
           puts "%4d %-30s %11s %s" % [i+1, a.username, domains, a.password]
         end
