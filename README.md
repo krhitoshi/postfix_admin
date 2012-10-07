@@ -17,6 +17,10 @@ Install postfix_admin as:
 
 ## Usage
 
+List the postfix_admin subcommands as:
+
+    $ postfix_admin
+
 ```
   postfix_admin account_passwd user@example.com new_password    # Change password of account
   postfix_admin add_account user@example.com password           # Add an account
