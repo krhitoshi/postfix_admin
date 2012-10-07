@@ -93,7 +93,7 @@ module PostfixAdmin
 
     def delete_domain(domain)
       if @base.delete_domain(domain)
-        puts %Q!"#{domain}" was successfully deleted.!
+        puts_deleted(domain)
       end
     end
 
