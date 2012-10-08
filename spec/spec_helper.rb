@@ -21,7 +21,7 @@ include PostfixAdmin
 #  user@example.com
 #
 # Alias:
-#  alias@example.com
+#  alias@example.com -> goto@example.jp
 
 def config_initialize
   CLI.config_file = File.join(File.dirname(__FILE__) , 'postfix_admin.conf')
@@ -88,7 +88,7 @@ def db_initialize
   forward = Alias.new
   forward.attributes = {
     :address  => 'alias@example.com',
-    :goto     => 'example.jp',
+    :goto     => 'goto@example.jp',
   }
   domain.aliases << forward
 
