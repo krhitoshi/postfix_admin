@@ -25,6 +25,24 @@ describe PostfixAdmin::CLI do
     @cli = CLI.new
   end
 
+  describe "#show" do
+    it "show all domains information by nil domain name" do
+      lambda { @cli.show(nil) }.should_not raise_error
+    end
+
+    it "show domain information" do
+      lambda { @cli.show('example.com') }.should_not raise_error
+    end
+
+    it "upcase will convert to downcase" do
+      lambda { @cli.show('ExAmpLe.CoM') }.should_not raise_error
+    end
+
+    it "when unknown domain, raises Error" do
+      lambda { @cli.show('unknown.example.com') }.should raise_error Error
+    end
+  end
+
   it "#show_domain" do
     lambda { @cli.show_domain }.should_not raise_error
     capture(:stdout){ @cli.show_domain }.should_not =~ /ALL/
@@ -173,6 +191,16 @@ describe PostfixAdmin::CLI do
   end
 
   describe "#delete_domain" do
+    it "can delete exist domain" do
+      lambda { @cli.delete_domain('example.com') }.should_not raise_error
+      Domain.exist?('example.net').should be_false
+    end
+
+    it "upcase will convert to downcase" do
+      lambda { @cli.delete_domain('eXaMplE.cOm') }.should_not raise_error
+      Domain.exist?('example.com').should be_false
+    end
+
     it "can delete related admins, addresses and aliases" do
       @cli.add_admin('admin@example.org', 'password')
       @cli.add_admin_domain('admin@example.org', 'example.org')

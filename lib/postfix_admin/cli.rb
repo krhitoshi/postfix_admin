@@ -20,6 +20,7 @@ module PostfixAdmin
     end
 
     def show(domain)
+      domain.downcase! if domain
       show_summary(domain)
 
       if domain

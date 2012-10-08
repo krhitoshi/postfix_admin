@@ -147,6 +147,7 @@ module PostfixAdmin
     end
 
     def delete_domain(domain_name)
+      domain_name.downcase!
       unless Domain.exist?(domain_name)
         raise Error, "Could not find domain #{domain_name}"
       end
