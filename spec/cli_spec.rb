@@ -136,6 +136,11 @@ describe PostfixAdmin::CLI do
       Admin.exist?('admin@example.com').should be_false
     end
 
+    it "can delete a super admin" do
+      lambda { @cli.delete_admin('all@example.com') }.should_not raise_error
+      Admin.exist?('all@example.com').should be_false
+    end
+
     it "can delete an admin whish has multiple domains" do
       @cli.add_admin_domain('admin@example.com', 'example.org')
       lambda { @cli.delete_admin('admin@example.com') }.should_not raise_error
