@@ -161,6 +161,11 @@ describe PostfixAdmin::CLI do
     lambda { @cli.add_domain('example.net') }.should_not raise_error
     end
 
+    it "upcase will convert to downcase" do
+      lambda{ @cli.add_domain('ExAmPle.NeT') }.should_not raise_error
+      Domain.exist?('example.net').should be_true
+    end
+
     it "can not add exist domain" do
       lambda{ @cli.add_domain('example.com') }.should raise_error Error
       lambda{ @cli.add_domain('ExAmPle.Com') }.should raise_error Error
