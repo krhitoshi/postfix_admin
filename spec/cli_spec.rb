@@ -1,16 +1,28 @@
 
 require 'postfix_admin/cli'
 
-describe PostfixAdmin::CLI do
+describe PostfixAdmin::CLI, "when config file does not exist" do
   before do
-    db_initialize
     config_initialize
-    @cli = CLI.new
+    @file = File.join(File.dirname(__FILE__) , 'tmp/postfix_admin.conf')
+    CLI.config_file = @file
+    FileUtils.rm(@file) if File.exist?(@file)
   end
 
   it "::config_file#=" do
-    CLI.config_file = '/tmp/postfix_admin.conf'
-    CLI.config_file.should == '/tmp/postfix_admin.conf'
+    CLI.config_file.should == @file
+  end
+
+  it "#new should raise SystemExit and create config_file" do
+    lambda { CLI.new }.should raise_error SystemExit
+    File.exist?(@file).should === true
+  end
+end
+
+describe PostfixAdmin::CLI do
+  before do
+    db_initialize
+    @cli = CLI.new
   end
 
   it "#show_domain" do
