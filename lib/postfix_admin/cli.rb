@@ -20,7 +20,7 @@ module PostfixAdmin
     end
 
     def show(domain)
-      domain.downcase! if domain
+      domain = domain.downcase if domain
       show_summary(domain)
 
       if domain
@@ -36,7 +36,7 @@ module PostfixAdmin
     def show_summary(domain_name=nil)
       title = "Summary"
       if domain_name
-        domain_name.downcase!
+        domain_name = domain_name.downcase
         domain_check(domain_name)
         title = "Summary of #{domain_name}"
       end

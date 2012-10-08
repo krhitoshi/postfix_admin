@@ -35,6 +35,11 @@ describe PostfixAdmin::CLI do
       lambda { @cli.show('example.com') }.should_not raise_error
     end
 
+    it "can use frozen domain name" do
+      domain = 'example.com'
+      lambda { @cli.show(domain.freeze) }.should_not raise_error
+    end
+
     it "upcase will convert to downcase" do
       lambda { @cli.show('ExAmpLe.CoM') }.should_not raise_error
     end
