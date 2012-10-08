@@ -48,9 +48,22 @@ describe PostfixAdmin::CLI do
     capture(:stdout){ @cli.show_domain }.should_not =~ /ALL/
   end
 
-  it "#show_summary" do
-    lambda { @cli.show_summary }.should_not raise_error
-    lambda { @cli.show_summary('unknown.example.com') }.should raise_error Error
+  describe "#show_summary" do
+    it "show summary of all domain" do
+      lambda { @cli.show_summary }.should_not raise_error
+    end
+
+    it "show summary of domain" do
+      lambda { @cli.show_summary('example.com') }.should_not raise_error
+    end
+
+    it "upcase will convert to downcase" do
+      lambda { @cli.show_summary('example.COM') }.should_not raise_error
+    end
+
+    it "when unknown domain, raises Error" do
+      lambda { @cli.show_summary('unknown.example.com') }.should raise_error Error
+    end
   end
 
   it "#show_admin" do
