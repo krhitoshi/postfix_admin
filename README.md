@@ -11,6 +11,8 @@ Sourceforge page http://sourceforge.net/projects/postfixadmin/
 This software supports only MySQL as database for Postfix Admin.
 PostgreSQL is not supported.
 
+Postfix Admin 2.2.0 is supported.
+
 ## Installation
 
 Install postfix_admin as:
