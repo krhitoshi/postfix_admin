@@ -16,6 +16,7 @@ describe PostfixAdmin::CLI, "when config file does not exist" do
   it "#new should raise SystemExit and create config_file" do
     lambda { CLI.new }.should raise_error SystemExit
     File.exist?(@file).should === true
+    ("%o" % File.stat(@file).mode).should == "100600"
   end
 end
 
