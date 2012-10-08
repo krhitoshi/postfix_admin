@@ -89,7 +89,7 @@ module PostfixAdmin
     desc "version", "Show postfix_admin version"
     def version
       require 'postfix_admin/version'
-      say "postfix_admin #{VERSION}"
+      runner{ say "postfix_admin #{VERSION}" }
     end
 
     private
