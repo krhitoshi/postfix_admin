@@ -128,6 +128,7 @@ module PostfixAdmin
     end
 
     def add_domain(domain_name)
+      domain_name.downcase!
       if domain_name !~ /.+\..+/
         raise Error, "Ivalid domain! #{domain_name}"
       end

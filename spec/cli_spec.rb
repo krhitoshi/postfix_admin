@@ -105,6 +105,12 @@ describe PostfixAdmin::CLI do
       Admin.exist?('admin@example.com').should be_false
     end
 
+    it "can delete an admin whish has multiple domains" do
+      @cli.add_admin_domain('admin@example.com', 'example.org')
+      lambda { @cli.delete_admin('admin@example.com') }.should_not raise_error
+      Admin.exist?('admin@example.com').should be_false
+    end
+
     it "can not delete unknown admin" do
       lambda { @cli.delete_admin('unknown_admin@example.com') }.should raise_error Error
     end
@@ -150,34 +156,39 @@ describe PostfixAdmin::CLI do
     end
   end
 
-  it "add and delete methods" do
+  describe "#add_domain" do
+    it "can add a new domain" do
     lambda { @cli.add_domain('example.net') }.should_not raise_error
+    end
 
-    lambda { @cli.add_admin('admin@example.net', 'password') }.should_not raise_error
-    lambda { @cli.add_admin_domain('admin@example.net', 'example.net') }.should_not raise_error
+    it "can not add exist domain" do
+      lambda{ @cli.add_domain('example.com') }.should raise_error Error
+      lambda{ @cli.add_domain('ExAmPle.Com') }.should raise_error Error
+    end
+  end
 
-    @cli.add_admin('admin2@example.net', 'password')
-    @cli.add_admin_domain('admin2@example.net', 'example.net')
+  describe "#delete_domain" do
+    it "can delete related admins, addresses and aliases" do
+      @cli.add_admin('admin@example.org', 'password')
+      @cli.add_admin_domain('admin@example.org', 'example.org')
+      @cli.add_account('user2@example.com', 'password')
 
-    @cli.add_admin('common@example.net', 'password')
-    @cli.add_admin_domain('common@example.net', 'example.com')
-    @cli.add_admin_domain('common@example.net', 'example.net')
-    lambda { @cli.delete_admin('common@example.net') }.should_not raise_error
-    Admin.exist?('common@example.net').should be_false
+      @cli.add_admin('other_admin@example.com', 'password')
+      @cli.add_admin_domain('other_admin@example.com', 'example.com')
 
-    @cli.add_admin('common@example.net', 'password')
-    @cli.add_admin_domain('common@example.net', 'example.com')
-    @cli.add_admin_domain('common@example.net', 'example.net')
+      lambda { @cli.delete_domain('example.com') }.should_not raise_error
+      Admin.exist?('admin@example.com').should be_false
+      Admin.exist?('admin@example.org').should be_true
+      Admin.exist?('other_admin@example.com').should be_false
 
-    lambda { @cli.add_account('user1@example.net', 'password') }.should_not raise_error
-    lambda { @cli.add_account('user2@example.net', 'password') }.should_not raise_error
+      # aliases should be removed
+      Alias.exist?('alias@example.com').should be_false
+      Alias.exist?('user@example.com').should be_false
+      Alias.exist?('user2@example.com').should be_false
 
-    lambda { @cli.delete_domain('example.net') }.should_not raise_error
-    Admin.exist?('admin@example.net').should be_false
-    Admin.exist?('admin2@example.net').should be_false
-
-    Admin.exist?('common@example.net').should be_true
-    lambda { @cli.delete_admin('common@example.net') }.should_not raise_error
-    Admin.exist?('common@example.net').should be_false
+      # mailboxes should be removed
+      Mailbox.exist?('user@example.com').should be_false
+      Mailbox.exist?('user2@example.com').should be_false
+    end
   end
 end
