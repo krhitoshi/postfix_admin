@@ -120,6 +120,10 @@ describe PostfixAdmin::Runner do
   end
 
   describe "edit_domain" do
+    it "when no options, shows usage" do
+      capture(:stderr){ Runner.start(['edit_domain', 'example.com']) }.should =~ /Use one or more options/
+    end
+
     it "can edit aliases limit of domain" do
       capture(:stdout){ Runner.start(['edit_domain', 'example.com', '--aliases', '40', '--mailboxes', '40', '--maxquota', '400']) }.should =~ /Successfully updated/
     end

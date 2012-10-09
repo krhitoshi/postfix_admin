@@ -50,7 +50,14 @@ module PostfixAdmin
     method_option :mailboxes, :type => :numeric, :aliases => "-m", :desc => "Edit mailboxes limitation"
     method_option :maxquota, :type => :numeric, :aliases => "-q", :desc => "Edit max quota limitation"
     def edit_domain(domain_name)
-      runner{ @cli.edit_domain(domain_name, options) }
+      runner do
+        if options.size == 0
+          warn "Use one or more options."
+          help('edit_domain')
+        else
+          @cli.edit_domain(domain_name, options)
+        end
+      end
     end
 
     desc "delete_domain example.com", "Delete a domain"
