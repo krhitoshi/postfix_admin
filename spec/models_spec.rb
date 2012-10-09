@@ -133,4 +133,14 @@ describe PostfixAdmin::Alias do
       Alias.exist?('unknown@unknown.example.com').should === false
     end
   end
+
+  describe ".mailbox?" do
+    it "when there is same address in maiboxes returns true" do
+      Alias.find('user@example.com').mailbox?.should === true
+    end
+
+    it "when there is no same address in maiboxes returns false" do
+      Alias.find('alias@example.com').mailbox?.should === false
+    end
+  end
 end

@@ -149,5 +149,9 @@ module PostfixAdmin
     def self.exist?(address)
       !!Alias.find(address)
     end
+
+    def mailbox?
+      Mailbox.exist?(address)
+    end
   end
 end
