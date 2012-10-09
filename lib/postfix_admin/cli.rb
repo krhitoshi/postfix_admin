@@ -114,6 +114,7 @@ module PostfixAdmin
       domain.save or raise "Could not save Domain.maxaliases"
 
       puts "Successfully updated limitation of #{domain_name}"
+      show_summary(domain_name)
     end
 
     def delete_domain(domain)
