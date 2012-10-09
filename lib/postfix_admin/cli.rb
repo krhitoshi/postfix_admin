@@ -44,7 +44,7 @@ module PostfixAdmin
       report(title) do
         if domain_name
           domain = Domain.find(domain_name)
-          puts "Mailboxes : %4d / %4d"    % [domain.mailboxes.count, max_str(domain.maxmailboxes)]
+          puts "Mailboxes : %4d / %4s"    % [domain.mailboxes.count, max_str(domain.maxmailboxes)]
           puts "Aliases   : %4d / %4s"    % [domain.num_total_aliases, max_str(domain.maxaliases)]
           puts "Quota     : %4d MB" % domain.maxquota
         else
