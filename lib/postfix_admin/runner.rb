@@ -45,6 +45,14 @@ module PostfixAdmin
       runner{ @cli.add_domain(domain_name) }
     end
 
+    desc "edit_domain example.com", "Edit a domain limitation"
+    method_option :aliases, :type => :numeric, :aliases => "-a", :desc => "Edit aliases limitation"
+    method_option :mailboxes, :type => :numeric, :aliases => "-m", :desc => "Edit mailboxes limitation"
+    method_option :maxquota, :type => :numeric, :aliases => "-q", :desc => "Edit max quota limitation"
+    def edit_domain(domain_name)
+      runner{ @cli.edit_domain(domain_name, options) }
+    end
+
     desc "delete_domain example.com", "Delete a domain"
     def delete_domain(domain_name)
       runner{ @cli.delete_domain(domain_name) }
