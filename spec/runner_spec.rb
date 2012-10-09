@@ -119,6 +119,16 @@ describe PostfixAdmin::Runner do
     end
   end
 
+  describe "edit_domain" do
+    it "can edit aliases limit of domain" do
+      capture(:stdout){ Runner.start(['edit_domain', 'example.com', '--aliases', '40', '--mailboxes', '40', '--maxquota', '400']) }.should =~ /Successfully updated/
+    end
+
+    it "aliases options -a, -m, -q" do
+      capture(:stdout){ Runner.start(['edit_domain', 'example.com', '-a', '40', '-m', '40', '-m', '400']) }.should =~ /Successfully updated/
+    end
+  end
+
   it "add_admin_domain" do
     capture(:stdout){ Runner.start(['add_admin_domain', 'admin@example.com', 'example.org']) }.should =~ EX_REGISTERED
   end

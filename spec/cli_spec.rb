@@ -209,6 +209,16 @@ describe PostfixAdmin::CLI do
     end
   end
 
+  describe "#edit_domain" do
+    it "can update domain limitations" do
+      lambda{ @cli.edit_domain('example.com', {:aliases => '40', :mailboxes => '40', :maxquota => '400'}) }.should_not raise_error
+      domain = Domain.find('example.com')
+      domain.maxaliases.should == 40
+      domain.maxmailboxes.should == 40
+      domain.maxquota.should == 400
+    end
+  end
+
   describe "#delete_domain" do
     it "can delete exist domain" do
       lambda { @cli.delete_domain('example.com') }.should_not raise_error
