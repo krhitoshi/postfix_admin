@@ -161,17 +161,21 @@ module PostfixAdmin
     def show_alias(domain)
       domain_check(domain)
 
-      aliases = Domain.find(domain).aliases.find_all do |mail_alias|
-        mail_alias.address != mail_alias.goto
+      forwards, aliases = Domain.find(domain).aliases.partition{|a| a.mailbox?}
+
+      forwards.delete_if do |f|
+        f.address == f.goto
       end
 
       index = " No. Address                        Go to"
-      report("Aliases", index) do
-        if aliases.count == 0
-          puts " No aliases"
-        else
-          aliases.each_with_index do |a, i|
-            puts "%4d %-30s %s" % [i+1, a.address, a.goto]
+      [["Forwards", forwards], ["Aliases", aliases]].each do |title, list|
+        report(title, index) do
+          if list.count == 0
+            puts " No #{title.downcase}"
+          else
+            list.each_with_index do |a, i|
+              puts "%4d %-30s %s" % [i+1, a.address, a.goto]
+            end
           end
         end
       end
