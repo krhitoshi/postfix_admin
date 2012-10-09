@@ -107,6 +107,7 @@ module PostfixAdmin
     end
 
     def edit_domain(domain_name, options)
+      domain_check(domain_name)
       domain = Domain.find(domain_name)
       domain.maxaliases   = options[:aliases]   if options[:aliases]
       domain.maxmailboxes = options[:mailboxes] if options[:mailboxes]

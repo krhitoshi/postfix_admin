@@ -127,6 +127,10 @@ describe PostfixAdmin::Runner do
     it "aliases options -a, -m, -q" do
       capture(:stdout){ Runner.start(['edit_domain', 'example.com', '-a', '40', '-m', '40', '-m', '400']) }.should =~ /Successfully updated/
     end
+
+    it "can not use unknown domain" do
+      capture(:stderr){ Runner.start(['edit_domain', 'unknown.example.com', '--aliases', '40', '--mailboxes', '40', '--maxquota', '400'])}.should =~ /Could not find/
+    end
   end
 
   it "add_admin_domain" do
