@@ -106,6 +106,16 @@ module PostfixAdmin
       change_password(Mailbox, user_name, password)
     end
 
+    def edit_domain(domain_name, options)
+      domain = Domain.find(domain_name)
+      domain.maxaliases   = options[:aliases]   if options[:aliases]
+      domain.maxmailboxes = options[:mailboxes] if options[:mailboxes]
+      domain.maxquota     = options[:maxquota]  if options[:maxquota]
+      domain.save or raise "Could not save Domain.maxaliases"
+
+      puts "Successfully updated limitation of #{domain_name}"
+    end
+
     def delete_domain(domain)
       if @base.delete_domain(domain)
         puts_deleted(domain)
