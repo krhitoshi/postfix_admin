@@ -200,7 +200,7 @@ describe PostfixAdmin::CLI do
 
   describe "#add_domain" do
     it "can add a new domain" do
-    lambda { @cli.add_domain('example.net') }.should_not raise_error
+      lambda { @cli.add_domain('example.net') }.should_not raise_error
     end
 
     it "upcase will convert to downcase" do
