@@ -8,7 +8,7 @@ module PostfixAdmin
 
     def initialize
       @config = load_config
-      @base = PostfixAdmin::Base.new(@config)
+      @base = Base.new(@config)
     end
 
     def self.config_file
@@ -68,14 +68,16 @@ module PostfixAdmin
       report('Domains', index) do
         if Domain.all_without_special_domain.empty?
           puts " No domains"
-        else
-          Domain.all_without_special_domain.each_with_index do |d, i|
-            puts "%4d %-30s %3d /%3s   %3d /%3s %10d" %
-              [i+1, d.domain_name, d.num_total_aliases, max_str(d.maxaliases),
-               d.mailboxes.count, max_str(d.maxmailboxes), d.maxquota]
-          end
+          next
+        end
+
+        Domain.all_without_special_domain.each_with_index do |d, i|
+          puts "%4d %-30s %3d /%3s   %3d /%3s %10d" %
+            [i+1, d.domain_name, d.num_total_aliases, max_str(d.maxaliases),
+             d.mailboxes.count, max_str(d.maxmailboxes), d.maxquota]
         end
       end
+
     end
 
     def add_domain(domain)
@@ -85,9 +87,7 @@ module PostfixAdmin
     end
 
     def super_admin(user_name, disable)
-      unless Admin.exist?(user_name)
-        raise Error, "Could not find admin #{user_name}"
-      end
+      raise Error, "Could not find admin #{user_name}" unless Admin.exist?(user_name)
 
       if disable
         Admin.find(user_name).super_admin = false
@@ -130,11 +130,12 @@ module PostfixAdmin
       report("Admins", index) do
         if admins.empty?
           puts " No admins"
-        else
-          admins.each_with_index do |a, i|
-            domains = a.super_admin? ? 'Super admin' : a.domains.count
-            puts "%4d %-40s %11s %s" % [i+1, a.username, domains, a.password]
-          end
+          next
+        end
+
+        admins.each_with_index do |a, i|
+          domains = a.super_admin? ? 'Super admin' : a.domains.count
+          puts "%4d %-40s %11s %s" % [i+1, a.username, domains, a.password]
         end
       end
 
@@ -148,11 +149,12 @@ module PostfixAdmin
       report("Addresses", index) do
         if mailboxes.empty?
           puts " No addresses"
-        else
-          mailboxes.each_with_index do |m, i|
-            quota = m.quota.to_f/ KB_TO_MB.to_f
-            puts "%4d %-40s  %10d %-15s %s" % [i+1, m.username, quota, m.password, m.maildir]
-          end
+          next
+        end
+
+        mailboxes.each_with_index do |m, i|
+          quota = m.quota.to_f/ KB_TO_MB.to_f
+          puts "%4d %-40s  %10d %-15s %s" % [i+1, m.username, quota, m.password, m.maildir]
         end
       end
 
@@ -172,10 +174,11 @@ module PostfixAdmin
         report(title, index) do
           if list.empty?
             puts " No #{title.downcase}"
-          else
-            list.each_with_index do |a, i|
-              puts "%4d %-40s %s" % [i+1, a.address, a.goto]
-            end
+            next
+          end
+
+          list.each_with_index do |a, i|
+            puts "%4d %-40s %s" % [i+1, a.address, a.goto]
           end
         end
       end
@@ -188,6 +191,7 @@ module PostfixAdmin
         puts "\nNo domain in database"
         return
       end
+
       report("Domains (#{user_name})", " No. Domain") do
         admin.domains.each_with_index do |d, i|
           puts "%4d %-30s" % [i+1, d.domain_name]
@@ -278,11 +282,11 @@ module PostfixAdmin
       end
     end
 
-    def create_config(config_file)
-      open(config_file, 'w') do |f|
+    def create_config(file)
+      open(file, 'w') do |f|
         f.write Base::DEFAULT_CONFIG.to_yaml
       end
-      File.chmod(0600, config_file)
+      File.chmod(0600, file)
     end
 
     def print_line
@@ -318,9 +322,8 @@ module PostfixAdmin
     end
 
     def change_password(klass, user_name, password)
-      unless klass.exist?(user_name)
-        raise Error, "Could not find #{user_name}"
-      end
+      raise Error, "Could not find #{user_name}" unless klass.exist?(user_name)
+
       validate_password(password)
 
       obj = klass.find(user_name)
