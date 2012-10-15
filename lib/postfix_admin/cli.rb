@@ -144,14 +144,14 @@ module PostfixAdmin
       domain_check(domain)
 
       mailboxes = Domain.find(domain).mailboxes
-      index = " No. Email                                     Quota (MB) Password"
+      index = " No. Email                                     Quota (MB) Password        Maildir"
       report("Addresses", index) do
         if mailboxes.empty?
           puts " No addresses"
         else
           mailboxes.each_with_index do |m, i|
             quota = m.quota.to_f/1024000.0
-            puts "%4d %-40s  %10.1f %s" % [i+1, m.username, quota, m.password]
+            puts "%4d %-40s  %10.1f %-15s %s" % [i+1, m.username, quota, m.password, m.maildir]
           end
         end
       end
@@ -277,7 +277,7 @@ module PostfixAdmin
     end
 
     def print_line
-      puts "-"*100
+      puts "-"*120
     end
 
     def report(title, index=nil)
