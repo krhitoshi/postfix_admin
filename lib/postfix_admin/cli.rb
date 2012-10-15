@@ -66,7 +66,7 @@ module PostfixAdmin
     def show_domain
       index = " No. Domain                Aliases   Mailboxes     Quota (MB)"
       report('Domains', index) do
-        if Domain.all_without_special_domain.count == 0
+        if Domain.all_without_special_domain.empty?
           puts " No domains"
         else
           Domain.all_without_special_domain.each_with_index do |d, i|
@@ -128,7 +128,7 @@ module PostfixAdmin
       admins = domain ? Admin.select{|a| a.has_domain?(domain)} : Admin.all
       index = " No. Admin                              Domains Password"
       report("Admins", index) do
-        if admins.count == 0
+        if admins.empty?
           puts " No admins"
         else
           admins.each_with_index do |a, i|
@@ -146,7 +146,7 @@ module PostfixAdmin
       mailboxes = Domain.find(domain).mailboxes
       index = " No. Email                           Quota (MB) Password"
       report("Addresses", index) do
-        if mailboxes.count == 0
+        if mailboxes.empty?
           puts " No addresses"
         else
           mailboxes.each_with_index do |m, i|
@@ -170,7 +170,7 @@ module PostfixAdmin
       index = " No. Address                        Go to"
       [["Forwards", forwards], ["Aliases", aliases]].each do |title, list|
         report(title, index) do
-          if list.count == 0
+          if list.empty?
             puts " No #{title.downcase}"
           else
             list.each_with_index do |a, i|
@@ -184,7 +184,7 @@ module PostfixAdmin
 
     def show_admin_domain(user_name)
       admin = Admin.find(user_name)
-      if admin.domains.count == 0
+      if admin.domains.empty?
         puts "\nNo domain in database"
         return
       end

@@ -161,7 +161,7 @@ module PostfixAdmin
       admin_names.each do |name|
         next unless Admin.exist?(name)
         admin = Admin.find(name)
-        admin.destroy or raise "Could not destroy Admin" if admin.domains.count == 0
+        admin.destroy or raise "Could not destroy Admin" if admin.domains.empty?
       end
       domain.destroy or raise "Could not destroy Domain"
     end
