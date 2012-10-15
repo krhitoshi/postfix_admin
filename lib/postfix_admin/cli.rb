@@ -152,7 +152,7 @@ module PostfixAdmin
 
         mailboxes.each_with_index do |m, i|
           quota = m.quota.to_f/ KB_TO_MB.to_f
-          puts "%4d %-40s  %10d %-15s %s" % [i+1, m.username, quota, m.password, m.maildir]
+          puts "%4d %-40s  %10s %-15s %s" % [i+1, m.username, max_str(quota.to_i), m.password, m.maildir]
         end
       end
 
