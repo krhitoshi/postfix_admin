@@ -81,7 +81,7 @@ module PostfixAdmin
     end
 
     desc "edit_account user@example.com", "Edit an account"
-    method_option :quota, :type => :numeric, :alias => "-q", :desc => "Edit quota limitation"
+    method_option :quota, :type => :numeric, :aliases => "-q", :desc => "Edit quota limitation"
     def edit_account(address)
       runner{  @cli.edit_account(address, options) }
     end

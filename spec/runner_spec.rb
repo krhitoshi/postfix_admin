@@ -141,6 +141,10 @@ describe PostfixAdmin::Runner do
     it "can edit quota limitation" do
       capture(:stdout){ Runner.start(['edit_account', 'user@example.com', '--quota', '50'])}.should =~ /Successfully updated/
     end
+
+    it "can use alias -q option" do
+      capture(:stdout){ Runner.start(['edit_account', 'user@example.com', '-q', '50'])}.should =~ /Successfully updated/
+    end
   end
 
   it "add_admin_domain" do
