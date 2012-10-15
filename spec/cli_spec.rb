@@ -229,6 +229,10 @@ describe PostfixAdmin::CLI do
       lambda { @cli.edit_account('user@example.com', {:quota => 50}) }.should_not raise_error
       Mailbox.find('user@example.com').quota.should == 50 * KB_TO_MB
     end
+
+    it "raise error when unknown account" do
+      lambda { @cli.edit_account('unknown@example.com', {:quota => 50}) }.should raise_error Error
+    end
   end
 
   describe "#delete_domain" do

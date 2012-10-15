@@ -233,6 +233,7 @@ module PostfixAdmin
     end
 
     def edit_account(address, options)
+      mailbox_check(address)
       mailbox = Mailbox.find(address)
       mailbox.quota = options[:quota] * KB_TO_MB if options[:quota]
       mailbox.save or raise "Could not save Mailbox"
@@ -300,6 +301,12 @@ module PostfixAdmin
     def domain_check(domain_name)
       unless Domain.exist?(domain_name)
         raise Error, %Q!Could not find domain "#{domain_name}"!
+      end
+    end
+
+    def mailbox_check(address)
+      unless Mailbox.exist?(address)
+        raise Error, %Q!Could not find mailbox "#{address}"!
       end
     end
 
