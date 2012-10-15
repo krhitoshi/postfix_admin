@@ -216,7 +216,7 @@ describe PostfixAdmin::CLI do
 
   describe "#edit_domain" do
     it "can update domain limitations" do
-      lambda{ @cli.edit_domain('example.com', {:aliases => '40', :mailboxes => '40', :maxquota => '400'}) }.should_not raise_error
+      lambda{ @cli.edit_domain('example.com', {:aliases => 40, :mailboxes => 40, :maxquota => 400}) }.should_not raise_error
       domain = Domain.find('example.com')
       domain.maxaliases.should == 40
       domain.maxmailboxes.should == 40
