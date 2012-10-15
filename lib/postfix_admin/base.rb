@@ -155,9 +155,17 @@ module PostfixAdmin
       domain = Domain.find(domain_name)
       domain.mailboxes.destroy or raise "Could not destroy Mailbox"
       domain.aliases.destroy or raise "Could not destroy Alias"
+      admin_names = domain.admins.map{|admin| admin.username }
       domain.domain_admins.destroy or raise "Could not destroy DomainAdmin"
-      delete_unnecessary_admins
 
+      admin_names.each do |name|
+        next unless Admin.exist?(name)
+        admin = Admin.find(name)
+        if admin.domains.count == 0
+          admin.destroy or raise "Could not destroy Admin"
+        end
+      end
+      domain.reload
       domain.destroy or raise "Could not destroy Domain"
     end
 
@@ -177,10 +185,6 @@ module PostfixAdmin
 
       Mailbox.all(:username => address).destroy or raise "Could not destroy Mailbox"
       Alias.all(:address => address).destroy or raise "Could not destroy Alias"
-    end
-
-    def delete_unnecessary_admins
-      Admin.unnecessary.destroy or raise "Could not destroy Admin"
     end
 
     def address_split(address)
