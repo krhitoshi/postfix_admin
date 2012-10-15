@@ -156,8 +156,7 @@ module PostfixAdmin
       domain.mailboxes.destroy or raise "Could not destroy Mailbox"
       domain.aliases.destroy or raise "Could not destroy Alias"
       admin_names = domain.admins.map{|a| a.username }
-      domain.admins.clear
-      domain.save or raise "Could not save Domain"
+      domain.clear_admins
 
       admin_names.each do |name|
         next unless Admin.exist?(name)

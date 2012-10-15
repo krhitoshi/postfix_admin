@@ -86,6 +86,11 @@ module PostfixAdmin
     def num_total_aliases
       aliases.count - mailboxes.count
     end
+
+    def clear_admins
+      admins.clear
+      save or raise "Could not save Domain"
+    end
   end
 
   class DomainAdmin
