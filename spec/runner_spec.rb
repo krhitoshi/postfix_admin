@@ -137,6 +137,12 @@ describe PostfixAdmin::Runner do
     end
   end
 
+  describe "edit_account" do
+    it "can edit quota limitation" do
+      capture(:stdout){ Runner.start(['edit_account', 'user@example.com', '--quota', '50'])}.should =~ /Successfully updated/
+    end
+  end
+
   it "add_admin_domain" do
     capture(:stdout){ Runner.start(['add_admin_domain', 'admin@example.com', 'example.org']) }.should =~ EX_REGISTERED
   end

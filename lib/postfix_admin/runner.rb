@@ -80,6 +80,12 @@ module PostfixAdmin
       runner{ @cli.add_account(address, password) }
     end
 
+    desc "edit_account user@example.com", "Edit an account"
+    method_option :quota, :type => :numeric, :alias => "-q", :desc => "Edit quota limitation"
+    def edit_account(address)
+      runner{  @cli.edit_account(address, options) }
+    end
+
     desc "add_admin admin@example.com password", "Add an admin user"
     method_option :super, :type => :boolean, :aliases => "-s", :desc => "register as a super admin"
     def add_admin(user_name, password)

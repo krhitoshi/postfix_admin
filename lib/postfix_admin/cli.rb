@@ -232,6 +232,14 @@ module PostfixAdmin
       end
     end
 
+    def edit_account(address, options)
+      mailbox = Mailbox.find(address)
+      mailbox.quota = options[:quota] if options[:quota]
+      mailbox.save or raise "Could not save Mailbox"
+
+      puts "Successfully updated #{address}"
+    end
+
     def delete_alias(address)
       puts_deleted(address) if @base.delete_alias(address)
     end
