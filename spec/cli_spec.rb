@@ -243,10 +243,13 @@ describe PostfixAdmin::CLI do
       @cli.add_admin('other_admin@example.com', 'password')
       @cli.add_admin_domain('other_admin@example.com', 'example.com')
 
+      @cli.add_admin('no_related@example.com', 'password')
+
       lambda { @cli.delete_domain('example.com') }.should_not raise_error
       Admin.exist?('admin@example.com').should be_false
       Admin.exist?('admin@example.org').should be_true
       Admin.exist?('other_admin@example.com').should be_false
+      Admin.exist?('no_related@example.com').should be_true
 
       # aliases should be removed
       Alias.exist?('alias@example.com').should be_false
