@@ -133,7 +133,19 @@ describe PostfixAdmin::Base do
       lambda{ @base.delete_admin_domain('admin@example.com', 'example.com') }.should_not raise_error
       Admin.find('admin@example.com').has_domain?('example.com').should be_false
     end
-  end
+
+    it "can not delete not administrated domain" do
+      lambda{ @base.delete_admin_domain('admin@example.com', 'example.org') }.should raise_error Error
+    end
+
+    it "raise error when unknown admin" do
+      lambda{ @base.delete_admin_domain('unknown_admin@example.com', 'example.com') }.should raise_error Error
+    end
+
+    it "raise error when unknown domain" do
+      lambda{ @base.delete_admin_domain('admin@example.com', 'unknown.example.com') }.should raise_error Error
+    end
+ end
 
   describe "#add_alias" do
     it "can add a new alias" do

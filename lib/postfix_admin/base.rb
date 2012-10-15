@@ -57,7 +57,7 @@ module PostfixAdmin
 
       admin  = Admin.find(user_name)
       unless admin.has_domain?(domain_name)
-        raise Error, "#{username} is not resistered as admin of #{domain_name}."
+        raise Error, "#{user_name} is not resistered as admin of #{domain_name}."
       end
 
       domain = Domain.find(domain_name)
