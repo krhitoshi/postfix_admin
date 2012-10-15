@@ -112,9 +112,9 @@ module PostfixAdmin
       domain.maxaliases   = options[:aliases]   if options[:aliases]
       domain.maxmailboxes = options[:mailboxes] if options[:mailboxes]
       domain.maxquota     = options[:maxquota]  if options[:maxquota]
-      domain.save or raise "Could not save Domain.maxaliases"
+      domain.save or raise "Could not save Domain"
 
-      puts "Successfully updated limitation of #{domain_name}"
+      puts "Successfully updated #{domain_name}"
       show_summary(domain_name)
     end
 

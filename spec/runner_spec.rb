@@ -124,7 +124,7 @@ describe PostfixAdmin::Runner do
       capture(:stderr){ Runner.start(['edit_domain', 'example.com']) }.should =~ /Use one or more options/
     end
 
-    it "can edit aliases limit of domain" do
+    it "can edit limitations of domain" do
       capture(:stdout){ Runner.start(['edit_domain', 'example.com', '--aliases', '40', '--mailboxes', '40', '--maxquota', '400']) }.should =~ /Successfully updated/
     end
 
