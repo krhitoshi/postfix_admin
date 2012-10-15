@@ -157,7 +157,7 @@ module PostfixAdmin
       domain.aliases.destroy or raise "Could not destroy Alias"
       admin_names = domain.admins.map{|a| a.username }
       domain.admins.clear
-      domain.save
+      domain.save or raise "Could not save Domain"
 
       admin_names.each do |name|
         next unless Admin.exist?(name)
@@ -172,7 +172,8 @@ module PostfixAdmin
         raise Error, "Could not find admin #{user_name}"
       end
       admin = Admin.find(user_name)
-      admin.domain_admins.destroy or raise "Could not destroy DomainAdmin"
+      admin.domains.clear
+      admin.save or raise "Could save Admin"
       admin.destroy or raise "Could not destroy Admin"
     end
 
