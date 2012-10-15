@@ -83,7 +83,14 @@ module PostfixAdmin
     desc "edit_account user@example.com", "Edit an account"
     method_option :quota, :type => :numeric, :aliases => "-q", :desc => "Edit quota limitation"
     def edit_account(address)
-      runner{  @cli.edit_account(address, options) }
+      runner do
+        if options.size == 0
+          warn "Use one or more options."
+          help('edit_account')
+        else
+          @cli.edit_account(address, options)
+        end
+      end
     end
 
     desc "add_admin admin@example.com password", "Add an admin user"

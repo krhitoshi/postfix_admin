@@ -138,6 +138,10 @@ describe PostfixAdmin::Runner do
   end
 
   describe "edit_account" do
+    it "when no options, shows usage" do
+      capture(:stderr){ Runner.start(['edit_account', 'user@example.com']) }.should =~ /Use one or more options/
+    end
+
     it "can edit quota limitation" do
       capture(:stdout){ Runner.start(['edit_account', 'user@example.com', '--quota', '50'])}.should =~ /Successfully updated/
     end
