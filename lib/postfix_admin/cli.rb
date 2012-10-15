@@ -299,15 +299,16 @@ module PostfixAdmin
     end
 
     def domain_check(domain_name)
-      unless Domain.exist?(domain_name)
-        raise Error, %Q!Could not find domain "#{domain_name}"!
-      end
+      klass_check(Domain, domain_name)
     end
 
     def mailbox_check(address)
-      unless Mailbox.exist?(address)
-        raise Error, %Q!Could not find mailbox "#{address}"!
-      end
+      klass_check(Mailbox, address)
+    end
+
+    def klass_check(klass, name)
+      object_name = klass.name.gsub(/PostfixAdmin::/, '').downcase
+      raise Error, %Q!Could not find #{object_name} "#{name}"! unless klass.exist?(name)
     end
 
     def validate_password(password)
