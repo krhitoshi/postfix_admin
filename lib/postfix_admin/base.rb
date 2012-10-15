@@ -29,17 +29,12 @@ module PostfixAdmin
       DataMapper.finalize
     end
 
-    def add_admin_domain(username, domain_name)
-      unless Admin.exist?(username)
-        raise Error, "#{username} is not resistered as admin."
-      end
-      unless Domain.exist?(domain_name)
-        raise Error, "Could not find domain #{domain_name}"
-      end
+    def add_admin_domain(user_name, domain_name)
+      admin_domain_check(user_name, domain_name)
 
-      admin  = Admin.find(username)
+      admin  = Admin.find(user_name)
       if admin.has_domain?(domain_name)
-        raise Error, "#{username} is already resistered as admin of #{domain_name}."
+        raise Error, "#{user_name} is already resistered as admin of #{domain_name}."
       end
 
       domain = Domain.find(domain_name)
@@ -48,12 +43,7 @@ module PostfixAdmin
     end
 
     def delete_admin_domain(user_name, domain_name)
-      unless Admin.exist?(user_name)
-        raise Error, "#{user_name} is not resistered as admin."
-      end
-      unless Domain.exist?(domain_name)
-        raise Error, "Could not find domain #{domain_name}"
-      end
+      admin_domain_check(user_name, domain_name)
 
       admin  = Admin.find(user_name)
       unless admin.has_domain?(domain_name)
@@ -205,5 +195,13 @@ module PostfixAdmin
     def address_split(address)
       address.split('@')
     end
+
+    private
+
+    def admin_domain_check(user_name, domain_name)
+      raise Error, "#{user_name} is not resistered as admin." unless Admin.exist?(user_name)
+      raise Error, "Could not find domain #{domain_name}"     unless Domain.exist?(domain_name)
+    end
+
   end
 end
