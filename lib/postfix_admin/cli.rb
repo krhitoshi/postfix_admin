@@ -151,7 +151,7 @@ module PostfixAdmin
         else
           mailboxes.each_with_index do |m, i|
             quota = m.quota.to_f/1024000.0
-            puts "%4d %-40s  %10.1f %-15s %s" % [i+1, m.username, quota, m.password, m.maildir]
+            puts "%4d %-40s  %10d %-15s %s" % [i+1, m.username, quota, m.password, m.maildir]
           end
         end
       end
