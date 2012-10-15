@@ -171,8 +171,7 @@ module PostfixAdmin
         raise Error, "Could not find admin #{user_name}"
       end
       admin = Admin.find(user_name)
-      admin.domains.clear
-      admin.save or raise "Could save Admin"
+      admin.clear_domains
       admin.destroy or raise "Could not destroy Admin"
     end
 

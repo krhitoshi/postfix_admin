@@ -33,6 +33,11 @@ module PostfixAdmin
       exist_domain?('ALL')
     end
 
+    def clear_domains
+      domains.clear
+      save or raise "Could save Admin"
+    end
+
     def self.find(username)
       Admin.first(:username => username)
     end
