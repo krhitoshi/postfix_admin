@@ -19,14 +19,14 @@ module PostfixAdmin
       @config_file = value
     end
 
-    def show(domain)
-      domain = domain.downcase if domain
-      show_summary(domain)
+    def show(domain_name)
+      domain_name = domain_name.downcase if domain_name
+      show_summary(domain_name)
 
-      if domain
-        show_admin(domain)
-        show_address(domain)
-        show_alias(domain)
+      if domain_name
+        show_admin(domain_name)
+        show_address(domain_name)
+        show_alias(domain_name)
       else
         show_domain
         show_admin
@@ -56,11 +56,11 @@ module PostfixAdmin
       end
     end
 
-    def setup_domain(domain, password)
-      admin = "admin@#{domain}"
-      add_domain(domain)
+    def setup_domain(domain_name, password)
+      admin = "admin@#{domain_name}"
+      add_domain(domain_name)
       add_admin(admin, password)
-      add_admin_domain(admin, domain)
+      add_admin_domain(admin, domain_name)
     end
 
     def show_domain
@@ -80,14 +80,13 @@ module PostfixAdmin
 
     end
 
-    def add_domain(domain)
-      if @base.add_domain(domain)
-        puts %Q!"#{domain}" was successfully registered.!
-      end
+    def add_domain(domain_name)
+      @base.add_domain(domain_name)
+      puts_registered(domain_name, "a domain")
     end
 
     def super_admin(user_name, disable)
-      raise Error, "Could not find admin #{user_name}" unless Admin.exist?(user_name)
+      admin_check(user_name)
 
       if disable
         Admin.find(user_name).super_admin = false
@@ -118,14 +117,13 @@ module PostfixAdmin
       show_summary(domain_name)
     end
 
-    def delete_domain(domain)
-      if @base.delete_domain(domain)
-        puts_deleted(domain)
-      end
+    def delete_domain(domain_name)
+      @base.delete_domain(domain_name)
+      puts_deleted(domain_name)
     end
 
-    def show_admin(domain=nil)
-      admins = domain ? Admin.select{|a| a.has_domain?(domain)} : Admin.all
+    def show_admin(domain_name=nil)
+      admins = domain_name ? Admin.select{|a| a.has_domain?(domain_name)} : Admin.all
       index = " No. Admin                                        Domains Password"
       report("Admins", index) do
         if admins.empty?
@@ -141,10 +139,10 @@ module PostfixAdmin
 
     end
 
-    def show_address(domain)
-      domain_check(domain)
+    def show_address(domain_name)
+      domain_check(domain_name)
 
-      mailboxes = Domain.find(domain).mailboxes
+      mailboxes = Domain.find(domain_name).mailboxes
       index = " No. Email                                     Quota (MB) Password        Maildir"
       report("Addresses", index) do
         if mailboxes.empty?
@@ -160,10 +158,10 @@ module PostfixAdmin
 
     end
 
-    def show_alias(domain)
-      domain_check(domain)
+    def show_alias(domain_name)
+      domain_check(domain_name)
 
-      forwards, aliases = Domain.find(domain).aliases.partition{|a| a.mailbox?}
+      forwards, aliases = Domain.find(domain_name).aliases.partition{|a| a.mailbox?}
 
       forwards.delete_if do |f|
         f.address == f.goto
@@ -189,39 +187,34 @@ module PostfixAdmin
 
     def add_admin(user_name, password, super_admin=false)
       validate_password(password)
-      if @base.add_admin(user_name, password)
-        if super_admin
-          Admin.find(user_name).super_admin = true
-          puts_registered(user_name, "a super admin")
-        else
-          puts_registered(user_name, "an admin")
-        end
+      @base.add_admin(user_name, password)
+      if super_admin
+        Admin.find(user_name).super_admin = true
+        puts_registered(user_name, "a super admin")
+      else
+        puts_registered(user_name, "an admin")
       end
     end
 
-    def add_admin_domain(user_name, domain)
-      if @base.add_admin_domain(user_name, domain)
-        puts_registered(domain, "a domain of #{user_name}")
-      end
+    def add_admin_domain(user_name, domain_name)
+      @base.add_admin_domain(user_name, domain_name)
+      puts_registered(domain_name, "a domain of #{user_name}")
     end
 
     def delete_admin_domain(user_name, domain_name)
-      if @base.delete_admin_domain(user_name, domain_name)
-        puts "#{domain_name} was successfully deleted from #{user_name}"
-      end
+      @base.delete_admin_domain(user_name, domain_name)
+      puts "#{domain_name} was successfully deleted from #{user_name}"
     end
 
     def add_account(address, password)
       validate_password(password)
-      if @base.add_account(address, password)
-        puts_registered(address, "an account")
-      end
+      @base.add_account(address, password)
+      puts_registered(address, "an account")
     end
 
     def add_alias(address, goto)
-      if @base.add_alias(address, goto)
-        puts_registered("#{address}: #{goto}", "an alias")
-      end
+      @base.add_alias(address, goto)
+      puts_registered("#{address}: #{goto}", "an alias")
     end
 
     def edit_account(address, options)
@@ -234,15 +227,18 @@ module PostfixAdmin
     end
 
     def delete_alias(address)
-      puts_deleted(address) if @base.delete_alias(address)
+      @base.delete_alias(address)
+      puts_deleted(address)
     end
 
     def delete_admin(user_name)
-      puts_deleted(user_name) if @base.delete_admin(user_name)
+      @base.delete_admin(user_name)
+      puts_deleted(user_name)
     end
 
     def delete_account(address)
-      puts_deleted(address) if @base.delete_account(address)
+      @base.delete_account(address)
+      puts_deleted(address)
     end
 
     private
@@ -309,6 +305,10 @@ module PostfixAdmin
 
     def mailbox_check(address)
       klass_check(Mailbox, address)
+    end
+
+    def admin_check(user_name)
+      klass_check(Admin, user_name)
     end
 
     def klass_check(klass, name)
