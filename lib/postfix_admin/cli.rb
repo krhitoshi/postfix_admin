@@ -169,20 +169,8 @@ module PostfixAdmin
         f.address == f.goto
       end
 
-      index = " No. Address                                  Go to"
-      [["Forwards", forwards], ["Aliases", aliases]].each do |title, list|
-        report(title, index) do
-          if list.empty?
-            puts " No #{title.downcase}"
-            next
-          end
-
-          list.each_with_index do |a, i|
-            puts "%4d %-40s %s" % [i+1, a.address, a.goto]
-          end
-        end
-      end
-
+      show_alias_base("Forwards", forwards)
+      show_alias_base("Aliases",  aliases)
     end
 
     def show_admin_domain(user_name)
@@ -258,6 +246,19 @@ module PostfixAdmin
     end
 
     private
+
+    def show_alias_base(title, addresses)
+      report(title, " No. Address                                  Go to") do
+        if addresses.empty?
+          puts " No #{title.downcase}"
+          next
+        end
+
+        addresses.each_with_index do |a, i|
+          puts "%4d %-40s %s" % [i+1, a.address, a.goto]
+        end
+      end
+    end
 
     def puts_registered(name, as_str)
       puts %Q!"#{name}" was successfully registered as #{as_str}.!
