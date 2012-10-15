@@ -213,6 +213,12 @@ module PostfixAdmin
       end
     end
 
+    def delete_admin_domain(user_name, domain_name)
+      if @base.delete_admin_domain(user_name, domain_name)
+        puts "#{domain_name} was successfully deleted from #{user_name}"
+      end
+    end
+
     def add_account(address, password)
       validate_password(password)
       if @base.add_account(address, password)

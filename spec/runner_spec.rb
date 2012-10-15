@@ -141,6 +141,10 @@ describe PostfixAdmin::Runner do
     capture(:stdout){ Runner.start(['add_admin_domain', 'admin@example.com', 'example.org']) }.should =~ EX_REGISTERED
   end
 
+  it "delete_admin_domain" do
+    capture(:stdout){ Runner.start(['delete_admin_domain', 'admin@example.com', 'example.com']) }.should =~ EX_DELETED
+  end
+
   it "delete_admin" do
     capture(:stdout){ Runner.start(['delete_admin', 'admin@example.com']) }.should =~ EX_DELETED
   end

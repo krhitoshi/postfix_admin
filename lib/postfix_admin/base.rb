@@ -47,6 +47,24 @@ module PostfixAdmin
       admin.save or raise "Relation Error: Domain of Admin"
     end
 
+    def delete_admin_domain(user_name, domain_name)
+      unless Admin.exist?(user_name)
+        raise Error, "#{user_name} is not resistered as admin."
+      end
+      unless Domain.exist?(domain_name)
+        raise Error, "Could not find domain #{domain_name}"
+      end
+
+      admin  = Admin.find(user_name)
+      unless admin.has_domain?(domain_name)
+        raise Error, "#{username} is not resistered as admin of #{domain_name}."
+      end
+
+      domain = Domain.find(domain_name)
+      admin.domains.delete(domain)
+      admin.save or "Could not save Admin"
+    end
+
     def add_admin(username, password)
       if Admin.exist?(username)
         raise Error, "#{username} is already resistered as admin."

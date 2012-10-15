@@ -130,6 +130,13 @@ describe PostfixAdmin::Base do
     end
   end
 
+  describe "#delete_admin_domain" do
+    it "#delete_admin_domain" do
+      lambda{ @base.delete_admin_domain('admin@example.com', 'example.com') }.should_not raise_error
+      Admin.find('admin@example.com').has_domain?('example.com').should be_false
+    end
+  end
+
   describe "#add_alias" do
     it "can add a new alias" do
       num_aliases   = Alias.count

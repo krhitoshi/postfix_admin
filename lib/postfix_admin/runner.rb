@@ -91,6 +91,12 @@ module PostfixAdmin
       runner{ @cli.add_admin_domain(user_name, domain_name) }
     end
 
+    desc "delete_admin_domain admin@example.com example.com", "Delete admin_domain"
+    def delete_admin_domain(user_name, domain_name)
+      runner{ @cli.delete_admin_domain(user_name, domain_name) }
+    end
+
+
     desc "add_alias alias@example.com goto@example.net", "Add an alias"
     def add_alias(address, goto)
       runner{ @cli.add_alias(address, goto) }
