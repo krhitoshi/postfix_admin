@@ -25,7 +25,7 @@ describe PostfixAdmin::Runner do
     end
 
     it "show the detail of example.com" do
-      capture(:stdout){ Runner.start(["show", "example.com"]) }.should =~ /user@example.com\s+100.0\s+password/
+      capture(:stdout){ Runner.start(["show", "example.com"]) }.should =~ /user@example.com\s+100\s+password/
     end
 
     it "when no admins, no aliases and no addresses" do
