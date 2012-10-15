@@ -112,9 +112,7 @@ describe PostfixAdmin::Base do
   describe "#add_admin_domain" do
     it "#add_admin_domain" do
       @base.add_admin_domain('admin@example.com', 'example.org')
-      Admin.find('admin@example.com').domains.find do |domain|
-        domain.domain_name == 'example.org'
-      end.should be_true
+      Admin.find('admin@example.com').has_domain?('example.org').should be_true
     end
 
     it "can not add unknown domain for an admin" do
