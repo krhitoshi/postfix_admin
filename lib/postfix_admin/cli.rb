@@ -150,7 +150,7 @@ module PostfixAdmin
           puts " No addresses"
         else
           mailboxes.each_with_index do |m, i|
-            quota = m.quota.to_f/1024000.0
+            quota = m.quota.to_f/ KB_TO_MB.to_f
             puts "%4d %-40s  %10d %-15s %s" % [i+1, m.username, quota, m.password, m.maildir]
           end
         end
@@ -234,7 +234,7 @@ module PostfixAdmin
 
     def edit_account(address, options)
       mailbox = Mailbox.find(address)
-      mailbox.quota = options[:quota] * 1024000 if options[:quota]
+      mailbox.quota = options[:quota] * KB_TO_MB if options[:quota]
       mailbox.save or raise "Could not save Mailbox"
 
       puts "Successfully updated #{address}"

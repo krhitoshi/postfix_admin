@@ -32,7 +32,7 @@ describe PostfixAdmin::Base do
     @base.config[:aliases].should == 30
     @base.config[:mailboxes].should == 30
     @base.config[:maxquota].should == 100
-    @base.config[:mailbox_quota].should == 100 * 1024 * 1000
+    @base.config[:mailbox_quota].should == 100 * KB_TO_MB
   end
 
   it "#domain_exist?" do

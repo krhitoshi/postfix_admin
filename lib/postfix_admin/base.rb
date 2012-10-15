@@ -21,7 +21,7 @@ module PostfixAdmin
       @config[:aliases]   = config['aliases']   || 30
       @config[:mailboxes] = config['mailboxes'] || 30
       @config[:maxquota]  = config['maxquota']  || 100
-      @config[:mailbox_quota] = @config[:maxquota] * 1024 * 1000
+      @config[:mailbox_quota] = @config[:maxquota] * KB_TO_MB
     end
 
     def db_setup(database)

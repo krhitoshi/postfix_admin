@@ -227,7 +227,7 @@ describe PostfixAdmin::CLI do
   describe "#edit_account" do
     it "can update account" do
       lambda { @cli.edit_account('user@example.com', {:quota => 50}) }.should_not raise_error
-      Mailbox.find('user@example.com').quota.should == 50 * 1024000
+      Mailbox.find('user@example.com').quota.should == 50 * KB_TO_MB
     end
   end
 

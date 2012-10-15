@@ -101,7 +101,7 @@ def db_initialize
     :password => 'password',
     :name     => '',
     :maildir  => path,
-    :quota    => 100 * 1024 * 1000,
+    :quota    => 100 * KB_TO_MB,
     # :local_part => user,
   }
   domain.mailboxes << mailbox
