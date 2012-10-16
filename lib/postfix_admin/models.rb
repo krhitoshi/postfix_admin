@@ -146,6 +146,15 @@ module PostfixAdmin
 
     storage_names[:default] = 'alias'
 
+    def self.mailbox(address)
+      mail_alias = Alias.new
+      mail_alias.attributes = {
+        :address     => address,
+        :goto        => address,
+      }
+      mail_alias
+    end
+
     def self.find(address)
       Alias.first(:address => address)
     end

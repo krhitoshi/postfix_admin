@@ -83,12 +83,7 @@ module PostfixAdmin
       end
 
       domain = Domain.find(domain_name)
-      mail_alias = Alias.new
-      mail_alias.attributes = {
-        :address     => address,
-        :goto        => address,
-      }
-      domain.aliases << mail_alias
+      domain.aliases << Alias.mailbox(address)
 
       mailbox = Mailbox.new
       mailbox.attributes = {
