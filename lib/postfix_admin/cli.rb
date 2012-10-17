@@ -243,6 +243,7 @@ module PostfixAdmin
       mailbox.save or raise "Could not save Mailbox"
 
       puts "Successfully updated #{address}"
+      show_account(address)
     end
 
     def delete_alias(address)
