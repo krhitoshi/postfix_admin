@@ -54,6 +54,13 @@ describe PostfixAdmin::CLI do
     capture(:stdout){ @cli.show_domain }.should_not =~ /ALL/
   end
 
+  describe "#show_account" do
+    it "shows information of an account" do
+      lambda {  @cli.show_account('user@example.com') }.should_not raise_error
+      capture(:stdout){ @cli.show_account('user@example.com') }.should =~ /Quota/
+    end
+  end
+
   describe "#show_summary" do
     it "show summary of all domain" do
       lambda { @cli.show_summary }.should_not raise_error

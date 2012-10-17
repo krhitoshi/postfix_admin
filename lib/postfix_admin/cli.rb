@@ -19,14 +19,20 @@ module PostfixAdmin
       @config_file = value
     end
 
-    def show(domain_name)
-      domain_name = domain_name.downcase if domain_name
-      show_summary(domain_name)
+    def show(name)
+      name = name.downcase if name
 
-      if domain_name
-        show_admin(domain_name)
-        show_address(domain_name)
-        show_alias(domain_name)
+      if name =~ /@/
+        show_account(name)
+        return
+      end
+
+      show_summary(name)
+
+      if name
+        show_admin(name)
+        show_address(name)
+        show_alias(name)
       else
         show_domain
         show_admin
@@ -61,6 +67,17 @@ module PostfixAdmin
       add_domain(domain_name)
       add_admin(admin, password)
       add_admin_domain(admin, domain_name)
+    end
+
+    def show_account(user_name)
+      mailbox    = Mailbox.find(user_name)
+      mail_alias = Alias.find(user_name)
+      report("Mailbox") do
+        puts "Address  : %s" % mailbox.username
+        puts "Password : %s" % mailbox.password
+        puts "Quota    : %d MB" % max_str(mailbox.quota / KB_TO_MB)
+        puts "Go to    : %s" % mail_alias.goto
+      end
     end
 
     def show_domain

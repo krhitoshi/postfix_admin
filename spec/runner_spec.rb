@@ -36,6 +36,10 @@ describe PostfixAdmin::Runner do
       out.should =~ /No aliases/
     end
 
+    it "shows information of an account" do
+      capture(:stdout){  Runner.start(["show", "user@example.com"]) }.should =~ /user@example.com/
+    end
+
     it "when no domains" do
       capture(:stdout){ Runner.start(['delete_domain', 'example.com']) }.should =~ EX_DELETED
       capture(:stdout){ Runner.start(['delete_domain', 'example.org']) }.should =~ EX_DELETED
