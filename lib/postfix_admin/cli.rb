@@ -70,8 +70,10 @@ module PostfixAdmin
     end
 
     def show_account(user_name)
+      account_check(user_name)
       mailbox    = Mailbox.find(user_name)
       mail_alias = Alias.find(user_name)
+
       report("Mailbox") do
         puts "Address  : %s" % mailbox.username
         puts "Password : %s" % mailbox.password
@@ -314,6 +316,12 @@ module PostfixAdmin
       print_line
       yield
       print_line
+    end
+
+    def account_check(user_name)
+      unless Mailbox.exist?(user_name) && Alias.exist?(user_name)
+        raise Error, %Q!Could not find account "#{user_name}"!
+      end
     end
 
     def domain_check(domain_name)

@@ -59,6 +59,10 @@ describe PostfixAdmin::CLI do
       lambda {  @cli.show_account('user@example.com') }.should_not raise_error
       capture(:stdout){ @cli.show_account('user@example.com') }.should =~ /Quota/
     end
+
+    it "raises error when unknown account" do
+      lambda {  @cli.show_account('unknown@example.com') }.should raise_error Error
+    end
   end
 
   describe "#show_summary" do
