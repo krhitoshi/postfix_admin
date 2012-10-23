@@ -14,7 +14,7 @@ module PostfixAdmin
       runner{ @cli.show_summary(domain_name) }
     end
 
-    desc "show [example.com]", "List of domains"
+    desc "show [example.com | user@example.com]", "Show domains or mailboxes"
     def show(domain_name=nil)
       runner{ @cli.show(domain_name) }
     end
