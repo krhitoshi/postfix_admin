@@ -131,7 +131,7 @@ module PostfixAdmin
     def runner
       begin
         yield
-      rescue => e
+      rescue Error, ArgumentError => e
         warn e.message
       end
     end
