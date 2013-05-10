@@ -114,7 +114,7 @@ module PostfixAdmin
     property :username, String, :key => true
     property :name, String
     property :domain_name, String, :field => 'domain'
-    property :password, String
+    property :password, String, :length => 0..255
     property :maildir, String
     property :quota, Integer
     #  property :local_part, String

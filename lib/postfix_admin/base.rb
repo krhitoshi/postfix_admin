@@ -97,7 +97,9 @@ module PostfixAdmin
         # :local_part => user,
       }
       domain.mailboxes << mailbox
-      domain.save or raise "Could not save Domain"
+      unless domain.save
+        raise "Could not save Mailbox and Domain #{mailbox.errors.map{|e| e.to_s}.join} #{domain.errors.map{|e| e.to_s}.join}"
+      end
     end
 
     def add_alias(address, goto)
