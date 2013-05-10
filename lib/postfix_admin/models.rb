@@ -4,7 +4,7 @@ module PostfixAdmin
   class Admin
     include ::DataMapper::Resource
     property :username, String, :key => true
-    property :password, String
+    property :password, String, :length => 0..255
     property :created, DateTime, :default => DateTime.now
     property :modified, DateTime, :default => DateTime.now
 

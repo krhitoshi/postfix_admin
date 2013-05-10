@@ -64,7 +64,9 @@ module PostfixAdmin
         :username => username,
         :password => password,
       }
-      admin.save or raise "Could not save Admin"
+      unless admin.save
+        raise "Could not save Admin #{admin.errors.map{|e| e.to_s}.join}"
+      end
     end
 
     def add_account(address, password)
