@@ -5,12 +5,21 @@ module PostfixAdmin
     include ::DataMapper::Resource
     property :username, String, :key => true
     property :password, String, :length => 0..255
+    property :active, Boolean, :default  => true
     property :created, DateTime, :default => DateTime.now
     property :modified, DateTime, :default => DateTime.now
 
     has n, :domain_admins, :child_key => :username
     has n, :domains, :model => 'Domain', :through => :domain_admins, :via => :domain
     storage_names[:default] = 'admin'
+
+    def active_str
+      if active
+        "YES"
+      else
+        "NO"
+      end
+    end
 
     def has_domain?(domain_name)
       if super_admin?
