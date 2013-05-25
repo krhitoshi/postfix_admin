@@ -19,6 +19,12 @@ describe PostfixAdmin::Admin do
     Admin.exist?('unknown@example.com').should === false
   end
 
+  it "active" do
+    Admin.find('admin@example.com').active.should === true
+    Admin.find('all@example.com').active.should === true
+    Admin.find('non_active_admin@example.com').active.should === false
+  end
+
   it "#super_admin?" do
     Admin.find('admin@example.com').super_admin?.should === false
     Admin.find('all@example.com').super_admin?.should === true

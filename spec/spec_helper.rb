@@ -62,6 +62,14 @@ def db_initialize
   }
   admin.save
 
+  non_active_admin = Admin.new
+  non_active_admin.attributes = {
+    :username => "non_active_admin@example.com",
+    :password => 'password',
+    :active => false
+  }
+  non_active_admin.save
+
   domain = Domain.find('example.com')
   domain.admins << admin
   domain.save
