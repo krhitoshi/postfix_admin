@@ -1,6 +1,10 @@
 require 'data_mapper'
 
 module PostfixAdmin
+  def self.flag_str(flag)
+    flag ? "YES" : "NO"
+  end
+
   class Admin
     include ::DataMapper::Resource
     property :username, String, :key => true
@@ -14,11 +18,7 @@ module PostfixAdmin
     storage_names[:default] = 'admin'
 
     def active_str
-      if active
-        "YES"
-      else
-        "NO"
-      end
+      PostfixAdmin.flag_str(active)
     end
 
     def has_domain?(domain_name)
@@ -108,11 +108,7 @@ module PostfixAdmin
     end
 
     def active_str
-      if active
-        "YES"
-      else
-        "NO"
-      end
+      PostfixAdmin.flag_str(active)
     end
   end
 
