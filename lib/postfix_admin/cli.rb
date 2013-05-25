@@ -264,14 +264,14 @@ module PostfixAdmin
     private
 
     def show_alias_base(title, addresses)
-      report(title, " No. Address                                  Go to") do
+      report(title, " No. Address                                  Active Go to") do
         if addresses.empty?
           puts " No #{title.downcase}"
           next
         end
 
         addresses.each_with_index do |a, i|
-          puts "%4d %-40s %s" % [i+1, a.address, a.goto]
+          puts "%4d %-40s   %-3s  %s" % [i+1, a.address, a.active_str, a.goto]
         end
       end
     end

@@ -158,12 +158,17 @@ module PostfixAdmin
     property :address, String, :key => true
     property :goto, Text
     property :domain_name, String, :field => 'domain'
+    property :active, Boolean, :default  => true
     property :created, DateTime, :default => DateTime.now
     property :modified, DateTime, :default => DateTime.now
 
     belongs_to :domain, :model => 'Domain', :child_key => :domain_name
 
     storage_names[:default] = 'alias'
+
+    def active_str
+      PostfixAdmin.flag_str(active)
+    end
 
     def self.mailbox(address)
       mail_alias = Alias.new
