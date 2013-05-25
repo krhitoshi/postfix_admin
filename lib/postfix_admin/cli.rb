@@ -162,7 +162,7 @@ module PostfixAdmin
       domain_check(domain_name)
 
       mailboxes = Domain.find(domain_name).mailboxes
-      index = " No. Email                                     Quota (MB) Password        Maildir"
+      index = " No. Email                                     Quota (MB) Active Password        Maildir"
       report("Addresses", index) do
         if mailboxes.empty?
           puts " No addresses"
@@ -171,7 +171,7 @@ module PostfixAdmin
 
         mailboxes.each_with_index do |m, i|
           quota = m.quota.to_f/ KB_TO_MB.to_f
-          puts "%4d %-40s  %10s %-15s %s" % [i+1, m.username, max_str(quota.to_i), m.password, m.maildir]
+          puts "%4d %-40s  %10s   %-3s  %-15s %s" % [i+1, m.username, max_str(quota.to_i), m.active_str, m.password, m.maildir]
         end
       end
 

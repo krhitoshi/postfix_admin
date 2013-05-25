@@ -132,12 +132,17 @@ module PostfixAdmin
     property :maildir, String
     property :quota, Integer
     #  property :local_part, String
+    property :active, Boolean, :default  => true
     property :created, DateTime, :default => DateTime.now
     property :modified, DateTime, :default => DateTime.now
 
     belongs_to :domain, :model => 'Domain', :child_key => :domain_name
 
     storage_names[:default] = 'mailbox'
+
+    def active_str
+      PostfixAdmin.flag_str(active)
+    end
 
     def self.find(username)
       Mailbox.first(:username => username)
