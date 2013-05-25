@@ -62,6 +62,7 @@ module PostfixAdmin
     property :transport, String, :default => 'virtual'
     property :backupmx, Integer, :default => 0
     property :description, String
+    property :active, Boolean, :default  => true
     property :created,  DateTime, :default => DateTime.now
     property :modified, DateTime, :default => DateTime.now
 
@@ -95,6 +96,14 @@ module PostfixAdmin
     def clear_admins
       admins.clear
       save or raise "Could not save Domain"
+    end
+
+    def active_str
+      if active
+        "YES"
+      else
+        "NO"
+      end
     end
   end
 
