@@ -35,7 +35,7 @@ def db_clear
   Admin.all.destroy
 end
 
-def create_domain(domain_name)
+def create_domain(domain_name, active=true)
   domain = Domain.new
   domain.attributes = {
     :domain_name  => domain_name,
@@ -43,6 +43,7 @@ def create_domain(domain_name)
     :maxaliases   => 30,
     :maxmailboxes => 30,
     :maxquota     => 100,
+    :active       => active
   }
   domain.save
 end
@@ -53,6 +54,7 @@ def db_initialize
   create_domain('ALL')
   create_domain('example.com')
   create_domain('example.org')
+  create_domain('non-active.example.com', false)
 
   username = "admin@example.com"
   admin = Admin.new

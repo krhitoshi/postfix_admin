@@ -82,6 +82,12 @@ describe PostfixAdmin::Domain do
     Domain.exist?('unknown.example.com').should === false
   end
 
+  it "active" do
+    Domain.find('example.com').active.should == true
+    Domain.find('example.org').active.should == true
+    Domain.find('non-active.example.com').active.should == false
+  end
+
   describe "#num_total_aliases and .num_total_aliases" do
     it "when only alias@example.com" do
       Domain.num_total_aliases.should be(1)
