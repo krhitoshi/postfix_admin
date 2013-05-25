@@ -1,6 +1,13 @@
 require File.expand_path(File.dirname(__FILE__) + "/spec_helper")
 require 'postfix_admin/models'
 
+describe PostfixAdmin do
+  it "flag_str" do
+    PostfixAdmin.flag_str(true).should == "YES"
+    PostfixAdmin.flag_str(false).should == "NO"
+  end
+end
+
 describe PostfixAdmin::Admin do
   before do
     db_initialize
