@@ -56,6 +56,14 @@ def create_alias(address, active=true)
   }
 end
 
+def create_mailbox_alias(address, active=true)
+  Alias.new.attributes = {
+    :address  => address,
+    :goto     => address,
+    :active   => active
+  }
+end
+
 def db_initialize
   db_clear
 
@@ -96,12 +104,7 @@ def db_initialize
   all_domain.save
 
   address = "user@example.com"
-  mail_alias = Alias.new
-  mail_alias.attributes = {
-    :address  => address,
-    :goto     => address,
-  }
-  domain.aliases << mail_alias
+  domain.aliases << create_alias(address)
 
   domain.aliases << create_alias('alias@example.com')
 

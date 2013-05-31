@@ -136,13 +136,7 @@ describe PostfixAdmin::Mailbox do
     }
     domain.mailboxes << non_active_mailbox
 
-    non_active_mail_alias = Alias.new
-    non_active_mail_alias.attributes = {
-      :address  => 'non_active_user@example.com',
-      :goto     => 'non_active_user@example.com',
-      :active   => false
-    }
-    domain.aliases << non_active_mail_alias
+    domain.aliases << create_mailbox_alias('non_active_user@example.com', false)
     domain.save
 
     Mailbox.find('non_active_user@example.com').active.should == false
@@ -184,13 +178,7 @@ describe PostfixAdmin::Alias do
 
   it "active" do
     domain = Domain.find('example.com')
-    non_active_alias = Alias.new
-    non_active_alias.attributes = {
-      :address  => 'non_active_alias@example.com',
-      :goto     => 'goto@example.jp',
-      :active   => false
-    }
-    domain.aliases << non_active_alias
+    domain.aliases << create_alias('non_active_alias@example.com', false)
     domain.save
 
     Alias.find('user@example.com').active.should == true
