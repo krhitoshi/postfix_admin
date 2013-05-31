@@ -124,7 +124,28 @@ describe PostfixAdmin::Mailbox do
 
   it "active" do
     Mailbox.find('user@example.com').active.should == true
-    Mailbox.find('non_active_user@non-active.example.com').active.should == false
+    domain = Domain.find('example.com')
+    non_active_mailbox = Mailbox.new
+    non_active_mailbox.attributes = {
+      :username => 'non_active_user@example.com',
+      :password => 'password',
+      :name     => '',
+      :maildir  => 'example.com/non_active_user@example.com/',
+      :quota    => 100 * KB_TO_MB,
+      :active   => false
+    }
+    domain.mailboxes << non_active_mailbox
+
+    non_active_mail_alias = Alias.new
+    non_active_mail_alias.attributes = {
+      :address  => 'non_active_user@example.com',
+      :goto     => 'non_active_user@example.com',
+      :active   => false
+    }
+    domain.aliases << non_active_mail_alias
+    domain.save
+
+    Mailbox.find('non_active_user@example.com').active.should == false
   end
 
   it "can use long maildir" do
@@ -162,6 +183,16 @@ describe PostfixAdmin::Alias do
   end
 
   it "active" do
+    domain = Domain.find('example.com')
+    non_active_alias = Alias.new
+    non_active_alias.attributes = {
+      :address  => 'non_active_alias@example.com',
+      :goto     => 'goto@example.jp',
+      :active   => false
+    }
+    domain.aliases << non_active_alias
+    domain.save
+
     Alias.find('user@example.com').active.should == true
     Alias.find('alias@example.com').active.should == true
     Alias.find('non_active_alias@example.com').active.should == false
