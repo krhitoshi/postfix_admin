@@ -48,6 +48,14 @@ def create_domain(domain_name, active=true)
   domain.save
 end
 
+def create_alias(address, active=true)
+  Alias.new.attributes = {
+    :address  => address,
+    :goto     => 'goto@example.jp',
+    :active   => active
+  }
+end
+
 def db_initialize
   db_clear
 
@@ -95,12 +103,7 @@ def db_initialize
   }
   domain.aliases << mail_alias
 
-  forward = Alias.new
-  forward.attributes = {
-    :address  => 'alias@example.com',
-    :goto     => 'goto@example.jp',
-  }
-  domain.aliases << forward
+  domain.aliases << create_alias('alias@example.com')
 
   path = "example.com/user@example.com/"
   mailbox = Mailbox.new
