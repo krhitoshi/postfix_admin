@@ -122,6 +122,11 @@ describe PostfixAdmin::Mailbox do
     db_initialize
   end
 
+  it "active" do
+    Mailbox.find('user@example.com').active.should == true
+    Mailbox.find('non_active_user@non-active.example.com').active.should == false
+  end
+
   describe ".exist?" do
     it "returns true for exist account (mailbox)" do
       Mailbox.exist?('user@example.com').should === true

@@ -115,7 +115,33 @@ def db_initialize
     # :local_part => user,
   }
   domain.mailboxes << mailbox
-  domain.save
+  unless domain.save
+    raise "Could not save domain"
+  end
+
+  non_active_domain = Domain.find('non-active.example.com')
+  non_active_mail_alias = Alias.new
+  non_active_mail_alias.attributes = {
+    :address  => 'non_active_user@non-active.example.com',
+    :goto     => 'non_active_user@non-active.example.com',
+  }
+  non_active_domain.aliases << non_active_mail_alias
+
+  non_active_mailbox = Mailbox.new
+  non_active_mailbox.attributes = {
+    :username => 'non_active_user@non-active.example.com',
+    :password => 'password',
+    :name     => '',
+#    :maildir  => 'non-active.example.com/non_active_user@non-active.example.com/',
+    :maildir  => 'non-active.example.com/non_active_user/',
+    :quota    => 100 * KB_TO_MB,
+    :active   => false
+  }
+  non_active_domain.mailboxes << non_active_mailbox
+
+  unless non_active_domain.save
+    raise "Could not save non_active_domain"
+  end
 end
 
 DataMapper.setup(:default, 'sqlite::memory:')
