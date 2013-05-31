@@ -79,6 +79,16 @@ describe PostfixAdmin::Base do
         (Alias.count - num_aliases).should be(1)
     end
 
+    it "CRAM-MD5 password" do
+      lambda{ @base.add_account('cram_md5@example.com', 'password', 'CRAM-MD5') }.should_not raise_error
+      Mailbox.find('cram_md5@example.com').password.should == '9186d855e11eba527a7a52ca82b313e180d62234f0acc9051b527243d41e2740'
+    end
+
+    it "SHA256 password" do
+      lambda{ @base.add_account('sha256@example.com', 'password', 'SHA256') }.should_not raise_error
+      Mailbox.find('sha256@example.com').password.should == 'XohImNooBHFR0OVvjcYpJ3NgPQ1qq73WKhHvch0VQtg='
+    end
+
     it "can not add account which hsas invalid address" do
       lambda{ @base.add_account('invalid.example.com', 'password') }.should raise_error Error
     end

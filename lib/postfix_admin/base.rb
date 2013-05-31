@@ -69,7 +69,9 @@ module PostfixAdmin
       end
     end
 
-    def add_account(address, password)
+    def add_account(address, in_password, scheme=nil)
+      password = scheme ? PostfixAdmin::Doveadm.password(in_password, scheme) : in_password
+
       if address !~ /.+\@.+\..+/
         raise Error, "Invalid mail address #{address}"
       end
