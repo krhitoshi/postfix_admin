@@ -127,6 +127,20 @@ describe PostfixAdmin::Mailbox do
     Mailbox.find('non_active_user@non-active.example.com').active.should == false
   end
 
+  it "can use long maildir" do
+    domain = Domain.find('example.com')
+    mailbox = Mailbox.new
+    mailbox.attributes = {
+    :username => 'long_maildir_user@example.com',
+    :password => 'password',
+    :name     => '',
+    :maildir  => 'looooooooooooong_path/example.com/long_maildir_user@example.com/',
+    :quota    => 100 * KB_TO_MB,
+    }
+    domain.mailboxes << mailbox
+    domain.save.should == true
+  end
+
   describe ".exist?" do
     it "returns true for exist account (mailbox)" do
       Mailbox.exist?('user@example.com').should === true

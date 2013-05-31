@@ -141,8 +141,7 @@ def db_initialize
     :username => 'non_active_user@non-active.example.com',
     :password => 'password',
     :name     => '',
-#    :maildir  => 'non-active.example.com/non_active_user@non-active.example.com/',
-    :maildir  => 'non-active.example.com/non_active_user/',
+    :maildir  => 'non-active.example.com/non_active_user@non-active.example.com/',
     :quota    => 100 * KB_TO_MB,
     :active   => false
   }
