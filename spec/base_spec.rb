@@ -89,6 +89,11 @@ describe PostfixAdmin::Base do
       Mailbox.find('sha256@example.com').password.should == 'XohImNooBHFR0OVvjcYpJ3NgPQ1qq73WKhHvch0VQtg='
     end
 
+    it "MD5-CRYPT password" do
+      lambda{ @base.add_account('scheme@example.com', 'password', 'MD5-CRYPT') }.should_not raise_error
+      Mailbox.find('scheme@example.com').password.size.should == 34
+    end
+
     it "can not add account which hsas invalid address" do
       lambda{ @base.add_account('invalid.example.com', 'password') }.should raise_error Error
     end

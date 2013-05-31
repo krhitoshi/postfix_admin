@@ -190,6 +190,11 @@ describe PostfixAdmin::Runner do
     it "add_account can use CRAM-MD5 scheme using -s" do
       capture(:stdout){ Runner.start(['add_account', 'user2@example.com', 'password', '-s', 'CRAM-MD5']) }.should =~ EX_REGISTERED
     end
+
+    it "add_account can use MD5-CRYPT scheme using -s" do
+      capture(:stdout){ Runner.start(['add_account', 'user2@example.com', 'password', '-s', 'MD5-CRYPT']) }.should =~ EX_REGISTERED
+      Mailbox.find('user2@example.com').password.size.should == 34
+    end
   end
 
   it "add and delete methods" do

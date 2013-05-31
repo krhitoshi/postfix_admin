@@ -22,5 +22,10 @@ describe PostfixAdmin::Doveadm do
       PostfixAdmin::Doveadm.password('password', 'SHA256').should == 'XohImNooBHFR0OVvjcYpJ3NgPQ1qq73WKhHvch0VQtg='
       PostfixAdmin::Doveadm.password('dovecot', 'SHA256').should == 'KN7aHmDsiQ/Ko+HzLzHcKoPqkjk7bditnD433YQYhcs='
     end
+
+    it "MD5-CRYPT" do
+      PostfixAdmin::Doveadm.password('password', 'MD5-CRYPT').size.should == 34
+      PostfixAdmin::Doveadm.password('dovecot', 'MD5-CRYPT').size.should == 34
+    end
   end
 end
