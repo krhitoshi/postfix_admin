@@ -95,7 +95,7 @@ module PostfixAdmin
     end
 
     def self.num_total_aliases
-      Alias.count - Mailbox.count
+      Alias.all(:active => true).count - Mailbox.all(:active => true).count
     end
 
     def num_total_aliases
@@ -139,7 +139,6 @@ module PostfixAdmin
     belongs_to :domain, :model => 'Domain', :child_key => :domain_name
 
     storage_names[:default] = 'mailbox'
-
     def active_str
       PostfixAdmin.flag_str(active)
     end

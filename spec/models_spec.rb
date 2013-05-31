@@ -147,6 +147,12 @@ describe PostfixAdmin::Alias do
     db_initialize
   end
 
+  it "active" do
+    Alias.find('user@example.com').active.should == true
+    Alias.find('alias@example.com').active.should == true
+    Alias.find('non_active_alias@non-active.example.com').active.should == false
+  end
+
   describe ".exist?" do
     it "returns true when exist alias and account" do
       Alias.exist?('user@example.com').should === true
