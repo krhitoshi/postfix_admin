@@ -102,7 +102,13 @@ def db_initialize
   }
   domain.aliases << forward
 
-  domain.save
+  non_active_alias = Alias.new
+  non_active_alias.attributes = {
+    :address  => 'non_active_alias@example.com',
+    :goto     => 'goto@example.jp',
+    :active   => false
+  }
+  domain.aliases << non_active_alias
 
   path = "example.com/user@example.com/"
   mailbox = Mailbox.new
@@ -127,14 +133,6 @@ def db_initialize
     :active   => false
   }
   non_active_domain.aliases << non_active_mail_alias
-
-  non_active_alias = Alias.new
-  non_active_alias.attributes = {
-    :address  => 'non_active_alias@non-active.example.com',
-    :goto     => 'goto@example.com',
-    :active   => false
-  }
-  non_active_domain.aliases << non_active_alias
 
   non_active_mailbox = Mailbox.new
   non_active_mailbox.attributes = {

@@ -99,7 +99,7 @@ module PostfixAdmin
     end
 
     def num_total_aliases
-      aliases.count - mailboxes.count
+      aliases.select{|a| a.active }.count - mailboxes.select{|m| m.active }.count
     end
 
     def clear_admins

@@ -164,7 +164,7 @@ describe PostfixAdmin::Alias do
   it "active" do
     Alias.find('user@example.com').active.should == true
     Alias.find('alias@example.com').active.should == true
-    Alias.find('non_active_alias@non-active.example.com').active.should == false
+    Alias.find('non_active_alias@example.com').active.should == false
   end
 
   describe ".exist?" do
