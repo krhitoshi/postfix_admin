@@ -12,6 +12,7 @@ include PostfixAdmin
 #  ALL
 #  example.com
 #  example.org
+#  non-active.example.com (not active)
 #
 # Admin:
 #  all@example.com   Super Admin
