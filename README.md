@@ -1,3 +1,5 @@
+[![Gem Version](https://badge.fury.io/rb/postfix_admin.png)](https://rubygems.org/gems/postfix_admin)
+
 # PostfixAdmin
 
 Command Line Tools of Postfix Admin
