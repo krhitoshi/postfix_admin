@@ -48,12 +48,20 @@ def create_domain(domain_name, active=true)
   domain.save
 end
 
-def create_alias(address, active=true)
+def create_alias_base(address, goto, active)
   Alias.new.attributes = {
     :address  => address,
-    :goto     => 'goto@example.jp',
+    :goto     => goto,
     :active   => active
   }
+end
+
+def create_alias(address, active=true)
+  create_alias_base(address, 'goto@example.jp', active)
+end
+
+def create_mailbox_alias(address, active=true)
+  create_alias_base(address, address, active)
 end
 
 def create_mailbox(address, in_path=nil, active=true)
@@ -69,13 +77,6 @@ def create_mailbox(address, in_path=nil, active=true)
   }
 end
 
-def create_mailbox_alias(address, active=true)
-  Alias.new.attributes = {
-    :address  => address,
-    :goto     => address,
-    :active   => active
-  }
-end
 
 def db_initialize
   db_clear
