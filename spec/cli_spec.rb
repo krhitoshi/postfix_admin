@@ -183,17 +183,17 @@ describe PostfixAdmin::CLI do
 
   describe "#add_account" do
     it "can add an account" do
-      lambda { @cli.add_account('new_user@example.com', 'password') }.should_not raise_error
+      lambda { @cli.add_account('new_user@example.com', 'password', {:scheme => 'CRAM-MD5'}) }.should_not raise_error
       Mailbox.exist?('new_user@example.com').should be_true
       Alias.exist?('new_user@example.com').should be_true
     end
 
     it "can not add account of unknown domain" do
-      lambda { @cli.add_account('user@unknown.example.com', 'password') }.should raise_error Error
+      lambda { @cli.add_account('user@unknown.example.com', 'password', {:scheme => 'CRAM-MD5'}) }.should raise_error Error
     end
 
     it "does not allow too short password (<5)" do
-      lambda { @cli.add_account('new_user@example.com', '1234') }.should raise_error ArgumentError
+      lambda { @cli.add_account('new_user@example.com', '1234', {:scheme => 'CRAM-MD5'}) }.should raise_error ArgumentError
     end
   end
 
@@ -260,7 +260,7 @@ describe PostfixAdmin::CLI do
     it "can delete related admins, addresses and aliases" do
       @cli.add_admin('admin@example.org', 'password')
       @cli.add_admin_domain('admin@example.org', 'example.org')
-      @cli.add_account('user2@example.com', 'password')
+      @cli.add_account('user2@example.com', 'password', {:scheme => 'CRAM-MD5'})
 
       @cli.add_admin('other_admin@example.com', 'password')
       @cli.add_admin_domain('other_admin@example.com', 'example.com')

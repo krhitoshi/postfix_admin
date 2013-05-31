@@ -225,9 +225,9 @@ module PostfixAdmin
       puts "#{domain_name} was successfully deleted from #{user_name}"
     end
 
-    def add_account(address, password)
+    def add_account(address, password, options)
       validate_password(password)
-      @base.add_account(address, password)
+      @base.add_account(address, password, options[:scheme])
       puts_registered(address, "an account")
     end
 

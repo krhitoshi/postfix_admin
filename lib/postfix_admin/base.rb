@@ -1,4 +1,5 @@
 require 'postfix_admin/models'
+require 'postfix_admin/doveadm'
 require 'postfix_admin/error'
 
 require 'date'
@@ -96,7 +97,7 @@ module PostfixAdmin
         :name     => '',
         :maildir  => path,
         :quota    => @config[:mailbox_quota],
-        # :local_part => user,
+        :local_part => user,
       }
       domain.mailboxes << mailbox
       unless domain.save

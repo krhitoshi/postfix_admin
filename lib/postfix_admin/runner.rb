@@ -76,8 +76,9 @@ module PostfixAdmin
     end
 
     desc "add_account user@example.com password", "Add an account"
+    method_option :scheme, :type => :string, :aliases => "-s", :desc => "password scheme"
     def add_account(address, password)
-      runner{ @cli.add_account(address, password) }
+      runner{ @cli.add_account(address, password, options) }
     end
 
     desc "edit_account user@example.com", "Edit an account"
@@ -96,7 +97,7 @@ module PostfixAdmin
     desc "add_admin admin@example.com password", "Add an admin user"
     method_option :super, :type => :boolean, :aliases => "-s", :desc => "register as a super admin"
     def add_admin(user_name, password)
-      runner{ @cli.add_admin(user_name, password, options[:super]) }
+      runner{ @cli.add_admin(user_name, password, options) }
     end
 
     desc "add_admin_domain admin@example.com example.com", "Add admin_domain"
