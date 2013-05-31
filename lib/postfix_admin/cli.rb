@@ -143,7 +143,7 @@ module PostfixAdmin
 
     def show_admin(domain_name=nil)
       admins = domain_name ? Admin.select{|a| a.has_domain?(domain_name)} : Admin.all
-      index = " No. Admin                                        Domains Active Password"
+      index = " No. Admin                                        Domains Active"
       report("Admins", index) do
         if admins.empty?
           puts " No admins"
@@ -152,7 +152,7 @@ module PostfixAdmin
 
         admins.each_with_index do |a, i|
           domains = a.super_admin? ? 'Super admin' : a.domains.count
-          puts "%4d %-40s %11s   %-3s  %s" % [i+1, a.username, domains, a.active_str, a.password]
+          puts "%4d %-40s %11s   %-3s" % [i+1, a.username, domains, a.active_str]
         end
       end
 
@@ -162,7 +162,7 @@ module PostfixAdmin
       domain_check(domain_name)
 
       mailboxes = Domain.find(domain_name).mailboxes
-      index = " No. Email                                     Quota (MB) Active Password        Maildir"
+      index = " No. Email                                     Quota (MB) Active         Maildir"
       report("Addresses", index) do
         if mailboxes.empty?
           puts " No addresses"
@@ -171,7 +171,7 @@ module PostfixAdmin
 
         mailboxes.each_with_index do |m, i|
           quota = m.quota.to_f/ KB_TO_MB.to_f
-          puts "%4d %-40s  %10s   %-3s  %-15s %s" % [i+1, m.username, max_str(quota.to_i), m.active_str, m.password, m.maildir]
+          puts "%4d %-40s  %10s   %-3s  %s" % [i+1, m.username, max_str(quota.to_i), m.active_str, m.maildir]
         end
       end
 

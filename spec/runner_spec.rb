@@ -21,11 +21,11 @@ describe PostfixAdmin::Runner do
     end
 
     it "shows information of admin@example.com" do
-      capture(:stdout){ Runner.start(["show"]) }.should =~ /admin@example.com\s+1\s+YES\s+password/
+      capture(:stdout){ Runner.start(["show"]) }.should =~ /admin@example.com\s+1\s+YES/
     end
 
     it "show the detail of example.com" do
-      capture(:stdout){ Runner.start(["show", "example.com"]) }.should =~ /user@example.com\s+100\s+YES\s+password/
+      capture(:stdout){ Runner.start(["show", "example.com"]) }.should =~ /user@example.com\s+100\s+YES/
     end
 
     it "when no admins, no aliases and no addresses" do
