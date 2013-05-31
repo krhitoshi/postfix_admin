@@ -7,7 +7,7 @@ module PostfixAdmin
 
   class Admin
     include ::DataMapper::Resource
-    property :username, String, :key => true
+    property :username, String, :key => true, :length => 0..255
     property :password, String, :length => 0..255
     property :active, Boolean, :default  => true
     property :created, DateTime, :default => DateTime.now
@@ -64,13 +64,13 @@ module PostfixAdmin
 
   class Domain
     include ::DataMapper::Resource
-    property :domain_name, String, :field => 'domain', :key => true
+    property :domain_name, String, :field => 'domain', :key => true, :length => 0..255
     property :maxaliases, Integer, :field => 'aliases'
     property :maxmailboxes, Integer, :field => 'mailboxes'
     property :maxquota, Integer
-    property :transport, String, :default => 'virtual'
+    property :transport, String, :default => 'virtual', :length => 0..255
     property :backupmx, Integer, :default => 0
-    property :description, String
+    property :description, String, :length => 0..255
     property :active, Boolean, :default  => true
     property :created,  DateTime, :default => DateTime.now
     property :modified, DateTime, :default => DateTime.now
@@ -115,8 +115,8 @@ module PostfixAdmin
   class DomainAdmin
     include ::DataMapper::Resource
     property :created, DateTime, :default => DateTime.now
-    property :domain_name, String, :field => 'domain', :key => true
-    property :username, String, :key => true
+    property :domain_name, String, :field => 'domain', :key => true, :length => 0..255
+    property :username, String, :key => true, :length => 0..255
 
     belongs_to :domain, :model => 'Domain', :child_key => :domain_name
     belongs_to :admin, :model => 'Admin', :child_key => :username
@@ -125,8 +125,8 @@ module PostfixAdmin
 
   class Mailbox
     include ::DataMapper::Resource
-    property :username, String, :key => true
-    property :name, String
+    property :username, String, :key => true, :length => 0..255
+    property :name, String, :length => 0..255
     property :domain_name, String, :field => 'domain'
     property :password, String, :length => 0..255
     property :maildir, String, :length => 0..255
@@ -154,9 +154,9 @@ module PostfixAdmin
 
   class Alias
     include ::DataMapper::Resource
-    property :address, String, :key => true
+    property :address, String, :key => true, :length => 0..255
     property :goto, Text
-    property :domain_name, String, :field => 'domain'
+    property :domain_name, String, :field => 'domain', :length => 0..255
     property :active, Boolean, :default  => true
     property :created, DateTime, :default => DateTime.now
     property :modified, DateTime, :default => DateTime.now
