@@ -56,6 +56,19 @@ def create_alias(address, active=true)
   }
 end
 
+def create_mailbox(address, in_path=nil, active=true)
+  path = in_path || "#{address.split('@').last}/#{address}/"
+  Mailbox.new.attributes = {
+    :username => address,
+    :password => 'password',
+    :name     => '',
+    :maildir  => path,
+    :quota    => 100 * KB_TO_MB,
+    # :local_part => user,
+    :active  => active
+  }
+end
+
 def create_mailbox_alias(address, active=true)
   Alias.new.attributes = {
     :address  => address,
@@ -104,21 +117,9 @@ def db_initialize
   all_domain.save
 
   address = "user@example.com"
-  domain.aliases << create_alias(address)
-
-  domain.aliases << create_alias('alias@example.com')
-
-  path = "example.com/user@example.com/"
-  mailbox = Mailbox.new
-  mailbox.attributes = {
-    :username => address,
-    :password => 'password',
-    :name     => '',
-    :maildir  => path,
-    :quota    => 100 * KB_TO_MB,
-    # :local_part => user,
-  }
-  domain.mailboxes << mailbox
+  domain.aliases   << create_alias(address)
+  domain.aliases   << create_alias('alias@example.com')
+  domain.mailboxes << create_mailbox(address)
 
   unless domain.save
     raise "Could not save domain"

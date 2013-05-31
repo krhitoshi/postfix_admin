@@ -125,18 +125,8 @@ describe PostfixAdmin::Mailbox do
   it "active" do
     Mailbox.find('user@example.com').active.should == true
     domain = Domain.find('example.com')
-    non_active_mailbox = Mailbox.new
-    non_active_mailbox.attributes = {
-      :username => 'non_active_user@example.com',
-      :password => 'password',
-      :name     => '',
-      :maildir  => 'example.com/non_active_user@example.com/',
-      :quota    => 100 * KB_TO_MB,
-      :active   => false
-    }
-    domain.mailboxes << non_active_mailbox
-
-    domain.aliases << create_mailbox_alias('non_active_user@example.com', false)
+    domain.mailboxes << create_mailbox('non_active_user@example.com', nil, false)
+    domain.aliases   << create_mailbox_alias('non_active_user@example.com', false)
     domain.save
 
     Mailbox.find('non_active_user@example.com').active.should == false
@@ -144,15 +134,7 @@ describe PostfixAdmin::Mailbox do
 
   it "can use long maildir" do
     domain = Domain.find('example.com')
-    mailbox = Mailbox.new
-    mailbox.attributes = {
-    :username => 'long_maildir_user@example.com',
-    :password => 'password',
-    :name     => '',
-    :maildir  => 'looooooooooooong_path/example.com/long_maildir_user@example.com/',
-    :quota    => 100 * KB_TO_MB,
-    }
-    domain.mailboxes << mailbox
+    domain.mailboxes << create_mailbox('long_maildir_user@example.com', 'looooooooooooong_path/example.com/long_maildir_user@example.com/')
     domain.save.should == true
   end
 
