@@ -22,6 +22,8 @@ describe PostfixAdmin::Admin do
   it "active" do
     Admin.find('admin@example.com').active.should === true
     Admin.find('all@example.com').active.should === true
+    non_active_admin = create_admin('non_active_admin@example.com', false)
+
     Admin.find('non_active_admin@example.com').active.should === false
   end
 
@@ -85,6 +87,8 @@ describe PostfixAdmin::Domain do
   it "active" do
     Domain.find('example.com').active.should == true
     Domain.find('example.org').active.should == true
+
+    create_domain('non-active.example.com', false)
     Domain.find('non-active.example.com').active.should == false
   end
 

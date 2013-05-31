@@ -12,7 +12,6 @@ include PostfixAdmin
 #  ALL
 #  example.com
 #  example.org
-#  non-active.example.com (not active)
 #
 # Admin:
 #  all@example.com   Super Admin
@@ -78,6 +77,16 @@ def create_mailbox(address, in_path=nil, active=true)
   }
 end
 
+def create_admin(username, active=true)
+  admin = Admin.new
+  admin.attributes = {
+    :username => username,
+    :password => 'password',
+    :active => active
+  }
+  admin.save
+  admin
+end
 
 def db_initialize
   db_clear
@@ -85,43 +94,21 @@ def db_initialize
   create_domain('ALL')
   create_domain('example.com')
   create_domain('example.org')
-  create_domain('non-active.example.com', false)
 
-  username = "admin@example.com"
-  admin = Admin.new
-  admin.attributes = {
-    :username => username,
-    :password => 'password',
-  }
-  admin.save
-
-  non_active_admin = Admin.new
-  non_active_admin.attributes = {
-    :username => "non_active_admin@example.com",
-    :password => 'password',
-    :active => false
-  }
-  non_active_admin.save
-
-  domain = Domain.find('example.com')
-  domain.admins << admin
-  domain.save
-
-  all_admin = Admin.new
-  all_admin.attributes = {
-    :username => 'all@example.com',
-    :password => 'password',
-  }
-  all_admin.save
-
+  all_admin = create_admin('all@example.com')
   all_domain = Domain.find('ALL')
   all_domain.admins << all_admin
-  all_domain.save
 
-  address = "user@example.com"
-  domain.aliases   << create_alias(address)
+  unless  all_domain.save
+    raise "Could not save all_domain"
+  end
+
+  admin = create_admin('admin@example.com')
+  domain = Domain.find('example.com')
+  domain.admins    << admin
   domain.aliases   << create_alias('alias@example.com')
-  domain.mailboxes << create_mailbox(address)
+  domain.aliases   << create_alias('user@example.com')
+  domain.mailboxes << create_mailbox('user@example.com')
 
   unless domain.save
     raise "Could not save domain"
