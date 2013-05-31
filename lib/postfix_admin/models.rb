@@ -95,11 +95,11 @@ module PostfixAdmin
     end
 
     def self.num_total_aliases
-      Alias.all(:active => true).count - Mailbox.all(:active => true).count
+      Alias.count - Mailbox.count
     end
 
     def num_total_aliases
-      aliases.select{|a| a.active }.count - mailboxes.select{|m| m.active }.count
+      aliases.count - mailboxes.count
     end
 
     def clear_admins
