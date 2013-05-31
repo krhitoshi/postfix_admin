@@ -178,7 +178,7 @@ describe PostfixAdmin::Runner do
     capture(:stdout){ Runner.start(['delete_account', 'user2@example.com']) }.should =~ EX_DELETED
   end
 
-  it "add_account can use long passwrod" do
+  it "add_account can use long password" do
     capture(:stdout){ Runner.start(['add_account', 'user2@example.com', '9c5e77f2da26fc03e9fa9e13ccd77aeb50c85539a4d90b70812715aea9ebda1d']) }.should =~ EX_REGISTERED
   end
 
