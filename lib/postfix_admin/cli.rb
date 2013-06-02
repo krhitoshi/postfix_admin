@@ -1,5 +1,6 @@
 require 'yaml'
 require 'postfix_admin'
+require 'postfix_admin/doveadm'
 
 module PostfixAdmin
   class CLI
@@ -225,9 +226,16 @@ module PostfixAdmin
       puts "#{domain_name} was successfully deleted from #{user_name}"
     end
 
-    def add_account(address, password, options)
-      validate_password(password)
-      @base.add_account(address, password, options[:scheme])
+    def add_account(address, text_password, options)
+      validate_password(text_password)
+      password =
+        if options[:scheme]
+          PostfixAdmin::Doveadm.password(text_password, options[:scheme])
+        else
+          text_password
+        end
+
+      @base.add_account(address, password)
       puts_registered(address, "an account")
     end
 

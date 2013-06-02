@@ -1,5 +1,4 @@
 require 'postfix_admin/models'
-require 'postfix_admin/doveadm'
 require 'postfix_admin/error'
 
 require 'date'
@@ -74,9 +73,7 @@ module PostfixAdmin
       end
     end
 
-    def add_account(address, in_password, scheme=nil)
-      password = scheme ? PostfixAdmin::Doveadm.password(in_password, scheme) : in_password
-
+    def add_account(address, password)
       if password.nil? || password.empty?
         raise Error, "Empty password"
       end
