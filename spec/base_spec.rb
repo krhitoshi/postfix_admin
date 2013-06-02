@@ -127,6 +127,14 @@ describe PostfixAdmin::Base do
       (Admin.count - num_admins).should be(1)
     end
 
+    it "refuse empty password" do
+      lambda{ @base.add_admin('admin@example.net', '') }.should raise_error Error
+    end
+
+    it "refuse nil password" do
+      lambda{ @base.add_admin('admin@example.net', nil) }.should raise_error Error
+    end
+
     it "can not add exist admin" do
       lambda{ @base.add_admin('admin@example.com', 'password') }.should raise_error Error
     end

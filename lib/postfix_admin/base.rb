@@ -57,6 +57,10 @@ module PostfixAdmin
     end
 
     def add_admin(username, password)
+      if password.nil? || password.empty?
+        raise Error, "Empty password"
+      end
+
       if Admin.exist?(username)
         raise Error, "#{username} is already resistered as admin."
       end
