@@ -1,4 +1,6 @@
 
+require 'open3'
+
 module PostfixAdmin
   class Doveadm
     def self.schemes
@@ -7,8 +9,12 @@ module PostfixAdmin
     end
 
     def self.password(password, scheme)
-      result = `doveadm pw -s #{scheme} -p #{password}`
-      result.chomp.gsub("{#{scheme}}", "")
+      stdin, stdout, stderr = Open3.popen3("doveadm pw -s #{scheme} -p #{password}")
+      if stderr.readlines.to_s =~ /Fatal:/
+        raise Error, stderr.readlines
+      else
+        stdout.readlines.first.chomp.gsub("{#{scheme}}", "")
+      end
     end
   end
 end

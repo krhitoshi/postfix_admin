@@ -27,5 +27,9 @@ describe PostfixAdmin::Doveadm do
       PostfixAdmin::Doveadm.password('password', 'MD5-CRYPT').should =~ EX_MD5_CRYPT
       PostfixAdmin::Doveadm.password('dovecot', 'MD5-CRYPT').should =~ EX_MD5_CRYPT
     end
+
+    it "unknown scheme raise error" do
+      lambda{ PostfixAdmin::Doveadm.password('password', 'UNKNOWN-SCHEME') }.should raise_error Error
+    end
   end
 end
