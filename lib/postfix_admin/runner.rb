@@ -1,6 +1,7 @@
 require 'thor'
 require 'postfix_admin'
 require 'postfix_admin/cli'
+require 'postfix_admin/doveadm'
 
 module PostfixAdmin
   class Runner < Thor
@@ -14,9 +15,14 @@ module PostfixAdmin
       runner{ @cli.show_summary(domain_name) }
     end
 
-    desc "show [example.com | user@example.com]", "Show domains or mailboxes"
-    def show(domain_name=nil)
-      runner{ @cli.show(domain_name) }
+    desc "schemes", "List all supported password schemes"
+    def schemes
+      runner{ puts PostfixAdmin::Doveadm.schemes.join(' ') }
+    end
+
+    desc "show [example.com | admin@example.com | user@example.com]", "Show domains or admins or mailboxes"
+    def show(name=nil)
+      runner{ @cli.show(name) }
     end
 
     desc "setup example.com password", "Setup a domain"
@@ -76,8 +82,16 @@ module PostfixAdmin
     end
 
     desc "add_account user@example.com password", "Add an account"
+    method_option :scheme, :type => :string, :aliases => "-s", :desc => "password scheme"
     def add_account(address, password)
-      runner{ @cli.add_account(address, password) }
+      runner do
+        if options[:scheme] == 'scheme'
+          warn "Specify password scheme"
+          help('add_account')
+        else
+          @cli.add_account(address, password, options[:scheme])
+        end
+      end
     end
 
     desc "edit_account user@example.com", "Edit an account"
@@ -94,9 +108,17 @@ module PostfixAdmin
     end
 
     desc "add_admin admin@example.com password", "Add an admin user"
-    method_option :super, :type => :boolean, :aliases => "-s", :desc => "register as a super admin"
+    method_option :super, :type => :boolean, :aliases => "-S", :desc => "register as a super admin"
+    method_option :scheme, :type => :string, :aliases => "-s", :desc => "password scheme"
     def add_admin(user_name, password)
-      runner{ @cli.add_admin(user_name, password, options[:super]) }
+      runner do
+        if options[:scheme] == 'scheme'
+          warn "Specify password scheme"
+          help('add_admin')
+        else
+          @cli.add_admin(user_name, password, options[:super], options[:scheme])
+        end
+      end
     end
 
     desc "add_admin_domain admin@example.com example.com", "Add admin_domain"

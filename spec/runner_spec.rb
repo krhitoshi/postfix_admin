@@ -15,6 +15,10 @@ describe PostfixAdmin::Runner do
     capture(:stdout){ Runner.start(["summary", "example.com"]) }.should =~ /\[Summary of example.com\]/
   end
 
+  it "schemes" do
+    capture(:stdout){ Runner.start(["schemes"]) }.should =~ /CLEARTEXT/
+  end
+
   describe "show" do
     it "shows information of example.com" do
      capture(:stdout){ Runner.start(["show"]) }.should =~ /example.com\s+1\s+\/\s+30\s+1\s+\/\s+30\s+100/
@@ -36,8 +40,16 @@ describe PostfixAdmin::Runner do
       out.should =~ /No aliases/
     end
 
+    it "shows information of an admin" do
+      capture(:stdout){  Runner.start(["show", "admin@example.com"]) }.should =~ /admin@example.com/
+    end
+
     it "shows information of an account" do
       capture(:stdout){  Runner.start(["show", "user@example.com"]) }.should =~ /user@example.com/
+    end
+
+    it "shows information of an alias" do
+      capture(:stdout){  Runner.start(["show", "alias@example.com"]) }.should =~ /alias@example.com/
     end
 
     it "when no domains" do
@@ -110,8 +122,35 @@ describe PostfixAdmin::Runner do
   end
 
   describe "add_admin" do
+    before do
+      @args = ['add_admin', 'admin@example.jp', 'password']
+    end
+
     it "can add an new admin" do
-      capture(:stdout){ Runner.start(['add_admin', 'admin@example.jp', 'password']) }.should =~ EX_REGISTERED
+      capture(:stdout){ Runner.start(@args) }.should =~ EX_REGISTERED
+    end
+
+    describe "scheme option" do
+      it "--scheme does not show error" do
+        capture(:stderr){ Runner.start(@args + ['--scheme', 'CRAM-MD5']) }.should == ""
+        Admin.find('admin@example.jp').password.should == CRAM_MD5_PASS
+      end
+
+      it "--shceme can resister admin" do
+        capture(:stdout){ Runner.start(@args + ['--scheme', 'CRAM-MD5']) }.should =~ EX_REGISTERED
+      end
+
+      it "-s does not show error" do
+        capture(:stderr){ Runner.start(@args + ['-s', 'CRAM-MD5']) }.should == ""
+      end
+
+      it "-s can resister admin" do
+        capture(:stdout){ Runner.start(@args + ['-s', 'CRAM-MD5']) }.should =~ EX_REGISTERED
+      end
+
+      it "-s require argument" do
+        capture(:stderr){ Runner.start(@args + ['-s']) }.should =~ /Specify password scheme/
+      end
     end
 
     it "can use long password" do
@@ -119,11 +158,11 @@ describe PostfixAdmin::Runner do
     end
 
     it "--super option" do
-      capture(:stdout){ Runner.start(['add_admin', 'admin@example.jp', 'password', '--super']) }.should =~ /registered as a super admin/
+      capture(:stdout){ Runner.start(@args + ['--super']) }.should =~ /registered as a super admin/
     end
 
-    it "-s (--super) option" do
-      capture(:stdout){ Runner.start(['add_admin', 'admin@example.jp', 'password', '-s']) }.should =~ /registered as a super admin/
+    it "-S (--super) option" do
+      capture(:stdout){ Runner.start(@args + ['-S']) }.should =~ /registered as a super admin/
     end
   end
 
@@ -178,8 +217,42 @@ describe PostfixAdmin::Runner do
     capture(:stdout){ Runner.start(['delete_account', 'user2@example.com']) }.should =~ EX_DELETED
   end
 
-  it "add_account can use long passwrod" do
-    capture(:stdout){ Runner.start(['add_account', 'user2@example.com', '9c5e77f2da26fc03e9fa9e13ccd77aeb50c85539a4d90b70812715aea9ebda1d']) }.should =~ EX_REGISTERED
+  describe "add_account" do
+    before do
+      @args = ['add_account', 'user2@example.com', 'password']
+    end
+
+    it "default scheme (CRAM-MD5) is applied" do
+      capture(:stdout){ Runner.start(@args) }.should =~ /scheme: CRAM-MD5/
+      Mailbox.find('user2@example.com').password.should == CRAM_MD5_PASS
+    end
+
+    it "add_account can use long password" do
+      capture(:stdout){ Runner.start(['add_account', 'user2@example.com', '9c5e77f2da26fc03e9fa9e13ccd77aeb50c85539a4d90b70812715aea9ebda1d']) }.should =~ EX_REGISTERED
+    end
+
+    describe "scheme" do
+      it "--scheme require argument" do
+        capture(:stderr){ Runner.start(@args + ['--scheme']) }.should =~ /Specify password scheme/
+    end
+
+      it "can use CRAM-MD5 using --scheme" do
+        capture(:stdout){ Runner.start(@args + ['--scheme', 'CRAM-MD5']) }.should =~ EX_REGISTERED
+        Mailbox.find('user2@example.com').password.should == CRAM_MD5_PASS
+      end
+
+      it "can use CRAM-MD5 using -s" do
+        capture(:stdout){ Runner.start(@args + ['-s', 'CRAM-MD5']) }.should =~ EX_REGISTERED
+        Mailbox.find('user2@example.com').password.should == CRAM_MD5_PASS
+      end
+
+      it "can use MD5-CRYPT using -s" do
+        result = capture(:stdout){ Runner.start(@args + ['-s', 'MD5-CRYPT']) }
+        result.should =~ EX_REGISTERED
+        result.should =~ /scheme: MD5-CRYPT/
+        Mailbox.find('user2@example.com').password.should =~ EX_MD5_CRYPT
+      end
+    end
   end
 
   it "add and delete methods" do

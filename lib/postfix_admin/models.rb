@@ -131,7 +131,7 @@ module PostfixAdmin
     property :password, String, :length => 0..255
     property :maildir, String, :length => 0..255
     property :quota, Integer
-    #  property :local_part, String
+    property :local_part, String
     property :active, Boolean, :default  => true
     property :created, DateTime, :default => DateTime.now
     property :modified, DateTime, :default => DateTime.now

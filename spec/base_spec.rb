@@ -12,7 +12,8 @@ describe PostfixAdmin::Base do
         'database'  => 'mysql://postfix:password@localhost/postfix',
         'aliases'   => 30,
         'mailboxes' => 30,
-        'maxquota'  => 100
+        'maxquota'  => 100,
+        'scheme'    => 'CRAM-MD5',
     }
   end
 
@@ -33,6 +34,7 @@ describe PostfixAdmin::Base do
     @base.config[:mailboxes].should == 30
     @base.config[:maxquota].should == 100
     @base.config[:mailbox_quota].should == 100 * KB_TO_MB
+    @base.config[:scheme].should == 'CRAM-MD5'
   end
 
   it "#domain_exist?" do
@@ -79,6 +81,14 @@ describe PostfixAdmin::Base do
         (Alias.count - num_aliases).should be(1)
     end
 
+    it "refuse empty password" do
+      lambda{ @base.add_account('new_user@example.com', '') }.should raise_error Error
+    end
+
+    it "refuse nil password" do
+      lambda{ @base.add_account('new_user@example.com', nil) }.should raise_error Error
+    end
+
     it "can not add account which hsas invalid address" do
       lambda{ @base.add_account('invalid.example.com', 'password') }.should raise_error Error
     end
@@ -102,6 +112,14 @@ describe PostfixAdmin::Base do
       @base.add_admin('admin@example.net', 'password')
       Admin.exist?('admin@example.net').should be_true
       (Admin.count - num_admins).should be(1)
+    end
+
+    it "refuse empty password" do
+      lambda{ @base.add_admin('admin@example.net', '') }.should raise_error Error
+    end
+
+    it "refuse nil password" do
+      lambda{ @base.add_admin('admin@example.net', nil) }.should raise_error Error
     end
 
     it "can not add exist admin" do

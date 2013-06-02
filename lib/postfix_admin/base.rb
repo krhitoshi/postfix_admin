@@ -12,7 +12,8 @@ module PostfixAdmin
       'database'  => 'mysql://postfix:password@localhost/postfix',
       'aliases'   => 30,
       'mailboxes' => 30,
-      'maxquota'  => 100
+      'maxquota'  => 100,
+      'scheme'    => 'CRAM-MD5',
     }
 
     def initialize(config)
@@ -22,6 +23,7 @@ module PostfixAdmin
       @config[:mailboxes] = config['mailboxes'] || 30
       @config[:maxquota]  = config['maxquota']  || 100
       @config[:mailbox_quota] = @config[:maxquota] * KB_TO_MB
+      @config[:scheme]    = config['scheme']    || 'CRAM-MD5'
     end
 
     def db_setup(database)
@@ -56,6 +58,8 @@ module PostfixAdmin
     end
 
     def add_admin(username, password)
+      password_check(password)
+
       if Admin.exist?(username)
         raise Error, "#{username} is already resistered as admin."
       end
@@ -70,6 +74,8 @@ module PostfixAdmin
     end
 
     def add_account(address, password)
+      password_check(password)
+
       if address !~ /.+\@.+\..+/
         raise Error, "Invalid mail address #{address}"
       end
@@ -94,7 +100,7 @@ module PostfixAdmin
         :name     => '',
         :maildir  => path,
         :quota    => @config[:mailbox_quota],
-        # :local_part => user,
+        :local_part => user,
       }
       domain.mailboxes << mailbox
       unless domain.save
@@ -202,5 +208,8 @@ module PostfixAdmin
       raise Error, "Could not find domain #{domain_name}"     unless Domain.exist?(domain_name)
     end
 
+    def password_check(password)
+      raise Error, "Empty password" if password.nil? || password.empty?
+    end
   end
 end

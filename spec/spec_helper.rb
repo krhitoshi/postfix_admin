@@ -133,8 +133,10 @@ module PostfixAdmin
   end
 end
 
+CRAM_MD5_PASS = '9186d855e11eba527a7a52ca82b313e180d62234f0acc9051b527243d41e2740'
 EX_DELETED    = /successfully deleted/
 EX_REGISTERED = /successfully registered/
+EX_MD5_CRYPT  = /^\$1\$[\.\/0-9A-Za-z]{8}\$[\.\/0-9A-Za-z]{22}$/
 
 RSpec.configure do |config|
   config.before do

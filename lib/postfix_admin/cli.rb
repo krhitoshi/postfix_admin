@@ -1,5 +1,6 @@
 require 'yaml'
 require 'postfix_admin'
+require 'postfix_admin/doveadm'
 
 module PostfixAdmin
   class CLI
@@ -23,7 +24,16 @@ module PostfixAdmin
       name = name.downcase if name
 
       if name =~ /@/
-        show_account(name)
+        if Admin.exist?(name)
+          show_admin_details(name)
+        end
+
+        if Mailbox.exist?(name)
+          show_account_details(name)
+        elsif Alias.exist?(name)
+          show_alias_details(name)
+        end
+
         return
       end
 
@@ -69,7 +79,7 @@ module PostfixAdmin
       add_admin_domain(admin, domain_name)
     end
 
-    def show_account(user_name)
+    def show_account_details(user_name)
       account_check(user_name)
       mailbox    = Mailbox.find(user_name)
       mail_alias = Alias.find(user_name)
@@ -79,6 +89,28 @@ module PostfixAdmin
         puts "Password : %s" % mailbox.password
         puts "Quota    : %d MB" % max_str(mailbox.quota / KB_TO_MB)
         puts "Go to    : %s" % mail_alias.goto
+        puts "Active   : %s" % mailbox.active_str
+      end
+    end
+
+    def show_admin_details(name)
+      admin_check(name)
+      admin = Admin.find(name)
+
+      report("Admin") do
+        puts "Name     : %s" % admin.username
+        puts "Password : %s" % admin.password
+        puts "Active   : %s" % admin.active_str
+      end
+    end
+
+    def show_alias_details(name)
+      alias_check(name)
+      mail_alias = Alias.find(name)
+      report("Alias") do
+        puts "Address  : %s" % mail_alias.address
+        puts "Go to    : %s" % mail_alias.goto
+        puts "Active   : %s" % mail_alias.active_str
       end
     end
 
@@ -204,9 +236,10 @@ module PostfixAdmin
       end
     end
 
-    def add_admin(user_name, password, super_admin=false)
+    def add_admin(user_name, password, super_admin=false, scheme=nil)
       validate_password(password)
-      @base.add_admin(user_name, password)
+
+      @base.add_admin(user_name, hashed_password(password, scheme))
       if super_admin
         Admin.find(user_name).super_admin = true
         puts_registered(user_name, "a super admin")
@@ -225,9 +258,10 @@ module PostfixAdmin
       puts "#{domain_name} was successfully deleted from #{user_name}"
     end
 
-    def add_account(address, password)
+    def add_account(address, password, scheme=nil)
       validate_password(password)
-      @base.add_account(address, password)
+
+      @base.add_account(address, hashed_password(password, scheme))
       puts_registered(address, "an account")
     end
 
@@ -243,7 +277,7 @@ module PostfixAdmin
       mailbox.save or raise "Could not save Mailbox"
 
       puts "Successfully updated #{address}"
-      show_account(address)
+      show_account_details(address)
     end
 
     def delete_alias(address)
@@ -333,6 +367,10 @@ module PostfixAdmin
       klass_check(Mailbox, address)
     end
 
+    def alias_check(address)
+      klass_check(Alias, address)
+    end
+
     def admin_check(user_name)
       klass_check(Admin, user_name)
     end
@@ -371,6 +409,14 @@ module PostfixAdmin
       else
         value.to_s
       end
+    end
+
+    private
+
+    def hashed_password(password, in_scheme)
+      scheme = in_scheme || @base.config[:scheme]
+      puts "scheme: #{scheme}"
+      PostfixAdmin::Doveadm.password(password, scheme)
     end
 
   end
