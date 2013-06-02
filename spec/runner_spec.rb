@@ -195,7 +195,7 @@ describe PostfixAdmin::Runner do
 
     it "add_account can use MD5-CRYPT scheme using -s" do
       capture(:stdout){ Runner.start(['add_account', 'user2@example.com', 'password', '-s', 'MD5-CRYPT']) }.should =~ EX_REGISTERED
-      Mailbox.find('user2@example.com').password.size.should == 34
+      Mailbox.find('user2@example.com').password.should =~ /^\$1\$[\.\/0-9A-Za-z]{8}\$[\.\/0-9A-Za-z]{22}$/
     end
   end
 
