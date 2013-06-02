@@ -29,7 +29,7 @@ module PostfixAdmin
         end
 
         if Mailbox.exist?(name)
-          show_account(name)
+          show_account_details(name)
         elsif Alias.exist?(name)
           show_alias_details(name)
         end
@@ -79,7 +79,7 @@ module PostfixAdmin
       add_admin_domain(admin, domain_name)
     end
 
-    def show_account(user_name)
+    def show_account_details(user_name)
       account_check(user_name)
       mailbox    = Mailbox.find(user_name)
       mail_alias = Alias.find(user_name)
@@ -277,7 +277,7 @@ module PostfixAdmin
       mailbox.save or raise "Could not save Mailbox"
 
       puts "Successfully updated #{address}"
-      show_account(address)
+      show_account_details(address)
     end
 
     def delete_alias(address)

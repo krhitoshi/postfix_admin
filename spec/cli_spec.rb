@@ -54,14 +54,14 @@ describe PostfixAdmin::CLI do
     capture(:stdout){ @cli.show_domain }.should_not =~ /ALL/
   end
 
-  describe "#show_account" do
+  describe "#show_account_details" do
     it "shows information of an account" do
-      lambda {  @cli.show_account('user@example.com') }.should_not raise_error
-      capture(:stdout){ @cli.show_account('user@example.com') }.should =~ /Quota/
+      lambda {  @cli.show_account_details('user@example.com') }.should_not raise_error
+      capture(:stdout){ @cli.show_account_details('user@example.com') }.should =~ /Quota/
     end
 
     it "raises error when unknown account" do
-      lambda {  @cli.show_account('unknown@example.com') }.should raise_error Error
+      lambda {  @cli.show_account_details('unknown@example.com') }.should raise_error Error
     end
   end
 
