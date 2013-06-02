@@ -14,7 +14,7 @@ describe PostfixAdmin::Doveadm do
 
   describe "password" do
     it "CRAM-MD5" do
-      PostfixAdmin::Doveadm.password('password', 'CRAM-MD5').should == '9186d855e11eba527a7a52ca82b313e180d62234f0acc9051b527243d41e2740'
+      PostfixAdmin::Doveadm.password('password', 'CRAM-MD5').should == CRAM_MD5_PASS
       PostfixAdmin::Doveadm.password('dovecot', 'CRAM-MD5').should == '2dc40f88a4c2142c3b10cc4b4d11382a648f600301b78a4070172782192898d6'
     end
 

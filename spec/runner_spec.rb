@@ -121,7 +121,7 @@ describe PostfixAdmin::Runner do
     describe "scheme option" do
       it "--scheme does not show error" do
         capture(:stderr){ Runner.start(@args + ['--scheme', 'CRAM-MD5']) }.should == ""
-        Admin.find('admin@example.jp').password.should == '9186d855e11eba527a7a52ca82b313e180d62234f0acc9051b527243d41e2740'
+        Admin.find('admin@example.jp').password.should == CRAM_MD5_PASS
       end
 
       it "--shceme can resister admin" do
@@ -212,7 +212,7 @@ describe PostfixAdmin::Runner do
 
     it "default scheme (CRAM-MD5) is applied" do
       Runner.start(@args)
-      Mailbox.find('user2@example.com').password.should == '9186d855e11eba527a7a52ca82b313e180d62234f0acc9051b527243d41e2740'
+      Mailbox.find('user2@example.com').password.should == CRAM_MD5_PASS
     end
 
     it "add_account can use long password" do
@@ -226,12 +226,12 @@ describe PostfixAdmin::Runner do
 
       it "add_account can use CRAM-MD5 scheme using --scheme" do
         capture(:stdout){ Runner.start(@args + ['--scheme', 'CRAM-MD5']) }.should =~ EX_REGISTERED
-        Mailbox.find('user2@example.com').password.should == '9186d855e11eba527a7a52ca82b313e180d62234f0acc9051b527243d41e2740'
+        Mailbox.find('user2@example.com').password.should == CRAM_MD5_PASS
       end
 
       it "add_account can use CRAM-MD5 scheme using -s" do
         capture(:stdout){ Runner.start(@args + ['-s', 'CRAM-MD5']) }.should =~ EX_REGISTERED
-        Mailbox.find('user2@example.com').password.should == '9186d855e11eba527a7a52ca82b313e180d62234f0acc9051b527243d41e2740'
+        Mailbox.find('user2@example.com').password.should == CRAM_MD5_PASS
       end
 
       it "add_account can use MD5-CRYPT scheme using -s" do
