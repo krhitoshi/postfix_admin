@@ -107,7 +107,7 @@ module PostfixAdmin
     def show_alias_details(name)
       alias_check(name)
       mail_alias = Alias.find(name)
-      report("Admin") do
+      report("Alias") do
         puts "Address  : %s" % mail_alias.address
         puts "Go to    : %s" % mail_alias.goto
         puts "Active   : %s" % mail_alias.active_str
