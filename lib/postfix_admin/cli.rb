@@ -85,6 +85,7 @@ module PostfixAdmin
         puts "Password : %s" % mailbox.password
         puts "Quota    : %d MB" % max_str(mailbox.quota / KB_TO_MB)
         puts "Go to    : %s" % mail_alias.goto
+        puts "Active   : %s" % mailbox.active_str
       end
     end
 
