@@ -1,6 +1,7 @@
 require 'thor'
 require 'postfix_admin'
 require 'postfix_admin/cli'
+require 'postfix_admin/doveadm'
 
 module PostfixAdmin
   class Runner < Thor
@@ -12,6 +13,11 @@ module PostfixAdmin
     desc "summary [example.com]", "Summarize the usage of PostfixAdmin"
     def summary(domain_name=nil)
       runner{ @cli.show_summary(domain_name) }
+    end
+
+    desc "schemes", "List all supported password schemes"
+    def schemes
+      runner{ puts PostfixAdmin::Doveadm.schemes.join(' ') }
     end
 
     desc "show [example.com | admin@example.com | user@example.com]", "Show domains or admins or mailboxes"
