@@ -110,30 +110,34 @@ describe PostfixAdmin::Runner do
   end
 
   describe "add_admin" do
+    before do
+      @args = ['add_admin', 'admin@example.jp', 'password']
+    end
+
     it "can add an new admin" do
-      capture(:stdout){ Runner.start(['add_admin', 'admin@example.jp', 'password']) }.should =~ EX_REGISTERED
+      capture(:stdout){ Runner.start(@args) }.should =~ EX_REGISTERED
     end
 
     describe "scheme option" do
       it "--scheme does not show error" do
-        capture(:stderr){ Runner.start(['add_admin', 'admin@example.jp', 'password', '--scheme', 'CRAM-MD5']) }.should == ""
+        capture(:stderr){ Runner.start(@args + ['--scheme', 'CRAM-MD5']) }.should == ""
         Admin.find('admin@example.jp').password.should == '9186d855e11eba527a7a52ca82b313e180d62234f0acc9051b527243d41e2740'
       end
 
       it "--shceme can resister admin" do
-        capture(:stdout){ Runner.start(['add_admin', 'admin@example.jp', 'password', '--scheme', 'CRAM-MD5']) }.should =~ EX_REGISTERED
+        capture(:stdout){ Runner.start(@args + ['--scheme', 'CRAM-MD5']) }.should =~ EX_REGISTERED
       end
 
       it "-s does not show error" do
-        capture(:stderr){ Runner.start(['add_admin', 'admin@example.jp', 'password', '-s', 'CRAM-MD5']) }.should == ""
+        capture(:stderr){ Runner.start(@args + ['-s', 'CRAM-MD5']) }.should == ""
       end
 
       it "-s can resister admin" do
-        capture(:stdout){ Runner.start(['add_admin', 'admin@example.jp', 'password', '-s', 'CRAM-MD5']) }.should =~ EX_REGISTERED
+        capture(:stdout){ Runner.start(@args + ['-s', 'CRAM-MD5']) }.should =~ EX_REGISTERED
       end
 
       it "-s require argument" do
-        capture(:stderr){ Runner.start(['add_admin', 'admin@example.jp', 'password', '-s']) }.should_not == ""
+        capture(:stderr){ Runner.start(@args + ['-s']) }.should_not == ""
       end
     end
 
@@ -142,11 +146,11 @@ describe PostfixAdmin::Runner do
     end
 
     it "--super option" do
-      capture(:stdout){ Runner.start(['add_admin', 'admin@example.jp', 'password', '--super']) }.should =~ /registered as a super admin/
+      capture(:stdout){ Runner.start(@args + ['--super']) }.should =~ /registered as a super admin/
     end
 
     it "-S (--super) option" do
-      capture(:stdout){ Runner.start(['add_admin', 'admin@example.jp', 'password', '-S']) }.should =~ /registered as a super admin/
+      capture(:stdout){ Runner.start(@args + ['-S']) }.should =~ /registered as a super admin/
     end
   end
 
