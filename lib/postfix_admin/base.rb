@@ -56,9 +56,7 @@ module PostfixAdmin
     end
 
     def add_admin(username, password)
-      if password.nil? || password.empty?
-        raise Error, "Empty password"
-      end
+      password_check(password)
 
       if Admin.exist?(username)
         raise Error, "#{username} is already resistered as admin."
@@ -74,9 +72,7 @@ module PostfixAdmin
     end
 
     def add_account(address, password)
-      if password.nil? || password.empty?
-        raise Error, "Empty password"
-      end
+      password_check(password)
 
       if address !~ /.+\@.+\..+/
         raise Error, "Invalid mail address #{address}"
@@ -210,5 +206,8 @@ module PostfixAdmin
       raise Error, "Could not find domain #{domain_name}"     unless Domain.exist?(domain_name)
     end
 
+    def password_check(password)
+      raise Error, "Empty password" if password.nil? || password.empty?
+    end
   end
 end
