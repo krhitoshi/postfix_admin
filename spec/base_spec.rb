@@ -79,6 +79,14 @@ describe PostfixAdmin::Base do
         (Alias.count - num_aliases).should be(1)
     end
 
+    it "refuse empty password" do
+      lambda{ @base.add_account('new_user@example.com', '') }.should raise_error Error
+    end
+
+    it "refuse nil password" do
+      lambda{ @base.add_account('new_user@example.com', nil) }.should raise_error Error
+    end
+
     it "CRAM-MD5 password" do
       lambda{ @base.add_account('scheme@example.com', 'password', 'CRAM-MD5') }.should_not raise_error
       Mailbox.find('scheme@example.com').password.should == '9186d855e11eba527a7a52ca82b313e180d62234f0acc9051b527243d41e2740'
