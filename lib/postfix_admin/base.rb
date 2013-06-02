@@ -12,7 +12,8 @@ module PostfixAdmin
       'database'  => 'mysql://postfix:password@localhost/postfix',
       'aliases'   => 30,
       'mailboxes' => 30,
-      'maxquota'  => 100
+      'maxquota'  => 100,
+      'scheme'    => 'CRAM-MD5',
     }
 
     def initialize(config)
@@ -22,6 +23,7 @@ module PostfixAdmin
       @config[:mailboxes] = config['mailboxes'] || 30
       @config[:maxquota]  = config['maxquota']  || 100
       @config[:mailbox_quota] = @config[:maxquota] * KB_TO_MB
+      @config[:scheme]    = config['scheme']    || 'CRAM-MD5'
     end
 
     def db_setup(database)

@@ -382,7 +382,7 @@ module PostfixAdmin
       if scheme
         PostfixAdmin::Doveadm.password(password, scheme)
       else
-        password
+        PostfixAdmin::Doveadm.password(password, @base.config[:scheme])
       end
     end
 

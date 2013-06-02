@@ -12,7 +12,8 @@ describe PostfixAdmin::Base do
         'database'  => 'mysql://postfix:password@localhost/postfix',
         'aliases'   => 30,
         'mailboxes' => 30,
-        'maxquota'  => 100
+        'maxquota'  => 100,
+        'scheme'    => 'CRAM-MD5',
     }
   end
 
@@ -33,6 +34,7 @@ describe PostfixAdmin::Base do
     @base.config[:mailboxes].should == 30
     @base.config[:maxquota].should == 100
     @base.config[:mailbox_quota].should == 100 * KB_TO_MB
+    @base.config[:scheme].should == 'CRAM-MD5'
   end
 
   it "#domain_exist?" do
