@@ -103,7 +103,7 @@ module PostfixAdmin
           warn "Specify password scheme"
           help('add_admin')
         end
-        @cli.add_admin(user_name, password, options[:super])
+        @cli.add_admin(user_name, password, options[:super], options[:scheme])
       end
     end
 

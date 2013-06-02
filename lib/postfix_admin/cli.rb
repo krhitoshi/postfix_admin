@@ -205,8 +205,15 @@ module PostfixAdmin
       end
     end
 
-    def add_admin(user_name, password, super_admin=false)
-      validate_password(password)
+    def add_admin(user_name, text_password, super_admin=false, scheme=nil)
+      validate_password(text_password)
+      password =
+        if scheme
+          PostfixAdmin::Doveadm.password(text_password, scheme)
+        else
+          text_password
+        end
+
       @base.add_admin(user_name, password)
       if super_admin
         Admin.find(user_name).super_admin = true

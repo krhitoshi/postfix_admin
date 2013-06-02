@@ -117,6 +117,7 @@ describe PostfixAdmin::Runner do
     describe "scheme option" do
       it "--scheme does not show error" do
         capture(:stderr){ Runner.start(['add_admin', 'admin@example.jp', 'password', '--scheme', 'CRAM-MD5']) }.should == ""
+        Admin.find('admin@example.jp').password.should == '9186d855e11eba527a7a52ca82b313e180d62234f0acc9051b527243d41e2740'
       end
 
       it "--shceme can resister admin" do
