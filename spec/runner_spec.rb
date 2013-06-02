@@ -185,10 +185,12 @@ describe PostfixAdmin::Runner do
   describe "scheme" do
     it "add_account can use CRAM-MD5 scheme using --scheme" do
       capture(:stdout){ Runner.start(['add_account', 'user2@example.com', 'password', '--scheme', 'CRAM-MD5']) }.should =~ EX_REGISTERED
+      Mailbox.find('user2@example.com').password.should == '9186d855e11eba527a7a52ca82b313e180d62234f0acc9051b527243d41e2740'
     end
 
     it "add_account can use CRAM-MD5 scheme using -s" do
       capture(:stdout){ Runner.start(['add_account', 'user2@example.com', 'password', '-s', 'CRAM-MD5']) }.should =~ EX_REGISTERED
+      Mailbox.find('user2@example.com').password.should == '9186d855e11eba527a7a52ca82b313e180d62234f0acc9051b527243d41e2740'
     end
 
     it "add_account can use MD5-CRYPT scheme using -s" do
