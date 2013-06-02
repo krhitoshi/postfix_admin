@@ -95,10 +95,16 @@ module PostfixAdmin
     end
 
     desc "add_admin admin@example.com password", "Add an admin user"
-    method_option :super, :type => :boolean, :aliases => "-s", :desc => "register as a super admin"
-    method_option :scheme, :type => :string, :aliases => "-S", :desc => "password scheme"
+    method_option :super, :type => :boolean, :aliases => "-S", :desc => "register as a super admin"
+    method_option :scheme, :type => :string, :aliases => "-s", :desc => "password scheme"
     def add_admin(user_name, password)
-      runner{ @cli.add_admin(user_name, password, options) }
+      runner do
+        if options[:scheme] == 'scheme'
+          warn "Specify password scheme"
+          help('add_admin')
+        end
+        @cli.add_admin(user_name, password, options[:super])
+      end
     end
 
     desc "add_admin_domain admin@example.com example.com", "Add admin_domain"
