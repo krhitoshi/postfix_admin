@@ -378,12 +378,10 @@ module PostfixAdmin
 
     private
 
-    def hashed_password(password, scheme)
-      if scheme
-        PostfixAdmin::Doveadm.password(password, scheme)
-      else
-        PostfixAdmin::Doveadm.password(password, @base.config[:scheme])
-      end
+    def hashed_password(password, in_scheme)
+      scheme = in_scheme || @base.config[:scheme]
+      puts "scheme: #{scheme}"
+      PostfixAdmin::Doveadm.password(password, scheme)
     end
 
   end
