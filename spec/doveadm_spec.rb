@@ -24,8 +24,8 @@ describe PostfixAdmin::Doveadm do
     end
 
     it "MD5-CRYPT" do
-      PostfixAdmin::Doveadm.password('password', 'MD5-CRYPT').size.should == 34
-      PostfixAdmin::Doveadm.password('dovecot', 'MD5-CRYPT').size.should == 34
+      PostfixAdmin::Doveadm.password('password', 'MD5-CRYPT').should =~ EX_MD5_CRYPT
+      PostfixAdmin::Doveadm.password('dovecot', 'MD5-CRYPT').should =~ EX_MD5_CRYPT
     end
   end
 end

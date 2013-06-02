@@ -135,6 +135,7 @@ end
 
 EX_DELETED    = /successfully deleted/
 EX_REGISTERED = /successfully registered/
+EX_MD5_CRYPT  = /^\$1\$[\.\/0-9A-Za-z]{8}\$[\.\/0-9A-Za-z]{22}$/
 
 RSpec.configure do |config|
   config.before do
