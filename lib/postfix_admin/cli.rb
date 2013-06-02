@@ -24,7 +24,12 @@ module PostfixAdmin
       name = name.downcase if name
 
       if name =~ /@/
-        show_account(name)
+        if Admin.exist?(name)
+          show_admin_details(name)
+        else
+          show_account(name)
+        end
+
         return
       end
 
@@ -80,6 +85,17 @@ module PostfixAdmin
         puts "Password : %s" % mailbox.password
         puts "Quota    : %d MB" % max_str(mailbox.quota / KB_TO_MB)
         puts "Go to    : %s" % mail_alias.goto
+      end
+    end
+
+    def show_admin_details(name)
+      admin_check(name)
+      admin = Admin.find(name)
+
+      report("Admin") do
+        puts "Name     : %s" % admin.username
+        puts "Password : %s" % admin.password
+        puts "Active   : %s" % admin.active_str
       end
     end
 

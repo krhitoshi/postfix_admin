@@ -36,6 +36,10 @@ describe PostfixAdmin::Runner do
       out.should =~ /No aliases/
     end
 
+    it "shows information of an admin" do
+      capture(:stdout){  Runner.start(["show", "admin@example.com"]) }.should =~ /admin@example.com/
+    end
+
     it "shows information of an account" do
       capture(:stdout){  Runner.start(["show", "user@example.com"]) }.should =~ /user@example.com/
     end
