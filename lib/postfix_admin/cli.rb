@@ -205,11 +205,10 @@ module PostfixAdmin
       end
     end
 
-    def add_admin(user_name, text_password, super_admin=false, scheme=nil)
-      validate_password(text_password)
-      password = hashed_password(text_password, scheme)
+    def add_admin(user_name, password, super_admin=false, scheme=nil)
+      validate_password(password)
 
-      @base.add_admin(user_name, password)
+      @base.add_admin(user_name, hashed_password(password, scheme))
       if super_admin
         Admin.find(user_name).super_admin = true
         puts_registered(user_name, "a super admin")
@@ -228,11 +227,10 @@ module PostfixAdmin
       puts "#{domain_name} was successfully deleted from #{user_name}"
     end
 
-    def add_account(address, text_password, scheme=nil)
-      validate_password(text_password)
-      password = hashed_password(text_password, scheme)
+    def add_account(address, password, scheme=nil)
+      validate_password(password)
 
-      @base.add_account(address, password)
+      @base.add_account(address, hashed_password(password, scheme))
       puts_registered(address, "an account")
     end
 
