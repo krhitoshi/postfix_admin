@@ -207,12 +207,7 @@ module PostfixAdmin
 
     def add_admin(user_name, text_password, super_admin=false, scheme=nil)
       validate_password(text_password)
-      password =
-        if scheme
-          PostfixAdmin::Doveadm.password(text_password, scheme)
-        else
-          text_password
-        end
+      password = hashed_password(text_password, scheme)
 
       @base.add_admin(user_name, password)
       if super_admin
@@ -235,12 +230,8 @@ module PostfixAdmin
 
     def add_account(address, text_password, options)
       validate_password(text_password)
-      password =
-        if options[:scheme]
-          PostfixAdmin::Doveadm.password(text_password, options[:scheme])
-        else
-          text_password
-        end
+      scheme = options[:scheme]
+      password = hashed_password(text_password, scheme)
 
       @base.add_account(address, password)
       puts_registered(address, "an account")
@@ -385,6 +376,16 @@ module PostfixAdmin
         '0'
       else
         value.to_s
+      end
+    end
+
+    private
+
+    def hashed_password(password, scheme)
+      if scheme
+        PostfixAdmin::Doveadm.password(password, scheme)
+      else
+        password
       end
     end
 
