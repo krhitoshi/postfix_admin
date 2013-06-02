@@ -206,8 +206,12 @@ describe PostfixAdmin::Runner do
   end
 
   describe "add_account" do
+    before do
+      @args = ['add_account', 'user2@example.com', 'password']
+    end
+
     it "default scheme (CRAM-MD5) is applied" do
-      Runner.start(['add_account', 'user2@example.com', 'password'])
+      Runner.start(@args)
       Mailbox.find('user2@example.com').password.should == '9186d855e11eba527a7a52ca82b313e180d62234f0acc9051b527243d41e2740'
     end
 
@@ -217,21 +221,21 @@ describe PostfixAdmin::Runner do
 
     describe "scheme" do
       it "--scheme require argument" do
-        capture(:stderr){ Runner.start(['add_account', 'user2@example.com', 'password', '--scheme']) }.should =~ /Specify password scheme/
+        capture(:stderr){ Runner.start(@args + ['--scheme']) }.should =~ /Specify password scheme/
     end
 
       it "add_account can use CRAM-MD5 scheme using --scheme" do
-        capture(:stdout){ Runner.start(['add_account', 'user2@example.com', 'password', '--scheme', 'CRAM-MD5']) }.should =~ EX_REGISTERED
+        capture(:stdout){ Runner.start(@args + ['--scheme', 'CRAM-MD5']) }.should =~ EX_REGISTERED
         Mailbox.find('user2@example.com').password.should == '9186d855e11eba527a7a52ca82b313e180d62234f0acc9051b527243d41e2740'
       end
 
       it "add_account can use CRAM-MD5 scheme using -s" do
-        capture(:stdout){ Runner.start(['add_account', 'user2@example.com', 'password', '-s', 'CRAM-MD5']) }.should =~ EX_REGISTERED
+        capture(:stdout){ Runner.start(@args + ['-s', 'CRAM-MD5']) }.should =~ EX_REGISTERED
         Mailbox.find('user2@example.com').password.should == '9186d855e11eba527a7a52ca82b313e180d62234f0acc9051b527243d41e2740'
       end
 
       it "add_account can use MD5-CRYPT scheme using -s" do
-        capture(:stdout){ Runner.start(['add_account', 'user2@example.com', 'password', '-s', 'MD5-CRYPT']) }.should =~ EX_REGISTERED
+        capture(:stdout){ Runner.start(@args + ['-s', 'MD5-CRYPT']) }.should =~ EX_REGISTERED
         Mailbox.find('user2@example.com').password.should =~ EX_MD5_CRYPT
       end
     end
