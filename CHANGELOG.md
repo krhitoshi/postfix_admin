@@ -1,4 +1,5 @@
 ## 0.1.2
+ * Support password hash by doveadm (external command)
  * Show active status
  * Don't show passwords using list format
 
