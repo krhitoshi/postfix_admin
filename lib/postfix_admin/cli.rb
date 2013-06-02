@@ -26,9 +26,11 @@ module PostfixAdmin
       if name =~ /@/
         if Admin.exist?(name)
           show_admin_details(name)
-        elsif Mailbox.exist?(name)
+        end
+
+        if Mailbox.exist?(name)
           show_account(name)
-        else
+        elsif Alias.exist?(name)
           show_alias_details(name)
         end
 
