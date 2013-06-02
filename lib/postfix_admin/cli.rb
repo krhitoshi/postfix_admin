@@ -26,8 +26,10 @@ module PostfixAdmin
       if name =~ /@/
         if Admin.exist?(name)
           show_admin_details(name)
-        else
+        elsif Mailbox.exist?(name)
           show_account(name)
+        else
+          show_alias_details(name)
         end
 
         return
@@ -97,6 +99,16 @@ module PostfixAdmin
         puts "Name     : %s" % admin.username
         puts "Password : %s" % admin.password
         puts "Active   : %s" % admin.active_str
+      end
+    end
+
+    def show_alias_details(name)
+      alias_check(name)
+      mail_alias = Alias.find(name)
+      report("Admin") do
+        puts "Address  : %s" % mail_alias.address
+        puts "Go to    : %s" % mail_alias.goto
+        puts "Active   : %s" % mail_alias.active_str
       end
     end
 
@@ -351,6 +363,10 @@ module PostfixAdmin
 
     def mailbox_check(address)
       klass_check(Mailbox, address)
+    end
+
+    def alias_check(address)
+      klass_check(Alias, address)
     end
 
     def admin_check(user_name)
