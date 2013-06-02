@@ -78,7 +78,14 @@ module PostfixAdmin
     desc "add_account user@example.com password", "Add an account"
     method_option :scheme, :type => :string, :aliases => "-s", :desc => "password scheme"
     def add_account(address, password)
-      runner{ @cli.add_account(address, password, options[:scheme]) }
+      runner do
+        if options[:scheme] == 'scheme'
+          warn "Specify password scheme"
+          help('add_account')
+        else
+          @cli.add_account(address, password, options[:scheme])
+        end
+      end
     end
 
     desc "edit_account user@example.com", "Edit an account"
@@ -102,8 +109,9 @@ module PostfixAdmin
         if options[:scheme] == 'scheme'
           warn "Specify password scheme"
           help('add_admin')
+        else
+          @cli.add_admin(user_name, password, options[:super], options[:scheme])
         end
-        @cli.add_admin(user_name, password, options[:super], options[:scheme])
       end
     end
 

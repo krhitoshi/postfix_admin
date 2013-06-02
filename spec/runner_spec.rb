@@ -137,7 +137,7 @@ describe PostfixAdmin::Runner do
       end
 
       it "-s require argument" do
-        capture(:stderr){ Runner.start(@args + ['-s']) }.should_not == ""
+        capture(:stderr){ Runner.start(@args + ['-s']) }.should =~ /Specify password scheme/
       end
     end
 
@@ -210,6 +210,10 @@ describe PostfixAdmin::Runner do
   end
 
   describe "scheme" do
+    it "--scheme require argument" do
+      capture(:stderr){ Runner.start(['add_account', 'user2@example.com', 'password', '--scheme']) }.should =~ /Specify password scheme/
+    end
+
     it "add_account can use CRAM-MD5 scheme using --scheme" do
       capture(:stdout){ Runner.start(['add_account', 'user2@example.com', 'password', '--scheme', 'CRAM-MD5']) }.should =~ EX_REGISTERED
       Mailbox.find('user2@example.com').password.should == '9186d855e11eba527a7a52ca82b313e180d62234f0acc9051b527243d41e2740'
