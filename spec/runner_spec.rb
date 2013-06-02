@@ -114,6 +114,16 @@ describe PostfixAdmin::Runner do
       capture(:stdout){ Runner.start(['add_admin', 'admin@example.jp', 'password']) }.should =~ EX_REGISTERED
     end
 
+    describe "scheme option" do
+      it "--scheme" do
+        capture(:stderr){ Runner.start(['add_admin', 'admin@example.jp', 'password', '--scheme', 'CRAM-MD5']) }.should == ""
+      end
+
+      it "--shceme" do
+        capture(:stdout){ Runner.start(['add_admin', 'admin@example.jp', 'password', '--scheme', 'CRAM-MD5']) }.should =~ EX_REGISTERED
+      end
+    end
+
     it "can use long password" do
       capture(:stdout){ Runner.start(['add_admin', 'admin@example.jp', '9c5e77f2da26fc03e9fa9e13ccd77aeb50c85539a4d90b70812715aea9ebda1d']) }.should =~ EX_REGISTERED
     end
