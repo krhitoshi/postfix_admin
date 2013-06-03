@@ -57,7 +57,9 @@ describe PostfixAdmin::CLI do
   describe "#show_account_details" do
     it "shows information of an account" do
       lambda {  @cli.show_account_details('user@example.com') }.should_not raise_error
-      capture(:stdout){ @cli.show_account_details('user@example.com') }.should =~ /Quota/
+      result = capture(:stdout){ @cli.show_account_details('user@example.com') }
+      result.should =~ /Name/
+      result.should =~ /Quota/
     end
 
     it "raises error when unknown account" do

@@ -86,6 +86,7 @@ module PostfixAdmin
 
       report("Mailbox") do
         puts "Address  : %s" % mailbox.username
+        puts "Name     : %s" % mailbox.name
         puts "Password : %s" % mailbox.password
         puts "Quota    : %d MB" % max_str(mailbox.quota / KB_TO_MB)
         puts "Go to    : %s" % mail_alias.goto
