@@ -137,6 +137,7 @@ CRAM_MD5_PASS = '9186d855e11eba527a7a52ca82b313e180d62234f0acc9051b527243d41e274
 CRAM_MD5_NEW_PASS = '820de4c70957274d41111c5fbcae4c87240c9f047fc56f3e720f103571be6cbc'
 EX_DELETED    = /successfully deleted/
 EX_REGISTERED = /successfully registered/
+EX_UPDATED    = /Successfully updated/
 EX_MD5_CRYPT  = /^\$1\$[\.\/0-9A-Za-z]{8}\$[\.\/0-9A-Za-z]{22}$/
 
 RSpec.configure do |config|

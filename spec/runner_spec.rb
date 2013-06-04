@@ -175,11 +175,11 @@ describe PostfixAdmin::Runner do
     end
 
     it "can edit limitations of domain" do
-      capture(:stdout){ Runner.start(['edit_domain', 'example.com', '--aliases', '40', '--mailboxes', '40', '--maxquota', '400']) }.should =~ /Successfully updated/
+      capture(:stdout){ Runner.start(['edit_domain', 'example.com', '--aliases', '40', '--mailboxes', '40', '--maxquota', '400']) }.should =~ EX_UPDATED
     end
 
     it "aliases options -a, -m, -q" do
-      capture(:stdout){ Runner.start(['edit_domain', 'example.com', '-a', '40', '-m', '40', '-m', '400']) }.should =~ /Successfully updated/
+      capture(:stdout){ Runner.start(['edit_domain', 'example.com', '-a', '40', '-m', '40', '-m', '400']) }.should =~ EX_UPDATED
     end
 
     it "can not use unknown domain" do
@@ -198,18 +198,27 @@ describe PostfixAdmin::Runner do
 
     it "can edit quota limitation" do
       output = capture(:stdout){ Runner.start(@args + ['--quota', '50'])}
-      output.should =~ /Successfully updated/
+      output.should =~ EX_UPDATED
       output.should =~ /Quota/
     end
 
-    it "can update name" do
-      output = capture(:stdout){ Runner.start(@args + ['--name', 'Hitoshi Kurokawa'])}
-      output.should =~ /Successfully updated/
+    it "can use alias -q option" do
+      capture(:stdout){ Runner.start(@args + ['-q', '50'])}.should =~ EX_UPDATED
+    end
+
+    it "can update name using --name option" do
+      capture(:stdout){ Runner.start(@args + ['--name', 'Hitoshi Kurokawa'])}.should =~ EX_UPDATED
       Mailbox.find('user@example.com').name.should == 'Hitoshi Kurokawa'
     end
 
-    it "can use alias -q option" do
-      capture(:stdout){ Runner.start(@args + ['-q', '50'])}.should =~ /Successfully updated/
+    it "can update name using -n option" do
+      capture(:stdout){ Runner.start(@args + ['-n', 'Hitoshi Kurokawa'])}.should =~ EX_UPDATED
+      Mailbox.find('user@example.com').name.should == 'Hitoshi Kurokawa'
+    end
+
+    it "-n option supports Japanese" do
+      capture(:stdout){ Runner.start(@args + ['-n', '黒川　仁'])}.should =~ EX_UPDATED
+      Mailbox.find('user@example.com').name.should == '黒川　仁'
     end
   end
 
