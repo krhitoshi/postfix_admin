@@ -198,6 +198,11 @@ describe PostfixAdmin::Runner do
       output.should =~ /Quota/
     end
 
+    it "can update name" do
+      output = capture(:stdout){ Runner.start(['edit_account', 'user@example.com', '--name', 'Hitoshi Kurokawa'])}
+      output.should =~ /Successfully updated/
+    end
+
     it "can use alias -q option" do
       capture(:stdout){ Runner.start(['edit_account', 'user@example.com', '-q', '50'])}.should =~ /Successfully updated/
     end
