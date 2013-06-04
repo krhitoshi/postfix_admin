@@ -245,6 +245,10 @@ describe PostfixAdmin::Runner do
         capture(:stderr){ Runner.start(@args + ['-n', @name]) }.should == ""
       end
 
+      it "require an argument" do
+        capture(:stderr){ Runner.start(@args + ['-n']) }.should_not == ""
+      end
+
       it "can change full name" do
         Runner.start(@args + ['-n', @name])
         Mailbox.find(@user).name.should == @name

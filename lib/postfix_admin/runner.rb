@@ -90,7 +90,12 @@ module PostfixAdmin
           warn "Specify password scheme"
           help('add_account')
         else
-          @cli.add_account(address, password, options[:scheme], options[:name])
+          if options[:name] == 'name'
+            warn "Specify name"
+            help('add_account')
+          else
+            @cli.add_account(address, password, options[:scheme], options[:name])
+          end
         end
       end
     end
