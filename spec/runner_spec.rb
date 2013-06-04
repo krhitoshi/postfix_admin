@@ -206,6 +206,10 @@ describe PostfixAdmin::Runner do
       capture(:stdout){ Runner.start(@args + ['-q', '50'])}.should =~ EX_UPDATED
     end
 
+    it "-q option require an argment" do
+      capture(:stderr){ Runner.start(@args + ['-q'])}.should_not == ""
+    end
+
     it "can update name using --name option" do
       capture(:stdout){ Runner.start(@args + ['--name', 'Hitoshi Kurokawa'])}.should =~ EX_UPDATED
       Mailbox.find('user@example.com').name.should == 'Hitoshi Kurokawa'
@@ -219,6 +223,10 @@ describe PostfixAdmin::Runner do
     it "-n option supports Japanese" do
       capture(:stdout){ Runner.start(@args + ['-n', '黒川　仁'])}.should =~ EX_UPDATED
       Mailbox.find('user@example.com').name.should == '黒川　仁'
+    end
+
+    it "-n option require an argument" do
+      capture(:stderr){ Runner.start(@args + ['-n'])}.should_not == ""
     end
   end
 

@@ -264,6 +264,7 @@ module PostfixAdmin
 
       @base.add_account(address, hashed_password(password, scheme), name)
       puts_registered(address, "an account")
+      show_account_details(address)
     end
 
     def add_alias(address, goto)

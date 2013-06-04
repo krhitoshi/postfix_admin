@@ -109,7 +109,12 @@ module PostfixAdmin
           warn "Use one or more options."
           help('edit_account')
         else
-          @cli.edit_account(address, options)
+          if options[:name] == 'name'
+            warn "Specify name"
+            help('edit_account')
+          else
+            @cli.edit_account(address, options)
+          end
         end
       end
     end
