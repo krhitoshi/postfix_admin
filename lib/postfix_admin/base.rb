@@ -73,7 +73,8 @@ module PostfixAdmin
       end
     end
 
-    def add_account(address, password)
+    def add_account(address, password, in_name=nil)
+      name = in_name || ''
       password_check(password)
 
       if address !~ /.+\@.+\..+/
@@ -97,7 +98,7 @@ module PostfixAdmin
       mailbox.attributes = {
         :username => address,
         :password => password,
-        :name     => '',
+        :name     => name,
         :maildir  => path,
         :quota    => @config[:mailbox_quota],
         :local_part => user,

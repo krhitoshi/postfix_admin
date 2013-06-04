@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 require File.expand_path(File.dirname(__FILE__) + "/spec_helper")
 require 'postfix_admin/runner'
 
@@ -220,7 +222,9 @@ describe PostfixAdmin::Runner do
 
   describe "add_account" do
     before do
-      @args = ['add_account', 'user2@example.com', 'password']
+      @user = 'user2@example.com'
+      @args = ['add_account', @user, 'password']
+      @name = 'Hitoshi Kurokawa'
     end
 
     it "default scheme (CRAM-MD5) is applied" do
@@ -233,8 +237,22 @@ describe PostfixAdmin::Runner do
     end
 
     describe "name option" do
-      it "does not raise error" do
-        capture(:stderr){ Runner.start(@args + ['--name', 'Hitoshi Kurokawa']) }.should == ""
+      it "--name options does not raise error" do
+        capture(:stderr){ Runner.start(@args + ['--name', @name]) }.should == ""
+      end
+
+      it "-n options does not raise error" do
+        capture(:stderr){ Runner.start(@args + ['-n', @name]) }.should == ""
+      end
+
+      it "can change full name" do
+        Runner.start(@args + ['-n', @name])
+        Mailbox.find(@user).name.should == @name
+      end
+
+      it "can use Japanese" do
+        capture(:stderr){ Runner.start(@args + ['-n', '黒川　仁']) }.should == ""
+        Mailbox.find(@user).name.should == '黒川　仁'
       end
     end
 
