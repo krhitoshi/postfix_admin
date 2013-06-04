@@ -83,6 +83,7 @@ module PostfixAdmin
 
     desc "add_account user@example.com password", "Add an account"
     method_option :scheme, :type => :string, :aliases => "-s", :desc => "password scheme"
+    method_option :name,   :type => :string, :aliases => "-n", :desc => "full name"
     def add_account(address, password)
       runner do
         if options[:scheme] == 'scheme'

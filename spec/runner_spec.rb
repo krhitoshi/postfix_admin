@@ -232,6 +232,12 @@ describe PostfixAdmin::Runner do
       capture(:stdout){ Runner.start(['add_account', 'user2@example.com', '9c5e77f2da26fc03e9fa9e13ccd77aeb50c85539a4d90b70812715aea9ebda1d']) }.should =~ EX_REGISTERED
     end
 
+    describe "name option" do
+      it "does not raise error" do
+        capture(:stderr){ Runner.start(@args + ['--name', 'Hitoshi Kurokawa']) }.should == ""
+      end
+    end
+
     describe "scheme" do
       it "--scheme require argument" do
         capture(:stderr){ Runner.start(@args + ['--scheme']) }.should =~ /Specify password scheme/
