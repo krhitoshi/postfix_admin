@@ -320,4 +320,16 @@ describe PostfixAdmin::Runner do
     lambda { Runner.start(['add_account', 'user2@example.net', 'password']) }.should_not raise_error
     lambda { Runner.start(['delete_domain', 'example.net']) }.should_not raise_error
   end
+
+  describe "dump" do
+    it "does not raise error" do
+      capture(:stderr){ Runner.start(['dump']) }.should == ""
+    end
+
+    it "all data" do
+      result = capture(:stdout){ Runner.start(['dump']) }
+      result.should =~ /Domains/
+    end
+  end
+
 end

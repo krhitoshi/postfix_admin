@@ -154,6 +154,11 @@ module PostfixAdmin
       runner{ @cli.delete_alias(address) }
     end
 
+    desc "dump", "Dump all data"
+    def dump
+      runner{ @cli.dump }
+    end
+
     desc "version", "Show postfix_admin version"
     def version
       require 'postfix_admin/version'

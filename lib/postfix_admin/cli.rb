@@ -298,6 +298,38 @@ module PostfixAdmin
       puts_deleted(address)
     end
 
+    def dump
+      puts "Admins"
+      puts "User Name,Password,Super Admin,Active"
+      Admin.all.each do |a|
+        puts [a.username, a.password, a.super_admin?, a.active].join(',')
+      end
+      puts
+      puts "Domains"
+      puts "Domain Name,Max Quota,Active"
+      Domain.all_without_special_domain.each do |d|
+        puts [d.domain_name, d.maxquota, d.active].join(',')
+      end
+      puts
+      puts "Mailboxes"
+      puts "User Name,Name,Password,Quota,Maildir,Active"
+      Mailbox.all.each do |m|
+        puts [m.username, m.name, m.password, m.quota, m.maildir, m.active].join(',')
+      end
+      puts
+      puts "Aliases"
+      puts "Address,Go to,Active"
+      Alias.all.select{|a| !a.mailbox? }.each do |a|
+        puts [a.address, a.goto, a.active].join(',')
+      end
+      puts
+      puts "Forwards"
+      puts "Address,Go to,Active"
+      Alias.all.select{|a| a.mailbox? && a.goto != a.address }.each do |a|
+        puts [a.address, a.goto, a.active].join(',')
+      end
+    end
+
     private
 
     def show_alias_base(title, addresses)
