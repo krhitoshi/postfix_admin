@@ -188,23 +188,27 @@ describe PostfixAdmin::Runner do
   end
 
   describe "edit_account" do
+    before do
+      @args = ['edit_account', 'user@example.com']
+    end
+
     it "when no options, shows usage" do
-      capture(:stderr){ Runner.start(['edit_account', 'user@example.com']) }.should =~ /Use one or more options/
+      capture(:stderr){ Runner.start(@args) }.should =~ /Use one or more options/
     end
 
     it "can edit quota limitation" do
-      output = capture(:stdout){ Runner.start(['edit_account', 'user@example.com', '--quota', '50'])}
+      output = capture(:stdout){ Runner.start(@args + ['--quota', '50'])}
       output.should =~ /Successfully updated/
       output.should =~ /Quota/
     end
 
     it "can update name" do
-      output = capture(:stdout){ Runner.start(['edit_account', 'user@example.com', '--name', 'Hitoshi Kurokawa'])}
+      output = capture(:stdout){ Runner.start(@args + ['--name', 'Hitoshi Kurokawa'])}
       output.should =~ /Successfully updated/
     end
 
     it "can use alias -q option" do
-      capture(:stdout){ Runner.start(['edit_account', 'user@example.com', '-q', '50'])}.should =~ /Successfully updated/
+      capture(:stdout){ Runner.start(@args + ['-q', '50'])}.should =~ /Successfully updated/
     end
   end
 
