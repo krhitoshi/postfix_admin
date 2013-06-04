@@ -274,6 +274,7 @@ module PostfixAdmin
     def edit_account(address, options)
       mailbox_check(address)
       mailbox = Mailbox.find(address)
+      mailbox.name = options[:name] if options[:name]
       mailbox.quota = options[:quota] * KB_TO_MB if options[:quota]
       mailbox.save or raise "Could not save Mailbox"
 

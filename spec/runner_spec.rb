@@ -205,6 +205,7 @@ describe PostfixAdmin::Runner do
     it "can update name" do
       output = capture(:stdout){ Runner.start(@args + ['--name', 'Hitoshi Kurokawa'])}
       output.should =~ /Successfully updated/
+      Mailbox.find('user@example.com').name.should == 'Hitoshi Kurokawa'
     end
 
     it "can use alias -q option" do
