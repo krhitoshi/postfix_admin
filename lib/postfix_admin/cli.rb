@@ -314,19 +314,19 @@ module PostfixAdmin
       puts "Mailboxes"
       puts "User Name,Name,Password,Quota,Maildir,Active"
       Mailbox.all.each do |m|
-        puts [m.username, m.name, m.password, m.quota, m.maildir, m.active].join(',')
+        puts [m.username, %Q!"#{m.name}"!, %Q!"#{m.password}"!, m.quota, %Q!"#{m.maildir}"!, m.active].join(',')
       end
       puts
       puts "Aliases"
       puts "Address,Go to,Active"
       Alias.all.select{|a| !a.mailbox? }.each do |a|
-        puts [a.address, a.goto, a.active].join(',')
+        puts [a.address, %Q!"#{a.goto}"!, a.active].join(',')
       end
       puts
       puts "Forwards"
       puts "Address,Go to,Active"
       Alias.all.select{|a| a.mailbox? && a.goto != a.address }.each do |a|
-        puts [a.address, a.goto, a.active].join(',')
+        puts [a.address, %Q!"#{a.goto}"!, a.active].join(',')
       end
     end
 
