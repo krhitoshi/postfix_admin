@@ -393,7 +393,7 @@ module PostfixAdmin
       validate_password(password)
 
       obj = klass.find(user_name)
-      obj.password = password
+      obj.password = hashed_password(password)
       if obj.save
         puts "the password of #{user_name} was successfully changed."
       else
@@ -414,7 +414,7 @@ module PostfixAdmin
 
     private
 
-    def hashed_password(password, in_scheme)
+    def hashed_password(password, in_scheme=nil)
       scheme = in_scheme || @base.config[:scheme]
       puts "scheme: #{scheme}"
       PostfixAdmin::Doveadm.password(password, scheme)

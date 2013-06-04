@@ -95,6 +95,7 @@ describe PostfixAdmin::Runner do
   describe "account_passwd" do
     it "can change password of an account" do
       capture(:stdout){ Runner.start(['account_passwd', 'user@example.com', 'new_password']) }.should =~ /successfully changed/
+      Mailbox.find('user@example.com').password.should == CRAM_MD5_NEW_PASS
     end
 
     it "can not use too short password (< 5)" do

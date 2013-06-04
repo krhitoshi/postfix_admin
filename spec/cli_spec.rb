@@ -121,7 +121,7 @@ describe PostfixAdmin::CLI do
 
   it "#change_admin_password" do
     lambda { @cli.change_admin_password('admin@example.com', 'new_password') }.should_not raise_error
-    Admin.find('admin@example.com').password.should == 'new_password'
+    Admin.find('admin@example.com').password.should == CRAM_MD5_NEW_PASS
     lambda { @cli.change_admin_password('unknown_admin@example.com', 'new_password') }.should raise_error Error
 
     lambda { @cli.change_admin_password('admin@example.com', '1234') }.should raise_error ArgumentError
@@ -129,7 +129,7 @@ describe PostfixAdmin::CLI do
 
   it "#change_account_password" do
     lambda { @cli.change_account_password('user@example.com', 'new_password') }.should_not raise_error
-    Mailbox.find('user@example.com').password.should == 'new_password'
+    Mailbox.find('user@example.com').password.should == CRAM_MD5_NEW_PASS
     lambda { @cli.change_account_password('unknown@example.com', 'new_password') }.should raise_error Error
     lambda { @cli.change_account_password('user@example.com', '1234') }.should raise_error ArgumentError
   end
