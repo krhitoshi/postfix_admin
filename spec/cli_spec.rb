@@ -285,4 +285,10 @@ describe PostfixAdmin::CLI do
       Mailbox.exist?('user2@example.com').should be_false
     end
   end
+
+  describe "#dump" do
+    it do
+      lambda { @cli.dump }.should_not raise_error
+    end
+  end
 end

@@ -302,7 +302,7 @@ module PostfixAdmin
       puts "Admins"
       puts "User Name,Password,Super Admin,Active"
       Admin.all.each do |a|
-        puts [a.username, a.password, a.super_admin?, a.active].join(',')
+        puts [a.username, %Q!"#{a.password}"!, a.super_admin?, a.active].join(',')
       end
       puts
       puts "Domains"
