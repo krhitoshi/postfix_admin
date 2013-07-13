@@ -290,5 +290,15 @@ describe PostfixAdmin::CLI do
     it do
       lambda { @cli.dump }.should_not raise_error
     end
+
+    it "print infomation of all domains" do
+      result = capture(:stdout){ @cli.dump }
+      result.should =~ /example.com,100,true/
+      result.should =~ /example.org,100,true/
+      result.should =~ /admin@example.com,"password",false,true/
+      result.should =~ /user@example.com,"","password",102400000,"example.com\/user@example.com\/",true/
+      result.should =~ /alias@example.com,"goto@example.jp",true/
+      result.should =~ /user@example.com,"goto@example.jp",true/
+    end
   end
 end
