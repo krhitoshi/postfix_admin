@@ -295,8 +295,8 @@ describe PostfixAdmin::CLI do
       result = capture(:stdout){ @cli.dump }
       result.should =~ /example.com,100,true/
       result.should =~ /example.org,100,true/
-      result.should =~ /admin@example.com,"password",false,true/
-      result.should =~ /user@example.com,"","password",102400000,"example.com\/user@example.com\/",true/
+      result.should =~ /admin@example.com,"9186d855e11eba527a7a52ca82b313e180d62234f0acc9051b527243d41e2740",false,true/
+      result.should =~ /user@example.com,"","9186d855e11eba527a7a52ca82b313e180d62234f0acc9051b527243d41e2740",102400000,"example.com\/user@example.com\/",true/
       result.should =~ /alias@example.com,"goto@example.jp",true/
       result.should =~ /user@example.com,"goto@example.jp",true/
     end

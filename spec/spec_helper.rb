@@ -4,8 +4,10 @@ $:.unshift(File.join(File.dirname(__FILE__), "..", "lib"))
 require 'postfix_admin'
 require 'postfix_admin/cli'
 
-
 include PostfixAdmin
+
+# CRAM-MD5
+SAMPLE_PASSWORD = "9186d855e11eba527a7a52ca82b313e180d62234f0acc9051b527243d41e2740"
 
 # [fixtures]
 # Domain:
@@ -68,7 +70,7 @@ def create_mailbox(address, in_path=nil, active=true)
   path = in_path || "#{address.split('@').last}/#{address}/"
   Mailbox.new.attributes = {
     :username => address,
-    :password => 'password',
+    :password => SAMPLE_PASSWORD,
     :name     => '',
     :maildir  => path,
     :quota    => 100 * KB_TO_MB,
@@ -81,7 +83,7 @@ def create_admin(username, active=true)
   admin = Admin.new
   admin.attributes = {
     :username => username,
-    :password => 'password',
+    :password => SAMPLE_PASSWORD,
     :active => active
   }
   admin.save
