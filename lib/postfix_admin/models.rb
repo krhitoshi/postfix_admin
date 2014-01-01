@@ -5,6 +5,14 @@ module PostfixAdmin
     flag ? "YES" : "NO"
   end
 
+  class Config
+    include ::DataMapper::Resource
+    property :id,    Integer, :key => true
+    property :name,  String
+    property :value, String
+    storage_names[:default] = 'config'
+  end
+
   class Admin
     include ::DataMapper::Resource
     property :username, String, :key => true, :length => 0..255
@@ -131,7 +139,6 @@ module PostfixAdmin
     property :password, String, :length => 0..255
     property :maildir, String, :length => 0..255
     property :quota, Integer
-    property :local_part, String
     property :active, Boolean, :default  => true
     property :created, DateTime, :default => DateTime.now
     property :modified, DateTime, :default => DateTime.now

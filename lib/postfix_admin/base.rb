@@ -18,6 +18,14 @@ module PostfixAdmin
 
     def initialize(config)
       db_setup(config['database'])
+      if local_part_required?
+        eval <<"EOS"
+class ::PostfixAdmin::Mailbox
+    property :local_part, String
+end
+EOS
+        DataMapper.finalize
+      end
       @config = {}
       @config[:aliases]   = config['aliases']   || 30
       @config[:mailboxes] = config['mailboxes'] || 30
@@ -95,14 +103,20 @@ module PostfixAdmin
       domain.aliases << Alias.mailbox(address)
 
       mailbox = Mailbox.new
-      mailbox.attributes = {
+      attributes = {
         :username => address,
         :password => password,
         :name     => name,
         :maildir  => path,
         :quota    => @config[:mailbox_quota],
-        :local_part => user,
       }
+
+      if local_part_required?
+        attributes[:local_part] = user
+      end
+
+      mailbox.attributes = attributes
+
       domain.mailboxes << mailbox
       unless domain.save
         raise "Could not save Mailbox and Domain #{mailbox.errors.map{|e| e.to_s}.join} #{domain.errors.map{|e| e.to_s}.join}"
@@ -203,6 +217,11 @@ module PostfixAdmin
     end
 
     private
+
+    # postfixadmin DB upgrade Number 495 loca_part added
+    def local_part_required?
+      Config.first.value.to_i >= 495
+    end
 
     def admin_domain_check(user_name, domain_name)
       raise Error, "#{user_name} is not resistered as admin." unless Admin.exist?(user_name)
