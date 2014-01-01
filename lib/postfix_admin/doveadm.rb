@@ -5,18 +5,27 @@ require 'shellwords'
 module PostfixAdmin
   class Doveadm
     def self.schemes
-      result = `doveadm pw -l`
+      result = `#{self.command_name} -l`
       result.split
     end
 
     def self.password(in_password, in_scheme)
       password = Shellwords.escape(in_password)
       scheme  = Shellwords.escape(in_scheme)
-      stdin, stdout, stderr = Open3.popen3("doveadm pw -s #{scheme} -p #{password}")
+      stdin, stdout, stderr = Open3.popen3("#{self.command_name} -s #{scheme} -p #{password}")
       if stderr.readlines.to_s =~ /Fatal:/
         raise Error, stderr.readlines
       else
         stdout.readlines.first.chomp.gsub("{#{scheme}}", "")
+      end
+    end
+
+    def self.command_name
+      begin
+        Open3.capture3("doveadm pw -l")[2].exited?
+        "doveadm pw"
+      rescue Errno::ENOENT
+        "dovecotpw"
       end
     end
   end
