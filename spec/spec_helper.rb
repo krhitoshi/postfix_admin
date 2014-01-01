@@ -30,6 +30,7 @@ def config_initialize
 end
 
 def db_clear
+  ::PostfixAdmin::Config.all.destroy
   DomainAdmin.all.destroy
   Mailbox.all.destroy
   Alias.all.destroy
@@ -90,8 +91,20 @@ def create_admin(username, active=true)
   admin
 end
 
+class ::PostfixAdmin::Mailbox
+  property :local_part, String
+end
+
 def db_initialize
   db_clear
+
+  config = ::PostfixAdmin::Config.new
+  config.attributes = {
+    :id    => 1,
+    :name  => "version",
+    :value => "740"
+  }
+  config.save
 
   create_domain('ALL')
   create_domain('example.com')
