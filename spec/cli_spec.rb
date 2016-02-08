@@ -106,12 +106,12 @@ describe PostfixAdmin::CLI do
   describe "#super_admin" do
     it "enables super admin flag of an admin" do
       lambda{ @cli.super_admin('admin@example.com', false) }.should_not raise_error
-      Admin.find('admin@example.com').super_admin?.should be_true
+      Admin.find('admin@example.com').super_admin?.should be true
     end
 
     it "disable super admin flag of an admin" do
       lambda{ @cli.super_admin('all@example.com', true) }.should_not raise_error
-      Admin.find('all@example.com').super_admin?.should be_false
+      Admin.find('all@example.com').super_admin?.should be false
     end
 
     it "can not user for unknown admin" do
@@ -137,7 +137,7 @@ describe PostfixAdmin::CLI do
   describe "#add_admin" do
     it "can add a new admin" do
       lambda { @cli.add_admin('new_admin@example.com', 'password') }.should_not raise_error
-      Admin.exist?('new_admin@example.com').should be_true
+      Admin.exist?('new_admin@example.com').should be true
     end
 
     it "can not add exist admin" do
@@ -152,18 +152,18 @@ describe PostfixAdmin::CLI do
   describe "#delete_admin" do
     it "can delete an admin" do
       lambda { @cli.delete_admin('admin@example.com') }.should_not raise_error
-      Admin.exist?('admin@example.com').should be_false
+      Admin.exist?('admin@example.com').should be false
     end
 
     it "can delete a super admin" do
       lambda { @cli.delete_admin('all@example.com') }.should_not raise_error
-      Admin.exist?('all@example.com').should be_false
+      Admin.exist?('all@example.com').should be false
     end
 
     it "can delete an admin whish has multiple domains" do
       @cli.add_admin_domain('admin@example.com', 'example.org')
       lambda { @cli.delete_admin('admin@example.com') }.should_not raise_error
-      Admin.exist?('admin@example.com').should be_false
+      Admin.exist?('admin@example.com').should be false
     end
 
     it "can not delete unknown admin" do
@@ -177,17 +177,17 @@ describe PostfixAdmin::CLI do
     lambda { @cli.delete_alias('unknown@example.com') }.should raise_error
 
     lambda { @cli.add_alias('new_alias@example.com', 'goto@example.jp') }.should_not raise_error
-    Alias.exist?('new_alias@example.com').should be_true
+    Alias.exist?('new_alias@example.com').should be true
 
     lambda { @cli.delete_alias('new_alias@example.com') }.should_not raise_error
-    Alias.exist?('new_alias@example.com').should be_false
+    Alias.exist?('new_alias@example.com').should be false
   end
 
   describe "#add_account" do
     it "can add an account" do
       lambda { @cli.add_account('new_user@example.com', 'password') }.should_not raise_error
-      Mailbox.exist?('new_user@example.com').should be_true
-      Alias.exist?('new_user@example.com').should be_true
+      Mailbox.exist?('new_user@example.com').should be true
+      Alias.exist?('new_user@example.com').should be true
     end
 
     it "can not add account of unknown domain" do
@@ -202,8 +202,8 @@ describe PostfixAdmin::CLI do
   describe "#delete_accont" do
     it "can delete an account" do
       lambda { @cli.delete_account('user@example.com') }.should_not raise_error
-      Mailbox.exist?('user@example.com').should be_false
-      Alias.exist?('user@example.com').should be_false
+      Mailbox.exist?('user@example.com').should be false
+      Alias.exist?('user@example.com').should be false
     end
 
     it "can not delete unknown account" do
@@ -218,7 +218,7 @@ describe PostfixAdmin::CLI do
 
     it "upcase will convert to downcase" do
       lambda{ @cli.add_domain('ExAmPle.NeT') }.should_not raise_error
-      Domain.exist?('example.net').should be_true
+      Domain.exist?('example.net').should be true
     end
 
     it "can not add exist domain" do
@@ -251,12 +251,12 @@ describe PostfixAdmin::CLI do
   describe "#delete_domain" do
     it "can delete exist domain" do
       lambda { @cli.delete_domain('example.com') }.should_not raise_error
-      Domain.exist?('example.net').should be_false
+      Domain.exist?('example.net').should be false
     end
 
     it "upcase will convert to downcase" do
       lambda { @cli.delete_domain('eXaMplE.cOm') }.should_not raise_error
-      Domain.exist?('example.com').should be_false
+      Domain.exist?('example.com').should be false
     end
 
     it "can delete related admins, addresses and aliases" do
@@ -270,19 +270,19 @@ describe PostfixAdmin::CLI do
       @cli.add_admin('no_related@example.com', 'password')
 
       lambda { @cli.delete_domain('example.com') }.should_not raise_error
-      Admin.exist?('admin@example.com').should be_false
-      Admin.exist?('admin@example.org').should be_true
-      Admin.exist?('other_admin@example.com').should be_false
-      Admin.exist?('no_related@example.com').should be_true
+      Admin.exist?('admin@example.com').should be false
+      Admin.exist?('admin@example.org').should be true
+      Admin.exist?('other_admin@example.com').should be false
+      Admin.exist?('no_related@example.com').should be true
 
       # aliases should be removed
-      Alias.exist?('alias@example.com').should be_false
-      Alias.exist?('user@example.com').should be_false
-      Alias.exist?('user2@example.com').should be_false
+      Alias.exist?('alias@example.com').should be false
+      Alias.exist?('user@example.com').should be false
+      Alias.exist?('user2@example.com').should be false
 
       # mailboxes should be removed
-      Mailbox.exist?('user@example.com').should be_false
-      Mailbox.exist?('user2@example.com').should be_false
+      Mailbox.exist?('user@example.com').should be false
+      Mailbox.exist?('user2@example.com').should be false
     end
   end
 

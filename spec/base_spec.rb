@@ -38,22 +38,22 @@ describe PostfixAdmin::Base do
   end
 
   it "#domain_exist?" do
-    Domain.exist?('example.com').should be_true
+    Domain.exist?('example.com').should be true
   end
 
   it "#alias_exist?" do
-    Alias.exist?('user@example.com').should be_true
-    Alias.exist?('unknown@example.com').should be_false
+    Alias.exist?('user@example.com').should be true
+    Alias.exist?('unknown@example.com').should be false
   end
 
   it "#mailbox_exist?" do
-    Mailbox.exist?('user@example.com').should be_true
-    Mailbox.exist?('unknown@example.com').should be_false
+    Mailbox.exist?('user@example.com').should be true
+    Mailbox.exist?('unknown@example.com').should be false
   end
 
   it "#admin_exist?" do
-    Admin.exist?('admin@example.com').should be_true
-    Admin.exist?('unknown_admin@example.com').should be_false
+    Admin.exist?('admin@example.com').should be true
+    Admin.exist?('unknown_admin@example.com').should be false
   end
 
   describe "#add_domain" do
@@ -110,7 +110,7 @@ describe PostfixAdmin::Base do
     it "can add an new admin" do
       num_admins = Admin.count
       @base.add_admin('admin@example.net', 'password')
-      Admin.exist?('admin@example.net').should be_true
+      Admin.exist?('admin@example.net').should be true
       (Admin.count - num_admins).should be(1)
     end
 
@@ -130,7 +130,7 @@ describe PostfixAdmin::Base do
   describe "#add_admin_domain" do
     it "#add_admin_domain" do
       @base.add_admin_domain('admin@example.com', 'example.org')
-      Admin.find('admin@example.com').has_domain?('example.org').should be_true
+      Admin.find('admin@example.com').has_domain?('example.org').should be true
     end
 
     it "can not add unknown domain for an admin" do
@@ -149,7 +149,7 @@ describe PostfixAdmin::Base do
   describe "#delete_admin_domain" do
     it "#delete_admin_domain" do
       lambda{ @base.delete_admin_domain('admin@example.com', 'example.com') }.should_not raise_error
-      Admin.find('admin@example.com').has_domain?('example.com').should be_false
+      Admin.find('admin@example.com').has_domain?('example.com').should be false
     end
 
     it "can not delete not administrated domain" do
@@ -170,7 +170,7 @@ describe PostfixAdmin::Base do
       num_aliases   = Alias.count
       lambda { @base.add_alias('new_alias@example.com', 'goto@example.jp') }.should_not raise_error
       (Alias.count - num_aliases).should be(1)
-      Alias.exist?('new_alias@example.com').should be_true
+      Alias.exist?('new_alias@example.com').should be true
     end
 
     it "can not add an alias which has a same name as a mailbox" do
@@ -190,7 +190,7 @@ describe PostfixAdmin::Base do
   describe "#delete_alias" do
     it "can delete an alias" do
       lambda{ @base.delete_alias('alias@example.com') }.should_not raise_error
-      Alias.exist?('alias@example.com').should be_false
+      Alias.exist?('alias@example.com').should be false
     end
 
     it "can not delete mailbox" do
@@ -214,8 +214,8 @@ describe PostfixAdmin::Base do
     it "can delete a domain" do
       lambda{ @base.delete_domain('example.com') }.should_not raise_error
 
-      Domain.exist?('example.com').should be_false
-      Admin.exist?('admin@example.com').should be_false
+      Domain.exist?('example.com').should be false
+      Admin.exist?('admin@example.com').should be false
 
       Alias.all(:domain_name => 'example.com').count.should be(0)
       Mailbox.all(:domain_name => 'example.com').count.should be(0)
@@ -231,7 +231,7 @@ describe PostfixAdmin::Base do
   describe "#delete_admin" do
     it "can delete an admin" do
       lambda{ @base.delete_admin('admin@example.com') }.should_not raise_error
-      Admin.exist?('admin@example.com').should be_false
+      Admin.exist?('admin@example.com').should be false
     end
 
     it "can not delete unknown admin" do
@@ -242,8 +242,8 @@ describe PostfixAdmin::Base do
   describe "#delete_account" do
     it "can delete an account" do
       lambda{ @base.delete_account('user@example.com') }.should_not raise_error
-      Mailbox.exist?('user@example.com').should be_false
-      Alias.exist?('user@example.com').should be_false
+      Mailbox.exist?('user@example.com').should be false
+      Alias.exist?('user@example.com').should be false
     end
 
     it "can not delete unknown account" do

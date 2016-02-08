@@ -40,7 +40,7 @@ describe PostfixAdmin::Admin do
 
     it "should not delete 'ALL' domain" do
       Admin.find('all@example.com').super_admin = false
-      Domain.exist?('ALL').should be_true
+      Domain.exist?('ALL').should be true
     end
 
     it "disable super admin flag" do
