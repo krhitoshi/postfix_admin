@@ -171,7 +171,7 @@ module PostfixAdmin
       begin
         yield
       rescue Error, ArgumentError => e
-        warn e.message
+        abort e.message
       end
     end
   end
