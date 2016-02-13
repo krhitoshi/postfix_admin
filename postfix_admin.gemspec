@@ -3,7 +3,7 @@ require File.expand_path('../lib/postfix_admin/version', __FILE__)
 Gem::Specification.new do |gem|
   gem.add_dependency 'thor'
   gem.add_dependency 'data_mapper'
-  gem.add_dependency 'do_mysql', '>= 0.10.9'
+  gem.add_dependency 'do_mysql', '>= 0.10.17'
   gem.add_dependency 'dm-mysql-adapter'
   gem.add_development_dependency 'rspec', '~> 2.11.0'
   gem.add_development_dependency 'dm-sqlite-adapter'
