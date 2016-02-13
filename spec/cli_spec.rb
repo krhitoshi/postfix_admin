@@ -172,9 +172,9 @@ describe PostfixAdmin::CLI do
   end
 
   it "#add_alias and #delete_alias" do
-    lambda { @cli.add_alias('user@example.com', 'goto@example.jp') }.should raise_error
-    lambda { @cli.delete_alias('user@example.com') }.should raise_error
-    lambda { @cli.delete_alias('unknown@example.com') }.should raise_error
+    lambda { @cli.add_alias('user@example.com', 'goto@example.jp') }.should raise_error Error
+    lambda { @cli.delete_alias('user@example.com') }.should raise_error Error
+    lambda { @cli.delete_alias('unknown@example.com') }.should raise_error Error
 
     lambda { @cli.add_alias('new_alias@example.com', 'goto@example.jp') }.should_not raise_error
     Alias.exist?('new_alias@example.com').should be true
