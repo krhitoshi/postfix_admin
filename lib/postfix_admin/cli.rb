@@ -163,6 +163,7 @@ module PostfixAdmin
       domain.maxaliases   = options[:aliases]   if options[:aliases]
       domain.maxmailboxes = options[:mailboxes] if options[:mailboxes]
       domain.maxquota     = options[:maxquota]  if options[:maxquota]
+      domain.active       = options[:active] unless options[:active].nil?
       domain.save or raise "Could not save Domain"
 
       puts "Successfully updated #{domain_name}"
