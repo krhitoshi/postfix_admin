@@ -63,6 +63,7 @@ module PostfixAdmin
           puts "Mailboxes : %4d / %4s"    % [domain.mailboxes.count, max_str(domain.maxmailboxes)]
           puts "Aliases   : %4d / %4s"    % [domain.num_total_aliases, max_str(domain.maxaliases)]
           puts "Max Quota : %4d MB" % domain.maxquota
+          puts "Active    :  %3s" % domain.active_str
         else
           puts "Domains   : %4d" % Domain.all_without_special_domain.count
           puts "Admins    : %4d" % Admin.count
