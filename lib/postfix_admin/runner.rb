@@ -121,6 +121,19 @@ module PostfixAdmin
       end
     end
 
+    desc "edit_admin admin@example.com", "Edit an admin user"
+    method_option :active, type: :boolean, desc: "Activate or Deactivate account"
+    def edit_admin(user_name)
+      runner do
+        if options.size == 0
+          warn "Use one or more options."
+          help('edit_admin')
+        else
+          @cli.edit_admin(user_name, options)
+        end
+      end
+    end
+
     desc "add_admin admin@example.com password", "Add an admin user"
     method_option :super, :type => :boolean, :aliases => "-S", :desc => "register as a super admin"
     method_option :scheme, :type => :string, :aliases => "-s", :desc => "password scheme"

@@ -158,6 +158,16 @@ module PostfixAdmin
       change_password(Mailbox, user_name, password)
     end
 
+    def edit_admin(admin_name, options)
+      admin_check(admin_name)
+      admin = Admin.find(admin_name)
+      admin.active = options[:active] unless options[:active].nil?
+      admin.save or raise "Could not save Admin"
+
+      puts "Successfully updated #{admin_name}"
+      show_admin_details(admin_name)
+    end
+
     def edit_domain(domain_name, options)
       domain_check(domain_name)
       domain = Domain.find(domain_name)

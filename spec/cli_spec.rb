@@ -251,6 +251,14 @@ describe PostfixAdmin::CLI do
     end
   end
 
+  describe "#edit_admin" do
+    it "can update admin" do
+      expect { @cli.edit_admin('admin@example.com', {active: false}) }.not_to raise_error
+      admin = Admin.find('admin@example.com')
+      expect(admin.active).to be false
+    end
+  end
+
   describe "#delete_domain" do
     it "can delete exist domain" do
       lambda { @cli.delete_domain('example.com') }.should_not raise_error
