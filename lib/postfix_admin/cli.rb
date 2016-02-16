@@ -279,6 +279,7 @@ module PostfixAdmin
       mailbox = Mailbox.find(address)
       mailbox.name = options[:name] if options[:name]
       mailbox.quota = options[:quota] * KB_TO_MB if options[:quota]
+      mailbox.active = options[:active] unless options[:active].nil?
       mailbox.save or raise "Could not save Mailbox"
 
       puts "Successfully updated #{address}"

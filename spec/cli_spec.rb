@@ -240,8 +240,10 @@ describe PostfixAdmin::CLI do
 
   describe "#edit_account" do
     it "can update account" do
-      lambda { @cli.edit_account('user@example.com', {:quota => 50}) }.should_not raise_error
-      Mailbox.find('user@example.com').quota.should == 50 * KB_TO_MB
+      lambda { @cli.edit_account('user@example.com', {quota: 50, active: false}) }.should_not raise_error
+      mailbox = Mailbox.find('user@example.com')
+      mailbox.quota.should == 50 * KB_TO_MB
+      expect(mailbox.active).to be false
     end
 
     it "raise error when unknown account" do
