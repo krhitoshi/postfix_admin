@@ -140,18 +140,6 @@ module PostfixAdmin
       puts_registered(domain_name, "a domain")
     end
 
-    def super_admin(user_name, disable)
-      admin_check(user_name)
-
-      if disable
-        Admin.find(user_name).super_admin = false
-        puts "Successfully disabled super admin flag of #{user_name}"
-      else
-        Admin.find(user_name).super_admin = true
-        puts "Successfully enabled super admin flag of #{user_name}"
-      end
-    end
-
     def change_admin_password(user_name, password)
       change_password(Admin, user_name, password)
     end

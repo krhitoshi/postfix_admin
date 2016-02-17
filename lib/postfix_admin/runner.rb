@@ -30,12 +30,6 @@ module PostfixAdmin
       runner{ @cli.setup_domain(domain_name, password) }
     end
 
-    desc "super_admin admin@example.com", "Enable super admin flag of an admin"
-    method_option :disable, :type => :boolean, :aliases => "-d", :desc => "Disable super admin flag"
-    def super_admin(user_name)
-      runner{ @cli.super_admin(user_name, options[:disable]) }
-    end
-
     desc "admin_passwd admin@example.com new_password", "Change password of admin"
     def admin_passwd(user_name, password)
       runner{ @cli.change_admin_password(user_name, password) }
