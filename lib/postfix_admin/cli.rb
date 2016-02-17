@@ -102,6 +102,8 @@ module PostfixAdmin
       report("Admin") do
         puts "Name     : %s" % admin.username
         puts "Password : %s" % admin.password
+        puts "Domains  : %s" % (admin.super_admin? ? "ALL" : admin.domains.count)
+        puts "Role     : %s" % (admin.super_admin? ? "Super admin" : "Admin")
         puts "Active   : %s" % admin.active_str
       end
     end
@@ -161,6 +163,7 @@ module PostfixAdmin
     def edit_admin(admin_name, options)
       admin_check(admin_name)
       admin = Admin.find(admin_name)
+      admin.super_admin = options[:super] unless options[:super].nil?
       admin.active = options[:active] unless options[:active].nil?
       admin.save or raise "Could not save Admin"
 
