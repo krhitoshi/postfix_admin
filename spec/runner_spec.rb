@@ -155,6 +155,20 @@ describe PostfixAdmin::Runner do
     end
   end
 
+  describe "edit_admin" do
+    it "when no options, shows usage" do
+      expect(capture(:stderr){ Runner.start(['edit_admin', 'admin@example.com']) }).to match /Use one or more options/
+    end
+
+    it "can update active status" do
+      expect(capture(:stdout){ Runner.start(['edit_admin', 'admin@example.com', '--no-active']) }).to match EX_UPDATED
+    end
+
+    it "can update super admin status" do
+      expect(capture(:stdout){ Runner.start(['edit_admin', 'admin@example.com', '--super']) }).to match EX_UPDATED
+    end
+  end
+
   describe "edit_domain" do
     it "when no options, shows usage" do
       exit_capture{ Runner.start(['edit_domain', 'example.com']) }.should =~ /Use one or more options/
