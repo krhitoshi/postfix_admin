@@ -72,11 +72,11 @@ describe PostfixAdmin::Runner do
     end
 
     it "can not use too short password (< 5)" do
-      capture(:stderr){ Runner.start(['admin_passwd', 'admin@example.com', '124']) }.should =~ /too short/
+      exit_capture{ Runner.start(['admin_passwd', 'admin@example.com', '124']) }.should =~ /too short/
     end
 
     it "can not use for unknown admin" do
-      capture(:stderr){ Runner.start(['admin_passwd', 'unknown@example.com', 'new_password']) }.should =~ /Could not find/
+      exit_capture{ Runner.start(['admin_passwd', 'unknown@example.com', 'new_password']) }.should =~ /Could not find/
     end
   end
 
@@ -87,11 +87,11 @@ describe PostfixAdmin::Runner do
     end
 
     it "can not use too short password (< 5)" do
-      capture(:stderr){ Runner.start(['account_passwd', 'user@example.com', '1234']) }.should =~ /too short/
+      exit_capture{ Runner.start(['account_passwd', 'user@example.com', '1234']) }.should =~ /too short/
     end
 
     it "can not use for unknown account" do
-      capture(:stderr){ Runner.start(['account_passwd', 'unknown@example.com', 'new_password']) }.should =~ /Could not find/
+      exit_capture{ Runner.start(['account_passwd', 'unknown@example.com', 'new_password']) }.should =~ /Could not find/
     end
   end
 
@@ -102,11 +102,11 @@ describe PostfixAdmin::Runner do
     end
 
     it "can not delete mailbox alias." do
-      capture(:stderr){ Runner.start(['delete_alias', 'user@example.com']) }.should =~ /Can not delete mailbox/
+      exit_capture{ Runner.start(['delete_alias', 'user@example.com']) }.should =~ /Can not delete mailbox/
     end
 
     it "can not add an alias for existed mailbox" do
-      capture(:stderr){ Runner.start(['add_alias', 'user@example.com', 'goto@example.jp']) }.should =~ /mailbox user@example.com is already registered!/
+      exit_capture{ Runner.start(['add_alias', 'user@example.com', 'goto@example.jp']) }.should =~ /mailbox user@example.com is already registered!/
     end
   end
 
@@ -121,7 +121,7 @@ describe PostfixAdmin::Runner do
 
     describe "scheme option" do
       it "--scheme does not show error" do
-        capture(:stderr){ Runner.start(@args + ['--scheme', 'CRAM-MD5']) }.should == ""
+        exit_capture{ Runner.start(@args + ['--scheme', 'CRAM-MD5']) }.should == ""
         Admin.find('admin@example.jp').password.should == CRAM_MD5_PASS
       end
 
@@ -130,7 +130,7 @@ describe PostfixAdmin::Runner do
       end
 
       it "-s does not show error" do
-        capture(:stderr){ Runner.start(@args + ['-s', 'CRAM-MD5']) }.should == ""
+        exit_capture{ Runner.start(@args + ['-s', 'CRAM-MD5']) }.should == ""
       end
 
       it "-s can resister admin" do
@@ -138,7 +138,7 @@ describe PostfixAdmin::Runner do
       end
 
       it "-s require argument" do
-        capture(:stderr){ Runner.start(@args + ['-s']) }.should =~ /Specify password scheme/
+        exit_capture{ Runner.start(@args + ['-s']) }.should =~ /Specify password scheme/
       end
     end
 
@@ -157,7 +157,7 @@ describe PostfixAdmin::Runner do
 
   describe "edit_domain" do
     it "when no options, shows usage" do
-      capture(:stderr){ Runner.start(['edit_domain', 'example.com']) }.should =~ /Use one or more options/
+      exit_capture{ Runner.start(['edit_domain', 'example.com']) }.should =~ /Use one or more options/
     end
 
     it "can edit limitations of domain" do
@@ -169,7 +169,7 @@ describe PostfixAdmin::Runner do
     end
 
     it "can not use unknown domain" do
-      capture(:stderr){ Runner.start(['edit_domain', 'unknown.example.com', '--aliases', '40', '--mailboxes', '40', '--maxquota', '400'])}.should =~ /Could not find/
+      exit_capture{ Runner.start(['edit_domain', 'unknown.example.com', '--aliases', '40', '--mailboxes', '40', '--maxquota', '400'])}.should =~ /Could not find/
     end
   end
 
@@ -179,7 +179,7 @@ describe PostfixAdmin::Runner do
     end
 
     it "when no options, shows usage" do
-      capture(:stderr){ Runner.start(@args) }.should =~ /Use one or more options/
+      exit_capture{ Runner.start(@args) }.should =~ /Use one or more options/
     end
 
     it "can edit quota limitation" do
@@ -193,7 +193,7 @@ describe PostfixAdmin::Runner do
     end
 
     it "-q option require an argment" do
-      capture(:stderr){ Runner.start(@args + ['-q'])}.should_not == ""
+      exit_capture{ Runner.start(@args + ['-q'])}.should_not == ""
     end
 
     it "can update name using --name option" do
@@ -212,7 +212,7 @@ describe PostfixAdmin::Runner do
     end
 
     it "-n option require an argument" do
-      capture(:stderr){ Runner.start(@args + ['-n'])}.should_not == ""
+      exit_capture{ Runner.start(@args + ['-n'])}.should_not == ""
     end
   end
 
@@ -251,15 +251,15 @@ describe PostfixAdmin::Runner do
 
     describe "name option" do
       it "--name options does not raise error" do
-        capture(:stderr){ Runner.start(@args + ['--name', @name]) }.should == ""
+        exit_capture{ Runner.start(@args + ['--name', @name]) }.should == ""
       end
 
       it "-n options does not raise error" do
-        capture(:stderr){ Runner.start(@args + ['-n', @name]) }.should == ""
+        exit_capture{ Runner.start(@args + ['-n', @name]) }.should == ""
       end
 
       it "require an argument" do
-        capture(:stderr){ Runner.start(@args + ['-n']) }.should_not == ""
+        exit_capture{ Runner.start(@args + ['-n']) }.should_not == ""
       end
 
       it "can change full name" do
@@ -268,14 +268,14 @@ describe PostfixAdmin::Runner do
       end
 
       it "can use Japanese" do
-        capture(:stderr){ Runner.start(@args + ['-n', '黒川　仁']) }.should == ""
+        exit_capture{ Runner.start(@args + ['-n', '黒川　仁']) }.should == ""
         Mailbox.find(@user).name.should == '黒川　仁'
       end
     end
 
     describe "scheme" do
       it "--scheme require argument" do
-        capture(:stderr){ Runner.start(@args + ['--scheme']) }.should =~ /Specify password scheme/
+        exit_capture{ Runner.start(@args + ['--scheme']) }.should =~ /Specify password scheme/
     end
 
       it "can use CRAM-MD5 using --scheme" do
@@ -309,7 +309,7 @@ describe PostfixAdmin::Runner do
 
   describe "dump" do
     it "does not raise error" do
-      capture(:stderr){ Runner.start(['dump']) }.should == ""
+      exit_capture{ Runner.start(['dump']) }.should == ""
     end
 
     it "all data" do

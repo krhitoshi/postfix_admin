@@ -164,12 +164,28 @@ RSpec.configure do |config|
     begin
       stream = stream.to_s
       eval "$#{stream} = StringIO.new"
+      $stderr = StringIO.new if stream != "stderr"
       yield
       result = eval("$#{stream}").string
+    rescue SystemExit => e
+      message = $stderr.string
+      message += e.message
+      raise message
     ensure
       eval("$#{stream} = #{stream.upcase}")
     end
 
+    result
+  end
+
+  def exit_capture
+    begin
+      $stderr = StringIO.new
+      yield
+    rescue SystemExit => e
+    ensure
+      result = $stderr.string
+    end
     result
   end
 
