@@ -161,11 +161,18 @@ describe PostfixAdmin::Runner do
     end
 
     it "can update active status" do
-      expect(capture(:stdout){ Runner.start(['edit_admin', 'admin@example.com', '--no-active']) }).to match EX_UPDATED
+      output = capture(:stdout){ Runner.start(['edit_admin', 'admin@example.com', '--no-active']) }
+      expect(output).to match EX_UPDATED
+      expect(output).to match /Active.+NO/
+      expect(output).to match /Role.+Admin/
     end
 
     it "can update super admin status" do
-      expect(capture(:stdout){ Runner.start(['edit_admin', 'admin@example.com', '--super']) }).to match EX_UPDATED
+      output = capture(:stdout){ Runner.start(['edit_admin', 'admin@example.com', '--super']) }
+      expect(output).to match EX_UPDATED
+      expect(output).to match /Domains.+ALL/
+      expect(output).to match /Active.+YES/
+      expect(output).to match /Role.+Super admin/
     end
   end
 
@@ -175,7 +182,9 @@ describe PostfixAdmin::Runner do
     end
 
     it "can edit limitations of domain" do
-      capture(:stdout){ Runner.start(['edit_domain', 'example.com', '--aliases', '40', '--mailboxes', '40', '--maxquota', '400']) }.should =~ EX_UPDATED
+      output = capture(:stdout){ Runner.start(['edit_domain', 'example.com', '--aliases', '40', '--mailboxes', '40', '--maxquota', '400', '--no-active']) }
+      expect(output).to match EX_UPDATED
+      expect(output).to match /Active.+NO/
     end
 
     it "aliases options -a, -m, -q" do
@@ -197,9 +206,10 @@ describe PostfixAdmin::Runner do
     end
 
     it "can edit quota limitation" do
-      output = capture(:stdout){ Runner.start(@args + ['--quota', '50'])}
-      output.should =~ EX_UPDATED
-      output.should =~ /Quota/
+      output = capture(:stdout){ Runner.start(@args + ['--quota', '50', '--no-active'])}
+      expect(output).to match EX_UPDATED
+      expect(output).to match /Quota/
+      expect(output).to match /Active.+NO/
     end
 
     it "can use alias -q option" do
