@@ -164,6 +164,11 @@ module PostfixAdmin
       runner{ @cli.delete_alias(address) }
     end
 
+    desc "log", "Show action logs"
+    def log
+      runner{ @cli.log }
+    end
+
     desc "dump", "Dump all data"
     def dump
       runner{ @cli.dump }

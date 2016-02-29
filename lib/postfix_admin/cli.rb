@@ -302,6 +302,12 @@ module PostfixAdmin
       puts_deleted(address)
     end
 
+    def log
+      Log.all.each do |l|
+        puts "#{l.timestamp} #{l.username} #{l.domain_name} #{l.action} #{l.data}"
+      end
+    end
+
     def dump
       puts "Admins"
       puts "User Name,Password,Super Admin,Active"

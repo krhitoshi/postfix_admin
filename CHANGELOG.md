@@ -1,3 +1,6 @@
+## 0.1.4
+ * Add "log" command
+
 ## 0.1.3
  * Support for activation and deactivation of domain, admin and account
  * Add "edit_admin" command

@@ -197,4 +197,17 @@ module PostfixAdmin
       Mailbox.exist?(address)
     end
   end
+
+  class Log
+    include ::DataMapper::Resource
+    property :timestamp, DateTime, key: true, default: DateTime.now
+    property :username, String, length: 0..255
+    property :domain_name, String, field: 'domain', length: 0..255
+    property :action, String, length: 0..255
+    property :data, Text
+
+    belongs_to :domain, :model => 'Domain', :child_key => :domain_name
+
+    storage_names[:default] = 'log'
+  end
 end
