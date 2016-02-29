@@ -1,3 +1,7 @@
+## 0.1.3
+ * Support for activation and deactivation of domain, admin and account
+ * Add "edit_admin" command
+
 ## 0.1.2
  * Support password hash by doveadm (external command)
  * Show active status
