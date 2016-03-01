@@ -331,6 +331,12 @@ describe PostfixAdmin::Runner do
     lambda { Runner.start(['delete_domain', 'example.net']) }.should_not raise_error
   end
 
+  describe "log" do
+    it "does not raise error" do
+      exit_capture{ Runner.start(['log']) }.should == ""
+    end
+  end
+
   describe "dump" do
     it "does not raise error" do
       exit_capture{ Runner.start(['dump']) }.should == ""
