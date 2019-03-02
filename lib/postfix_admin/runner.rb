@@ -96,7 +96,7 @@ module PostfixAdmin
     end
 
     desc "edit_account user@example.com", "Edit an account"
-    method_option :quota, :type => :numeric, :aliases => "-q", :desc => "quota limitation"
+    method_option :quota, :type => :numeric, :aliases => "-q", :desc => "quota limitation (MB)"
     method_option :name,  :type => :string,  :aliases => "-n", :desc => "full name"
     method_option :active, type: :boolean, desc: "Update active status"
     def edit_account(address)
