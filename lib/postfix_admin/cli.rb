@@ -283,6 +283,12 @@ module PostfixAdmin
       mailbox.active = options[:active] unless options[:active].nil?
       mailbox.save or raise "Could not save Mailbox"
 
+      if options[:goto]
+        mail_alias = Alias.find(address)
+        mail_alias.goto = options[:goto]
+        mail_alias.save or raise "Could not save Alias"
+      end
+
       puts "Successfully updated #{address}"
       show_account_details(address)
     end
