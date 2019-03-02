@@ -154,6 +154,20 @@ module PostfixAdmin
       runner{ @cli.delete_admin_domain(user_name, domain_name) }
     end
 
+    desc "edit_alias alias@example.com", "Edit an alias"
+    method_option :goto,  :type => :string,  :aliases => "-g",
+                  :desc => "mailboxes, addresses e-mails are delivered to"
+    method_option :active, type: :boolean, desc: "Update active status"
+    def edit_alias(address)
+      runner do
+        if options.size == 0
+          warn "Use one or more options."
+          help('edit_alias')
+        else
+          @cli.edit_alias(address, options)
+        end
+      end
+    end
 
     desc "add_alias alias@example.com goto@example.net", "Add an alias"
     def add_alias(address, goto)

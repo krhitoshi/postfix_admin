@@ -293,6 +293,17 @@ module PostfixAdmin
       show_account_details(address)
     end
 
+    def edit_alias(address, options)
+      alias_check(address)
+      mail_alias = Alias.find(address)
+      mail_alias.goto = options[:goto] if options[:goto]
+      mail_alias.active = options[:active] unless options[:active].nil?
+      mail_alias.save or raise "Could not save Alias"
+
+      puts "Successfully updated #{address}"
+      show_alias_details(address)
+    end
+
     def delete_alias(address)
       @base.delete_alias(address)
       puts_deleted(address)
