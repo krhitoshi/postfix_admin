@@ -110,6 +110,20 @@ describe PostfixAdmin::Runner do
     end
   end
 
+  describe "edit_alias" do
+    it "can update active status" do
+      output = capture(:stdout){ Runner.start(['edit_alias', 'alias@example.com', '--no-active']) }
+      expect(output).to match EX_UPDATED
+      expect(output).to match /Active.+NO/
+    end
+
+    it "can update goto" do
+      output = capture(:stdout){ Runner.start(['edit_alias', 'alias@example.com', '-g', 'goto@example.com,user@example.com']) }
+      expect(output).to match EX_UPDATED
+      Alias.find('alias@example.com').goto.should == 'goto@example.com,user@example.com'
+    end
+  end
+
   describe "add_admin" do
     before do
       @args = ['add_admin', 'admin@example.jp', 'password']
@@ -237,6 +251,11 @@ describe PostfixAdmin::Runner do
 
     it "-n option require an argument" do
       exit_capture{ Runner.start(@args + ['-n'])}.should_not == ""
+    end
+
+    it "can update goto" do
+      capture(:stdout){ Runner.start(@args + ['-g', 'user@example.com,forward@example.com'])}.should =~ EX_UPDATED
+      Alias.find('user@example.com').goto.should == 'user@example.com,forward@example.com'
     end
   end
 
