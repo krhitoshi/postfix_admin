@@ -1,19 +1,18 @@
 [![Gem Version](https://badge.fury.io/rb/postfix_admin.png)](https://rubygems.org/gems/postfix_admin)
 
-# PostfixAdmin
+# postfix_admin
 
-Command Line Tools of Postfix Admin
+Command Line Tools for Postfix Admin
 
 ## Description
 
-Postfix Admin Web Site http://postfixadmin.sourceforge.net/
+* Postfix Admin (Original Application)
+  + Web Site http://postfixadmin.sourceforge.net/
+  + GitHub https://github.com/postfixadmin/postfixadmin
 
-Sourceforge page http://sourceforge.net/projects/postfixadmin/
+* MySQL or MariaDB is supported. PostgreSQL is not supported.
 
-This software supports only MySQL as database for Postfix Admin.
-PostgreSQL is not supported.
-
-Postfix Admin 2.2.0 is supported.
+* Postfix Admin 2.2.0 is supported.
 
 ## Installation
 
