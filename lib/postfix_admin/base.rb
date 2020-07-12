@@ -84,8 +84,8 @@ module PostfixAdmin
       end
       admin = Admin.new
       admin.attributes = {
-        :username => username,
-        :password => password,
+        username: username,
+        password: password,
       }
       unless admin.save
         raise "Could not save Admin #{admin.errors.map(&:to_s).join}"
@@ -142,18 +142,20 @@ module PostfixAdmin
       if Alias.exists?(address)
         raise Error, "alias #{address} is already registered!"
       end
-      user, domain_name = address_split(address)
+
+      local_part, domain_name = address_split(address)
+
       unless Domain.exists?(domain_name)
         raise Error, "Invalid domain! #{domain_name}"
       end
+
       domain = Domain.find(domain_name)
 
-      new_alias = Alias.new
-      new_alias.attributes = {
-        :address => address,
-        :goto    => goto,
+      attributes = {
+        local_part: local_part,
+        goto: goto
       }
-      domain.aliases << new_alias
+      domain.rel_aliases << Alias.new(attributes)
       domain.save or raise "Could not save Alias"
     end
 
@@ -164,7 +166,7 @@ module PostfixAdmin
       unless Alias.exists?(address)
         raise Error, "#{address} is not found!"
       end
-      Alias.all(:address => address).destroy or raise "Could not destroy Alias"
+      Alias.all(address: address).destroy or raise "Could not destroy Alias"
     end
 
     def add_domain(domain_name)
@@ -177,11 +179,11 @@ module PostfixAdmin
       end
       domain = Domain.new
       domain.attributes = {
-        :domain  => domain_name,
-        :description  => domain_name,
-        :aliases   => @config[:aliases],
-        :mailboxes => @config[:mailboxes],
-        :maxquota     => @config[:maxquota],
+        domain: domain_name,
+        description: domain_name,
+        aliases: @config[:aliases],
+        mailboxes: @config[:mailboxes],
+        maxquota: @config[:maxquota],
       }
       domain.save or raise "Could not save Domain"
     end
@@ -228,8 +230,8 @@ module PostfixAdmin
         raise Error, "Could not find account #{address}"
       end
 
-      Mailbox.all(:username => address).destroy or raise "Could not destroy Mailbox"
-      Alias.all(:address => address).destroy or raise "Could not destroy Alias"
+      Mailbox.all(username: address).destroy or raise "Could not destroy Mailbox"
+      Alias.all(address: address).destroy or raise "Could not destroy Alias"
     end
 
     def address_split(address)
