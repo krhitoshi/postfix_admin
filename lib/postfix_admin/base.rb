@@ -54,12 +54,13 @@ module PostfixAdmin
       admin_domain_check(user_name, domain_name)
 
       admin  = Admin.find(user_name)
-      if admin.has_domain?(domain_name)
+      domain = Domain.find(domain_name)
+
+      if admin.has_domain?(domain)
         raise Error, "#{user_name} is already resistered as admin of #{domain_name}."
       end
 
-      domain = Domain.find(domain_name)
-      admin.domains << domain
+      admin.rel_domains << domain
       admin.save or raise "Relation Error: Domain of Admin"
     end
 
@@ -176,10 +177,10 @@ module PostfixAdmin
       end
       domain = Domain.new
       domain.attributes = {
-        :domain_name  => domain_name,
+        :domain  => domain_name,
         :description  => domain_name,
-        :maxaliases   => @config[:aliases],
-        :maxmailboxes => @config[:mailboxes],
+        :aliases   => @config[:aliases],
+        :mailboxes => @config[:mailboxes],
         :maxquota     => @config[:maxquota],
       }
       domain.save or raise "Could not save Domain"

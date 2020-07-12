@@ -23,7 +23,6 @@ module PostfixAdmin
     def show(name)
       name = name.downcase if name
 
-
       if name =~ /@/
         if Admin.exist?(name)
           show_admin_details(name)
