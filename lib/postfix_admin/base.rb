@@ -79,7 +79,7 @@ module PostfixAdmin
     def add_admin(username, password)
       password_check(password)
 
-      if Admin.exist?(username)
+      if Admin.exists?(username)
         raise Error, "#{username} is already resistered as admin."
       end
       admin = Admin.new
@@ -102,11 +102,11 @@ module PostfixAdmin
       user, domain_name = address_split(address)
       path = "#{domain_name}/#{address}/"
 
-      unless Domain.exist?(domain_name)
+      unless Domain.exists?(domain_name)
         raise Error, "Could not find domain #{domain_name}"
       end
 
-      if Alias.exist?(address)
+      if Alias.exists?(address)
         raise Error, "#{address} is already resistered."
       end
 
@@ -135,14 +135,14 @@ module PostfixAdmin
     end
 
     def add_alias(address, goto)
-      if Mailbox.exist?(address)
+      if Mailbox.exists?(address)
         raise Error, "mailbox #{address} is already registered!"
       end
-      if Alias.exist?(address)
+      if Alias.exists?(address)
         raise Error, "alias #{address} is already registered!"
       end
       user, domain_name = address_split(address)
-      unless Domain.exist?(domain_name)
+      unless Domain.exists?(domain_name)
         raise Error, "Invalid domain! #{domain_name}"
       end
       domain = Domain.find(domain_name)
@@ -157,10 +157,10 @@ module PostfixAdmin
     end
 
     def delete_alias(address)
-      if Mailbox.exist?(address)
+      if Mailbox.exists?(address)
         raise Error, "Can not delete mailbox by delete_alias. Use delete_account"
       end
-      unless Alias.exist?(address)
+      unless Alias.exists?(address)
         raise Error, "#{address} is not found!"
       end
       Alias.all(:address => address).destroy or raise "Could not destroy Alias"
@@ -171,7 +171,7 @@ module PostfixAdmin
       if domain_name !~ /.+\..+/
         raise Error, "Ivalid domain! #{domain_name}"
       end
-      if Domain.exist?(domain_name)
+      if Domain.exists?(domain_name)
         raise Error, "#{domain_name} is already registered!"
       end
       domain = Domain.new
@@ -187,7 +187,7 @@ module PostfixAdmin
 
     def delete_domain(domain_name)
       domain_name = domain_name.downcase
-      unless Domain.exist?(domain_name)
+      unless Domain.exists?(domain_name)
         raise Error, "Could not find domain #{domain_name}"
       end
 
@@ -198,7 +198,7 @@ module PostfixAdmin
       domain.clear_admins
 
       admin_names.each do |name|
-        next unless Admin.exist?(name)
+        next unless Admin.exists?(name)
         admin = Admin.find(name)
         admin.destroy or raise "Could not destroy Admin" if admin.domains.empty?
       end
@@ -206,7 +206,7 @@ module PostfixAdmin
     end
 
     def delete_admin(user_name)
-      unless Admin.exist?(user_name)
+      unless Admin.exists?(user_name)
         raise Error, "Could not find admin #{user_name}"
       end
       admin = Admin.find(user_name)
@@ -215,7 +215,7 @@ module PostfixAdmin
     end
 
     def delete_account(address)
-      unless Alias.exist?(address) && Mailbox.exist?(address)
+      unless Alias.exists?(address) && Mailbox.exists?(address)
         raise Error, "Could not find account #{address}"
       end
 
@@ -235,8 +235,8 @@ module PostfixAdmin
     # end
 
     def admin_domain_check(user_name, domain_name)
-      raise Error, "#{user_name} is not resistered as admin." unless Admin.exist?(user_name)
-      raise Error, "Could not find domain #{domain_name}"     unless Domain.exist?(domain_name)
+      raise Error, "#{user_name} is not resistered as admin." unless Admin.exists?(user_name)
+      raise Error, "Could not find domain #{domain_name}"     unless Domain.exists?(domain_name)
     end
 
     def password_check(password)
