@@ -44,7 +44,7 @@ module PostfixAdmin
     end
 
     def db_setup(database)
-      ActiveRecord::Base.establish_connection(database.gsub('mysql:', 'mysql2:'))
+      ActiveRecord::Base.establish_connection(database)
       # DataMapper.setup(:default, database)
       # DataMapper.finalize
     end
