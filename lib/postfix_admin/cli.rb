@@ -336,7 +336,7 @@ module PostfixAdmin
       puts "Domains"
       puts "Domain Name,Max Quota,Active"
       Domain.without_all.each do |d|
-        puts [d.domain_name, d.maxquota, d.active].join(',')
+        puts [d.domain, d.maxquota, d.active].join(',')
       end
       puts
       puts "Mailboxes"
