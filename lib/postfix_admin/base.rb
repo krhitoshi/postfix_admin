@@ -89,7 +89,7 @@ module PostfixAdmin
         :password => password,
       }
       unless admin.save
-        raise "Could not save Admin #{admin.errors.map{|e| e.to_s}.join}"
+        raise "Could not save Admin #{admin.errors.map(&:to_s).join}"
       end
     end
 
@@ -131,7 +131,7 @@ module PostfixAdmin
 
       domain.mailboxes << mailbox
       unless domain.save
-        raise "Could not save Mailbox and Domain #{mailbox.errors.map{|e| e.to_s}.join} #{domain.errors.map{|e| e.to_s}.join}"
+        raise "Could not save Mailbox and Domain #{mailbox.errors.map(&:to_s).join} #{domain.errors.map(&:to_s).join}"
       end
     end
 
@@ -193,17 +193,25 @@ module PostfixAdmin
       end
 
       domain = Domain.find(domain_name)
-      domain.mailboxes.destroy or raise "Could not destroy Mailbox"
-      domain.aliases.destroy or raise "Could not destroy Alias"
-      admin_names = domain.admins.map{|a| a.username }
-      domain.clear_admins
+      domain.rel_mailboxes.delete_all
+      domain.rel_aliases.delete_all
+
+      admin_names = domain.admins.map(&:username)
+
+      domain.admins.delete_all
 
       admin_names.each do |name|
         next unless Admin.exists?(name)
+
         admin = Admin.find(name)
-        admin.destroy or raise "Could not destroy Admin" if admin.domains.empty?
+
+        # check if the admin is needed or not
+        if admin.rel_domains.empty?
+          admin.destroy
+        end
       end
-      domain.destroy or raise "Could not destroy Domain"
+
+      domain.destroy
     end
 
     def delete_admin(user_name)

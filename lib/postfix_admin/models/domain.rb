@@ -23,6 +23,9 @@ module PostfixAdmin
     has_many :rel_aliases, class_name: "Alias", foreign_key: :domain,
                            dependent: :destroy
 
+    has_many :domain_admins, foreign_key: :domain, dependent: :delete_all
+    has_many :admins, through: :domain_admins
+
     before_validation do |domain|
       domain.domain = domain.domain.downcase unless domain.domain.empty?
       domain.transport = "virtual"
