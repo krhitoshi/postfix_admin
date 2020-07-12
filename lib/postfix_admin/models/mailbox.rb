@@ -41,6 +41,7 @@ module PostfixAdmin
 
     validate do |mailbox|
       domain = mailbox.rel_domain
+
       unless domain.maxquota.zero?
         if mailbox.quota_mb.zero?
           mailbox.errors.add(:quota_mb, "cannot be 0")
@@ -53,11 +54,14 @@ module PostfixAdmin
 
     before_validation do |mailbox|
       mailbox.name = "" if mailbox.name.nil?
-      mailbox.quota = if mailbox.quota_mb.nil?
-                        nil
-                      else
-                        mailbox.quota_mb * 1_024_000
-                      end
+      if mailbox.quota_mb
+        mailbox.quota = mailbox.quota_mb * 1_024_000
+      elsif mailbox.quota
+        mailbox.quota_mb = mailbox.quota / 1_024_000
+      else
+        mailbox.quota_mb = 0
+        mailbox.quota = 0
+      end
       mailbox.username = "#{mailbox.local_part}@#{mailbox.domain}"
       mailbox.maildir = "#{mailbox.domain}/#{mailbox.username}/"
       mailbox.build_alias(local_part: mailbox.local_part, goto: mailbox.username,

@@ -455,8 +455,8 @@ module PostfixAdmin
       validate_password(password)
 
       obj = klass.find(user_name)
-      obj.password = hashed_password(password)
-      if obj.save
+
+      if obj.update(password: hashed_password(password))
         puts "the password of #{user_name} was successfully changed."
       else
         raise "Could not change password of #{klass.name}"
