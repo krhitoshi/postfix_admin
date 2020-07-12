@@ -23,6 +23,7 @@ module PostfixAdmin
     def show(name)
       name = name.downcase if name
 
+
       if name =~ /@/
         if Admin.exist?(name)
           show_admin_details(name)
@@ -60,15 +61,15 @@ module PostfixAdmin
       report(title) do
         if domain_name
           domain = Domain.find(domain_name)
-          puts "Mailboxes : %4d / %4s"    % [domain.mailboxes.count, max_str(domain.maxmailboxes)]
-          puts "Aliases   : %4d / %4s"    % [domain.num_total_aliases, max_str(domain.maxaliases)]
+          puts "Mailboxes : %4d / %4s"    % [domain.rel_mailboxes.count, max_str(domain.mailboxes)]
+          puts "Aliases   : %4d / %4s"    % [domain.pure_aliases.count, max_str(domain.aliases)]
           puts "Max Quota : %4d MB" % domain.maxquota
           puts "Active    :  %3s" % domain.active_str
         else
-          puts "Domains   : %4d" % Domain.all_without_special_domain.count
+          puts "Domains   : %4d" % Domain.without_all.count
           puts "Admins    : %4d" % Admin.count
           puts "Mailboxes : %4d" % Mailbox.count
-          puts "Aliases   : %4d" % Domain.num_total_aliases
+          puts "Aliases   : %4d" % Alias.pure.count
         end
       end
     end
@@ -121,15 +122,15 @@ module PostfixAdmin
     def show_domain
       index = " No. Domain                          Aliases   Mailboxes     Quota (MB)  Active"
       report('Domains', index) do
-        if Domain.all_without_special_domain.empty?
+        if Domain.without_all.empty?
           puts " No domains"
           next
         end
 
-        Domain.all_without_special_domain.each_with_index do |d, i|
+        Domain.without_all.each_with_index do |d, i|
           puts "%4d %-30s %3d /%3s   %3d /%3s %10d         %-3s" %
-            [i+1, d.domain_name, d.num_total_aliases, max_str(d.maxaliases),
-             d.mailboxes.count, max_str(d.maxmailboxes), d.maxquota, d.active_str]
+            [i+1, d.domain, d.pure_aliases.count, max_str(d.aliases),
+             d.rel_mailboxes.count, max_str(d.mailboxes), d.maxquota, d.active_str]
         end
       end
 
@@ -178,7 +179,7 @@ module PostfixAdmin
     end
 
     def show_admin(domain_name=nil)
-      admins = domain_name ? Admin.select{|a| a.has_domain?(domain_name)} : Admin.all
+      admins = domain_name ? Admin.select{|a| a.rel_domains.exists?(domain_name)} : Admin.all
       index = " No. Admin                                        Domains Active"
       report("Admins", index) do
         if admins.empty?
@@ -187,7 +188,7 @@ module PostfixAdmin
         end
 
         admins.each_with_index do |a, i|
-          domains = a.super_admin? ? 'Super admin' : a.domains.count
+          domains = a.super_admin? ? 'Super admin' : a.rel_domains.count
           puts "%4d %-40s %11s   %-3s" % [i+1, a.username, domains, a.active_str]
         end
       end
@@ -197,7 +198,7 @@ module PostfixAdmin
     def show_address(domain_name)
       domain_check(domain_name)
 
-      mailboxes = Domain.find(domain_name).mailboxes
+      mailboxes = Domain.find(domain_name).rel_mailboxes
       index = " No. Email                           Name                 Quota (MB) Active         Maildir"
       report("Addresses", index) do
         if mailboxes.empty?
@@ -216,7 +217,7 @@ module PostfixAdmin
     def show_alias(domain_name)
       domain_check(domain_name)
 
-      forwards, aliases = Domain.find(domain_name).aliases.partition{|a| a.mailbox?}
+      forwards, aliases = Domain.find(domain_name).rel_aliases.partition{|a| a.mailbox?}
 
       forwards.delete_if do |f|
         f.address == f.goto
@@ -335,7 +336,7 @@ module PostfixAdmin
       puts
       puts "Domains"
       puts "Domain Name,Max Quota,Active"
-      Domain.all_without_special_domain.each do |d|
+      Domain.without_all.each do |d|
         puts [d.domain_name, d.maxquota, d.active].join(',')
       end
       puts
@@ -440,7 +441,7 @@ module PostfixAdmin
 
     def klass_check(klass, name)
       object_name = klass.name.gsub(/PostfixAdmin::/, '').downcase
-      raise Error, %Q!Could not find #{object_name} "#{name}"! unless klass.exist?(name)
+      raise Error, %Q!Could not find #{object_name} "#{name}"! unless klass.exists?(name)
     end
 
     def validate_password(password)

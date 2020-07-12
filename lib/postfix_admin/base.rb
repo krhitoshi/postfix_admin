@@ -1,8 +1,18 @@
-require 'postfix_admin/models'
+# require 'postfix_admin/models'
 require 'postfix_admin/error'
 
 require 'date'
 require 'data_mapper'
+require 'active_record'
+require 'postfix_admin/models/application_record'
+require 'postfix_admin/models/admin'
+require 'postfix_admin/models/domain'
+require 'postfix_admin/models/mailbox'
+require 'postfix_admin/models/alias'
+require 'postfix_admin/models/domain_admin'
+require 'postfix_admin/models/log'
+require 'postfix_admin/models/mail_domain'
+require 'postfix_admin/models/quota'
 
 module PostfixAdmin
   class Base
@@ -18,14 +28,14 @@ module PostfixAdmin
 
     def initialize(config)
       db_setup(config['database'])
-      if local_part_required?
-        eval <<"EOS"
-class ::PostfixAdmin::Mailbox
-    property :local_part, String
-end
-EOS
-        DataMapper.finalize
-      end
+#       if local_part_required?
+#         eval <<"EOS"
+# class ::PostfixAdmin::Mailbox
+#     property :local_part, String
+# end
+# EOS
+#         DataMapper.finalize
+#       end
       @config = {}
       @config[:aliases]   = config['aliases']   || 30
       @config[:mailboxes] = config['mailboxes'] || 30
@@ -35,8 +45,9 @@ EOS
     end
 
     def db_setup(database)
-      DataMapper.setup(:default, database)
-      DataMapper.finalize
+      ActiveRecord::Base.establish_connection(database.gsub('mysql:', 'mysql2:'))
+      # DataMapper.setup(:default, database)
+      # DataMapper.finalize
     end
 
     def add_admin_domain(user_name, domain_name)
@@ -219,9 +230,9 @@ EOS
     private
 
     # postfixadmin DB upgrade Number 495 loca_part added
-    def local_part_required?
-      Config.first.value.to_i >= 495
-    end
+    # def local_part_required?
+    #   Config.first.value.to_i >= 495
+    # end
 
     def admin_domain_check(user_name, domain_name)
       raise Error, "#{user_name} is not resistered as admin." unless Admin.exist?(user_name)
