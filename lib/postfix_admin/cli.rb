@@ -102,7 +102,7 @@ module PostfixAdmin
       report("Admin") do
         puts "Name     : %s" % admin.username
         puts "Password : %s" % admin.password
-        puts "Domains  : %s" % (admin.super_admin? ? "ALL" : admin.domains.count)
+        puts "Domains  : %s" % (admin.super_admin? ? "ALL" : admin.rel_domains.count)
         puts "Role     : %s" % (admin.super_admin? ? "Super admin" : "Admin")
         puts "Active   : %s" % admin.active_str
       end
