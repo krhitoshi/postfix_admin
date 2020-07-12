@@ -1,249 +1,382 @@
 -- phpMyAdmin SQL Dump
--- version 3.4.7
--- http://www.phpmyadmin.net
+-- version 4.9.1
+-- https://www.phpmyadmin.net/
 --
--- ホスト: localhost
--- 生成時間: 2012 年 9 月 25 日 23:12
--- サーバのバージョン: 5.5.15
--- PHP のバージョン: 5.3.15
+-- Host: localhost
+-- Generation Time: May 30, 2020 at 04:28 PM
+-- Server version: 10.3.17-MariaDB-log
+-- PHP Version: 7.2.11
 
-SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
+START TRANSACTION;
 SET time_zone = "+00:00";
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+/*!40101 SET NAMES utf8mb4 */;
 
 --
--- データベース: `postfix_test`
+-- Database: `postfix`
 --
 
 -- --------------------------------------------------------
 
 --
--- テーブルの構造 `admin`
+-- Table structure for table `admin`
 --
 
-CREATE TABLE IF NOT EXISTS `admin` (
-  `username` varchar(255) NOT NULL DEFAULT '',
-  `password` varchar(255) NOT NULL DEFAULT '',
-  `created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `modified` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `active` tinyint(1) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`username`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Postfix Admin - Virtual Admins';
-
---
--- テーブルのデータをダンプしています `admin`
---
-
-INSERT INTO `admin` (`username`, `password`, `created`, `modified`, `active`) VALUES
-('all@example.com', 'password', '2012-08-31 15:39:02', '2012-08-31 15:39:19', 1),
-('admin@example.com', 'password', '2012-08-31 10:27:58', '2012-08-31 10:28:16', 1);
+CREATE TABLE `admin` (
+  `username` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `created` datetime NOT NULL DEFAULT '2000-01-01 00:00:00',
+  `modified` datetime NOT NULL DEFAULT '2000-01-01 00:00:00',
+  `active` tinyint(1) NOT NULL DEFAULT 1,
+  `superadmin` tinyint(1) NOT NULL DEFAULT 0,
+  `phone` varchar(30) NOT NULL DEFAULT '',
+  `email_other` varchar(255) NOT NULL DEFAULT '',
+  `token` varchar(255) NOT NULL DEFAULT '',
+  `token_validity` datetime NOT NULL DEFAULT '2000-01-01 00:00:00'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Postfix Admin - Virtual Admins';
 
 -- --------------------------------------------------------
 
 --
--- テーブルの構造 `alias`
+-- Table structure for table `alias`
 --
 
-CREATE TABLE IF NOT EXISTS `alias` (
-  `address` varchar(255) NOT NULL DEFAULT '',
+CREATE TABLE `alias` (
+  `address` varchar(255) NOT NULL,
   `goto` text NOT NULL,
-  `domain` varchar(255) NOT NULL DEFAULT '',
-  `created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `modified` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `active` tinyint(1) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`address`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Postfix Admin - Virtual Aliases';
-
---
--- テーブルのデータをダンプしています `alias`
---
-
-INSERT INTO `alias` (`address`, `goto`, `domain`, `created`, `modified`, `active`) VALUES
-('user@example.com', 'user@example.com', 'example.com', '2012-08-31 10:24:12', '2012-08-31 10:24:12', 1);
+  `domain` varchar(255) NOT NULL,
+  `created` datetime NOT NULL DEFAULT '2000-01-01 00:00:00',
+  `modified` datetime NOT NULL DEFAULT '2000-01-01 00:00:00',
+  `active` tinyint(1) NOT NULL DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Postfix Admin - Virtual Aliases';
 
 -- --------------------------------------------------------
 
 --
--- テーブルの構造 `config`
+-- Table structure for table `alias_domain`
 --
 
-CREATE TABLE IF NOT EXISTS `config` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(20) CHARACTER SET latin1 NOT NULL DEFAULT '',
-  `value` varchar(20) CHARACTER SET latin1 NOT NULL DEFAULT '',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `name` (`name`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='PostfixAdmin settings' AUTO_INCREMENT=2 ;
+CREATE TABLE `alias_domain` (
+  `alias_domain` varchar(255) CHARACTER SET latin1 NOT NULL DEFAULT '',
+  `target_domain` varchar(255) CHARACTER SET latin1 NOT NULL DEFAULT '',
+  `created` datetime NOT NULL DEFAULT '2000-01-01 00:00:00',
+  `modified` datetime NOT NULL DEFAULT '2000-01-01 00:00:00',
+  `active` tinyint(1) NOT NULL DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Postfix Admin - Domain Aliases';
+
+-- --------------------------------------------------------
 
 --
--- テーブルのデータをダンプしています `config`
+-- Table structure for table `config`
+--
+
+CREATE TABLE `config` (
+  `id` int(11) NOT NULL,
+  `name` varchar(20) NOT NULL DEFAULT '',
+  `value` varchar(20) NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='PostfixAdmin settings';
+
+--
+-- Dumping data for table `config`
 --
 
 INSERT INTO `config` (`id`, `name`, `value`) VALUES
-(1, 'version', '352');
+(1, 'version', '1841');
 
 -- --------------------------------------------------------
 
 --
--- テーブルの構造 `domain`
+-- Table structure for table `domain`
 --
 
-CREATE TABLE IF NOT EXISTS `domain` (
-  `domain` varchar(255) NOT NULL DEFAULT '',
-  `description` varchar(255) NOT NULL DEFAULT '',
-  `aliases` int(10) NOT NULL DEFAULT '0',
-  `mailboxes` int(10) NOT NULL DEFAULT '0',
-  `maxquota` bigint(20) NOT NULL DEFAULT '0',
-  `quota` bigint(20) NOT NULL DEFAULT '0',
-  `transport` varchar(255) DEFAULT NULL,
-  `backupmx` tinyint(1) NOT NULL DEFAULT '0',
-  `created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `modified` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `active` tinyint(1) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`domain`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Postfix Admin - Virtual Domains';
+CREATE TABLE `domain` (
+  `domain` varchar(255) NOT NULL,
+  `description` varchar(255) NOT NULL,
+  `aliases` int(10) NOT NULL DEFAULT 0,
+  `mailboxes` int(10) NOT NULL DEFAULT 0,
+  `maxquota` bigint(20) NOT NULL DEFAULT 0,
+  `quota` bigint(20) NOT NULL DEFAULT 0,
+  `transport` varchar(255) NOT NULL,
+  `backupmx` tinyint(1) NOT NULL DEFAULT 0,
+  `created` datetime NOT NULL DEFAULT '2000-01-01 00:00:00',
+  `modified` datetime NOT NULL DEFAULT '2000-01-01 00:00:00',
+  `active` tinyint(1) NOT NULL DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Postfix Admin - Virtual Domains';
 
 --
--- テーブルのデータをダンプしています `domain`
+-- Dumping data for table `domain`
 --
 
 INSERT INTO `domain` (`domain`, `description`, `aliases`, `mailboxes`, `maxquota`, `quota`, `transport`, `backupmx`, `created`, `modified`, `active`) VALUES
-('ALL', '', 0, 0, 0, 0, NULL, 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00', 1),
-('example.com', '', 100, 100, 100, 0, 'virtual', 0, '2012-08-31 10:21:49', '2012-08-31 10:21:49', 1);
+('ALL', '', 0, 0, 0, 0, '', 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00', 1);
 
 -- --------------------------------------------------------
 
 --
--- テーブルの構造 `domain_admins`
+-- Table structure for table `domain_admins`
 --
 
-CREATE TABLE IF NOT EXISTS `domain_admins` (
-  `username` varchar(255) NOT NULL DEFAULT '',
-  `domain` varchar(255) NOT NULL DEFAULT '',
-  `created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `active` tinyint(1) NOT NULL DEFAULT '1',
-  KEY `username` (`username`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Postfix Admin - Domain Admins';
-
---
--- テーブルのデータをダンプしています `domain_admins`
---
-
-INSERT INTO `domain_admins` (`username`, `domain`, `created`, `active`) VALUES
-('all@example.com', 'ALL', '2012-08-31 15:39:19', 1),
-('admin@example.com', 'example.com', '2012-08-31 10:28:16', 1);
+CREATE TABLE `domain_admins` (
+  `username` varchar(255) NOT NULL,
+  `domain` varchar(255) NOT NULL,
+  `created` datetime NOT NULL DEFAULT '2000-01-01 00:00:00',
+  `active` tinyint(1) NOT NULL DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Postfix Admin - Domain Admins';
 
 -- --------------------------------------------------------
 
 --
--- テーブルの構造 `fetchmail`
+-- Table structure for table `fetchmail`
 --
 
-CREATE TABLE IF NOT EXISTS `fetchmail` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `mailbox` varchar(255) NOT NULL DEFAULT '',
-  `src_server` varchar(255) NOT NULL DEFAULT '',
+CREATE TABLE `fetchmail` (
+  `id` int(11) UNSIGNED NOT NULL,
+  `mailbox` varchar(255) NOT NULL,
+  `src_server` varchar(255) NOT NULL,
   `src_auth` enum('password','kerberos_v5','kerberos','kerberos_v4','gssapi','cram-md5','otp','ntlm','msn','ssh','any') DEFAULT NULL,
-  `src_user` varchar(255) NOT NULL DEFAULT '',
-  `src_password` varchar(255) NOT NULL DEFAULT '',
-  `src_folder` varchar(255) NOT NULL DEFAULT '',
-  `poll_time` int(11) unsigned NOT NULL DEFAULT '10',
-  `fetchall` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `keep` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `src_user` varchar(255) NOT NULL,
+  `src_password` varchar(255) NOT NULL,
+  `src_folder` varchar(255) NOT NULL,
+  `poll_time` int(11) UNSIGNED NOT NULL DEFAULT 10,
+  `fetchall` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
+  `keep` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
   `protocol` enum('POP3','IMAP','POP2','ETRN','AUTO') DEFAULT NULL,
-  `extra_options` text,
-  `returned_text` text,
-  `mda` varchar(255) NOT NULL DEFAULT '',
-  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `usessl` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
+  `extra_options` text DEFAULT NULL,
+  `returned_text` text DEFAULT NULL,
+  `mda` varchar(255) NOT NULL,
+  `date` timestamp NOT NULL DEFAULT '1999-12-31 15:00:00',
+  `sslcertck` tinyint(1) NOT NULL DEFAULT 0,
+  `sslcertpath` varchar(255) DEFAULT '',
+  `sslfingerprint` varchar(255) CHARACTER SET latin1 DEFAULT '',
+  `domain` varchar(255) CHARACTER SET latin1 DEFAULT '',
+  `active` tinyint(1) NOT NULL DEFAULT 0,
+  `created` timestamp NOT NULL DEFAULT '1999-12-31 15:00:00',
+  `modified` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- テーブルの構造 `log`
+-- Table structure for table `log`
 --
 
-CREATE TABLE IF NOT EXISTS `log` (
-  `timestamp` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `username` varchar(255) NOT NULL DEFAULT '',
-  `domain` varchar(255) NOT NULL DEFAULT '',
-  `action` varchar(255) NOT NULL DEFAULT '',
-  `data` varchar(255) NOT NULL DEFAULT '',
-  KEY `timestamp` (`timestamp`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Postfix Admin - Log';
+CREATE TABLE `log` (
+  `timestamp` datetime NOT NULL DEFAULT '2000-01-01 00:00:00',
+  `username` varchar(255) NOT NULL,
+  `domain` varchar(255) NOT NULL,
+  `action` varchar(255) NOT NULL,
+  `data` text NOT NULL,
+  `id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Postfix Admin - Log';
 
 -- --------------------------------------------------------
 
 --
--- テーブルの構造 `mailbox`
+-- Table structure for table `mailbox`
 --
 
-CREATE TABLE IF NOT EXISTS `mailbox` (
-  `username` varchar(255) NOT NULL DEFAULT '',
-  `password` varchar(255) NOT NULL DEFAULT '',
-  `name` varchar(255) NOT NULL DEFAULT '',
-  `maildir` varchar(255) NOT NULL DEFAULT '',
-  `quota` bigint(20) NOT NULL DEFAULT '0',
-  `domain` varchar(255) NOT NULL DEFAULT '',
-  `created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `modified` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `active` tinyint(1) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`username`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Postfix Admin - Virtual Mailboxes';
-
---
--- テーブルのデータをダンプしています `mailbox`
---
-
-INSERT INTO `mailbox` (`username`, `password`, `name`, `maildir`, `quota`, `domain`, `created`, `modified`, `active`) VALUES
-('user@example.com', 'password', '', 'example.com/user@example.com/', 102400000, 'example.com', '2012-08-31 10:24:12', '2012-08-31 10:24:12', 1);
+CREATE TABLE `mailbox` (
+  `username` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `maildir` varchar(255) NOT NULL,
+  `quota` bigint(20) NOT NULL DEFAULT 0,
+  `local_part` varchar(255) NOT NULL,
+  `domain` varchar(255) NOT NULL,
+  `created` datetime NOT NULL DEFAULT '2000-01-01 00:00:00',
+  `modified` datetime NOT NULL DEFAULT '2000-01-01 00:00:00',
+  `active` tinyint(1) NOT NULL DEFAULT 1,
+  `phone` varchar(30) NOT NULL DEFAULT '',
+  `email_other` varchar(255) NOT NULL DEFAULT '',
+  `token` varchar(255) NOT NULL DEFAULT '',
+  `token_validity` datetime NOT NULL DEFAULT '2000-01-01 00:00:00'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Postfix Admin - Virtual Mailboxes';
 
 -- --------------------------------------------------------
 
 --
--- テーブルの構造 `vacation`
+-- Table structure for table `quota`
 --
 
-CREATE TABLE IF NOT EXISTS `vacation` (
+CREATE TABLE `quota` (
+  `username` varchar(255) NOT NULL,
+  `path` varchar(100) NOT NULL,
+  `current` bigint(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `quota2`
+--
+
+CREATE TABLE `quota2` (
+  `username` varchar(100) NOT NULL,
+  `bytes` bigint(20) NOT NULL DEFAULT 0,
+  `messages` int(11) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `vacation`
+--
+
+CREATE TABLE `vacation` (
   `email` varchar(255) NOT NULL,
-  `subject` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-  `body` text CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `subject` varchar(255) NOT NULL,
+  `body` text NOT NULL,
   `cache` text NOT NULL,
   `domain` varchar(255) NOT NULL,
-  `created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `active` tinyint(1) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`email`),
-  KEY `email` (`email`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Postfix Admin - Virtual Vacation';
+  `created` datetime NOT NULL DEFAULT '2000-01-01 00:00:00',
+  `active` tinyint(1) NOT NULL DEFAULT 1,
+  `modified` timestamp NOT NULL DEFAULT current_timestamp(),
+  `activefrom` timestamp NOT NULL DEFAULT '1999-12-31 15:00:00',
+  `activeuntil` timestamp NOT NULL DEFAULT '2038-01-17 15:00:00',
+  `interval_time` int(11) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Postfix Admin - Virtual Vacation';
 
 -- --------------------------------------------------------
 
 --
--- テーブルの構造 `vacation_notification`
+-- Table structure for table `vacation_notification`
 --
 
-CREATE TABLE IF NOT EXISTS `vacation_notification` (
-  `on_vacation` varchar(255) NOT NULL,
-  `notified` varchar(255) NOT NULL,
-  `notified_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`on_vacation`,`notified`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Postfix Admin - Virtual Vacation Notifications';
+CREATE TABLE `vacation_notification` (
+  `on_vacation` varchar(150) NOT NULL,
+  `notified` varchar(255) CHARACTER SET latin1 NOT NULL DEFAULT '',
+  `notified_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Postfix Admin - Virtual Vacation Notifications';
 
 --
--- ダンプしたテーブルの制約
+-- Indexes for dumped tables
 --
 
 --
--- テーブルの制約 `vacation_notification`
+-- Indexes for table `admin`
+--
+ALTER TABLE `admin`
+  ADD PRIMARY KEY (`username`);
+
+--
+-- Indexes for table `alias`
+--
+ALTER TABLE `alias`
+  ADD PRIMARY KEY (`address`),
+  ADD KEY `domain` (`domain`);
+
+--
+-- Indexes for table `alias_domain`
+--
+ALTER TABLE `alias_domain`
+  ADD PRIMARY KEY (`alias_domain`),
+  ADD KEY `active` (`active`),
+  ADD KEY `target_domain` (`target_domain`);
+
+--
+-- Indexes for table `config`
+--
+ALTER TABLE `config`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `name` (`name`);
+
+--
+-- Indexes for table `domain`
+--
+ALTER TABLE `domain`
+  ADD PRIMARY KEY (`domain`);
+
+--
+-- Indexes for table `domain_admins`
+--
+ALTER TABLE `domain_admins`
+  ADD KEY `username` (`username`);
+
+--
+-- Indexes for table `fetchmail`
+--
+ALTER TABLE `fetchmail`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `log`
+--
+ALTER TABLE `log`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `timestamp` (`timestamp`),
+  ADD KEY `domain_timestamp` (`domain`,`timestamp`);
+
+--
+-- Indexes for table `mailbox`
+--
+ALTER TABLE `mailbox`
+  ADD PRIMARY KEY (`username`),
+  ADD KEY `domain` (`domain`);
+
+--
+-- Indexes for table `quota`
+--
+ALTER TABLE `quota`
+  ADD PRIMARY KEY (`username`,`path`);
+
+--
+-- Indexes for table `quota2`
+--
+ALTER TABLE `quota2`
+  ADD PRIMARY KEY (`username`);
+
+--
+-- Indexes for table `vacation`
+--
+ALTER TABLE `vacation`
+  ADD PRIMARY KEY (`email`),
+  ADD KEY `email` (`email`);
+
+--
+-- Indexes for table `vacation_notification`
+--
+ALTER TABLE `vacation_notification`
+  ADD PRIMARY KEY (`on_vacation`,`notified`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `config`
+--
+ALTER TABLE `config`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `fetchmail`
+--
+ALTER TABLE `fetchmail`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `log`
+--
+ALTER TABLE `log`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `vacation_notification`
 --
 ALTER TABLE `vacation_notification`
   ADD CONSTRAINT `vacation_notification_pkey` FOREIGN KEY (`on_vacation`) REFERENCES `vacation` (`email`) ON DELETE CASCADE;
+COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
