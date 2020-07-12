@@ -24,13 +24,13 @@ module PostfixAdmin
       name = name.downcase if name
 
       if name =~ /@/
-        if Admin.exist?(name)
+        if Admin.exists?(name)
           show_admin_details(name)
         end
 
-        if Mailbox.exist?(name)
+        if Mailbox.exists?(name)
           show_account_details(name)
-        elsif Alias.exist?(name)
+        elsif Alias.exists?(name)
           show_alias_details(name)
         end
 
@@ -417,7 +417,7 @@ module PostfixAdmin
     end
 
     def account_check(user_name)
-      unless Mailbox.exist?(user_name) && Alias.exist?(user_name)
+      unless Mailbox.exists?(user_name) && Alias.exists?(user_name)
         raise Error, %Q!Could not find account "#{user_name}"!
       end
     end
@@ -450,7 +450,7 @@ module PostfixAdmin
     end
 
     def change_password(klass, user_name, password)
-      raise Error, "Could not find #{user_name}" unless klass.exist?(user_name)
+      raise Error, "Could not find #{user_name}" unless klass.exists?(user_name)
 
       validate_password(password)
 

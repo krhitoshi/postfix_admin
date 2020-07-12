@@ -40,7 +40,6 @@ module PostfixAdmin
       @config[:aliases]   = config['aliases']   || 30
       @config[:mailboxes] = config['mailboxes'] || 30
       @config[:maxquota]  = config['maxquota']  || 100
-      @config[:mailbox_quota] = @config[:maxquota] * KB_TO_MB
       @config[:scheme]    = config['scheme']    || 'CRAM-MD5'
     end
 
@@ -112,24 +111,25 @@ module PostfixAdmin
       end
 
       domain = Domain.find(domain_name)
-      domain.aliases << Alias.mailbox(address)
 
-      mailbox = Mailbox.new
+      # mail_alias = Alias.new
+      # mail_alias.attributes = { address: address, goto: address }
+      #
+      # domain.rel_aliases << mail_alias
+
       attributes = {
-        :username => address,
-        :password => password,
-        :name     => name,
-        :maildir  => path,
-        :quota    => @config[:mailbox_quota],
+          username: address,
+          password: password,
+          name: name,
+          maildir: path,
+          local_part: user,
+          quota_mb: @config[:maxquota]
       }
 
-      if local_part_required?
-        attributes[:local_part] = user
-      end
+      mailbox = Mailbox.new(attributes)
 
-      mailbox.attributes = attributes
+      domain.rel_mailboxes << mailbox
 
-      domain.mailboxes << mailbox
       unless domain.save
         raise "Could not save Mailbox and Domain #{mailbox.errors.map(&:to_s).join} #{domain.errors.map(&:to_s).join}"
       end
