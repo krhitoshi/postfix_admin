@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    tty: true
+    ports:
+    - '7080:80'
+    volumes:
+    - .:/app
+    - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    tmpfs:
+      - /tmp
+      - /run
+    stop_signal: SIGRTMIN+3
+  db:
+    image: mariadb:10
+    volumes:
+    - ./spec/postfix_test.sql:/docker-entrypoint-initdb.d/postfix.sql
+    environment:
+      - MYSQL_RANDOM_ROOT_PASSWORD=yes
+      - MYSQL_USER=postfix
+      - MYSQL_PASSWORD=password
+      - MYSQL_DATABASE=postfix
