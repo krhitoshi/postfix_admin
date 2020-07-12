@@ -230,8 +230,8 @@ module PostfixAdmin
         raise Error, "Could not find account #{address}"
       end
 
-      Mailbox.all(username: address).destroy or raise "Could not destroy Mailbox"
-      Alias.all(address: address).destroy or raise "Could not destroy Alias"
+      Mailbox.where(username: address).delete_all
+      Alias.where(address: address).delete_all
     end
 
     def address_split(address)
