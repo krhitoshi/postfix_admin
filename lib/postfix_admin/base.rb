@@ -163,10 +163,12 @@ module PostfixAdmin
       if Mailbox.exists?(address)
         raise Error, "Can not delete mailbox by delete_alias. Use delete_account"
       end
+
       unless Alias.exists?(address)
         raise Error, "#{address} is not found!"
       end
-      Alias.all(address: address).destroy or raise "Could not destroy Alias"
+
+      Alias.where(address: address).delete_all
     end
 
     def add_domain(domain_name)
