@@ -66,14 +66,14 @@ module PostfixAdmin
     def delete_admin_domain(user_name, domain_name)
       admin_domain_check(user_name, domain_name)
 
-      admin  = Admin.find(user_name)
-      unless admin.has_domain?(domain_name)
-        raise Error, "#{user_name} is not resistered as admin of #{domain_name}."
+      admin = Admin.find(user_name)
+      domain_admin_query = admin.domain_admins.where(domain: domain_name)
+
+      unless domain_admin_query.take
+        raise Error, "#{user_name} is not registered as admin of #{domain_name}."
       end
 
-      domain = Domain.find(domain_name)
-      admin.domains.delete(domain)
-      admin.save or "Could not save Admin"
+      domain_admin_query.delete_all
     end
 
     def add_admin(username, password)
