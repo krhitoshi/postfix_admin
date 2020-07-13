@@ -2,14 +2,10 @@ require File.expand_path('../lib/postfix_admin/version', __FILE__)
 
 Gem::Specification.new do |gem|
   gem.add_dependency 'thor', '~> 0.19.1'
-  gem.add_dependency 'data_mapper'
-  gem.add_dependency 'do_mysql', '>= 0.10.17'
-  gem.add_dependency 'dm-mysql-adapter'
   gem.add_dependency 'activerecord', '~> 6.0.3'
   gem.add_dependency 'mysql2', '>= 0.5.3'
   gem.add_development_dependency 'rake', '~> 10.5.0'
   gem.add_development_dependency 'rspec', '~> 3.9.0'
-  gem.add_development_dependency 'dm-sqlite-adapter'
 
   gem.authors       = ["Hitoshi Kurokawa"]
   gem.email         = ["hitoshi@nextseed.jp"]

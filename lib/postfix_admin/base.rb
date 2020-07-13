@@ -1,4 +1,3 @@
-# require 'postfix_admin/models'
 require 'postfix_admin/error'
 
 require 'date'

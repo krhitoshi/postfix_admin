@@ -1,22 +1,24 @@
 require File.expand_path(File.dirname(__FILE__) + "/spec_helper")
-require 'postfix_admin/models'
-
-describe PostfixAdmin do
-  it "flag_str" do
-    PostfixAdmin.flag_str(true).should == "YES"
-    PostfixAdmin.flag_str(false).should == "NO"
-  end
-end
+require 'active_record'
+require 'postfix_admin/models/application_record'
+require 'postfix_admin/models/admin'
+require 'postfix_admin/models/domain'
+require 'postfix_admin/models/mailbox'
+require 'postfix_admin/models/alias'
+require 'postfix_admin/models/domain_admin'
+require 'postfix_admin/models/log'
+require 'postfix_admin/models/mail_domain'
+require 'postfix_admin/models/quota'
 
 describe PostfixAdmin::Admin do
   before do
     db_initialize
   end
 
-  it ".exist?" do
-    Admin.exist?('admin@example.com').should === true
-    Admin.exist?('all@example.com').should === true
-    Admin.exist?('unknown@example.com').should === false
+  it ".exists?" do
+    Admin.exists?('admin@example.com').should === true
+    Admin.exists?('all@example.com').should === true
+    Admin.exists?('unknown@example.com').should === false
   end
 
   it "active" do
@@ -40,7 +42,7 @@ describe PostfixAdmin::Admin do
 
     it "should not delete 'ALL' domain" do
       Admin.find('all@example.com').super_admin = false
-      Domain.exist?('ALL').should be true
+      Domain.exists?('ALL').should be true
     end
 
     it "disable super admin flag" do
@@ -51,23 +53,23 @@ describe PostfixAdmin::Admin do
 
   describe "#has_domain?" do
     it "returns true when the admin has privileges for the domain" do
-      Admin.find('admin@example.com').has_domain?('example.com').should === true
+      d = Domain.find('example.com')
+      Admin.find('admin@example.com').has_domain?(d).should === true
     end
 
     it "returns false when the admin does not have privileges for the domain" do
-      Admin.find('admin@example.com').has_domain?('example.org').should === false
-    end
-
-    it "returns false when unknown domain" do
-      Admin.find('admin@example.com').has_domain?('unknown.example.com').should === false
+      d = Domain.find('example.org')
+      Admin.find('admin@example.com').has_domain?(d).should === false
     end
 
     it "returns true when super admin and exist domain" do
-      Admin.find('all@example.com').has_domain?('example.com').should === true
+      d = Domain.find('example.com')
+      Admin.find('all@example.com').has_domain?(d).should === true
     end
 
-    it "returns false when super admin and unknown domain" do
-      Admin.find('all@example.com').has_domain?('unknown.example.com').should === false
+    it "returns true when super admin and another domain" do
+      d = Domain.find('example.org')
+      Admin.find('all@example.com').has_domain?(d).should === true
     end
   end
 end
@@ -78,10 +80,10 @@ describe PostfixAdmin::Domain do
     @base = PostfixAdmin::Base.new({'database' => 'sqlite::memory:'})
   end
 
-  it ".exist?" do
-    Domain.exist?('example.com').should === true
-    Domain.exist?('example.org').should === true
-    Domain.exist?('unknown.example.com').should === false
+  it ".exists?" do
+    Domain.exists?('example.com').should === true
+    Domain.exists?('example.org').should === true
+    Domain.exists?('unknown.example.com').should === false
   end
 
   it "active" do
@@ -94,29 +96,29 @@ describe PostfixAdmin::Domain do
 
   describe "#num_total_aliases and .num_total_aliases" do
     it "when only alias@example.com" do
-      Domain.num_total_aliases.should be(1)
-      Domain.find('example.com').num_total_aliases.should be(1)
+      Alias.pure.count.should be(1)
+      Domain.find('example.com').pure_aliases.count.should be(1)
     end
 
     it "should increase one if you add an alias" do
       @base.add_alias('new_alias@example.com', 'goto@example.jp')
-      Domain.num_total_aliases.should be(2)
-      Domain.find('example.com').num_total_aliases.should be(2)
+      Alias.pure.count.should be(2)
+      Domain.find('example.com').pure_aliases.count.should be(2)
     end
 
     it "should not increase if you add an account" do
       @base.add_account('user2@example.com', 'password')
-      Domain.num_total_aliases.should be(1)
-      Domain.find('example.com').num_total_aliases.should be(1)
+      Alias.pure.count.should be(1)
+      Domain.find('example.com').pure_aliases.count.should be(1)
     end
 
     it ".num_total_aliases should not increase if you add an account and an aliase for other domain" do
       @base.add_account('user@example.org', 'password')
-      Domain.num_total_aliases.should be(1)
-      Domain.find('example.com').num_total_aliases.should be(1)
+      Alias.pure.count.should be(1)
+      Domain.find('example.com').pure_aliases.count.should be(1)
       @base.add_alias('new_alias@example.org', 'goto@example.jp')
-      Domain.num_total_aliases.should be(2)
-      Domain.find('example.com').num_total_aliases.should be(1)
+      Alias.pure.count.should be(2)
+      Domain.find('example.com').pure_aliases.count.should be(1)
     end
   end
 end
@@ -129,30 +131,29 @@ describe PostfixAdmin::Mailbox do
   it "active" do
     Mailbox.find('user@example.com').active.should == true
     domain = Domain.find('example.com')
-    domain.mailboxes << create_mailbox('non_active_user@example.com', nil, false)
-    domain.aliases   << create_mailbox_alias('non_active_user@example.com', false)
-    domain.save
+    domain.rel_mailboxes << create_mailbox('non_active_user@example.com', nil, false)
+    domain.save!
 
     Mailbox.find('non_active_user@example.com').active.should == false
   end
 
   it "can use long maildir" do
     domain = Domain.find('example.com')
-    domain.mailboxes << create_mailbox('long_maildir_user@example.com', 'looooooooooooong_path/example.com/long_maildir_user@example.com/')
+    domain.rel_mailboxes << create_mailbox('long_maildir_user@example.com', 'looooooooooooong_path/example.com/long_maildir_user@example.com/')
     domain.save.should == true
   end
 
-  describe ".exist?" do
+  describe ".exists?" do
     it "returns true for exist account (mailbox)" do
-      Mailbox.exist?('user@example.com').should === true
+      Mailbox.exists?('user@example.com').should === true
     end
 
     it "returns false for alias" do
-      Mailbox.exist?('alias@example.com').should === false
+      Mailbox.exists?('alias@example.com').should === false
     end
 
     it "returns false for unknown account (mailbox)" do
-      Mailbox.exist?('unknown@unknown.example.com').should === false
+      Mailbox.exists?('unknown@unknown.example.com').should === false
     end
   end
 end
@@ -164,7 +165,7 @@ describe PostfixAdmin::Alias do
 
   it "active" do
     domain = Domain.find('example.com')
-    domain.aliases << create_alias('non_active_alias@example.com', false)
+    domain.rel_aliases << create_alias('non_active_alias@example.com', false)
     domain.save
 
     Alias.find('user@example.com').active.should == true
@@ -172,14 +173,14 @@ describe PostfixAdmin::Alias do
     Alias.find('non_active_alias@example.com').active.should == false
   end
 
-  describe ".exist?" do
+  describe ".exists?" do
     it "returns true when exist alias and account" do
-      Alias.exist?('user@example.com').should === true
-      Alias.exist?('alias@example.com').should === true
+      Alias.exists?('user@example.com').should === true
+      Alias.exists?('alias@example.com').should === true
     end
 
     it "returns false when unknown alias" do
-      Alias.exist?('unknown@unknown.example.com').should === false
+      Alias.exists?('unknown@unknown.example.com').should === false
     end
   end
 
