@@ -30,33 +30,29 @@ def config_initialize
 end
 
 def db_clear
-  ::PostfixAdmin::Config.all.destroy
-  DomainAdmin.all.destroy
-  Mailbox.all.destroy
-  Alias.all.destroy
-  Domain.all.destroy
-  Admin.all.destroy
+  # ::PostfixAdmin::Config.all.destroy
+  DomainAdmin.delete_all
+  Mailbox.delete_all
+  Alias.delete_all
+  Domain.without_all.delete_all
+  Admin.delete_all
 end
 
 def create_domain(domain_name, active=true)
   domain = Domain.new
   domain.attributes = {
-    :domain_name  => domain_name,
-    :description  => domain_name,
-    :maxaliases   => 30,
-    :maxmailboxes => 30,
-    :maxquota     => 100,
-    :active       => active
+    domain: domain_name,
+    description: domain_name,
+    aliases: 30,
+    mailboxes: 30,
+    maxquota: 100,
+    active: active
   }
-  domain.save
+  domain.save!
 end
 
 def create_alias_base(address, goto, active)
-  Alias.new.attributes = {
-    :address  => address,
-    :goto     => goto,
-    :active   => active
-  }
+  Alias.new(local_part: address.split("@")[0], goto: goto, active: active)
 end
 
 def create_alias(address, active=true)
@@ -69,70 +65,65 @@ end
 
 def create_mailbox(address, in_path=nil, active=true)
   path = in_path || "#{address.split('@').last}/#{address}/"
-  Mailbox.new.attributes = {
-    :username => address,
-    :password => SAMPLE_PASSWORD,
-    :name     => '',
-    :maildir  => path,
-    :quota    => 100 * KB_TO_MB,
-    # :local_part => user,
-    :active  => active
-  }
+  Mailbox.new(
+    username: address,
+    password: SAMPLE_PASSWORD,
+    name: '',
+    maildir: path,
+    quota_mb: 100,
+    local_part: address.split('@').first,
+    active: active
+  )
 end
 
 def create_admin(username, active=true)
   admin = Admin.new
   admin.attributes = {
-    :username => username,
-    :password => SAMPLE_PASSWORD,
-    :active => active
+    username: username,
+    password: SAMPLE_PASSWORD,
+    active: active
   }
   admin.save
   admin
 end
 
-class ::PostfixAdmin::Mailbox
-  property :local_part, String
-end
+# class ::PostfixAdmin::Mailbox
+#   property :local_part, String
+# end
 
 def db_initialize
   db_clear
 
-  config = ::PostfixAdmin::Config.new
-  config.attributes = {
-    :id    => 1,
-    :name  => "version",
-    :value => "740"
-  }
-  config.save
+  # config = ::PostfixAdmin::Config.new
+  # config.attributes = {
+  #   :id    => 1,
+  #   :name  => "version",
+  #   :value => "740"
+  # }
+  # config.save
 
-  create_domain('ALL')
+  # create_domain('ALL')
   create_domain('example.com')
   create_domain('example.org')
 
   all_admin = create_admin('all@example.com')
-  all_domain = Domain.find('ALL')
-  all_domain.admins << all_admin
-
-  unless  all_domain.save
-    raise "Could not save all_domain"
-  end
+  all_admin.rel_domains << Domain.find('ALL')
+  all_admin.save!
 
   admin = create_admin('admin@example.com')
   domain = Domain.find('example.com')
-  domain.admins    << admin
-  domain.aliases   << create_alias('alias@example.com')
-  domain.aliases   << create_alias('user@example.com')
-  domain.mailboxes << create_mailbox('user@example.com')
+  domain.admins << admin
+  domain.rel_aliases   << create_alias('alias@example.com')
+  domain.rel_aliases   << create_alias('user@example.com')
+  domain.rel_mailboxes << create_mailbox('user@example.com')
 
-  unless domain.save
-    raise "Could not save domain"
-  end
+  domain.save!
 end
 
-DataMapper.setup(:default, 'sqlite::memory:')
-DataMapper.finalize
-DataMapper.auto_migrate!
+# DataMapper.setup(:default, 'sqlite::memory:')
+# DataMapper.finalize
+# DataMapper.auto_migrate!
+ActiveRecord::Base.establish_connection('mysql2://postfix:password@db/postfix')
 db_initialize
 config_initialize
 
