@@ -186,7 +186,7 @@ module PostfixAdmin
         mailboxes: @config[:mailboxes],
         maxquota: @config[:maxquota],
       }
-      domain.save or raise "Could not save Domain"
+      domain.save!
     end
 
     def delete_domain(domain_name)

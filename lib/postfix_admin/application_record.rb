@@ -25,5 +25,14 @@ module PostfixAdmin
     def active_str
       active? ? "Active" : "Inactive"
     end
+
+    # This is workaround to set current time on timestamps when a record is created
+    # Activerecord does not insert timestamps if default values are set on their columns.
+    after_create :set_current_time_to_timestamp_columns
+
+    def set_current_time_to_timestamp_columns
+      now = Time.now
+      update(created: now, modified: now)
+    end
   end
 end
