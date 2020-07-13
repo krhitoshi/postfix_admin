@@ -55,9 +55,9 @@ module PostfixAdmin
     before_validation do |mailbox|
       mailbox.name = "" if mailbox.name.nil?
       if mailbox.quota_mb
-        mailbox.quota = mailbox.quota_mb * 1_024_000
+        mailbox.quota = mailbox.quota_mb * KB_TO_MB
       elsif mailbox.quota
-        mailbox.quota_mb = mailbox.quota / 1_024_000
+        mailbox.quota_mb = mailbox.quota / KB_TO_MB
       else
         mailbox.quota_mb = 0
         mailbox.quota = 0
@@ -70,7 +70,7 @@ module PostfixAdmin
 
     def quota_usage_str
       if quota_usage
-        usage_mb = quota_usage.bytes / 1_024_000
+        usage_mb = quota_usage.bytes / KB_TO_MB
         usage_mb.to_s
       else
         "0"
@@ -81,7 +81,7 @@ module PostfixAdmin
       if quota.zero?
         "--"
       else
-        quota_mb = quota / 1_024_000
+        quota_mb = quota / KB_TO_MB
         "#{quota_mb} MB"
       end
     end
