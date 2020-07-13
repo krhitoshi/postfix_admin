@@ -230,7 +230,8 @@ describe PostfixAdmin::CLI do
                                    active: false }) }.should_not raise_error
       mailbox = Mailbox.find('user@example.com')
       mailbox.quota.should == 50 * KB_TO_MB
-      expect(mailbox.active).to be false
+      expect(mailbox.alias.goto).to eq('user@example.com,goto@example.jp')
+      expect(mailbox.active).to be(false)
     end
 
     it "raise error when unknown account" do
