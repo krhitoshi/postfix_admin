@@ -1,4 +1,4 @@
-
+require File.expand_path(File.dirname(__FILE__) + "/spec_helper")
 require 'postfix_admin/cli'
 
 describe PostfixAdmin::CLI, "when config file does not exist" do

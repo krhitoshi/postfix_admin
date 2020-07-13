@@ -228,14 +228,14 @@ module PostfixAdmin
 
     def show_admin_domain(user_name)
       admin = Admin.find(user_name)
-      if admin.domains.empty?
+      if admin.rel_domains.empty?
         puts "\nNo domain in database"
         return
       end
 
       report("Domains (#{user_name})", " No. Domain") do
-        admin.domains.each_with_index do |d, i|
-          puts "%4d %-30s" % [i+1, d.domain_name]
+        admin.rel_domains.each_with_index do |d, i|
+          puts "%4d %-30s" % [i + 1, d.domain]
         end
       end
     end
