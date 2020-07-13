@@ -56,7 +56,7 @@ module PostfixAdmin
       domain = Domain.find(domain_name)
 
       if admin.has_domain?(domain)
-        raise Error, "#{user_name} is already resistered as admin of #{domain_name}."
+        raise Error, "#{user_name} is already registered as admin of #{domain_name}."
       end
 
       admin.rel_domains << domain
@@ -80,7 +80,7 @@ module PostfixAdmin
       password_check(password)
 
       if Admin.exists?(username)
-        raise Error, "#{username} is already resistered as admin."
+        raise Error, "#{username} is already registered as admin."
       end
       admin = Admin.new
       admin.attributes = {
@@ -107,7 +107,7 @@ module PostfixAdmin
       end
 
       if Alias.exists?(address)
-        raise Error, "#{address} is already resistered."
+        raise Error, "#{address} is already registered."
       end
 
       domain = Domain.find(domain_name)
@@ -246,7 +246,7 @@ module PostfixAdmin
     # end
 
     def admin_domain_check(user_name, domain_name)
-      raise Error, "#{user_name} is not resistered as admin." unless Admin.exists?(user_name)
+      raise Error, "#{user_name} is not registered as admin." unless Admin.exists?(user_name)
       raise Error, "Could not find domain #{domain_name}"     unless Domain.exists?(domain_name)
     end
 
