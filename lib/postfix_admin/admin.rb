@@ -1,4 +1,4 @@
-require 'postfix_admin/models/concerns/dovecot_cram_md5_password'
+require 'postfix_admin/concerns/dovecot_cram_md5_password'
 
 module PostfixAdmin
   class Admin < ApplicationRecord

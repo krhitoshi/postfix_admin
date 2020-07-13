@@ -1,6 +1,7 @@
 
 $:.unshift(File.join(File.dirname(__FILE__), "..", "lib"))
 
+require 'fileutils'
 require 'postfix_admin'
 require 'postfix_admin/cli'
 

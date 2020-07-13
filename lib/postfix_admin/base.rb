@@ -1,17 +1,16 @@
 require 'postfix_admin/error'
 
 require 'date'
-require 'data_mapper'
 require 'active_record'
-require 'postfix_admin/models/application_record'
-require 'postfix_admin/models/admin'
-require 'postfix_admin/models/domain'
-require 'postfix_admin/models/mailbox'
-require 'postfix_admin/models/alias'
-require 'postfix_admin/models/domain_admin'
-require 'postfix_admin/models/log'
-require 'postfix_admin/models/mail_domain'
-require 'postfix_admin/models/quota'
+require 'postfix_admin/application_record'
+require 'postfix_admin/admin'
+require 'postfix_admin/domain'
+require 'postfix_admin/mailbox'
+require 'postfix_admin/alias'
+require 'postfix_admin/domain_admin'
+require 'postfix_admin/log'
+require 'postfix_admin/mail_domain'
+require 'postfix_admin/quota'
 
 module PostfixAdmin
   class Base
