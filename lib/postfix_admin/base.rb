@@ -19,7 +19,7 @@ module PostfixAdmin
     attr_reader :config
 
     DEFAULT_CONFIG = {
-      'database'  => 'mysql://postfix:password@localhost/postfix',
+      'database'  => 'mysql2://postfix:password@localhost/postfix',
       'aliases'   => 30,
       'mailboxes' => 30,
       'maxquota'  => 100,
