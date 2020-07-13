@@ -8,7 +8,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'activerecord', '~> 6.0.3'
   gem.add_dependency 'mysql2', '>= 0.5.3'
   gem.add_development_dependency 'rake', '~> 10.5.0'
-  gem.add_development_dependency 'rspec', '~> 3.4.0'
+  gem.add_development_dependency 'rspec', '~> 3.9.0'
   gem.add_development_dependency 'dm-sqlite-adapter'
 
   gem.authors       = ["Hitoshi Kurokawa"]
