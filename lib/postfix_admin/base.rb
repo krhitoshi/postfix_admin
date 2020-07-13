@@ -222,9 +222,10 @@ module PostfixAdmin
       unless Admin.exists?(user_name)
         raise Error, "Could not find admin #{user_name}"
       end
+
       admin = Admin.find(user_name)
-      admin.clear_domains
-      admin.destroy or raise "Could not destroy Admin"
+      admin.rel_domains.delete_all
+      admin.destroy!
     end
 
     def delete_account(address)
