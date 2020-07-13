@@ -41,6 +41,10 @@ module PostfixAdmin
         warn("Deprecation Warning: Use 'mysql2' as a DB adopter instead of 'mysql' in '#{CLI.config_file}'")
       end
 
+      if uri.scheme != "mysql2"
+        raise "'#{uri.scheme}' is not supported as a DB adopter. Use 'mysql2' instead in '#{CLI.config_file}'."
+      end
+
       ActiveRecord::Base.establish_connection(uri.to_s)
 
     rescue LoadError => e
