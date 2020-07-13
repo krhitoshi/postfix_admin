@@ -63,11 +63,11 @@ describe PostfixAdmin::Base do
     end
 
     it "can not add exist domain" do
-      lambda{ @base.add_domain('example.com') }.should raise_error Error
+      lambda { @base.add_domain('example.com') }.should raise_error Error
     end
 
     it "can not add invalid domain" do
-      lambda{ @base.add_domain('localhost') }.should raise_error Error
+      lambda { @base.add_domain('localhost') }.should raise_error Error
     end
   end
 
@@ -81,27 +81,27 @@ describe PostfixAdmin::Base do
     end
 
     it "refuse empty password" do
-      lambda{ @base.add_account('new_user@example.com', '') }.should raise_error Error
+      lambda { @base.add_account('new_user@example.com', '') }.should raise_error Error
     end
 
     it "refuse nil password" do
-      lambda{ @base.add_account('new_user@example.com', nil) }.should raise_error Error
+      lambda { @base.add_account('new_user@example.com', nil) }.should raise_error Error
     end
 
     it "can not add account which hsas invalid address" do
-      lambda{ @base.add_account('invalid.example.com', 'password') }.should raise_error Error
+      lambda { @base.add_account('invalid.example.com', 'password') }.should raise_error Error
     end
 
     it "can not add account for unknown domain" do
-      lambda{ @base.add_account('user@unknown.example.com', 'password') }.should raise_error Error
+      lambda { @base.add_account('user@unknown.example.com', 'password') }.should raise_error Error
     end
 
     it "can not add account which has same address as exist mailbox" do
-      lambda{ @base.add_account('user@example.com', 'password') }.should raise_error Error
+      lambda { @base.add_account('user@example.com', 'password') }.should raise_error Error
     end
 
     it "can not add account which has same address as exist alias" do
-      lambda{ @base.add_account('alias@example.com', 'password') }.should raise_error Error
+      lambda { @base.add_account('alias@example.com', 'password') }.should raise_error Error
     end
   end
 
@@ -114,15 +114,15 @@ describe PostfixAdmin::Base do
     end
 
     it "refuse empty password" do
-      lambda{ @base.add_admin('admin@example.net', '') }.should raise_error Error
+      lambda { @base.add_admin('admin@example.net', '') }.should raise_error Error
     end
 
     it "refuse nil password" do
-      lambda{ @base.add_admin('admin@example.net', nil) }.should raise_error Error
+      lambda { @base.add_admin('admin@example.net', nil) }.should raise_error Error
     end
 
     it "can not add exist admin" do
-      lambda{ @base.add_admin('admin@example.com', 'password') }.should raise_error Error
+      lambda { @base.add_admin('admin@example.com', 'password') }.should raise_error Error
     end
   end
 
@@ -134,35 +134,35 @@ describe PostfixAdmin::Base do
     end
 
     it "can not add unknown domain for an admin" do
-      lambda{ @base.add_admin_domain('admin@example.com', 'unknown.example.com') }.should raise_error Error
+      lambda { @base.add_admin_domain('admin@example.com', 'unknown.example.com') }.should raise_error Error
     end
 
     it "can not add domain for unknown admin" do
-      lambda{ @base.add_admin_domain('unknown_admin@example.com', 'example.net') }.should raise_error Error
+      lambda { @base.add_admin_domain('unknown_admin@example.com', 'example.net') }.should raise_error Error
     end
 
     it "can not add a domain which the admin has already privileges for" do
-      lambda{ @base.add_admin_domain('admin@example.com', 'example.com') }.should raise_error Error
+      lambda { @base.add_admin_domain('admin@example.com', 'example.com') }.should raise_error Error
     end
   end
 
   describe "#delete_admin_domain" do
     it "#delete_admin_domain" do
       d = Domain.find('example.org')
-      lambda{ @base.delete_admin_domain('admin@example.com', 'example.com') }.should_not raise_error
+      lambda { @base.delete_admin_domain('admin@example.com', 'example.com') }.should_not raise_error
       Admin.find('admin@example.com').has_domain?(d).should be false
     end
 
     it "can not delete not administrated domain" do
-      lambda{ @base.delete_admin_domain('admin@example.com', 'example.org') }.should raise_error Error
+      lambda { @base.delete_admin_domain('admin@example.com', 'example.org') }.should raise_error Error
     end
 
     it "raise error when unknown admin" do
-      lambda{ @base.delete_admin_domain('unknown_admin@example.com', 'example.com') }.should raise_error Error
+      lambda { @base.delete_admin_domain('unknown_admin@example.com', 'example.com') }.should raise_error Error
     end
 
     it "raise error when unknown domain" do
-      lambda{ @base.delete_admin_domain('admin@example.com', 'unknown.example.com') }.should raise_error Error
+      lambda { @base.delete_admin_domain('admin@example.com', 'unknown.example.com') }.should raise_error Error
     end
  end
 
@@ -190,16 +190,16 @@ describe PostfixAdmin::Base do
 
   describe "#delete_alias" do
     it "can delete an alias" do
-      lambda{ @base.delete_alias('alias@example.com') }.should_not raise_error
+      lambda { @base.delete_alias('alias@example.com') }.should_not raise_error
       Alias.exists?('alias@example.com').should be false
     end
 
     it "can not delete mailbox" do
-      lambda{ @base.delete_alias('user@example.com') }.should raise_error Error
+      lambda { @base.delete_alias('user@example.com') }.should raise_error Error
     end
 
     it "can not delete unknown alias" do
-      lambda{ @base.delete_alias('unknown@example.com') }.should raise_error Error
+      lambda { @base.delete_alias('unknown@example.com') }.should raise_error Error
     end
   end
 
@@ -213,7 +213,7 @@ describe PostfixAdmin::Base do
     end
 
     it "can delete a domain" do
-      lambda{ @base.delete_domain('example.com') }.should_not raise_error
+      lambda { @base.delete_domain('example.com') }.should_not raise_error
 
       Domain.exists?('example.com').should be false
       Admin.exists?('admin@example.com').should be false
@@ -226,30 +226,30 @@ describe PostfixAdmin::Base do
     end
 
     it "can not delete unknown domain" do
-      lambda{ @base.delete_domain('unknown.example.com') }.should raise_error Error
+      lambda { @base.delete_domain('unknown.example.com') }.should raise_error Error
     end
   end
 
   describe "#delete_admin" do
     it "can delete an admin" do
-      lambda{ @base.delete_admin('admin@example.com') }.should_not raise_error
+      lambda { @base.delete_admin('admin@example.com') }.should_not raise_error
       Admin.exists?('admin@example.com').should be false
     end
 
     it "can not delete unknown admin" do
-      lambda{ @base.delete_admin('unknown_admin@example.com') }.should raise_error Error
+      lambda { @base.delete_admin('unknown_admin@example.com') }.should raise_error Error
     end
   end
 
   describe "#delete_account" do
     it "can delete an account" do
-      lambda{ @base.delete_account('user@example.com') }.should_not raise_error
+      lambda { @base.delete_account('user@example.com') }.should_not raise_error
       Mailbox.exists?('user@example.com').should be false
       Alias.exists?('user@example.com').should be false
     end
 
     it "can not delete unknown account" do
-      lambda{ @base.delete_account('unknown@example.com') }.should raise_error Error
+      lambda { @base.delete_account('unknown@example.com') }.should raise_error Error
     end
   end
 end

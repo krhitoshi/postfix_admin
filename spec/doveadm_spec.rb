@@ -29,7 +29,7 @@ describe PostfixAdmin::Doveadm do
     end
 
     it "unknown scheme raise error" do
-      lambda{ PostfixAdmin::Doveadm.password('password', 'UNKNOWN-SCHEME') }.should raise_error Error
+      lambda { PostfixAdmin::Doveadm.password('password', 'UNKNOWN-SCHEME') }.should raise_error Error
     end
   end
 end

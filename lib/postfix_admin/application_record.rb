@@ -10,7 +10,6 @@ module PostfixAdmin
     RE_DOMAIN_NAME_LIKE_BASE = '([a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,}'
     RE_EMAIL_LIKE_BASE = '[^@\s]+@([a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,}'
 
-
     RE_DOMAIN_NAME_LIKE = /#{RE_DOMAIN_NAME_LIKE_BASE}/
     RE_EMAIL_LIKE = /#{RE_EMAIL_LIKE_BASE}/
 

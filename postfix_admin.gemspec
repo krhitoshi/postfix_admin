@@ -15,7 +15,7 @@ Gem::Specification.new do |gem|
   gem.homepage      = "https://github.com/krhitoshi/postfix_admin"
 
   gem.files         = `git ls-files`.split($\)
-  gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
+  gem.executables   = gem.files.grep(%r{^bin/}).map { |f| File.basename(f) }
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.name          = "postfix_admin"
   gem.require_paths = ["lib"]

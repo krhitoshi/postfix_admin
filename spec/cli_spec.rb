@@ -51,13 +51,13 @@ describe PostfixAdmin::CLI do
 
   it "#show_domain" do
     lambda { @cli.show_domain }.should_not raise_error
-    capture(:stdout){ @cli.show_domain }.should_not =~ /ALL/
+    capture(:stdout) { @cli.show_domain }.should_not =~ /ALL/
   end
 
   describe "#show_account_details" do
     it "shows information of an account" do
       lambda {  @cli.show_account_details('user@example.com') }.should_not raise_error
-      result = capture(:stdout){ @cli.show_account_details('user@example.com') }
+      result = capture(:stdout) { @cli.show_account_details('user@example.com') }
       result.should =~ /Name/
       result.should =~ /Quota/
     end
@@ -201,19 +201,19 @@ describe PostfixAdmin::CLI do
     end
 
     it "upcase will convert to downcase" do
-      lambda{ @cli.add_domain('ExAmPle.NeT') }.should_not raise_error
+      lambda { @cli.add_domain('ExAmPle.NeT') }.should_not raise_error
       Domain.exists?('example.net').should be true
     end
 
     it "can not add exist domain" do
-      lambda{ @cli.add_domain('example.com') }.should raise_error Error
-      lambda{ @cli.add_domain('ExAmPle.Com') }.should raise_error Error
+      lambda { @cli.add_domain('example.com') }.should raise_error Error
+      lambda { @cli.add_domain('ExAmPle.Com') }.should raise_error Error
     end
   end
 
   describe "#edit_domain" do
     it "can update domain limitations" do
-      lambda{ @cli.edit_domain('example.com', {aliases: 40, mailboxes: 40, maxquota: 400, active: false}) }.should_not raise_error
+      lambda { @cli.edit_domain('example.com', {aliases: 40, mailboxes: 40, maxquota: 400, active: false}) }.should_not raise_error
       domain = Domain.find('example.com')
       domain.aliases.should == 40
       domain.mailboxes.should == 40
@@ -235,7 +235,7 @@ describe PostfixAdmin::CLI do
     end
 
     it "raise error when unknown account" do
-      lambda { @cli.edit_account('unknown@example.com', {:quota => 50}) }.should raise_error Error
+      lambda { @cli.edit_account('unknown@example.com', {quota: 50}) }.should raise_error Error
     end
   end
 
@@ -293,7 +293,7 @@ describe PostfixAdmin::CLI do
     end
 
     it "print infomation of all domains" do
-      result = capture(:stdout){ @cli.dump }
+      result = capture(:stdout) { @cli.dump }
       result.should =~ /example.com,100,true/
       result.should =~ /example.org,100,true/
       result.should =~ /admin@example.com,"9186d855e11eba527a7a52ca82b313e180d62234f0acc9051b527243d41e2740",false,true/

@@ -39,7 +39,7 @@ def db_clear
   Admin.delete_all
 end
 
-def create_domain(domain_name, active=true)
+def create_domain(domain_name, active = true)
   domain = Domain.new
   domain.attributes = {
     domain: domain_name,
@@ -56,15 +56,15 @@ def create_alias_base(address, goto, active)
   Alias.new(local_part: address.split("@")[0], goto: goto, active: active)
 end
 
-def create_alias(address, active=true)
+def create_alias(address, active = true)
   create_alias_base(address, 'goto@example.jp', active)
 end
 
-def create_mailbox_alias(address, active=true)
+def create_mailbox_alias(address, active = true)
   create_alias_base(address, address, active)
 end
 
-def create_mailbox(address, in_path=nil, active=true)
+def create_mailbox(address, in_path = nil, active = true)
   path = in_path || "#{address.split('@').last}/#{address}/"
   Mailbox.new(
     username: address,
@@ -77,7 +77,7 @@ def create_mailbox(address, in_path=nil, active=true)
   )
 end
 
-def create_admin(username, active=true)
+def create_admin(username, active = true)
   admin = Admin.new
   admin.attributes = {
     username: username,
@@ -131,7 +131,6 @@ config_initialize
 
 module PostfixAdmin
   class Base
-
     # without DataMapper setup
     def db_setup(database)
       unless database

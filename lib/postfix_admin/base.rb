@@ -90,7 +90,7 @@ module PostfixAdmin
       end
     end
 
-    def add_account(address, password, in_name=nil)
+    def add_account(address, password, in_name = nil)
       name = in_name || ''
       password_check(password)
 

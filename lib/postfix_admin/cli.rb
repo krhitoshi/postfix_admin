@@ -49,7 +49,7 @@ module PostfixAdmin
       end
     end
 
-    def show_summary(domain_name=nil)
+    def show_summary(domain_name = nil)
       title = "Summary"
       if domain_name
         domain_name = domain_name.downcase
@@ -132,7 +132,6 @@ module PostfixAdmin
              d.rel_mailboxes.count, max_str(d.mailboxes), d.maxquota, d.active_str]
         end
       end
-
     end
 
     def add_domain(domain_name)
@@ -181,8 +180,8 @@ module PostfixAdmin
       puts_deleted(domain_name)
     end
 
-    def show_admin(domain_name=nil)
-      admins = domain_name ? Admin.select{|a| a.rel_domains.exists?(domain_name)} : Admin.all
+    def show_admin(domain_name = nil)
+      admins = domain_name ? Admin.select { |a| a.rel_domains.exists?(domain_name) } : Admin.all
       index = " No. Admin                                        Domains Active"
       report("Admins", index) do
         if admins.empty?
@@ -195,7 +194,6 @@ module PostfixAdmin
           puts "%4d %-40s %11s   %-3s" % [i+1, a.username, domains, a.active_str]
         end
       end
-
     end
 
     def show_address(domain_name)
@@ -214,13 +212,12 @@ module PostfixAdmin
           puts "%4d %-30s  %-20s %10s   %-3s  %s" % [i+1, m.username, m.name, max_str(quota.to_i), m.active_str, m.maildir]
         end
       end
-
     end
 
     def show_alias(domain_name)
       domain_check(domain_name)
 
-      forwards, aliases = Domain.find(domain_name).rel_aliases.partition{|a| a.mailbox?}
+      forwards, aliases = Domain.find(domain_name).rel_aliases.partition { |a| a.mailbox? }
 
       forwards.delete_if do |f|
         f.address == f.goto
@@ -244,7 +241,7 @@ module PostfixAdmin
       end
     end
 
-    def add_admin(user_name, password, super_admin=false, scheme=nil)
+    def add_admin(user_name, password, super_admin = false, scheme = nil)
       validate_password(password)
 
       @base.add_admin(user_name, hashed_password(password, scheme))
@@ -266,7 +263,7 @@ module PostfixAdmin
       puts "#{domain_name} was successfully deleted from #{user_name}"
     end
 
-    def add_account(address, password, scheme=nil, name=nil)
+    def add_account(address, password, scheme = nil, name = nil)
       validate_password(password)
 
       @base.add_account(address, hashed_password(password, scheme), name)
@@ -351,13 +348,13 @@ module PostfixAdmin
       puts
       puts "Aliases"
       puts "Address,Go to,Active"
-      Alias.all.select{|a| !a.mailbox? }.each do |a|
+      Alias.all.select { |a| !a.mailbox? }.each do |a|
         puts [a.address, %Q!"#{a.goto}"!, a.active].join(',')
       end
       puts
       puts "Forwards"
       puts "Address,Go to,Active"
-      Alias.all.select{|a| a.mailbox? && a.goto != a.address }.each do |a|
+      Alias.all.select { |a| a.mailbox? && a.goto != a.address }.each do |a|
         puts [a.address, %Q!"#{a.goto}"!, a.active].join(',')
       end
     end
@@ -411,7 +408,7 @@ module PostfixAdmin
       puts "-"*120
     end
 
-    def report(title, index=nil)
+    def report(title, index = nil)
       puts "\n[#{title}]"
       print_line if index
       puts index if index
@@ -480,11 +477,10 @@ module PostfixAdmin
 
     private
 
-    def hashed_password(password, in_scheme=nil)
+    def hashed_password(password, in_scheme = nil)
       scheme = in_scheme || @base.config[:scheme]
       puts "scheme: #{scheme}"
       PostfixAdmin::Doveadm.password(password, scheme)
     end
-
   end
 end

@@ -36,7 +36,7 @@ describe PostfixAdmin::Admin do
 
   describe "#super_admin=" do
     it "enable super admin flag" do
-      lambda{ Admin.find('all@example.com').super_admin = false }.should_not raise_error
+      lambda { Admin.find('all@example.com').super_admin = false }.should_not raise_error
       Admin.find('all@example.com').super_admin?.should === false
     end
 
@@ -46,7 +46,7 @@ describe PostfixAdmin::Admin do
     end
 
     it "disable super admin flag" do
-      lambda{ Admin.find('admin@example.com').super_admin = true }.should_not raise_error
+      lambda { Admin.find('admin@example.com').super_admin = true }.should_not raise_error
       Admin.find('admin@example.com').super_admin?.should === true
     end
   end
