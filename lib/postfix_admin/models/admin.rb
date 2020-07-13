@@ -7,7 +7,7 @@ module PostfixAdmin
 
     include DovecotCramMD5Password
 
-    validates :username, presence: true, uniqueness: true,
+    validates :username, presence: true, uniqueness: { case_sensitive: false },
                          format: { with: RE_EMAIL_LIKE_WITH_ANCHORS,
                                    message: "must be a valid email address" }
 

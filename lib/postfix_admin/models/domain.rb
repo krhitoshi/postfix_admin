@@ -3,7 +3,7 @@ module PostfixAdmin
     self.table_name = :domain
     self.primary_key = :domain
 
-    validates :domain, presence: true, uniqueness: true,
+    validates :domain, presence: true, uniqueness: { case_sensitive: false },
                        format: { with: RE_DOMAIN_NAME_LIKE_WITH_ANCHORS,
                                  message: "must be a valid domain name" }
     validates :transport, presence: true
