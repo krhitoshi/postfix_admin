@@ -152,10 +152,8 @@ module PostfixAdmin
       admin_check(admin_name)
       admin = Admin.find(admin_name)
 
-      unless options[:super_admin].nil?
-        domain_ids = admin.rel_domain_ids.dup
-        domain_ids << "ALL"
-        admin.rel_domain_ids = domain_ids
+      unless options[:super].nil?
+        admin.super_admin = options[:super]
       end
 
       admin.active = options[:active] unless options[:active].nil?

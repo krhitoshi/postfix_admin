@@ -182,7 +182,9 @@ describe PostfixAdmin::Runner do
     end
 
     it "can update super admin status" do
-      output = capture(:stdout){ Runner.start(['edit_admin', 'admin@example.com', '--super']) }
+      output = capture(:stdout){
+        Runner.start(['edit_admin', 'admin@example.com', '--super'])
+      }
       expect(output).to match EX_UPDATED
       expect(output).to match /Domains.+ALL/
       expect(output).to match /Active.+Active/

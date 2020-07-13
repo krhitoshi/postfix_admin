@@ -30,6 +30,17 @@ module PostfixAdmin
       end
     end
 
+    def super_admin=(value)
+      if value
+        domain_ids = self.rel_domain_ids.dup
+        domain_ids << "ALL"
+        self.rel_domain_ids = domain_ids
+        save!
+      else
+        domain_admins.where(domain: "ALL").delete_all
+      end
+    end
+
     def has_admin?(admin)
       self == admin || super_admin?
     end
