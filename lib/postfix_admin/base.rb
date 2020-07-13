@@ -26,14 +26,7 @@ module PostfixAdmin
 
     def initialize(config)
       db_setup(config['database'])
-#       if local_part_required?
-#         eval <<"EOS"
-# class ::PostfixAdmin::Mailbox
-#     property :local_part, String
-# end
-# EOS
-#         DataMapper.finalize
-#       end
+
       @config = {}
       @config[:aliases]   = config['aliases']   || 30
       @config[:mailboxes] = config['mailboxes'] || 30
@@ -43,8 +36,6 @@ module PostfixAdmin
 
     def db_setup(database)
       ActiveRecord::Base.establish_connection(database)
-      # DataMapper.setup(:default, database)
-      # DataMapper.finalize
     end
 
     def add_admin_domain(user_name, domain_name)
@@ -109,11 +100,6 @@ module PostfixAdmin
       end
 
       domain = Domain.find(domain_name)
-
-      # mail_alias = Alias.new
-      # mail_alias.attributes = { address: address, goto: address }
-      #
-      # domain.rel_aliases << mail_alias
 
       attributes = {
           username: address,
@@ -240,11 +226,6 @@ module PostfixAdmin
     end
 
     private
-
-    # postfixadmin DB upgrade Number 495 loca_part added
-    # def local_part_required?
-    #   Config.first.value.to_i >= 495
-    # end
 
     def admin_domain_check(user_name, domain_name)
       raise Error, "#{user_name} is not registered as admin." unless Admin.exists?(user_name)
