@@ -327,7 +327,7 @@ module PostfixAdmin
     def log
       Log.all.each do |l|
         time = l.timestamp.strftime("%Y-%m-%d %X %Z")
-        puts "#{time}  #{l.username}  #{l.domain_name}  #{l.action}  #{l.data}"
+        puts "#{time}  #{l.username}  #{l.domain}  #{l.action}  #{l.data}"
       end
     end
 
