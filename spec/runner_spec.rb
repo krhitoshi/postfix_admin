@@ -139,7 +139,7 @@ describe PostfixAdmin::Runner do
         Admin.find('admin@example.jp').password.should == CRAM_MD5_PASS
       end
 
-      it "--shceme can resister admin" do
+      it "--shceme can register admin" do
         capture(:stdout){ Runner.start(@args + ['--scheme', 'CRAM-MD5']) }.should =~ EX_REGISTERED
       end
 
@@ -147,7 +147,7 @@ describe PostfixAdmin::Runner do
         exit_capture{ Runner.start(@args + ['-s', 'CRAM-MD5']) }.should == ""
       end
 
-      it "-s can resister admin" do
+      it "-s can register admin" do
         capture(:stdout){ Runner.start(@args + ['-s', 'CRAM-MD5']) }.should =~ EX_REGISTERED
       end
 
