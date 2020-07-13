@@ -9,7 +9,7 @@ describe PostfixAdmin::Base do
 
   it "DEFAULT_CONFIG" do
     PostfixAdmin::Base::DEFAULT_CONFIG.should == {
-        'database'  => 'mysql://postfix:password@localhost/postfix',
+        'database'  => 'mysql2://postfix:password@localhost/postfix',
         'aliases'   => 30,
         'mailboxes' => 30,
         'maxquota'  => 100,
@@ -33,7 +33,6 @@ describe PostfixAdmin::Base do
     @base.config[:aliases].should == 30
     @base.config[:mailboxes].should == 30
     @base.config[:maxquota].should == 100
-    @base.config[:mailbox_quota].should == 100 * KB_TO_MB
     @base.config[:scheme].should == 'CRAM-MD5'
   end
 
@@ -130,7 +129,8 @@ describe PostfixAdmin::Base do
   describe "#add_admin_domain" do
     it "#add_admin_domain" do
       @base.add_admin_domain('admin@example.com', 'example.org')
-      Admin.find('admin@example.com').has_domain?('example.org').should be true
+      d = Domain.find('example.org')
+      Admin.find('admin@example.com').has_domain?(d).should be true
     end
 
     it "can not add unknown domain for an admin" do
@@ -148,8 +148,9 @@ describe PostfixAdmin::Base do
 
   describe "#delete_admin_domain" do
     it "#delete_admin_domain" do
+      d = Domain.find('example.org')
       lambda{ @base.delete_admin_domain('admin@example.com', 'example.com') }.should_not raise_error
-      Admin.find('admin@example.com').has_domain?('example.com').should be false
+      Admin.find('admin@example.com').has_domain?(d).should be false
     end
 
     it "can not delete not administrated domain" do
@@ -167,7 +168,7 @@ describe PostfixAdmin::Base do
 
   describe "#add_alias" do
     it "can add a new alias" do
-      num_aliases   = Alias.count
+      num_aliases = Alias.count
       lambda { @base.add_alias('new_alias@example.com', 'goto@example.jp') }.should_not raise_error
       (Alias.count - num_aliases).should be(1)
       Alias.exists?('new_alias@example.com').should be true
@@ -217,10 +218,11 @@ describe PostfixAdmin::Base do
       Domain.exists?('example.com').should be false
       Admin.exists?('admin@example.com').should be false
 
-      Alias.all(:domain_name => 'example.com').count.should be(0)
-      Mailbox.all(:domain_name => 'example.com').count.should be(0)
+      Alias.where(domain: 'example.com').count.should be(0)
+      Mailbox.where(domain: 'example.com').count.should be(0)
 
-      DomainAdmin.all(:username => 'admin@example.com', :domain_name => 'example.com').count.should be(0)
+      DomainAdmin.where(username: 'admin@example.com',
+                        domain: 'example.com').count.should be(0)
     end
 
     it "can not delete unknown domain" do
