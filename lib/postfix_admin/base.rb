@@ -35,7 +35,14 @@ module PostfixAdmin
     end
 
     def db_setup(database)
-      ActiveRecord::Base.establish_connection(database)
+      uri = URI.parse(database)
+
+      if uri.scheme == "mysql"
+        uri.scheme = "mysql2"
+        warn("Deprecation Warning: Use 'mysql2' as DB adopter instead of 'mysql' in '#{CLI.config_file}'")
+      end
+
+      ActiveRecord::Base.establish_connection(uri.to_s)
     end
 
     def add_admin_domain(user_name, domain_name)
