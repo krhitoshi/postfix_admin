@@ -25,24 +25,26 @@ module PostfixAdmin
     }
 
     def initialize(config)
-      db_setup(config['database'])
-
       @config = {}
+      @config[:database]  = config['database']
       @config[:aliases]   = config['aliases']   || 30
       @config[:mailboxes] = config['mailboxes'] || 30
       @config[:maxquota]  = config['maxquota']  || 100
       @config[:scheme]    = config['scheme']    || 'CRAM-MD5'
     end
 
-    def db_setup(database)
-      uri = URI.parse(database)
+    def db_setup
+      uri = URI.parse(@config[:database])
 
       if uri.scheme == "mysql"
         uri.scheme = "mysql2"
-        warn("Deprecation Warning: Use 'mysql2' as DB adopter instead of 'mysql' in '#{CLI.config_file}'")
+        warn("Deprecation Warning: Use 'mysql2' as a DB adopter instead of 'mysql' in '#{CLI.config_file}'")
       end
 
       ActiveRecord::Base.establish_connection(uri.to_s)
+
+    rescue LoadError => e
+      raise e.message
     end
 
     def add_admin_domain(user_name, domain_name)

@@ -131,11 +131,8 @@ config_initialize
 
 module PostfixAdmin
   class Base
-    # without DataMapper setup
-    def db_setup(database)
-      unless database
-        raise ArgumentError
-      end
+    # without actual db setup
+    def db_setup
     end
   end
 end

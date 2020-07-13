@@ -4,7 +4,7 @@ require 'postfix_admin/base'
 describe PostfixAdmin::Base do
   before do
     db_initialize
-    @base = PostfixAdmin::Base.new({'database' => 'mysql2://postfix:password@db/postfix'})
+    @base = PostfixAdmin::Base.new({'database' => 'mysql2://postfix:password@localhost/postfix'})
   end
 
   it "DEFAULT_CONFIG" do
@@ -25,15 +25,15 @@ describe PostfixAdmin::Base do
     lambda { PostfixAdmin::Base.new }.should raise_error(ArgumentError)
   end
 
-  it "#new without database config" do
-    lambda { PostfixAdmin::Base.new({}) }.should raise_error(ArgumentError)
-  end
-
   it "Default configuration should be correct" do
     @base.config[:aliases].should == 30
     @base.config[:mailboxes].should == 30
     @base.config[:maxquota].should == 100
     @base.config[:scheme].should == 'CRAM-MD5'
+  end
+
+  it "config database" do
+    @base.config[:database].should == 'mysql2://postfix:password@localhost/postfix'
   end
 
   it "#domain_exists?" do

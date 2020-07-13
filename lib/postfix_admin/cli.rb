@@ -20,6 +20,10 @@ module PostfixAdmin
       @config_file = value
     end
 
+    def db_setup
+      @base.db_setup
+    end
+
     def show(name)
       name = name.downcase if name
 

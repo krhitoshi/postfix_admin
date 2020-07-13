@@ -198,11 +198,10 @@ module PostfixAdmin
     private
 
     def runner
-      begin
-        yield
-      rescue Error, ArgumentError => e
-        abort e.message
-      end
+      @cli.db_setup
+      yield
+    rescue StandardError => e
+      abort "Error: #{e.message}"
     end
   end
 end
