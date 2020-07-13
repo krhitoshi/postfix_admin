@@ -123,7 +123,8 @@ end
 # DataMapper.setup(:default, 'sqlite::memory:')
 # DataMapper.finalize
 # DataMapper.auto_migrate!
-ActiveRecord::Base.establish_connection('mysql2://postfix:password@db/postfix')
+DATABASE_URL = 'mysql2://postfix:password@db/postfix'
+ActiveRecord::Base.establish_connection(DATABASE_URL)
 db_initialize
 config_initialize
 
