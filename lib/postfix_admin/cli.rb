@@ -162,11 +162,11 @@ module PostfixAdmin
     def edit_domain(domain_name, options)
       domain_check(domain_name)
       domain = Domain.find(domain_name)
-      domain.maxaliases   = options[:aliases]   if options[:aliases]
-      domain.maxmailboxes = options[:mailboxes] if options[:mailboxes]
+      domain.aliases   = options[:aliases]   if options[:aliases]
+      domain.mailboxes = options[:mailboxes] if options[:mailboxes]
       domain.maxquota     = options[:maxquota]  if options[:maxquota]
       domain.active       = options[:active] unless options[:active].nil?
-      domain.save or raise "Could not save Domain"
+      domain.save!
 
       puts "Successfully updated #{domain_name}"
       show_summary(domain_name)

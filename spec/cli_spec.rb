@@ -215,8 +215,8 @@ describe PostfixAdmin::CLI do
     it "can update domain limitations" do
       lambda{ @cli.edit_domain('example.com', {aliases: 40, mailboxes: 40, maxquota: 400, active: false}) }.should_not raise_error
       domain = Domain.find('example.com')
-      domain.maxaliases.should == 40
-      domain.maxmailboxes.should == 40
+      domain.aliases.should == 40
+      domain.mailboxes.should == 40
       domain.maxquota.should == 400
       expect(domain.active).to be false
     end
