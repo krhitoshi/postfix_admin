@@ -39,7 +39,10 @@ module PostfixAdmin
     end
 
     before_validation do |a|
-      a.address = "#{a.local_part}@#{a.domain}" unless a.local_part.empty?
+      unless a.address
+        a.address = "#{a.local_part}@#{a.domain}" unless a.local_part.empty?
+      end
+
       unless a.forward_addresses.empty?
         forward_addresses = a.forward_addresses.dup
         forward_addresses.delete_if { |f| f.blank? }
