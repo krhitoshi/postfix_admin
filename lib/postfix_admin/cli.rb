@@ -151,9 +151,15 @@ module PostfixAdmin
     def edit_admin(admin_name, options)
       admin_check(admin_name)
       admin = Admin.find(admin_name)
-      admin.super_admin = options[:super] unless options[:super].nil?
+
+      unless options[:super_admin].nil?
+        domain_ids = admin.rel_domain_ids.dup
+        domain_ids << "ALL"
+        admin.rel_domain_ids = domain_ids
+      end
+
       admin.active = options[:active] unless options[:active].nil?
-      admin.save or raise "Could not save Admin"
+      admin.save!
 
       puts "Successfully updated #{admin_name}"
       show_admin_details(admin_name)

@@ -237,7 +237,8 @@ describe PostfixAdmin::CLI do
 
   describe "#edit_admin" do
     it "can update admin" do
-      expect { @cli.edit_admin('admin@example.com', {super: true, active: false}) }.not_to raise_error
+      expect { @cli.edit_admin('admin@example.com',
+                               { super_admin: true, active: false }) }.not_to raise_error
       admin = Admin.find('admin@example.com')
       expect(admin.super_admin?).to be true
       expect(admin.active).to be false
