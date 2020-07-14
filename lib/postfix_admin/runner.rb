@@ -5,6 +5,10 @@ require 'postfix_admin/doveadm'
 
 module PostfixAdmin
   class Runner < Thor
+    def self.exit_on_failure?
+      true
+    end
+
     def initialize(*args)
       super
       @cli = CLI.new
