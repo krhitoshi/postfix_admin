@@ -6,19 +6,33 @@ Command Line Tools for Postfix Admin
 
 ## Description
 
-* Postfix Admin (Original Application)
+* Postfix Admin (Original Web-based Application)
   + Web Site http://postfixadmin.sourceforge.net/
   + GitHub https://github.com/postfixadmin/postfixadmin
 
-* MySQL or MariaDB is supported. PostgreSQL is not supported.
+* Postfix Admin 3.2 is supported.
 
-* Postfix Admin 2.2.0 is supported.
+* MySQL/MariaDB is supported.
+
+* Other database engines are not supported.
 
 ## Installation
 
 Install postfix_admin as:
 
     $ gem install postfix_admin
+
+Just execute `postfix_admin` command to generate your config file: `~/.postfix_admin.conf`
+
+    $ postfix_admin
+
+Edit the file for your environment:
+
+    $ vi ~/.postfix_admin.conf
+
+You can see domains on your host if the `database` parameter is set properly:
+
+    $ postfix_admin show
 
 ## Usage
 
@@ -53,11 +67,3 @@ Commands:
   postfix_admin summary [example.com]                                      # Summarize the usage of PostfixAdmin
   postfix_admin version                                                    # Show postfix_admin version
 ```
-
-## Contributing
-
-1. Fork it
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Added some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request
