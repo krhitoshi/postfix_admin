@@ -1,16 +1,7 @@
 require 'postfix_admin/error'
 
 require 'date'
-require 'active_record'
-require 'postfix_admin/application_record'
-require 'postfix_admin/admin'
-require 'postfix_admin/domain'
-require 'postfix_admin/mailbox'
-require 'postfix_admin/alias'
-require 'postfix_admin/domain_admin'
-require 'postfix_admin/log'
-require 'postfix_admin/mail_domain'
-require 'postfix_admin/quota'
+require 'postfix_admin/models'
 
 module PostfixAdmin
   class Base
