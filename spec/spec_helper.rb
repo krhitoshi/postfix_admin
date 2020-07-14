@@ -21,7 +21,7 @@ end
 include PostfixAdmin
 
 # CRAM-MD5
-SAMPLE_PASSWORD = "9186d855e11eba527a7a52ca82b313e180d62234f0acc9051b527243d41e2740"
+SAMPLE_PASSWORD = "{CRAM-MD5}9186d855e11eba527a7a52ca82b313e180d62234f0acc9051b527243d41e2740"
 
 # [fixtures]
 # Domain:
@@ -150,12 +150,12 @@ module PostfixAdmin
   end
 end
 
-CRAM_MD5_PASS = '9186d855e11eba527a7a52ca82b313e180d62234f0acc9051b527243d41e2740'
-CRAM_MD5_NEW_PASS = '820de4c70957274d41111c5fbcae4c87240c9f047fc56f3e720f103571be6cbc'
+CRAM_MD5_PASS = '{CRAM-MD5}9186d855e11eba527a7a52ca82b313e180d62234f0acc9051b527243d41e2740'
+CRAM_MD5_NEW_PASS = '{CRAM-MD5}820de4c70957274d41111c5fbcae4c87240c9f047fc56f3e720f103571be6cbc'
 EX_DELETED    = /successfully deleted/
 EX_REGISTERED = /successfully registered/
 EX_UPDATED    = /Successfully updated/
-EX_MD5_CRYPT  = /^\$1\$[\.\/0-9A-Za-z]{8}\$[\.\/0-9A-Za-z]{22}$/
+EX_MD5_CRYPT  = /^\{MD5-CRYPT\}\$1\$[\.\/0-9A-Za-z]{8}\$[\.\/0-9A-Za-z]{22}$/
 
 RSpec.configure do |config|
   config.before do
