@@ -1,5 +1,6 @@
 ## 0.2.0
  * Switched its object-relational mapper from DataMapper to ActiveRecord
+ * Stored password hash includes scheme prefix: like `{CRAM-MD5}`, `{PLAIN}`
 
 ## 0.1.4
  * Added "log" subcommand

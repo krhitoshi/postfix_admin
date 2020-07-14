@@ -16,7 +16,7 @@ module PostfixAdmin
       if stderr.readlines.to_s =~ /Fatal:/
         raise Error, stderr.readlines
       else
-        stdout.readlines.first.chomp.gsub("{#{scheme}}", "")
+        stdout.readlines.first.chomp
       end
     end
 
