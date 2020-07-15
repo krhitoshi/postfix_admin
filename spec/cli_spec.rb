@@ -245,7 +245,16 @@ describe PostfixAdmin::CLI do
                                { super: true, active: false }) }.not_to raise_error
       admin = Admin.find('admin@example.com')
       expect(admin.super_admin?).to be true
+      expect(admin.superadmin).to be true if admin.has_superadmin_column?
       expect(admin.active).to be false
+    end
+
+    it "can disable super admin" do
+      expect { @cli.edit_admin('all@example.com',
+                               { super: false }) }.not_to raise_error
+      admin = Admin.find('all@example.com')
+      expect(admin.super_admin?).to be false
+      expect(admin.superadmin).to be false if admin.has_superadmin_column?
     end
   end
 

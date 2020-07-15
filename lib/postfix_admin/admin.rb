@@ -24,7 +24,11 @@ module PostfixAdmin
 
     def super_admin?
       if @super_admin.nil?
-        @super_admin = rel_domains.exists?("ALL")
+        @super_admin = if has_superadmin_column?
+          self.superadmin && rel_domains.exists?("ALL")
+        else
+          rel_domains.exists?("ALL")
+        end
       else
         @super_admin
       end
@@ -35,10 +39,16 @@ module PostfixAdmin
         domain_ids = self.rel_domain_ids.dup
         domain_ids << "ALL"
         self.rel_domain_ids = domain_ids
-        save!
+        self.superadmin = true if has_superadmin_column?
       else
         domain_admins.where(domain: "ALL").delete_all
+        self.superadmin = false if has_superadmin_column?
       end
+      save!
+    end
+
+    def has_superadmin_column?
+      has_attribute?(:superadmin)
     end
 
     def has_admin?(admin)

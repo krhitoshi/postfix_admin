@@ -35,9 +35,11 @@ describe PostfixAdmin::Admin do
   end
 
   describe "#super_admin=" do
-    it "enable super admin flag" do
+    it "disable super admin flag" do
       lambda { Admin.find('all@example.com').super_admin = false }.should_not raise_error
-      Admin.find('all@example.com').super_admin?.should === false
+      admin = Admin.find('all@example.com')
+      admin.super_admin?.should === false
+      admin.superadmin.should === false if admin.has_superadmin_column?
     end
 
     it "should not delete 'ALL' domain" do
@@ -45,9 +47,11 @@ describe PostfixAdmin::Admin do
       Domain.exists?('ALL').should be true
     end
 
-    it "disable super admin flag" do
+    it "enable super admin flag" do
       lambda { Admin.find('admin@example.com').super_admin = true }.should_not raise_error
-      Admin.find('admin@example.com').super_admin?.should === true
+      admin = Admin.find('all@example.com')
+      admin.super_admin?.should === true
+      admin.superadmin.should === true if admin.has_superadmin_column?
     end
   end
 
