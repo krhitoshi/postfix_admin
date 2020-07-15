@@ -1,3 +1,6 @@
+## 0.2.1
+ * Supported `superadmin` column of `admin` table
+
 ## 0.2.0
  * Switched its object-relational mapper from DataMapper to ActiveRecord
  * Stored password hash includes scheme prefix: like `{CRAM-MD5}`, `{PLAIN}`
