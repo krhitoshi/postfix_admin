@@ -29,9 +29,9 @@ services:
   db:
     image: mariadb:10
     volumes:
-    - ./spec/postfix.v1841.sql:/docker-entrypoint-initdb.d/postfix.sql
-#    - ./spec/postfix.v740.sql:/docker-entrypoint-initdb.d/postfix.sql
-#    - ./spec/postfix.v352.sql:/docker-entrypoint-initdb.d/postfix.sql
+    - ./docker-db/postfix.v1841.sql:/docker-entrypoint-initdb.d/postfix.sql
+#    - ./docker-db/postfix.v740.sql:/docker-entrypoint-initdb.d/postfix.sql
+#    - ./docker-db/postfix.v352.sql:/docker-entrypoint-initdb.d/postfix.sql
     environment:
       - MYSQL_RANDOM_ROOT_PASSWORD=yes
       - MYSQL_USER=postfix
