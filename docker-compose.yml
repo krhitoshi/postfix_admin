@@ -13,13 +13,16 @@ services:
       - /tmp
       - /run
     stop_signal: SIGRTMIN+3
+    depends_on:
+      - db
   admin:
     build: docker-admin
     ports:
       - '8080:80'
     volumes:
-#      - ./config.local.php:/var/www/html/config.local.php
       - ./docker-admin/config.local.php:/var/www/html/config.local.php
+    depends_on:
+      - db
 #    environment:
 #      - POSTFIXADMIN_DB_TYPE=mysqli
 #      - POSTFIXADMIN_DB_HOST=db
