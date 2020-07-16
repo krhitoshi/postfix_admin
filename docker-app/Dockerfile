@@ -15,7 +15,7 @@ RUN gem install bundler && bundle install
 
 COPY spec/postfix_admin.conf /root/.postfix_admin.conf
 
-COPY docker-entrypoint.sh /docker-entrypoint.sh
+COPY docker-app/docker-entrypoint.sh /docker-entrypoint.sh
 RUN chmod +x /docker-entrypoint.sh
 ENTRYPOINT ["/docker-entrypoint.sh"]
 
