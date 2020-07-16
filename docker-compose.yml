@@ -4,8 +4,6 @@ services:
   app:
     build: .
     tty: true
-    ports:
-    - '7080:80'
     volumes:
     - .:/app
     - /sys/fs/cgroup:/sys/fs/cgroup:ro
@@ -13,10 +11,25 @@ services:
       - /tmp
       - /run
     stop_signal: SIGRTMIN+3
+  admin:
+    build: docker-admin
+    ports:
+      - '8080:80'
+    volumes:
+#      - ./config.local.php:/var/www/html/config.local.php
+      - ./docker-admin/config.local.php:/var/www/html/config.local.php
+#    environment:
+#      - POSTFIXADMIN_DB_TYPE=mysqli
+#      - POSTFIXADMIN_DB_HOST=db
+#      - POSTFIXADMIN_DB_USER=postfix
+#      - POSTFIXADMIN_DB_PASSWORD=password
+#      - POSTFIXADMIN_DB_NAME=postfix
   db:
     image: mariadb:10
     volumes:
     - ./spec/postfix.v1841.sql:/docker-entrypoint-initdb.d/postfix.sql
+#    - ./spec/postfix.v740.sql:/docker-entrypoint-initdb.d/postfix.sql
+#    - ./spec/postfix.v352.sql:/docker-entrypoint-initdb.d/postfix.sql
     environment:
       - MYSQL_RANDOM_ROOT_PASSWORD=yes
       - MYSQL_USER=postfix
