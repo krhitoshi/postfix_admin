@@ -14,6 +14,7 @@ describe PostfixAdmin::Base do
         'mailboxes' => 30,
         'maxquota'  => 100,
         'scheme'    => 'CRAM-MD5',
+        'passwordhash_prefix' => true
     }
   end
 

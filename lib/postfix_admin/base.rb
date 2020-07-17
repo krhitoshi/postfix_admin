@@ -13,6 +13,7 @@ module PostfixAdmin
       'mailboxes' => 30,
       'maxquota'  => 100,
       'scheme'    => 'CRAM-MD5',
+      'passwordhash_prefix' => true
     }
 
     def initialize(config)
@@ -22,6 +23,11 @@ module PostfixAdmin
       @config[:mailboxes] = config['mailboxes'] || 30
       @config[:maxquota]  = config['maxquota']  || 100
       @config[:scheme]    = config['scheme']    || 'CRAM-MD5'
+      @config[:passwordhash_prefix] = if config['passwordhash_prefix'].nil?
+                                        true
+                                      else
+                                        config['passwordhash_prefix']
+                                      end
     end
 
     def db_setup

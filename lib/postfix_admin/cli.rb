@@ -4,7 +4,8 @@ require 'postfix_admin/doveadm'
 
 module PostfixAdmin
   class CLI
-    @config_file = '~/.postfix_admin.conf'
+    DEFAULT_CONFIG_PATH = '~/.postfix_admin.conf'
+    @config_file = DEFAULT_CONFIG_PATH
     MIN_NUM_PASSWORD_CHARACTER = 5
 
     def initialize
@@ -482,9 +483,10 @@ module PostfixAdmin
     private
 
     def hashed_password(password, in_scheme = nil)
+      prefix = @base.config[:passwordhash_prefix]
       scheme = in_scheme || @base.config[:scheme]
       puts "scheme: #{scheme}"
-      PostfixAdmin::Doveadm.password(password, scheme)
+      PostfixAdmin::Doveadm.password(password, scheme, prefix)
     end
   end
 end

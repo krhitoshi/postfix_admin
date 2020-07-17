@@ -23,6 +23,7 @@ end
 describe PostfixAdmin::CLI do
   before do
     db_initialize
+    CLI.config_file = CLI::DEFAULT_CONFIG_PATH
     @cli = CLI.new
   end
 
@@ -103,19 +104,44 @@ describe PostfixAdmin::CLI do
     lambda { @cli.show_alias('unknown.example.com') }.should raise_error Error
   end
 
-  it "#change_admin_password" do
-    lambda { @cli.change_admin_password('admin@example.com', 'new_password') }.should_not raise_error
-    Admin.find('admin@example.com').password.should == CRAM_MD5_NEW_PASS
-    lambda { @cli.change_admin_password('unknown_admin@example.com', 'new_password') }.should raise_error Error
+  describe "change password" do
+    it "#change_admin_password" do
+      lambda { @cli.change_admin_password('admin@example.com', 'new_password') }.should_not raise_error
+      Admin.find('admin@example.com').password.should == CRAM_MD5_NEW_PASS
+      lambda { @cli.change_admin_password('unknown_admin@example.com', 'new_password') }.should raise_error Error
 
-    lambda { @cli.change_admin_password('admin@example.com', '1234') }.should raise_error ArgumentError
-  end
+      lambda { @cli.change_admin_password('admin@example.com', '1234') }.should raise_error ArgumentError
+    end
 
-  it "#change_account_password" do
-    lambda { @cli.change_account_password('user@example.com', 'new_password') }.should_not raise_error
-    Mailbox.find('user@example.com').password.should == CRAM_MD5_NEW_PASS
-    lambda { @cli.change_account_password('unknown@example.com', 'new_password') }.should raise_error Error
-    lambda { @cli.change_account_password('user@example.com', '1234') }.should raise_error ArgumentError
+    it "#change_account_password" do
+      lambda { @cli.change_account_password('user@example.com', 'new_password') }.should_not raise_error
+      Mailbox.find('user@example.com').password.should == CRAM_MD5_NEW_PASS
+      lambda { @cli.change_account_password('unknown@example.com', 'new_password') }.should raise_error Error
+      lambda { @cli.change_account_password('user@example.com', '1234') }.should raise_error ArgumentError
+    end
+
+    describe "without prefix" do
+      before do
+        CLI.config_file = File.join(File.dirname(__FILE__) ,
+                                    'postfix_admin.conf.without_prefix')
+        @cli = CLI.new
+      end
+
+      it "#change_admin_password without prefix" do
+        lambda { @cli.change_admin_password('admin@example.com', 'new_password') }.should_not raise_error
+        Admin.find('admin@example.com').password.should == CRAM_MD5_NEW_PASS_WITHOUT_PREFIX
+        lambda { @cli.change_admin_password('unknown_admin@example.com', 'new_password') }.should raise_error Error
+
+        lambda { @cli.change_admin_password('admin@example.com', '1234') }.should raise_error ArgumentError
+      end
+
+      it "#change_account_password" do
+        lambda { @cli.change_account_password('user@example.com', 'new_password') }.should_not raise_error
+        Mailbox.find('user@example.com').password.should == CRAM_MD5_NEW_PASS_WITHOUT_PREFIX
+        lambda { @cli.change_account_password('unknown@example.com', 'new_password') }.should raise_error Error
+        lambda { @cli.change_account_password('user@example.com', '1234') }.should raise_error ArgumentError
+      end
+    end
   end
 
   describe "#add_admin" do
