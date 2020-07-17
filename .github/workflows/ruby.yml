@@ -30,4 +30,4 @@ jobs:
     - name: docker-compose up
       run: docker-compose up -d
     - name: Run tests
-      run: docker-compose exec app rake
+      run: docker-compose exec -T app rake
