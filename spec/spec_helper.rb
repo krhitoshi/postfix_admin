@@ -160,7 +160,7 @@ EX_DELETED    = /successfully deleted/
 EX_REGISTERED = /successfully registered/
 EX_UPDATED    = /Successfully updated/
 EX_MD5_CRYPT  = /^\{MD5-CRYPT\}\$1\$[\.\/0-9A-Za-z]{8}\$[\.\/0-9A-Za-z]{22}$/
-EX_MD5_CRYPT_WITOUT_PREFIX = /^\$1\$[\.\/0-9A-Za-z]{8}\$[\.\/0-9A-Za-z]{22}$/
+EX_MD5_CRYPT_WITHOUT_PREFIX = /^\$1\$[\.\/0-9A-Za-z]{8}\$[\.\/0-9A-Za-z]{22}$/
 
 RSpec.configure do |config|
   config.before do
