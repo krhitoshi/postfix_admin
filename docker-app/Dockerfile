@@ -20,6 +20,4 @@ COPY docker-app/docker-entrypoint.sh /docker-entrypoint.sh
 RUN chmod +x /docker-entrypoint.sh
 ENTRYPOINT ["/docker-entrypoint.sh"]
 
-EXPOSE 80
-
 CMD ["/sbin/init"]
