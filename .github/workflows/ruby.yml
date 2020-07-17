@@ -29,5 +29,9 @@ jobs:
         ruby-version: 2.6
     - name: docker-compose up
       run: docker-compose up -d
-    - name: Run tests
+    - name: Run tests for Ruby 2.6
       run: docker-compose exec -T app /wait-for-it.sh db:3306 -- rake
+    - name: Remove Gemfile.lock
+      run: rm -f Gemfile.lock
+    - name: Run tests for Ruby 2.5.0
+      run: docker-compose exec -T app2.5 rake
