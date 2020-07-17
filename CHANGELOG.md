@@ -1,5 +1,6 @@
 ## 0.2.1
  * Supported `superadmin` column of `admin` table
+ * Added `passwordhash_prefix` keyword in the configuration format for backward compatibility
 
 ## 0.2.0
  * Switched its object-relational mapper from DataMapper to ActiveRecord
