@@ -8,11 +8,6 @@ services:
     tty: true
     volumes:
     - .:/app
-    - /sys/fs/cgroup:/sys/fs/cgroup:ro
-    tmpfs:
-      - /tmp
-      - /run
-    stop_signal: SIGRTMIN+3
     depends_on:
       - db
   app2.5:

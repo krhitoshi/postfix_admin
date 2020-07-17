@@ -1,10 +1,8 @@
-FROM centos:8
+FROM ruby:2.6
 
-RUN dnf -y module enable ruby:2.6 \
-    && dnf -y install \
-    ruby ruby-devel mariadb-devel sqlite-devel gcc make redhat-rpm-config \
-    mariadb dovecot git \
-    && dnf clean all
+RUN apt-get update && \
+    apt-get install -y dovecot-core iproute2 mariadb-client && \
+    rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
@@ -24,4 +22,4 @@ COPY docker-app/docker-entrypoint.sh /docker-entrypoint.sh
 RUN chmod +x /docker-entrypoint.sh
 ENTRYPOINT ["/docker-entrypoint.sh"]
 
-CMD ["/sbin/init"]
+CMD ["irb"]
