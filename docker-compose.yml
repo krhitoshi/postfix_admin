@@ -15,6 +15,15 @@ services:
     stop_signal: SIGRTMIN+3
     depends_on:
       - db
+  app2.5:
+    tty: true
+    build:
+      context: .
+      dockerfile: docker-app-2.5/Dockerfile
+    volumes:
+      - .:/app
+    depends_on:
+      - db
   admin:
     build: docker-admin
     ports:
