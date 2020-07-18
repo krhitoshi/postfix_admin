@@ -1,14 +1,14 @@
 require File.expand_path(File.dirname(__FILE__) + "/spec_helper")
 require 'postfix_admin/base'
 
-describe PostfixAdmin::Base do
+RSpec.describe PostfixAdmin::Base do
   before do
     db_initialize
-    @base = PostfixAdmin::Base.new({'database' => 'mysql2://postfix:password@localhost/postfix'})
+    @base = Base.new({'database' => 'mysql2://postfix:password@localhost/postfix'})
   end
 
   it "DEFAULT_CONFIG" do
-    PostfixAdmin::Base::DEFAULT_CONFIG.should == {
+    res = {
         'database'  => 'mysql2://postfix:password@localhost/postfix',
         'aliases'   => 30,
         'mailboxes' => 30,
@@ -16,59 +16,60 @@ describe PostfixAdmin::Base do
         'scheme'    => 'CRAM-MD5',
         'passwordhash_prefix' => true
     }
+    expect(Base::DEFAULT_CONFIG).to eq res
   end
 
   it "#address_split" do
-    @base.address_split('user@example.com').should == ['user', 'example.com']
+    expect(@base.address_split('user@example.com')).to eq ['user', 'example.com']
   end
 
   it "#new without config" do
-    lambda { PostfixAdmin::Base.new }.should raise_error(ArgumentError)
+    expect { Base.new }.to raise_error ArgumentError
   end
 
-  it "Default configuration should be correct" do
-    @base.config[:aliases].should == 30
-    @base.config[:mailboxes].should == 30
-    @base.config[:maxquota].should == 100
-    @base.config[:scheme].should == 'CRAM-MD5'
+  it "Default configuration to be correct" do
+    expect(@base.config[:aliases]).to eq 30
+    expect(@base.config[:mailboxes]).to eq 30
+    expect(@base.config[:maxquota]).to eq 100
+    expect(@base.config[:scheme]).to eq 'CRAM-MD5'
   end
 
   it "config database" do
-    @base.config[:database].should == 'mysql2://postfix:password@localhost/postfix'
+    expect(@base.config[:database]).to eq 'mysql2://postfix:password@localhost/postfix'
   end
 
   it "#domain_exists?" do
-    Domain.exists?('example.com').should be true
+    expect(Domain.exists?('example.com')).to be true
   end
 
   it "#alias_exists?" do
-    Alias.exists?('user@example.com').should be true
-    Alias.exists?('unknown@example.com').should be false
+    expect(Alias.exists?('user@example.com')).to be true
+    expect(Alias.exists?('unknown@example.com')).to be false
   end
 
   it "#mailbox_exists?" do
-    Mailbox.exists?('user@example.com').should be true
-    Mailbox.exists?('unknown@example.com').should be false
+    expect(Mailbox.exists?('user@example.com')).to be true
+    expect(Mailbox.exists?('unknown@example.com')).to be false
   end
 
   it "#admin_exists?" do
-    Admin.exists?('admin@example.com').should be true
-    Admin.exists?('unknown_admin@example.com').should be false
+    expect(Admin.exists?('admin@example.com')).to be true
+    expect(Admin.exists?('unknown_admin@example.com')).to be false
   end
 
   describe "#add_domain" do
     it "can add a new domain" do
       num_domains = Domain.count
       @base.add_domain('example.net')
-      (Domain.count - num_domains).should be(1)
+      expect(Domain.count - num_domains).to eq 1
     end
 
     it "can not add exist domain" do
-      lambda { @base.add_domain('example.com') }.should raise_error Error
+      expect { @base.add_domain('example.com') }.to raise_error Error
     end
 
     it "can not add invalid domain" do
-      lambda { @base.add_domain('localhost') }.should raise_error Error
+      expect { @base.add_domain('localhost') }.to raise_error Error
     end
   end
 
@@ -77,32 +78,32 @@ describe PostfixAdmin::Base do
       num_mailboxes = Mailbox.count
       num_aliases   = Alias.count
       @base.add_account('new_user@example.com', 'password')
-      (Mailbox.count - num_mailboxes).should be(1)
-        (Alias.count - num_aliases).should be(1)
+      expect(Mailbox.count - num_mailboxes).to eq 1
+      expect(Alias.count - num_aliases).to eq 1
     end
 
     it "refuse empty password" do
-      lambda { @base.add_account('new_user@example.com', '') }.should raise_error Error
+      expect { @base.add_account('new_user@example.com', '') }.to raise_error Error
     end
 
     it "refuse nil password" do
-      lambda { @base.add_account('new_user@example.com', nil) }.should raise_error Error
+      expect { @base.add_account('new_user@example.com', nil) }.to raise_error Error
     end
 
     it "can not add account which hsas invalid address" do
-      lambda { @base.add_account('invalid.example.com', 'password') }.should raise_error Error
+      expect { @base.add_account('invalid.example.com', 'password') }.to raise_error Error
     end
 
     it "can not add account for unknown domain" do
-      lambda { @base.add_account('user@unknown.example.com', 'password') }.should raise_error Error
+      expect { @base.add_account('user@unknown.example.com', 'password') }.to raise_error Error
     end
 
     it "can not add account which has same address as exist mailbox" do
-      lambda { @base.add_account('user@example.com', 'password') }.should raise_error Error
+      expect { @base.add_account('user@example.com', 'password') }.to raise_error Error
     end
 
     it "can not add account which has same address as exist alias" do
-      lambda { @base.add_account('alias@example.com', 'password') }.should raise_error Error
+      expect { @base.add_account('alias@example.com', 'password') }.to raise_error Error
     end
   end
 
@@ -110,20 +111,20 @@ describe PostfixAdmin::Base do
     it "can add an new admin" do
       num_admins = Admin.count
       @base.add_admin('admin@example.net', 'password')
-      Admin.exists?('admin@example.net').should be true
-      (Admin.count - num_admins).should be(1)
+      expect(Admin.exists?('admin@example.net')).to be true
+      expect(Admin.count - num_admins).to eq 1
     end
 
     it "refuse empty password" do
-      lambda { @base.add_admin('admin@example.net', '') }.should raise_error Error
+      expect { @base.add_admin('admin@example.net', '') }.to raise_error Error
     end
 
     it "refuse nil password" do
-      lambda { @base.add_admin('admin@example.net', nil) }.should raise_error Error
+      expect { @base.add_admin('admin@example.net', nil) }.to raise_error Error
     end
 
     it "can not add exist admin" do
-      lambda { @base.add_admin('admin@example.com', 'password') }.should raise_error Error
+      expect { @base.add_admin('admin@example.com', 'password') }.to raise_error Error
     end
   end
 
@@ -131,76 +132,76 @@ describe PostfixAdmin::Base do
     it "#add_admin_domain" do
       @base.add_admin_domain('admin@example.com', 'example.org')
       d = Domain.find('example.org')
-      Admin.find('admin@example.com').has_domain?(d).should be true
+      expect(Admin.find('admin@example.com').has_domain?(d)).to be true
     end
 
     it "can not add unknown domain for an admin" do
-      lambda { @base.add_admin_domain('admin@example.com', 'unknown.example.com') }.should raise_error Error
+      expect { @base.add_admin_domain('admin@example.com', 'unknown.example.com') }.to raise_error Error
     end
 
     it "can not add domain for unknown admin" do
-      lambda { @base.add_admin_domain('unknown_admin@example.com', 'example.net') }.should raise_error Error
+      expect { @base.add_admin_domain('unknown_admin@example.com', 'example.net') }.to raise_error Error
     end
 
     it "can not add a domain which the admin has already privileges for" do
-      lambda { @base.add_admin_domain('admin@example.com', 'example.com') }.should raise_error Error
+      expect { @base.add_admin_domain('admin@example.com', 'example.com') }.to raise_error Error
     end
   end
 
   describe "#delete_admin_domain" do
     it "#delete_admin_domain" do
       d = Domain.find('example.org')
-      lambda { @base.delete_admin_domain('admin@example.com', 'example.com') }.should_not raise_error
-      Admin.find('admin@example.com').has_domain?(d).should be false
+      expect { @base.delete_admin_domain('admin@example.com', 'example.com') }.to_not raise_error
+      expect(Admin.find('admin@example.com').has_domain?(d)).to be false
     end
 
     it "can not delete not administrated domain" do
-      lambda { @base.delete_admin_domain('admin@example.com', 'example.org') }.should raise_error Error
+      expect { @base.delete_admin_domain('admin@example.com', 'example.org') }.to raise_error Error
     end
 
     it "raise error when unknown admin" do
-      lambda { @base.delete_admin_domain('unknown_admin@example.com', 'example.com') }.should raise_error Error
+      expect { @base.delete_admin_domain('unknown_admin@example.com', 'example.com') }.to raise_error Error
     end
 
     it "raise error when unknown domain" do
-      lambda { @base.delete_admin_domain('admin@example.com', 'unknown.example.com') }.should raise_error Error
+      expect { @base.delete_admin_domain('admin@example.com', 'unknown.example.com') }.to raise_error Error
     end
  end
 
   describe "#add_alias" do
     it "can add a new alias" do
       num_aliases = Alias.count
-      lambda { @base.add_alias('new_alias@example.com', 'goto@example.jp') }.should_not raise_error
-      (Alias.count - num_aliases).should be(1)
-      Alias.exists?('new_alias@example.com').should be true
+      expect { @base.add_alias('new_alias@example.com', 'goto@example.jp') }.to_not raise_error
+      expect(Alias.count - num_aliases).to eq 1
+      expect(Alias.exists?('new_alias@example.com')).to be true
     end
 
     it "can not add an alias which has a same name as a mailbox" do
-      lambda { @base.add_alias('user@example.com', 'goto@example.jp') }.should raise_error Error
+      expect { @base.add_alias('user@example.com', 'goto@example.jp') }.to raise_error Error
     end
 
     it "can not add an alias which has a sama name as other alias" do
       @base.add_alias('new_alias@example.com', 'goto@example.jp')
-      lambda { @base.add_alias('new_alias@example.com', 'goto@example.jp') }.should raise_error Error
+      expect { @base.add_alias('new_alias@example.com', 'goto@example.jp') }.to raise_error Error
     end
 
     it "can not add an alias of unknown domain" do
-      lambda { @base.add_alias('new_alias@unknown.example.com', 'goto@example.jp') }.should raise_error Error
+      expect { @base.add_alias('new_alias@unknown.example.com', 'goto@example.jp') }.to raise_error Error
     end
   end
 
   describe "#delete_alias" do
     it "can delete an alias" do
-      lambda { @base.delete_alias('alias@example.com') }.should_not raise_error
-      Alias.exists?('alias@example.com').should be false
+      expect { @base.delete_alias('alias@example.com') }.to_not raise_error
+      expect(Alias.exists?('alias@example.com')).to be false
     end
 
     it "can not delete mailbox" do
-      lambda { @base.delete_alias('user@example.com') }.should raise_error Error
+      expect { @base.delete_alias('user@example.com') }.to raise_error Error
     end
 
     it "can not delete unknown alias" do
-      lambda { @base.delete_alias('unknown@example.com') }.should raise_error Error
+      expect { @base.delete_alias('unknown@example.com') }.to raise_error Error
     end
   end
 
@@ -214,43 +215,43 @@ describe PostfixAdmin::Base do
     end
 
     it "can delete a domain" do
-      lambda { @base.delete_domain('example.com') }.should_not raise_error
+      expect { @base.delete_domain('example.com') }.to_not raise_error
 
-      Domain.exists?('example.com').should be false
-      Admin.exists?('admin@example.com').should be false
+      expect(Domain.exists?('example.com')).to be false
+      expect(Admin.exists?('admin@example.com')).to be false
 
-      Alias.where(domain: 'example.com').count.should be(0)
-      Mailbox.where(domain: 'example.com').count.should be(0)
+      expect(Alias.where(domain: 'example.com').count).to eq 0
+      expect(Mailbox.where(domain: 'example.com').count).to eq 0
 
-      DomainAdmin.where(username: 'admin@example.com',
-                        domain: 'example.com').count.should be(0)
+      expect(DomainAdmin.where(username: 'admin@example.com',
+                        domain: 'example.com').count).to eq 0
     end
 
     it "can not delete unknown domain" do
-      lambda { @base.delete_domain('unknown.example.com') }.should raise_error Error
+      expect { @base.delete_domain('unknown.example.com') }.to raise_error Error
     end
   end
 
   describe "#delete_admin" do
     it "can delete an admin" do
-      lambda { @base.delete_admin('admin@example.com') }.should_not raise_error
-      Admin.exists?('admin@example.com').should be false
+      expect { @base.delete_admin('admin@example.com') }.to_not raise_error
+      expect(Admin.exists?('admin@example.com')).to be false
     end
 
     it "can not delete unknown admin" do
-      lambda { @base.delete_admin('unknown_admin@example.com') }.should raise_error Error
+      expect { @base.delete_admin('unknown_admin@example.com') }.to raise_error Error
     end
   end
 
   describe "#delete_account" do
     it "can delete an account" do
-      lambda { @base.delete_account('user@example.com') }.should_not raise_error
-      Mailbox.exists?('user@example.com').should be false
-      Alias.exists?('user@example.com').should be false
+      expect { @base.delete_account('user@example.com') }.to_not raise_error
+      expect(Mailbox.exists?('user@example.com')).to be false
+      expect(Alias.exists?('user@example.com')).to be false
     end
 
     it "can not delete unknown account" do
-      lambda { @base.delete_account('unknown@example.com') }.should raise_error Error
+      expect { @base.delete_account('unknown@example.com') }.to raise_error Error
     end
   end
 end
