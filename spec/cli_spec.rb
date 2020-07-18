@@ -10,13 +10,13 @@ describe PostfixAdmin::CLI, "when config file does not exist" do
   end
 
   it "::config_file#=" do
-    CLI.config_file.should == @file
+    expect(CLI.config_file).to eq @file
   end
 
   it "#new should raise SystemExit and create config_file, permission should be 600" do
     expect { CLI.new }.to raise_error SystemExit
-    File.exists?(@file).should === true
-    ("%o" % File.stat(@file).mode).should == "100600"
+    expect(File.exists?(@file)).to be true
+    expect("%o" % File.stat(@file).mode).to eq "100600"
   end
 end
 
@@ -107,7 +107,7 @@ describe PostfixAdmin::CLI do
   describe "change password" do
     it "#change_admin_password" do
       expect { @cli.change_admin_password('admin@example.com', 'new_password') }.to_not raise_error
-      Admin.find('admin@example.com').password.should == CRAM_MD5_NEW_PASS
+      expect(Admin.find('admin@example.com').password).to eq CRAM_MD5_NEW_PASS
       expect { @cli.change_admin_password('unknown_admin@example.com', 'new_password') }.to raise_error Error
 
       expect { @cli.change_admin_password('admin@example.com', '1234') }.to raise_error ArgumentError
@@ -115,7 +115,7 @@ describe PostfixAdmin::CLI do
 
     it "#change_account_password" do
       expect { @cli.change_account_password('user@example.com', 'new_password') }.to_not raise_error
-      Mailbox.find('user@example.com').password.should == CRAM_MD5_NEW_PASS
+      expect(Mailbox.find('user@example.com').password).to eq CRAM_MD5_NEW_PASS
       expect { @cli.change_account_password('unknown@example.com', 'new_password') }.to raise_error Error
       expect { @cli.change_account_password('user@example.com', '1234') }.to raise_error ArgumentError
     end
@@ -129,7 +129,7 @@ describe PostfixAdmin::CLI do
 
       it "#change_admin_password without prefix" do
         expect { @cli.change_admin_password('admin@example.com', 'new_password') }.to_not raise_error
-        Admin.find('admin@example.com').password.should == CRAM_MD5_NEW_PASS_WITHOUT_PREFIX
+        expect(Admin.find('admin@example.com').password).to eq CRAM_MD5_NEW_PASS_WITHOUT_PREFIX
         expect { @cli.change_admin_password('unknown_admin@example.com', 'new_password') }.to raise_error Error
 
         expect { @cli.change_admin_password('admin@example.com', '1234') }.to raise_error ArgumentError
@@ -137,7 +137,7 @@ describe PostfixAdmin::CLI do
 
       it "#change_account_password" do
         expect { @cli.change_account_password('user@example.com', 'new_password') }.to_not raise_error
-        Mailbox.find('user@example.com').password.should == CRAM_MD5_NEW_PASS_WITHOUT_PREFIX
+        expect(Mailbox.find('user@example.com').password).to eq CRAM_MD5_NEW_PASS_WITHOUT_PREFIX
         expect { @cli.change_account_password('unknown@example.com', 'new_password') }.to raise_error Error
         expect { @cli.change_account_password('user@example.com', '1234') }.to raise_error ArgumentError
       end
@@ -147,7 +147,7 @@ describe PostfixAdmin::CLI do
   describe "#add_admin" do
     it "can add a new admin" do
       expect { @cli.add_admin('new_admin@example.com', 'password') }.to_not raise_error
-      Admin.exists?('new_admin@example.com').should be true
+      expect(Admin.exists?('new_admin@example.com')).to be true
     end
 
     it "can not add exist admin" do
@@ -162,18 +162,18 @@ describe PostfixAdmin::CLI do
   describe "#delete_admin" do
     it "can delete an admin" do
       expect { @cli.delete_admin('admin@example.com') }.to_not raise_error
-      Admin.exists?('admin@example.com').should be false
+      expect(Admin.exists?('admin@example.com')).to be false
     end
 
     it "can delete a super admin" do
       expect { @cli.delete_admin('all@example.com') }.to_not raise_error
-      Admin.exists?('all@example.com').should be false
+      expect(Admin.exists?('all@example.com')).to be false
     end
 
     it "can delete an admin whish has multiple domains" do
       @cli.add_admin_domain('admin@example.com', 'example.org')
       expect { @cli.delete_admin('admin@example.com') }.to_not raise_error
-      Admin.exists?('admin@example.com').should be false
+      expect(Admin.exists?('admin@example.com')).to be false
     end
 
     it "can not delete unknown admin" do
@@ -187,17 +187,17 @@ describe PostfixAdmin::CLI do
     expect { @cli.delete_alias('unknown@example.com') }.to raise_error Error
 
     expect { @cli.add_alias('new_alias@example.com', 'goto@example.jp') }.to_not raise_error
-    Alias.exists?('new_alias@example.com').should be true
+    expect(Alias.exists?('new_alias@example.com')).to be true
 
     expect { @cli.delete_alias('new_alias@example.com') }.to_not raise_error
-    Alias.exists?('new_alias@example.com').should be false
+    expect(Alias.exists?('new_alias@example.com')).to be false
   end
 
   describe "#add_account" do
     it "can add an account" do
       expect { @cli.add_account('new_user@example.com', 'password') }.to_not raise_error
-      Mailbox.exists?('new_user@example.com').should be true
-      Alias.exists?('new_user@example.com').should be true
+      expect(Mailbox.exists?('new_user@example.com')).to be true
+      expect(Alias.exists?('new_user@example.com')).to be true
     end
 
     it "can not add account of unknown domain" do
@@ -212,8 +212,8 @@ describe PostfixAdmin::CLI do
   describe "#delete_accont" do
     it "can delete an account" do
       expect { @cli.delete_account('user@example.com') }.to_not raise_error
-      Mailbox.exists?('user@example.com').should be false
-      Alias.exists?('user@example.com').should be false
+      expect(Mailbox.exists?('user@example.com')).to be false
+      expect(Alias.exists?('user@example.com')).to be false
     end
 
     it "can not delete unknown account" do
@@ -228,7 +228,7 @@ describe PostfixAdmin::CLI do
 
     it "upcase will convert to downcase" do
       expect { @cli.add_domain('ExAmPle.NeT') }.to_not raise_error
-      Domain.exists?('example.net').should be true
+      expect(Domain.exists?('example.net')).to be true
     end
 
     it "can not add exist domain" do
@@ -241,9 +241,9 @@ describe PostfixAdmin::CLI do
     it "can update domain limitations" do
       expect { @cli.edit_domain('example.com', {aliases: 40, mailboxes: 40, maxquota: 400, active: false}) }.to_not raise_error
       domain = Domain.find('example.com')
-      domain.aliases.should == 40
-      domain.mailboxes.should == 40
-      domain.maxquota.should == 400
+      expect(domain.aliases).to eq 40
+      expect(domain.mailboxes).to eq 40
+      expect(domain.maxquota).to eq 400
       expect(domain.active).to be false
     end
   end
@@ -255,7 +255,7 @@ describe PostfixAdmin::CLI do
                                    goto: 'user@example.com,goto@example.jp',
                                    active: false }) }.to_not raise_error
       mailbox = Mailbox.find('user@example.com')
-      mailbox.quota.should == 50 * KB_TO_MB
+      expect(mailbox.quota).to eq 50 * KB_TO_MB
       expect(mailbox.alias.goto).to eq('user@example.com,goto@example.jp')
       expect(mailbox.active).to be(false)
     end
@@ -287,12 +287,12 @@ describe PostfixAdmin::CLI do
   describe "#delete_domain" do
     it "can delete exist domain" do
       expect { @cli.delete_domain('example.com') }.to_not raise_error
-      Domain.exists?('example.net').should be false
+      expect(Domain.exists?('example.net')).to be false
     end
 
     it "upcase will convert to downcase" do
       expect { @cli.delete_domain('eXaMplE.cOm') }.to_not raise_error
-      Domain.exists?('example.com').should be false
+      expect(Domain.exists?('example.com')).to be false
     end
 
     it "can delete related admins, addresses and aliases" do
@@ -306,19 +306,19 @@ describe PostfixAdmin::CLI do
       @cli.add_admin('no_related@example.com', 'password')
 
       expect { @cli.delete_domain('example.com') }.to_not raise_error
-      Admin.exists?('admin@example.com').should be false
-      Admin.exists?('admin@example.org').should be true
-      Admin.exists?('other_admin@example.com').should be false
-      Admin.exists?('no_related@example.com').should be true
+      expect(Admin.exists?('admin@example.com')).to be false
+      expect(Admin.exists?('admin@example.org')).to be true
+      expect(Admin.exists?('other_admin@example.com')).to be false
+      expect(Admin.exists?('no_related@example.com')).to be true
 
       # aliases should be removed
-      Alias.exists?('alias@example.com').should be false
-      Alias.exists?('user@example.com').should be false
-      Alias.exists?('user2@example.com').should be false
+      expect(Alias.exists?('alias@example.com')).to be false
+      expect(Alias.exists?('user@example.com')).to be false
+      expect(Alias.exists?('user2@example.com')).to be false
 
       # mailboxes should be removed
-      Mailbox.exists?('user@example.com').should be false
-      Mailbox.exists?('user2@example.com').should be false
+      expect(Mailbox.exists?('user@example.com')).to be false
+      expect(Mailbox.exists?('user2@example.com')).to be false
     end
   end
 
@@ -329,12 +329,12 @@ describe PostfixAdmin::CLI do
 
     it "print infomation of all domains" do
       result = capture(:stdout) { @cli.dump }
-      result.should =~ /example.com,100,true/
-      result.should =~ /example.org,100,true/
-      result.should =~ /admin@example.com,"{CRAM-MD5}9186d855e11eba527a7a52ca82b313e180d62234f0acc9051b527243d41e2740",false,true/
-      result.should =~ /user@example.com,"","{CRAM-MD5}9186d855e11eba527a7a52ca82b313e180d62234f0acc9051b527243d41e2740",102400000,"example.com\/user@example.com\/",true/
-      result.should =~ /alias@example.com,"goto@example.jp",true/
-      # result.should =~ /user@example.com,"goto@example.jp",true/
+      expect(result).to match /example.com,100,true/
+      expect(result).to match /example.org,100,true/
+      expect(result).to match /admin@example.com,"{CRAM-MD5}9186d855e11eba527a7a52ca82b313e180d62234f0acc9051b527243d41e2740",false,true/
+      expect(result).to match /user@example.com,"","{CRAM-MD5}9186d855e11eba527a7a52ca82b313e180d62234f0acc9051b527243d41e2740",102400000,"example.com\/user@example.com\/",true/
+      expect(result).to match /alias@example.com,"goto@example.jp",true/
+      # expect(result).to match /user@example.com,"goto@example.jp",true/
     end
   end
 end
