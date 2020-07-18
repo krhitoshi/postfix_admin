@@ -1,7 +1,7 @@
 require File.expand_path(File.dirname(__FILE__) + "/spec_helper")
 require 'postfix_admin/cli'
 
-describe PostfixAdmin::CLI, "when config file does not exist" do
+RSpec.describe PostfixAdmin::CLI, "when config file does not exist" do
   before do
     config_initialize
     @file = File.join(File.dirname(__FILE__) , 'tmp/postfix_admin.conf')
@@ -20,7 +20,7 @@ describe PostfixAdmin::CLI, "when config file does not exist" do
   end
 end
 
-describe PostfixAdmin::CLI do
+RSpec.describe PostfixAdmin::CLI do
   before do
     db_initialize
     CLI.config_file = CLI::DEFAULT_CONFIG_PATH

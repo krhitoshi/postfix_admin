@@ -10,7 +10,7 @@ require 'postfix_admin/log'
 require 'postfix_admin/mail_domain'
 require 'postfix_admin/quota'
 
-describe PostfixAdmin::Admin do
+RSpec.describe PostfixAdmin::Admin do
   before do
     db_initialize
   end
@@ -78,7 +78,7 @@ describe PostfixAdmin::Admin do
   end
 end
 
-describe PostfixAdmin::Domain do
+RSpec.describe PostfixAdmin::Domain do
   before do
     db_initialize
     @base = PostfixAdmin::Base.new({'database' => 'sqlite::memory:'})
@@ -127,7 +127,7 @@ describe PostfixAdmin::Domain do
   end
 end
 
-describe PostfixAdmin::Mailbox do
+RSpec.describe PostfixAdmin::Mailbox do
   before do
     db_initialize
   end
@@ -162,7 +162,7 @@ describe PostfixAdmin::Mailbox do
   end
 end
 
-describe PostfixAdmin::Alias do
+RSpec.describe PostfixAdmin::Alias do
   before do
     db_initialize
   end

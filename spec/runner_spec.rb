@@ -1,7 +1,7 @@
 require File.expand_path(File.dirname(__FILE__) + "/spec_helper")
 require 'postfix_admin/runner'
 
-describe PostfixAdmin::Runner do
+RSpec.describe PostfixAdmin::Runner do
   before do
     db_initialize
   end
