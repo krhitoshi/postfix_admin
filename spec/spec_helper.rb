@@ -83,15 +83,6 @@ end
 def db_initialize
   db_clear
 
-  # config = ::PostfixAdmin::Config.new
-  # config.attributes = {
-  #   :id    => 1,
-  #   :name  => "version",
-  #   :value => "740"
-  # }
-  # config.save
-
-  # create_domain("example.com")
   create(:domain, domain: "example.com")
   create(:domain, domain: "example.org")
 
