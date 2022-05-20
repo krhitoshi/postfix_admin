@@ -40,13 +40,10 @@ jobs:
           bundler-cache: true # runs 'bundle install' and caches installed gems automatically
       - name: Install dovecotpw
         run: sudo apt-get install -y dovecot-core
-      - name: Download wait-for-it.sh
-        run: curl -O https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh
-      - name: Make wait-for-it.sh executable
-        run: chmod 755 ./wait-for-it.sh
       - name: docker-compose up
         run: docker-compose up -d db
-      - name: Sleep
+      - name: Sleep (work around)
+        # wait-for-it.sh doesn't work with docker compose port mapping
         run: sleep 10
       - name: Run tests
-        run: ./wait-for-it.sh 127.0.0.1:13306 -- bundle exec rake
+        run: bundle exec rake
