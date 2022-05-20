@@ -22,10 +22,12 @@ FactoryBot.define do
   end
 
   factory :mailbox do
-    sequence(:username) { |n| "mailbox#{n}@example.test" }
+    # :username and :maildir will be automatically set by Mailbox
+    username { nil }
+    maildir { nil }
     sequence(:local_part) { |n| "mailbox#{n}" }
-    sequence(:maildir) { |n| "example.test/mailbox#{n}@example.test/" }
-    domain { "example.test" }
+    # :domain expected to be set by relation
+    domain { nil }
     password { SAMPLE_PASSWORD }
     name { "" }
     quota_mb { 100 }

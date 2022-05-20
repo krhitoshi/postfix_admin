@@ -52,12 +52,6 @@ def db_clear
   Admin.delete_all
 end
 
-def create_mailbox(address, in_path = nil, active = true)
-  path = in_path || "#{address.split('@').last}/#{address}/"
-  build(:mailbox, username: address, maildir: path,
-                  local_part: address.split('@').first, active: active)
-end
-
 def db_initialize
   db_clear
 
@@ -74,7 +68,7 @@ def db_initialize
   domain.admins << admin
   domain.rel_aliases   << build(:alias, address: "alias@example.com")
   domain.rel_aliases   << build(:alias, address: "user@example.com")
-  domain.rel_mailboxes << create_mailbox('user@example.com')
+  domain.rel_mailboxes << build(:mailbox, local_part: "user")
 
   domain.save!
 end

@@ -135,7 +135,8 @@ RSpec.describe PostfixAdmin::Mailbox do
   it "active" do
     expect(Mailbox.find('user@example.com').active).to be true
     domain = Domain.find('example.com')
-    domain.rel_mailboxes << create_mailbox('non_active_user@example.com', nil, false)
+    domain.rel_mailboxes << build(:mailbox, local_part: "non_active_user",
+                                            active: false)
     domain.save!
 
     mailbox = Mailbox.find('non_active_user@example.com')
@@ -145,7 +146,8 @@ RSpec.describe PostfixAdmin::Mailbox do
 
   it "can use long maildir" do
     domain = Domain.find('example.com')
-    domain.rel_mailboxes << create_mailbox('long_maildir_user@example.com', 'looooooooooooong_path/example.com/long_maildir_user@example.com/')
+    domain.rel_mailboxes << build(:mailbox, local_part: "long_maildir_user",
+                                  maildir: "looooooooooooong_path/example.com/long_maildir_user@example.com/")
     expect(domain.save).to be true
     expect(Mailbox.find("long_maildir_user@example.com").maildir).to eq "looooooooooooong_path/example.com/long_maildir_user@example.com/"
   end
