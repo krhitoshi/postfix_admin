@@ -12,5 +12,9 @@ FactoryBot.define do
     mailboxes { 30 }
     maxquota { 100 }
     active { true }
+
+    after(:create) do |domain|
+      domain.description = domain.domain
+    end
   end
 end
