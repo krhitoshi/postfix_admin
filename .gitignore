@@ -18,3 +18,4 @@ tmp
 .idea
 .vagrant
 .ruby-version
+.rspec_status
