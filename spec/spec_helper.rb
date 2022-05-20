@@ -56,16 +56,9 @@ def db_clear
 end
 
 def create_domain(domain_name, active = true)
-  domain = Domain.new
-  domain.attributes = {
-    domain: domain_name,
-    description: domain_name,
-    aliases: 30,
-    mailboxes: 30,
-    maxquota: 100,
-    active: active
-  }
-  domain.save!
+  create(:domain, domain: domain_name, description: domain_name,
+                  aliases: 30, mailboxes: 30, maxquota: 100,
+                  active: active)
 end
 
 def create_alias_base(address, goto, active)
