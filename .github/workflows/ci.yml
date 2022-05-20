@@ -46,5 +46,7 @@ jobs:
         run: chmod 755 ./wait-for-it.sh
       - name: docker-compose up
         run: docker-compose up -d db
+      - name: Sleep
+        run: sleep 10
       - name: Run tests
         run: ./wait-for-it.sh 127.0.0.1:13306 -- bundle exec rake
