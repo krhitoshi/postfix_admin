@@ -94,14 +94,8 @@ def create_mailbox(address, in_path = nil, active = true)
 end
 
 def create_admin(username, active = true)
-  admin = Admin.new
-  admin.attributes = {
-    username: username,
-    password: SAMPLE_PASSWORD,
-    active: active
-  }
-  admin.save
-  admin
+  # FactoryBot.create(:admin, username: username, active: active)
+  create(:admin, username: username, active: active)
 end
 
 # class ::PostfixAdmin::Mailbox
@@ -140,7 +134,7 @@ end
 
 DATABASE_URL = ENV.fetch("DATABASE_URL") { 'mysql2://postfix:password@127.0.0.1:13306/postfix' }
 ActiveRecord::Base.establish_connection(DATABASE_URL)
-db_initialize
+# db_initialize
 
 module PostfixAdmin
   class Base
