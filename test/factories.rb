@@ -18,6 +18,17 @@ FactoryBot.define do
     end
   end
 
+  factory :mailbox do
+    sequence(:username) { |n| "mailbox#{n}@example.test" }
+    sequence(:local_part) { |n| "mailbox#{n}" }
+    sequence(:maildir) { |n| "example.test/mailbox#{n}@example.test/" }
+    domain { "example.test" }
+    password { SAMPLE_PASSWORD }
+    name { "" }
+    quota_mb { 100 }
+    active { true }
+  end
+
   factory :alias do
     sequence(:address) { |n| "address#{n}@example.test" }
     goto { "goto@example.jp" }

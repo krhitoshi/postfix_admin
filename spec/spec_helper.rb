@@ -57,15 +57,8 @@ end
 
 def create_mailbox(address, in_path = nil, active = true)
   path = in_path || "#{address.split('@').last}/#{address}/"
-  Mailbox.new(
-    username: address,
-    password: SAMPLE_PASSWORD,
-    name: '',
-    maildir: path,
-    quota_mb: 100,
-    local_part: address.split('@').first,
-    active: active
-  )
+  build(:mailbox, username: address, maildir: path,
+                  local_part: address.split('@').first, active: active)
 end
 
 def db_initialize
