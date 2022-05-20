@@ -55,10 +55,6 @@ def db_clear
   Admin.delete_all
 end
 
-def create_mailbox_alias(address, active = true)
-  build(:alias, address: address, goto: address, active: active)
-end
-
 def create_mailbox(address, in_path = nil, active = true)
   path = in_path || "#{address.split('@').last}/#{address}/"
   Mailbox.new(
