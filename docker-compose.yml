@@ -1,5 +1,8 @@
 version: '3.8'
 
+# docker compose up -d
+# docker compose exec app bundle exec rake
+
 services:
   app:
     build:
