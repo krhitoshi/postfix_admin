@@ -17,4 +17,11 @@ FactoryBot.define do
       domain.description = domain.domain
     end
   end
+
+  factory :alias do
+    sequence(:address) { |n| "address#{n}@example.test" }
+    sequence(:goto) { |n| "goto#{n}@example.test" }
+    domain { "example.test" }
+    active { true }
+  end
 end

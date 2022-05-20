@@ -60,11 +60,11 @@ def create_alias_base(address, goto, active)
 end
 
 def create_alias(address, active = true)
-  create_alias_base(address, 'goto@example.jp', active)
+  build(:alias, address: address, goto: "goto@example.jp", active: active)
 end
 
 def create_mailbox_alias(address, active = true)
-  create_alias_base(address, address, active)
+  build(:alias, address: address, goto: address, active: active)
 end
 
 def create_mailbox(address, in_path = nil, active = true)
