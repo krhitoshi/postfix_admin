@@ -3,7 +3,6 @@ require 'postfix_admin/cli'
 
 RSpec.describe PostfixAdmin::CLI, "when config file does not exist" do
   before do
-    config_initialize
     @file = File.join(File.dirname(__FILE__) , 'tmp/postfix_admin.conf')
     CLI.config_file = @file
     FileUtils.rm(@file) if File.exists?(@file)

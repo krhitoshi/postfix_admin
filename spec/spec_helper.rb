@@ -39,10 +39,6 @@ SAMPLE_PASSWORD = "{CRAM-MD5}9186d855e11eba527a7a52ca82b313e180d62234f0acc9051b5
 # Alias:
 #  alias@example.com -> goto@example.jp
 
-def config_initialize
-  CLI.config_file = File.join(File.dirname(__FILE__) , 'postfix_admin.conf')
-end
-
 def db_clear
   # ::PostfixAdmin::Config.all.destroy
   DomainAdmin.delete_all
@@ -141,7 +137,6 @@ end
 DATABASE_URL = ENV.fetch("DATABASE_URL") { 'mysql2://postfix:password@127.0.0.1:13306/postfix' }
 ActiveRecord::Base.establish_connection(DATABASE_URL)
 db_initialize
-config_initialize
 
 module PostfixAdmin
   class Base
