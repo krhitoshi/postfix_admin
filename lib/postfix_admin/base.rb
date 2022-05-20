@@ -33,7 +33,8 @@ module PostfixAdmin
     def db_setup
       raise "'database' parameter is required in '#{CLI.config_file}'" unless @config[:database]
 
-      uri = URI.parse(@config[:database])
+      database = ENV.fetch("DATABASE_URL") { @config[:database] }
+      uri = URI.parse(database)
 
       if uri.scheme == "mysql"
         uri.scheme = "mysql2"
