@@ -11,6 +11,8 @@ services:
     tty: true
     volumes:
       - .:/app
+    environment:
+      - DATABASE_URL=mysql2://postfix:password@db/postfix
     depends_on:
       - db
   admin:
