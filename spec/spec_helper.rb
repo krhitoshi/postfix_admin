@@ -55,12 +55,6 @@ def db_clear
   Admin.delete_all
 end
 
-def create_domain(domain_name, active = true)
-  create(:domain, domain: domain_name, description: domain_name,
-                  aliases: 30, mailboxes: 30, maxquota: 100,
-                  active: active)
-end
-
 def create_alias_base(address, goto, active)
   Alias.new(local_part: address.split("@")[0], goto: goto, active: active)
 end
@@ -97,9 +91,9 @@ def db_initialize
   # }
   # config.save
 
-  # create_domain('ALL')
-  create_domain('example.com')
-  create_domain('example.org')
+  # create_domain("example.com")
+  create(:domain, domain: "example.com")
+  create(:domain, domain: "example.org")
 
   all_admin = create(:admin, username: "all@example.com")
   all_admin.rel_domains << Domain.find('ALL')

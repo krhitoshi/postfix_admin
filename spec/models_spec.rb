@@ -94,7 +94,7 @@ RSpec.describe PostfixAdmin::Domain do
     expect(Domain.find('example.com').active).to be true
     expect(Domain.find('example.org').active).to be true
 
-    create_domain('non-active.example.com', false)
+    create(:domain, domain: "non-active.example.com", active: false)
     expect(Domain.find('non-active.example.com').active).to be false
   end
 
