@@ -55,10 +55,6 @@ def db_clear
   Admin.delete_all
 end
 
-def create_alias_base(address, goto, active)
-  Alias.new(local_part: address.split("@")[0], goto: goto, active: active)
-end
-
 def create_alias(address, active = true)
   build(:alias, address: address, goto: "goto@example.jp", active: active)
 end
