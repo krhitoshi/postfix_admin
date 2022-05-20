@@ -63,7 +63,7 @@ module PostfixAdmin
         mailbox.quota = 0
       end
       mailbox.username = "#{mailbox.local_part}@#{mailbox.domain}"
-      mailbox.maildir = "#{mailbox.domain}/#{mailbox.username}/"
+      mailbox.maildir ||= "#{mailbox.domain}/#{mailbox.username}/"
       mailbox.build_alias(local_part: mailbox.local_part, goto: mailbox.username,
                           domain: mailbox.domain)
     end
