@@ -27,7 +27,18 @@ jobs:
     strategy:
       matrix:
         ruby-version: ['2.6', '2.7', '3.0', '3.1']
-
+    services:
+      db:
+        image: mariadb:10
+        ports:
+          - "3306:3306"
+        volumes:
+          - /docker-db/postfix.v1841.sql:/docker-entrypoint-initdb.d/postfix.sql
+        env:
+          MYSQL_RANDOM_ROOT_PASSWORD: yes
+          MYSQL_USER: postfix
+          MYSQL_PASSWORD: password
+          MYSQL_DATABASE: postfix
     steps:
       - uses: actions/checkout@v3
       - name: Set up Ruby
@@ -44,7 +55,9 @@ jobs:
         run: curl -O https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh
       - name: Make wait-for-it.sh executable
         run: chmod 755 ./wait-for-it.sh
-      - name: docker-compose up
-        run: docker-compose up -d db
+#      - name: docker-compose up
+#        run: docker-compose up -d db
       - name: Run tests
-        run: ./wait-for-it.sh 127.0.0.1:13306 -- bundle exec rake
+        env:
+          DATABASE_URL: 'mysql2://postfix:password@db/postfix'
+        run: ./wait-for-it.sh db:3306 -- bundle exec rake
