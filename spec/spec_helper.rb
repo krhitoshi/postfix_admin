@@ -93,10 +93,6 @@ def create_mailbox(address, in_path = nil, active = true)
   )
 end
 
-# class ::PostfixAdmin::Mailbox
-#   property :local_part, String
-# end
-
 def db_initialize
   db_clear
 
