@@ -20,7 +20,7 @@ FactoryBot.define do
 
   factory :alias do
     sequence(:address) { |n| "address#{n}@example.test" }
-    sequence(:goto) { |n| "goto#{n}@example.test" }
+    goto { "goto@example.jp" }
     domain { "example.test" }
     active { true }
   end

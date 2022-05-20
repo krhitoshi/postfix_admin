@@ -169,7 +169,8 @@ RSpec.describe PostfixAdmin::Alias do
 
   it "active" do
     domain = Domain.find('example.com')
-    domain.rel_aliases << create_alias('non_active_alias@example.com', false)
+    domain.rel_aliases << build(:alias, address: "non_active_alias@example.com",
+                                        active: false)
     domain.save
 
     expect(Alias.find('user@example.com').active).to be true

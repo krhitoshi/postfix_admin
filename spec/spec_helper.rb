@@ -55,10 +55,6 @@ def db_clear
   Admin.delete_all
 end
 
-def create_alias(address, active = true)
-  build(:alias, address: address, goto: "goto@example.jp", active: active)
-end
-
 def create_mailbox_alias(address, active = true)
   build(:alias, address: address, goto: address, active: active)
 end
@@ -90,8 +86,8 @@ def db_initialize
   admin = create(:admin, username: "admin@example.com")
   domain = Domain.find('example.com')
   domain.admins << admin
-  domain.rel_aliases   << create_alias('alias@example.com')
-  domain.rel_aliases   << create_alias('user@example.com')
+  domain.rel_aliases   << build(:alias, address: "alias@example.com")
+  domain.rel_aliases   << build(:alias, address: "user@example.com")
   domain.rel_mailboxes << create_mailbox('user@example.com')
 
   domain.save!
