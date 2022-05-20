@@ -24,7 +24,7 @@ RSpec.describe PostfixAdmin::Admin do
   it "active" do
     expect(Admin.find('admin@example.com').active).to be true
     expect(Admin.find('all@example.com').active).to be true
-    non_active_admin = create_admin('non_active_admin@example.com', false)
+    create(:admin, username: "non_active_admin@example.com", active: false)
 
     expect(Admin.find('non_active_admin@example.com').active).to be false
   end

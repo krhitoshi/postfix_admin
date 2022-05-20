@@ -3,6 +3,7 @@ $:.unshift(File.join(File.dirname(__FILE__), "..", "lib"))
 
 require 'fileutils'
 require 'bundler/setup'
+Bundler.require(:default, :development)
 require 'postfix_admin'
 require 'postfix_admin/cli'
 
@@ -12,6 +13,12 @@ RSpec.configure do |config|
 
   # Disable RSpec exposing methods globally on `Module` and `main`
   # config.disable_monkey_patching!
+
+  config.include FactoryBot::Syntax::Methods
+
+  config.before(:suite) do
+    FactoryBot.find_definitions
+  end
 
   config.expect_with :rspec do |c|
     c.syntax = :expect
@@ -86,21 +93,6 @@ def create_mailbox(address, in_path = nil, active = true)
   )
 end
 
-def create_admin(username, active = true)
-  admin = Admin.new
-  admin.attributes = {
-    username: username,
-    password: SAMPLE_PASSWORD,
-    active: active
-  }
-  admin.save
-  admin
-end
-
-# class ::PostfixAdmin::Mailbox
-#   property :local_part, String
-# end
-
 def db_initialize
   db_clear
 
@@ -116,12 +108,12 @@ def db_initialize
   create_domain('example.com')
   create_domain('example.org')
 
-  all_admin = create_admin('all@example.com')
+  all_admin = create(:admin, username: "all@example.com")
   all_admin.rel_domains << Domain.find('ALL')
   all_admin.superadmin = true if all_admin.has_superadmin_column?
   all_admin.save!
 
-  admin = create_admin('admin@example.com')
+  admin = create(:admin, username: "admin@example.com")
   domain = Domain.find('example.com')
   domain.admins << admin
   domain.rel_aliases   << create_alias('alias@example.com')
@@ -133,7 +125,7 @@ end
 
 DATABASE_URL = ENV.fetch("DATABASE_URL") { 'mysql2://postfix:password@127.0.0.1:13306/postfix' }
 ActiveRecord::Base.establish_connection(DATABASE_URL)
-db_initialize
+# db_initialize
 
 module PostfixAdmin
   class Base
