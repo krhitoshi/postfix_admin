@@ -10,14 +10,14 @@ FactoryBot.define do
 
   factory :domain do
     sequence(:domain) { |n| "example#{n}.test" }
-    description { "Description" }
+    # description { "Description" }
     aliases { 30 }
     mailboxes { 30 }
     maxquota { 100 }
     active { true }
 
-    after(:create) do |domain|
-      domain.description = domain.domain
+    after(:build) do |domain|
+      domain.description = domain.domain unless domain.description
     end
   end
 
