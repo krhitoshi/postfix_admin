@@ -1,4 +1,7 @@
 FactoryBot.define do
+  # CRAM-MD5
+  SAMPLE_PASSWORD = "{CRAM-MD5}9186d855e11eba527a7a52ca82b313e180d62234f0acc9051b527243d41e2740"
+
   factory :admin do
     username { "admin@example.test" }
     password { SAMPLE_PASSWORD }
