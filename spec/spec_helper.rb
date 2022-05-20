@@ -3,6 +3,7 @@ $:.unshift(File.join(File.dirname(__FILE__), "..", "lib"))
 
 require 'fileutils'
 require 'bundler/setup'
+Bundler.require(:default, :development)
 require 'postfix_admin'
 require 'postfix_admin/cli'
 
@@ -12,6 +13,12 @@ RSpec.configure do |config|
 
   # Disable RSpec exposing methods globally on `Module` and `main`
   # config.disable_monkey_patching!
+
+  config.include FactoryBot::Syntax::Methods
+
+  config.before(:suite) do
+    FactoryBot.find_definitions
+  end
 
   config.expect_with :rspec do |c|
     c.syntax = :expect
