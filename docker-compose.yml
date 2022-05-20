@@ -36,6 +36,7 @@ services:
   db:
     image: mariadb:10
     volumes:
+    - db-data:/var/lib/mysql
     - ./docker-db/postfix.v1841.sql:/docker-entrypoint-initdb.d/postfix.sql
 #    - ./docker-db/postfix.v740.sql:/docker-entrypoint-initdb.d/postfix.sql
 #    - ./docker-db/postfix.v352.sql:/docker-entrypoint-initdb.d/postfix.sql
@@ -44,3 +45,5 @@ services:
       - MYSQL_USER=postfix
       - MYSQL_PASSWORD=password
       - MYSQL_DATABASE=postfix
+volumes:
+  db-data:
