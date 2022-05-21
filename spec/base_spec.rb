@@ -166,7 +166,7 @@ RSpec.describe PostfixAdmin::Base do
     it "raise error when unknown domain" do
       expect { @base.delete_admin_domain('admin@example.com', 'unknown.example.com') }.to raise_error Error
     end
- end
+  end
 
   describe "#add_alias" do
     it "can add a new alias" do
