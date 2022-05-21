@@ -1,8 +1,6 @@
 require "test_helper"
 
 class BaseTest < ActiveSupport::TestCase
-  include PostfixAdmin
-
   setup do
     config = { "database" => "mysql2://postfix:password@localhost/postfix" }
     @base = Base.new(config)
