@@ -58,4 +58,15 @@ class BaseTest < ActiveSupport::TestCase
       assert_raise(PostfixAdmin::Error) { @base.add_domain("invalid_domain") }
     end
   end
+
+  test "#add_account can add a new account" do
+    create(:domain, domain: "example.com")
+    assert_difference("Mailbox.count") do
+      assert_difference("Alias.count") do
+        @base.add_account("new_account@example.com", "password")
+      end
+    end
+    assert Mailbox.exists?("new_account@example.com")
+    assert Alias.exists?("new_account@example.com")
+  end
 end

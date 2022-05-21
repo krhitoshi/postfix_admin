@@ -27,14 +27,6 @@ RSpec.describe PostfixAdmin::Base do
   end
 
   describe "#add_account" do
-    it "can add a new account" do
-      num_mailboxes = Mailbox.count
-      num_aliases   = Alias.count
-      @base.add_account('new_user@example.com', 'password')
-      expect(Mailbox.count - num_mailboxes).to eq 1
-      expect(Alias.count - num_aliases).to eq 1
-    end
-
     it "refuse empty password" do
       expect { @base.add_account('new_user@example.com', '') }.to raise_error Error
     end
