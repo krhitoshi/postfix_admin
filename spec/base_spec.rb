@@ -7,25 +7,6 @@ RSpec.describe PostfixAdmin::Base do
     @base = Base.new({'database' => 'mysql2://postfix:password@localhost/postfix'})
   end
 
-  it "#domain_exists?" do
-    expect(Domain.exists?('example.com')).to be true
-  end
-
-  it "#alias_exists?" do
-    expect(Alias.exists?('user@example.com')).to be true
-    expect(Alias.exists?('unknown@example.com')).to be false
-  end
-
-  it "#mailbox_exists?" do
-    expect(Mailbox.exists?('user@example.com')).to be true
-    expect(Mailbox.exists?('unknown@example.com')).to be false
-  end
-
-  it "#admin_exists?" do
-    expect(Admin.exists?('admin@example.com')).to be true
-    expect(Admin.exists?('unknown_admin@example.com')).to be false
-  end
-
   describe "#add_account" do
     it "refuse empty password" do
       expect { @base.add_account('new_user@example.com', '') }.to raise_error Error
