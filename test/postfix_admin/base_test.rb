@@ -53,4 +53,11 @@ class BaseTest < ActiveSupport::TestCase
       assert_raise(PostfixAdmin::Error) { @base.add_domain("example.com") }
     end
   end
+
+  test "#add_domain raises an error for an invalid domain" do
+    db_reset
+    assert_difference("Domain.count", 0) do
+      assert_raise(PostfixAdmin::Error) { @base.add_domain("invalid_domain") }
+    end
+  end
 end

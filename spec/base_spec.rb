@@ -26,12 +26,6 @@ RSpec.describe PostfixAdmin::Base do
     expect(Admin.exists?('unknown_admin@example.com')).to be false
   end
 
-  describe "#add_domain" do
-    it "can not add invalid domain" do
-      expect { @base.add_domain('localhost') }.to raise_error Error
-    end
-  end
-
   describe "#add_account" do
     it "can add a new account" do
       num_mailboxes = Mailbox.count
