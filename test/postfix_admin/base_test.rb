@@ -45,7 +45,7 @@ class BaseTest < ActiveSupport::TestCase
     end
   end
 
-  test "#add_domain can not add an existing domain" do
+  test "#add_domain raises an error for an existing domain" do
     db_reset
     create(:domain, domain: "example.com")
     assert Domain.exists?("example.com")
