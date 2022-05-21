@@ -27,4 +27,15 @@ class BaseTest < ActiveSupport::TestCase
   test "#new without config" do
     assert_raise(ArgumentError) { Base.new }
   end
+
+  test "Default configurations to be correct" do
+    assert_equal 30, @base.config[:aliases]
+    assert_equal 30, @base.config[:mailboxes]
+    assert_equal 100, @base.config[:maxquota]
+    assert_equal "CRAM-MD5", @base.config[:scheme]
+  end
+
+  test "config database" do
+    assert_equal "mysql2://postfix:password@localhost/postfix", @base.config[:database]
+  end
 end

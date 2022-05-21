@@ -7,17 +7,6 @@ RSpec.describe PostfixAdmin::Base do
     @base = Base.new({'database' => 'mysql2://postfix:password@localhost/postfix'})
   end
 
-  it "Default configuration to be correct" do
-    expect(@base.config[:aliases]).to eq 30
-    expect(@base.config[:mailboxes]).to eq 30
-    expect(@base.config[:maxquota]).to eq 100
-    expect(@base.config[:scheme]).to eq 'CRAM-MD5'
-  end
-
-  it "config database" do
-    expect(@base.config[:database]).to eq 'mysql2://postfix:password@localhost/postfix'
-  end
-
   it "#domain_exists?" do
     expect(Domain.exists?('example.com')).to be true
   end
