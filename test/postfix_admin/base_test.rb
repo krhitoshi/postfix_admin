@@ -2,6 +2,7 @@ require "test_helper"
 
 class BaseTest < ActiveSupport::TestCase
   setup do
+    db_reset
     config = { "database" => "mysql2://postfix:password@localhost/postfix" }
     @base = Base.new(config)
   end
@@ -38,7 +39,6 @@ class BaseTest < ActiveSupport::TestCase
   end
 
   test "#add_domain can add a new domain" do
-    db_reset
     assert_difference("Domain.count") do
       @base.add_domain("new-domain.test")
       assert Domain.exists?("new-domain.test")
@@ -46,7 +46,6 @@ class BaseTest < ActiveSupport::TestCase
   end
 
   test "#add_domain raises an error for an existing domain" do
-    db_reset
     create(:domain, domain: "example.com")
     assert Domain.exists?("example.com")
     assert_difference("Domain.count", 0) do
@@ -55,7 +54,6 @@ class BaseTest < ActiveSupport::TestCase
   end
 
   test "#add_domain raises an error for an invalid domain" do
-    db_reset
     assert_difference("Domain.count", 0) do
       assert_raise(PostfixAdmin::Error) { @base.add_domain("invalid_domain") }
     end
