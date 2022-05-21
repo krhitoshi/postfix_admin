@@ -12,7 +12,6 @@ module DovecotCramMD5Password
     end
 
     attr_reader :password_unencrypted
-    attr_accessor :password_unencrypted_confirmation
   end
 
   def password_unencrypted=(unencrypted_password)
