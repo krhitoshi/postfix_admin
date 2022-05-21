@@ -1,2 +1,22 @@
+AllCops:
+  NewCops: enable
 Style/StringLiterals:
   Enabled: false
+Style/EmptyMethod:
+  Enabled: false
+Style/IfUnlessModifier:
+  Enabled: false
+Style/AsciiComments:
+  Enabled: false
+Style/FrozenStringLiteralComment:
+  Enabled: false
+Style/Documentation:
+  Enabled: false
+Metrics/MethodLength:
+  Enabled: false
+Metrics/AbcSize:
+  Enabled: false
+Metrics/ClassLength:
+  Enabled: false
+Style/EmptyElse:
+  EnforcedStyle: empty
