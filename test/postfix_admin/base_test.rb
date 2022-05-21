@@ -36,4 +36,10 @@ class BaseTest < ActiveSupport::TestCase
   test "config database" do
     assert_equal "mysql2://postfix:password@localhost/postfix", @base.config[:database]
   end
+
+  test "#add_domain can add a new domain" do
+    assert_difference("Domain.count") do
+      @base.add_domain("new-domain.test")
+    end
+  end
 end

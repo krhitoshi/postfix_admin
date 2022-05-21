@@ -27,12 +27,6 @@ RSpec.describe PostfixAdmin::Base do
   end
 
   describe "#add_domain" do
-    it "can add a new domain" do
-      num_domains = Domain.count
-      @base.add_domain('example.net')
-      expect(Domain.count - num_domains).to eq 1
-    end
-
     it "can not add exist domain" do
       expect { @base.add_domain('example.com') }.to raise_error Error
     end
