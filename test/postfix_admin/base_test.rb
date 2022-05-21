@@ -1,8 +1,4 @@
-$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), "..", "..", "lib"))
-
-require "minitest/autorun"
-require "active_support"
-require "postfix_admin"
+require "test_helper"
 
 class BaseTest < ActiveSupport::TestCase
   include PostfixAdmin
