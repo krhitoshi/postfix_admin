@@ -49,13 +49,15 @@ class BaseTest < ActiveSupport::TestCase
     create(:domain, domain: "example.com")
     assert Domain.exists?("example.com")
     assert_difference("Domain.count", 0) do
-      assert_raise(PostfixAdmin::Error) { @base.add_domain("example.com") }
+      error = assert_raise(PostfixAdmin::Error) { @base.add_domain("example.com") }
+      assert_match "example.com is already registered", error.to_s
     end
   end
 
   test "#add_domain raises an error for an invalid domain" do
     assert_difference("Domain.count", 0) do
-      assert_raise(PostfixAdmin::Error) { @base.add_domain("invalid_domain") }
+      error = assert_raise(PostfixAdmin::Error) { @base.add_domain("invalid_domain") }
+      assert_match "Ivalid domain", error.to_s
     end
   end
 
@@ -76,7 +78,7 @@ class BaseTest < ActiveSupport::TestCase
         error = assert_raise(PostfixAdmin::Error) do
           @base.add_account("new_account@example.com", "")
         end
-        assert_match /Empty password/, error.to_s
+        assert_match "Empty password", error.to_s
       end
     end
   end
