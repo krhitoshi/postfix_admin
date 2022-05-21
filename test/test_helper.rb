@@ -9,13 +9,14 @@ class ActiveSupport::TestCase
   include PostfixAdmin
   include FactoryBot::Syntax::Methods
 
-  # Run tests in parallel with specified workers
-  parallelize(workers: :number_of_processors)
+  FactoryBot.find_definitions
 
-  parallelize_setup do |_worker|
-    database = ENV.fetch("DATABASE_URL") { 'mysql2://postfix:password@127.0.0.1:13306/postfix' }
-    ActiveRecord::Base.establish_connection(database)
+  database = ENV.fetch("DATABASE_URL") do
+    "mysql2://postfix:password@127.0.0.1:13306/postfix"
+  end
+  ActiveRecord::Base.establish_connection(database)
 
+  def db_reset
     DomainAdmin.delete_all
     Mailbox.delete_all
     Alias.delete_all

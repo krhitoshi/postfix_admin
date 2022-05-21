@@ -38,8 +38,19 @@ class BaseTest < ActiveSupport::TestCase
   end
 
   test "#add_domain can add a new domain" do
+    db_reset
     assert_difference("Domain.count") do
       @base.add_domain("new-domain.test")
+      assert Domain.exists?("new-domain.test")
+    end
+  end
+
+  test "#add_domain can not add an existing domain" do
+    db_reset
+    create(:domain, domain: "example.com")
+    assert Domain.exists?("example.com")
+    assert_difference("Domain.count", 0) do
+      assert_raise(PostfixAdmin::Error) { @base.add_domain("example.com") }
     end
   end
 end

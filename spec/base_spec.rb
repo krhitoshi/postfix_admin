@@ -27,10 +27,6 @@ RSpec.describe PostfixAdmin::Base do
   end
 
   describe "#add_domain" do
-    it "can not add exist domain" do
-      expect { @base.add_domain('example.com') }.to raise_error Error
-    end
-
     it "can not add invalid domain" do
       expect { @base.add_domain('localhost') }.to raise_error Error
     end
