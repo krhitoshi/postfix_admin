@@ -8,10 +8,6 @@ RSpec.describe PostfixAdmin::Base do
   end
 
   describe "#add_account" do
-    it "refuse empty password" do
-      expect { @base.add_account('new_user@example.com', '') }.to raise_error Error
-    end
-
     it "refuse nil password" do
       expect { @base.add_account('new_user@example.com', nil) }.to raise_error Error
     end

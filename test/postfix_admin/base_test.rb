@@ -69,4 +69,15 @@ class BaseTest < ActiveSupport::TestCase
     assert Mailbox.exists?("new_account@example.com")
     assert Alias.exists?("new_account@example.com")
   end
+
+  test "#add_account raises an error for an empty password" do
+    assert_difference("Mailbox.count", 0) do
+      assert_difference("Alias.count", 0) do
+        error = assert_raise(PostfixAdmin::Error) do
+          @base.add_account("new_account@example.com", "")
+        end
+        assert_match /Empty password/, error.to_s
+      end
+    end
+  end
 end
