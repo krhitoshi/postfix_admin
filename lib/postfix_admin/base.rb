@@ -99,7 +99,7 @@ module PostfixAdmin
       password_check(password)
 
       if address !~ /.+\@.+\..+/
-        raise Error, "Invalid mail address #{address}"
+        raise Error, "Invalid mail address: #{address}"
       end
       user, domain_name = address_split(address)
       path = "#{domain_name}/#{address}/"

@@ -8,10 +8,6 @@ RSpec.describe PostfixAdmin::Base do
   end
 
   describe "#add_account" do
-    it "can not add account which hsas invalid address" do
-      expect { @base.add_account('invalid.example.com', 'password') }.to raise_error Error
-    end
-
     it "can not add account for unknown domain" do
       expect { @base.add_account('user@unknown.example.com', 'password') }.to raise_error Error
     end

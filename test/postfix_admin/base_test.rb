@@ -84,4 +84,15 @@ class BaseTest < ActiveSupport::TestCase
       end
     end
   end
+
+  test "#add_account raises an error for an invalid address" do
+    assert_difference("Mailbox.count", 0) do
+      assert_difference("Alias.count", 0) do
+        error = assert_raise(PostfixAdmin::Error) do
+          @base.add_account("invalid.example.com", "password")
+        end
+        assert_match "Invalid mail address", error.to_s
+      end
+    end
+  end
 end
