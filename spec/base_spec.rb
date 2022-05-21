@@ -7,26 +7,6 @@ RSpec.describe PostfixAdmin::Base do
     @base = Base.new({'database' => 'mysql2://postfix:password@localhost/postfix'})
   end
 
-  it "DEFAULT_CONFIG" do
-    res = {
-        'database'  => 'mysql2://postfix:password@localhost/postfix',
-        'aliases'   => 30,
-        'mailboxes' => 30,
-        'maxquota'  => 100,
-        'scheme'    => 'CRAM-MD5',
-        'passwordhash_prefix' => true
-    }
-    expect(Base::DEFAULT_CONFIG).to eq res
-  end
-
-  it "#address_split" do
-    expect(@base.address_split('user@example.com')).to eq ['user', 'example.com']
-  end
-
-  it "#new without config" do
-    expect { Base.new }.to raise_error ArgumentError
-  end
-
   it "Default configuration to be correct" do
     expect(@base.config[:aliases]).to eq 30
     expect(@base.config[:mailboxes]).to eq 30
