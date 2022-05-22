@@ -82,7 +82,7 @@ class BaseTest < ActiveSupport::TestCase
       error = assert_raise(PostfixAdmin::Error) do
         @base.add_account("invalid.example.com", "password")
       end
-      assert_match "Invalid mail address", error.to_s
+      assert_match "Invalid email address", error.to_s
     end
   end
 

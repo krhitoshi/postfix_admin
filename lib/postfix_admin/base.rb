@@ -103,7 +103,7 @@ module PostfixAdmin
       password_check(password)
 
       unless valid_email_address?(address)
-        raise_error "Invalid mail address: #{address}"
+        raise_error "Invalid email address: #{address}"
       end
 
       user, domain_name = address_split(address)
