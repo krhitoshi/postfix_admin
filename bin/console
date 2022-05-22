@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 
 require "bundler/setup"
+Bundler.require(:default, :development)
 require "postfix_admin"
 require "postfix_admin/cli"
 
@@ -10,6 +11,9 @@ require "postfix_admin/cli"
 @cli = PostfixAdmin::CLI.new
 @cli.db_setup
 include PostfixAdmin
+
+include FactoryBot::Syntax::Methods
+FactoryBot.find_definitions
 
 require "pry"
 Pry.start
