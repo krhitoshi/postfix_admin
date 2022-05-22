@@ -109,10 +109,7 @@ module PostfixAdmin
       user, domain_name = address_split(address)
       path = "#{domain_name}/#{address}/"
 
-      unless Domain.exists?(domain_name)
-        raise_error "Could not find domain: #{domain_name}"
-      end
-
+      domain_must_exist!(domain_name)
       alias_must_not_exist!(address)
 
       domain = Domain.find(domain_name)
@@ -144,9 +141,7 @@ module PostfixAdmin
 
       local_part, domain_name = address_split(address)
 
-      unless Domain.exists?(domain_name)
-        raise_error "Invalid domain! #{domain_name}"
-      end
+      domain_must_exist!(domain_name)
 
       domain = Domain.find(domain_name)
 
@@ -196,9 +191,7 @@ module PostfixAdmin
     def delete_domain(domain_name)
       domain_name = domain_name.downcase
 
-      unless Domain.exists?(domain_name)
-        raise_error "Could not find domain: #{domain_name}"
-      end
+      domain_must_exist!(domain_name)
 
       domain = Domain.find(domain_name)
       domain.rel_mailboxes.delete_all
@@ -259,6 +252,12 @@ module PostfixAdmin
       /.+@.+\..+/.match?(address)
     end
 
+    def domain_must_exist!(domain_name)
+      unless Domain.exists?(domain_name)
+        raise_error "Could not find domain: #{domain_name}"
+      end
+    end
+
     def alias_must_not_exist!(address)
       if Alias.exists?(address)
         raise_error "Alias has already been registered: #{address}"
@@ -270,9 +269,7 @@ module PostfixAdmin
         raise_error "#{user_name} is not registered as admin."
       end
 
-      unless Domain.exists?(domain_name)
-        raise_error "Could not find domain #{domain_name}"
-      end
+      domain_must_exist!(domain_name)
     end
 
     def validate_password(password)
