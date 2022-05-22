@@ -106,27 +106,6 @@ RSpec.describe PostfixAdmin::Base do
   end
 
   describe "#delete_domain" do
-    before do
-      @base.add_account('user2@example.com', 'password')
-      @base.add_account('user3@example.com', 'password')
-
-      @base.add_alias('alias2@example.com', 'goto2@example.jp')
-      @base.add_alias('alias3@example.com', 'goto3@example.jp')
-    end
-
-    it "can delete a domain" do
-      expect { @base.delete_domain('example.com') }.to_not raise_error
-
-      expect(Domain.exists?('example.com')).to be false
-      expect(Admin.exists?('admin@example.com')).to be false
-
-      expect(Alias.where(domain: 'example.com').count).to eq 0
-      expect(Mailbox.where(domain: 'example.com').count).to eq 0
-
-      expect(DomainAdmin.where(username: 'admin@example.com',
-                        domain: 'example.com').count).to eq 0
-    end
-
     it "can not delete unknown domain" do
       expect { @base.delete_domain('unknown.example.com') }.to raise_error Error
     end

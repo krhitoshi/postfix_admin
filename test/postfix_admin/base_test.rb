@@ -115,4 +115,33 @@ class BaseTest < ActiveSupport::TestCase
       assert_match "Alias has already been registered: alias@example.com", error.to_s
     end
   end
+
+  test "#delete_domain deletes a domain" do
+    domain = create(:domain, domain: "example.com")
+    domain.admins << build(:admin, username: "admin@example.com")
+    domain.rel_aliases   << build(:alias, address: "alias@example.com")
+    domain.rel_aliases   << build(:alias, address: "user@example.com")
+    domain.rel_mailboxes << build(:mailbox, local_part: "user")
+    domain.save!
+
+    assert Domain.exists?("example.com")
+    assert Admin.exists?("admin@example.com")
+    assert DomainAdmin.exists?(username: "admin@example.com",
+                               domain: "example.com")
+    assert Alias.exists?(domain: "example.com")
+    assert Mailbox.exists?(domain: "example.com")
+
+    assert_difference("Domain.count", -1) do
+      assert_nothing_raised do
+        @base.delete_domain("example.com")
+      end
+    end
+
+    assert_not Domain.exists?("example.com")
+    assert_not Admin.exists?("admin@example.com")
+    assert_not DomainAdmin.exists?(username: "admin@example.com",
+                                   domain: "example.com")
+    assert_not Alias.exists?(domain: "example.com")
+    assert_not Mailbox.exists?(domain: "example.com")
+  end
 end
