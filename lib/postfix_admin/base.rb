@@ -238,11 +238,11 @@ module PostfixAdmin
       Alias.where(address: address).delete_all
     end
 
+    private
+
     def address_split(address)
       address.split('@')
     end
-
-    private
 
     def valid_domain_name?(domain_name)
       /.+\..+/.match?(domain_name)
