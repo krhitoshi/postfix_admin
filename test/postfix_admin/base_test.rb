@@ -107,8 +107,9 @@ class BaseTest < ActiveSupport::TestCase
     end
   end
 
-  test "#add_account raises an error for an existing username" do
+  test "#add_account raises an error for an existing mailbox or an alias" do
     domain = create(:domain, domain: "example.com")
+    domain.rel_aliases   << build(:alias, address: "alias@example.com")
     domain.rel_aliases   << build(:alias, address: "user@example.com")
     domain.rel_mailboxes << build(:mailbox, local_part: "user")
     domain.save!
@@ -118,6 +119,15 @@ class BaseTest < ActiveSupport::TestCase
           @base.add_account("user@example.com", "password")
         end
         assert_match "user@example.com is already registered", error.to_s
+      end
+    end
+
+    assert_difference("Mailbox.count", 0) do
+      assert_difference("Alias.count", 0) do
+        error = assert_raise(PostfixAdmin::Error) do
+          @base.add_account("alias@example.com", "password")
+        end
+        assert_match "alias@example.com is already registered", error.to_s
       end
     end
   end

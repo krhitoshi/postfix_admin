@@ -7,12 +7,6 @@ RSpec.describe PostfixAdmin::Base do
     @base = Base.new({'database' => 'mysql2://postfix:password@localhost/postfix'})
   end
 
-  describe "#add_account" do
-    it "can not add account which has same address as exist alias" do
-      expect { @base.add_account('alias@example.com', 'password') }.to raise_error Error
-    end
-  end
-
   describe "#add_admin" do
     it "can add an new admin" do
       num_admins = Admin.count
