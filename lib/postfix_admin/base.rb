@@ -8,13 +8,13 @@ module PostfixAdmin
     attr_reader :config
 
     DEFAULT_CONFIG = {
-      'database'  => 'mysql2://postfix:password@localhost/postfix',
-      'aliases'   => 30,
-      'mailboxes' => 30,
-      'maxquota'  => 100,
-      'scheme'    => 'CRAM-MD5',
-      'passwordhash_prefix' => true
-    }
+      "database" => "mysql2://postfix:password@localhost/postfix",
+      "aliases" => 30,
+      "mailboxes" => 30,
+      "maxquota" => 100,
+      "scheme" => "CRAM-MD5",
+      "passwordhash_prefix" => true
+    }.freeze
 
     def initialize(config)
       @config = {}
@@ -116,12 +116,12 @@ module PostfixAdmin
       domain = Domain.find(domain_name)
 
       attributes = {
-          username: address,
-          password: password,
-          name: name,
-          maildir: path,
-          local_part: user,
-          quota_mb: @config[:maxquota]
+        username: address,
+        password: password,
+        name: name,
+        maildir: path,
+        local_part: user,
+        quota_mb: @config[:maxquota]
       }
 
       mailbox = Mailbox.new(attributes)
@@ -152,6 +152,7 @@ module PostfixAdmin
         local_part: local_part,
         goto: goto
       }
+
       domain.rel_aliases << Alias.new(attributes)
       domain.save or raise "Could not save Alias"
     end
@@ -185,7 +186,7 @@ module PostfixAdmin
         description: domain_name,
         aliases: @config[:aliases],
         mailboxes: @config[:mailboxes],
-        maxquota: @config[:maxquota],
+        maxquota: @config[:maxquota]
       }
       domain.save!
     end
@@ -255,8 +256,13 @@ module PostfixAdmin
     end
 
     def admin_domain_check(user_name, domain_name)
-      raise Error, "#{user_name} is not registered as admin." unless Admin.exists?(user_name)
-      raise Error, "Could not find domain #{domain_name}"     unless Domain.exists?(domain_name)
+      unless Admin.exists?(user_name)
+        raise Error, "#{user_name} is not registered as admin."
+      end
+
+      unless Domain.exists?(domain_name)
+        raise Error, "Could not find domain #{domain_name}"
+      end
     end
 
     def password_check(password)
