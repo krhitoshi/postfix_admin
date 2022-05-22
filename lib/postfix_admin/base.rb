@@ -102,7 +102,7 @@ module PostfixAdmin
       name = in_name || ''
       password_check(password)
 
-      if address !~ /.+\@.+\..+/
+      unless valid_email_address?(address)
         raise_error "Invalid mail address: #{address}"
       end
 
@@ -253,6 +253,10 @@ module PostfixAdmin
 
     def valid_domain_name?(domain_name)
       /.+\..+/.match?(domain_name)
+    end
+
+    def valid_email_address?(address)
+      /.+@.+\..+/.match?(address)
     end
 
     def alias_must_not_exist!(address)
