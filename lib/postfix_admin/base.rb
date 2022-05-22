@@ -90,7 +90,7 @@ module PostfixAdmin
       admin = Admin.new
       admin.attributes = {
         username: username,
-        password: password,
+        password: password
       }
 
       unless admin.save
