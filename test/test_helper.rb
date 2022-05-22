@@ -25,10 +25,8 @@ class ActiveSupport::TestCase
   end
 
   def assert_account_difference(*args, &block)
-    assert_difference("Mailbox.count", *args) do
-      assert_difference("Alias.count", *args) do
-        block.call
-      end
+    assert_difference(%w[Mailbox.count Alias.count], *args) do
+      block.call
     end
   end
 end
