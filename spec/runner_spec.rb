@@ -106,7 +106,7 @@ RSpec.describe PostfixAdmin::Runner do
     end
 
     it "can not add an alias for existed mailbox" do
-      expect(exit_capture { Runner.start(['add_alias', 'user@example.com', 'goto@example.jp']) }).to match /mailbox user@example.com is already registered!/
+      expect(exit_capture { Runner.start(['add_alias', 'user@example.com', 'goto@example.jp']) }).to match /Mailbox has already been registered: user@example\.com/
     end
   end
 

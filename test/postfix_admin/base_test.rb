@@ -50,7 +50,7 @@ class BaseTest < ActiveSupport::TestCase
     assert Domain.exists?("example.com")
     assert_difference("Domain.count", 0) do
       error = assert_raise(PostfixAdmin::Error) { @base.add_domain("example.com") }
-      assert_match "example.com is already registered", error.to_s
+      assert_match "Domain has already been registered: example.com", error.to_s
     end
   end
 
@@ -109,14 +109,14 @@ class BaseTest < ActiveSupport::TestCase
       error = assert_raise(PostfixAdmin::Error) do
         @base.add_account("user@example.com", "password")
       end
-      assert_match "user@example.com is already registered", error.to_s
+      assert_match "Alias has already been registered: user@example.com", error.to_s
     end
 
     assert_account_difference(0) do
       error = assert_raise(PostfixAdmin::Error) do
         @base.add_account("alias@example.com", "password")
       end
-      assert_match "alias@example.com is already registered", error.to_s
+      assert_match "Alias has already been registered: alias@example.com", error.to_s
     end
   end
 end

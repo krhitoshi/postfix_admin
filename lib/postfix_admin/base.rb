@@ -58,7 +58,7 @@ module PostfixAdmin
       domain = Domain.find(domain_name)
 
       if admin.has_domain?(domain)
-        raise Error, "#{user_name} is already registered as admin of #{domain_name}."
+        raise Error, "Admin '#{user_name}' has already been registered for Domain '#{domain_name}'"
       end
 
       admin.rel_domains << domain
@@ -82,7 +82,7 @@ module PostfixAdmin
       password_check(password)
 
       if Admin.exists?(username)
-        raise Error, "#{username} is already registered as admin."
+        raise Error, "Admin has already been registered: #{username}"
       end
 
       admin = Admin.new
@@ -112,7 +112,7 @@ module PostfixAdmin
       end
 
       if Alias.exists?(address)
-        raise Error, "#{address} is already registered."
+        raise Error, "Alias has already been registered: #{address}"
       end
 
       domain = Domain.find(domain_name)
@@ -137,11 +137,11 @@ module PostfixAdmin
 
     def add_alias(address, goto)
       if Mailbox.exists?(address)
-        raise Error, "mailbox #{address} is already registered!"
+        raise Error, "Mailbox has already been registered: #{address}"
       end
 
       if Alias.exists?(address)
-        raise Error, "alias #{address} is already registered!"
+        raise Error, "Alias has already been registered: #{address}"
       end
 
       local_part, domain_name = address_split(address)
@@ -180,7 +180,7 @@ module PostfixAdmin
       end
 
       if Domain.exists?(domain_name)
-        raise Error, "#{domain_name} is already registered!"
+        raise Error, "Domain has already been registered: #{domain_name}"
       end
 
       domain = Domain.new
