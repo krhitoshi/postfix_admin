@@ -106,10 +106,10 @@ module PostfixAdmin
         raise_error "Invalid email address: #{address}"
       end
 
-      user, domain_name = address_split(address)
-      path = "#{domain_name}/#{address}/"
-
       alias_must_not_exist!(address)
+
+      local_part, domain_name = address_split(address)
+      path = "#{domain_name}/#{address}/"
 
       domain = find_domain(domain_name)
 
@@ -118,7 +118,7 @@ module PostfixAdmin
         password: password,
         name: name,
         maildir: path,
-        local_part: user,
+        local_part: local_part,
         quota_mb: @config[:maxquota]
       }
 
