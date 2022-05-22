@@ -105,7 +105,7 @@ module PostfixAdmin
       path = "#{domain_name}/#{address}/"
 
       unless Domain.exists?(domain_name)
-        raise Error, "Could not find domain #{domain_name}"
+        raise Error, "Could not find domain: #{domain_name}"
       end
 
       if Alias.exists?(address)

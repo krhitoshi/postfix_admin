@@ -95,4 +95,15 @@ class BaseTest < ActiveSupport::TestCase
       end
     end
   end
+
+  test "#add_account raises an error for an unknown domain name" do
+    assert_difference("Mailbox.count", 0) do
+      assert_difference("Alias.count", 0) do
+        error = assert_raise(PostfixAdmin::Error) do
+          @base.add_account("user@unknown.example.com", "password")
+        end
+        assert_match "Could not find domain: unknown.example.com", error.to_s
+      end
+    end
+  end
 end
