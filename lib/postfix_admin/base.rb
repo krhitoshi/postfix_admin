@@ -189,8 +189,6 @@ module PostfixAdmin
       domain_name = domain_name.downcase
 
       domain = find_domain(domain_name)
-      domain.rel_mailboxes.delete_all
-      domain.rel_aliases.delete_all
 
       admin_names = domain.admins.map(&:username)
 
