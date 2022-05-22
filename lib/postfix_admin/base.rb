@@ -94,7 +94,7 @@ module PostfixAdmin
       }
 
       unless admin.save
-        raise_error "Could not save Admin #{admin.errors.map(&:to_s).join}"
+        raise_error "Failed to save Admin #{admin.errors.map(&:to_s).join}"
       end
     end
 
@@ -123,7 +123,7 @@ module PostfixAdmin
       domain.rel_mailboxes << mailbox
 
       unless domain.save
-        raise_error "Could not save Mailbox and Domain #{mailbox.errors.map(&:to_s).join} #{domain.errors.map(&:to_s).join}"
+        raise_error "Failed to save Mailbox and Domain #{mailbox.errors.map(&:to_s).join} #{domain.errors.map(&:to_s).join}"
       end
     end
 
@@ -144,7 +144,7 @@ module PostfixAdmin
       }
 
       domain.rel_aliases << Alias.new(attributes)
-      domain.save || raise_error("Could not save Alias")
+      domain.save || raise_error("Failed to save Alias")
     end
 
     def delete_alias(address)
