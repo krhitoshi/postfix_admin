@@ -84,11 +84,13 @@ module PostfixAdmin
       if Admin.exists?(username)
         raise Error, "#{username} is already registered as admin."
       end
+
       admin = Admin.new
       admin.attributes = {
         username: username,
         password: password,
       }
+
       unless admin.save
         raise "Could not save Admin #{admin.errors.map(&:to_s).join}"
       end
@@ -101,6 +103,7 @@ module PostfixAdmin
       if address !~ /.+\@.+\..+/
         raise Error, "Invalid mail address: #{address}"
       end
+
       user, domain_name = address_split(address)
       path = "#{domain_name}/#{address}/"
 
@@ -136,6 +139,7 @@ module PostfixAdmin
       if Mailbox.exists?(address)
         raise Error, "mailbox #{address} is already registered!"
       end
+
       if Alias.exists?(address)
         raise Error, "alias #{address} is already registered!"
       end
@@ -170,12 +174,15 @@ module PostfixAdmin
 
     def add_domain(domain_name)
       domain_name = domain_name.downcase
+
       if domain_name !~ /.+\..+/
         raise Error, "Invalid domain name: #{domain_name}"
       end
+
       if Domain.exists?(domain_name)
         raise Error, "#{domain_name} is already registered!"
       end
+
       domain = Domain.new
       domain.attributes = {
         domain: domain_name,
@@ -189,6 +196,7 @@ module PostfixAdmin
 
     def delete_domain(domain_name)
       domain_name = domain_name.downcase
+
       unless Domain.exists?(domain_name)
         raise Error, "Could not find domain #{domain_name}"
       end
