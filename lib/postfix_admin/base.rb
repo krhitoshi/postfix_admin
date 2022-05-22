@@ -98,21 +98,16 @@ module PostfixAdmin
       end
     end
 
+    # Adds an email account that consists of a Mailbox and an Alias.
     def add_account(address, password, in_name = nil)
-      name = in_name || ''
-      validate_password(password)
-
-      unless valid_email_address?(address)
-        raise_error "Invalid email address: #{address}"
-      end
-
-      alias_must_not_exist!(address)
+      validate_account(address, password)
 
       local_part, domain_name = address_split(address)
       path = "#{domain_name}/#{address}/"
 
       domain = find_domain(domain_name)
 
+      name = in_name || ''
       attributes = {
         username: address,
         password: password,
@@ -272,6 +267,16 @@ module PostfixAdmin
 
     def validate_password(password)
       raise_error "Empty password" if password.nil? || password.empty?
+    end
+
+    def validate_account(address, password)
+      validate_password(password)
+
+      unless valid_email_address?(address)
+        raise_error "Invalid email address: #{address}"
+      end
+
+      alias_must_not_exist!(address)
     end
   end
 end
