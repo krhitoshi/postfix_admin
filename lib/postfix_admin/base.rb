@@ -197,7 +197,7 @@ module PostfixAdmin
       domain_name = domain_name.downcase
 
       unless Domain.exists?(domain_name)
-        raise_error "Could not find domain #{domain_name}"
+        raise_error "Could not find domain: #{domain_name}"
       end
 
       domain = Domain.find(domain_name)

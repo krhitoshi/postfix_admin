@@ -105,12 +105,6 @@ RSpec.describe PostfixAdmin::Base do
     end
   end
 
-  describe "#delete_domain" do
-    it "can not delete unknown domain" do
-      expect { @base.delete_domain('unknown.example.com') }.to raise_error Error
-    end
-  end
-
   describe "#delete_admin" do
     it "can delete an admin" do
       expect { @base.delete_admin('admin@example.com') }.to_not raise_error

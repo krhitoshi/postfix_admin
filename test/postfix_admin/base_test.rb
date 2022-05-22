@@ -144,4 +144,9 @@ class BaseTest < ActiveSupport::TestCase
     assert_not Alias.exists?(domain: "example.com")
     assert_not Mailbox.exists?(domain: "example.com")
   end
+
+  test "#delete_domain raises an error for an unknown domain name" do
+    error = assert_raise(PostfixAdmin::Error) { @base.delete_domain("example.com") }
+    assert_match "Could not find domain: example.com", error.to_s
+  end
 end
