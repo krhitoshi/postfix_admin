@@ -171,7 +171,7 @@ module PostfixAdmin
     def add_domain(domain_name)
       domain_name = domain_name.downcase
 
-      if domain_name !~ /.+\..+/
+      unless valid_domain_name?(domain_name)
         raise Error, "Invalid domain name: #{domain_name}"
       end
 
@@ -243,6 +243,10 @@ module PostfixAdmin
     end
 
     private
+
+    def valid_domain_name?(domain_name)
+      /.+\..+/.match?(domain_name)
+    end
 
     def alias_must_not_exist!(address)
       if Alias.exists?(address)
