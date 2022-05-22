@@ -122,6 +122,7 @@ module PostfixAdmin
         quota_mb: @config[:maxquota]
       }
 
+      # An Alias also will be added when a Mailbox is saved.
       mailbox = Mailbox.new(attributes)
 
       domain.rel_mailboxes << mailbox
