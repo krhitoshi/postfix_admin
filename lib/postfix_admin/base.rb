@@ -81,7 +81,7 @@ module PostfixAdmin
     end
 
     def add_admin(username, password)
-      password_check(password)
+      validate_password(password)
 
       if Admin.exists?(username)
         raise_error "Admin has already been registered: #{username}"
@@ -100,7 +100,7 @@ module PostfixAdmin
 
     def add_account(address, password, in_name = nil)
       name = in_name || ''
-      password_check(password)
+      validate_password(password)
 
       unless valid_email_address?(address)
         raise_error "Invalid email address: #{address}"
@@ -275,7 +275,7 @@ module PostfixAdmin
       end
     end
 
-    def password_check(password)
+    def validate_password(password)
       raise_error "Empty password" if password.nil? || password.empty?
     end
   end
