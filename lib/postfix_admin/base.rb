@@ -192,7 +192,7 @@ module PostfixAdmin
 
       admin_names = domain.admins.map(&:username)
 
-      domain.admins.delete_all
+      domain.destroy
 
       admin_names.each do |name|
         next unless Admin.exists?(name)
@@ -204,8 +204,6 @@ module PostfixAdmin
           admin.destroy
         end
       end
-
-      domain.destroy
     end
 
     def delete_admin(user_name)
