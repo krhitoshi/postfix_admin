@@ -50,7 +50,7 @@ module PostfixAdmin
       ActiveRecord::Base.establish_connection(uri.to_s)
 
     rescue LoadError => e
-      raise e.message
+      raise_error e.message
     end
 
     def add_admin_domain(user_name, domain_name)
@@ -127,7 +127,7 @@ module PostfixAdmin
       domain.rel_mailboxes << mailbox
 
       unless domain.save
-        raise "Could not save Mailbox and Domain #{mailbox.errors.map(&:to_s).join} #{domain.errors.map(&:to_s).join}"
+        raise_error "Could not save Mailbox and Domain #{mailbox.errors.map(&:to_s).join} #{domain.errors.map(&:to_s).join}"
       end
     end
 
@@ -148,7 +148,7 @@ module PostfixAdmin
       }
 
       domain.rel_aliases << Alias.new(attributes)
-      domain.save or raise "Could not save Alias"
+      domain.save || raise_error("Could not save Alias")
     end
 
     def delete_alias(address)
