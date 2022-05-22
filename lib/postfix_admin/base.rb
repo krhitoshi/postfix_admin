@@ -109,10 +109,9 @@ module PostfixAdmin
       user, domain_name = address_split(address)
       path = "#{domain_name}/#{address}/"
 
-      domain_must_exist!(domain_name)
       alias_must_not_exist!(address)
 
-      domain = Domain.find(domain_name)
+      domain = find_domain(domain_name)
 
       attributes = {
         username: address,
@@ -141,9 +140,7 @@ module PostfixAdmin
 
       local_part, domain_name = address_split(address)
 
-      domain_must_exist!(domain_name)
-
-      domain = Domain.find(domain_name)
+      domain = find_domain(domain_name)
 
       attributes = {
         local_part: local_part,
@@ -191,9 +188,7 @@ module PostfixAdmin
     def delete_domain(domain_name)
       domain_name = domain_name.downcase
 
-      domain_must_exist!(domain_name)
-
-      domain = Domain.find(domain_name)
+      domain = find_domain(domain_name)
       domain.rel_mailboxes.delete_all
       domain.rel_aliases.delete_all
 
@@ -235,6 +230,11 @@ module PostfixAdmin
     end
 
     private
+
+    def find_domain(domain_name)
+      domain_must_exist!(domain_name)
+      Domain.find(domain_name)
+    end
 
     def raise_error(message)
       raise PostfixAdmin::Error, message
