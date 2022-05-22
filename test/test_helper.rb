@@ -23,4 +23,12 @@ class ActiveSupport::TestCase
     Domain.without_all.delete_all
     Admin.delete_all
   end
+
+  def assert_account_difference(*args, &block)
+    assert_difference("Mailbox.count", *args) do
+      assert_difference("Alias.count", *args) do
+        block.call
+      end
+    end
+  end
 end

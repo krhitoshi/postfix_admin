@@ -63,10 +63,8 @@ class BaseTest < ActiveSupport::TestCase
 
   test "#add_account can add a new account" do
     create(:domain, domain: "example.com")
-    assert_difference("Mailbox.count") do
-      assert_difference("Alias.count") do
-        @base.add_account("new_account@example.com", "password")
-      end
+    assert_account_difference do
+      @base.add_account("new_account@example.com", "password")
     end
     assert Mailbox.exists?("new_account@example.com")
     assert Alias.exists?("new_account@example.com")
@@ -74,36 +72,30 @@ class BaseTest < ActiveSupport::TestCase
 
   test "#add_account raises an error for an empty password" do
     ["", nil].each do |empty_pass|
-      assert_difference("Mailbox.count", 0) do
-        assert_difference("Alias.count", 0) do
-          error = assert_raise(PostfixAdmin::Error) do
-            @base.add_account("new_account@example.com", empty_pass)
-          end
-          assert_match "Empty password", error.to_s
+      assert_account_difference(0) do
+        error = assert_raise(PostfixAdmin::Error) do
+          @base.add_account("new_account@example.com", empty_pass)
         end
+        assert_match "Empty password", error.to_s
       end
     end
   end
 
   test "#add_account raises an error for an invalid address" do
-    assert_difference("Mailbox.count", 0) do
-      assert_difference("Alias.count", 0) do
-        error = assert_raise(PostfixAdmin::Error) do
-          @base.add_account("invalid.example.com", "password")
-        end
-        assert_match "Invalid mail address", error.to_s
+    assert_account_difference(0) do
+      error = assert_raise(PostfixAdmin::Error) do
+        @base.add_account("invalid.example.com", "password")
       end
+      assert_match "Invalid mail address", error.to_s
     end
   end
 
   test "#add_account raises an error for an unknown domain name" do
-    assert_difference("Mailbox.count", 0) do
-      assert_difference("Alias.count", 0) do
-        error = assert_raise(PostfixAdmin::Error) do
-          @base.add_account("user@unknown.example.com", "password")
-        end
-        assert_match "Could not find domain: unknown.example.com", error.to_s
+    assert_account_difference(0) do
+      error = assert_raise(PostfixAdmin::Error) do
+        @base.add_account("user@unknown.example.com", "password")
       end
+      assert_match "Could not find domain: unknown.example.com", error.to_s
     end
   end
 
@@ -113,22 +105,18 @@ class BaseTest < ActiveSupport::TestCase
     domain.rel_aliases   << build(:alias, address: "user@example.com")
     domain.rel_mailboxes << build(:mailbox, local_part: "user")
     domain.save!
-    assert_difference("Mailbox.count", 0) do
-      assert_difference("Alias.count", 0) do
-        error = assert_raise(PostfixAdmin::Error) do
-          @base.add_account("user@example.com", "password")
-        end
-        assert_match "user@example.com is already registered", error.to_s
+    assert_account_difference(0) do
+      error = assert_raise(PostfixAdmin::Error) do
+        @base.add_account("user@example.com", "password")
       end
+      assert_match "user@example.com is already registered", error.to_s
     end
 
-    assert_difference("Mailbox.count", 0) do
-      assert_difference("Alias.count", 0) do
-        error = assert_raise(PostfixAdmin::Error) do
-          @base.add_account("alias@example.com", "password")
-        end
-        assert_match "alias@example.com is already registered", error.to_s
+    assert_account_difference(0) do
+      error = assert_raise(PostfixAdmin::Error) do
+        @base.add_account("alias@example.com", "password")
       end
+      assert_match "alias@example.com is already registered", error.to_s
     end
   end
 end
