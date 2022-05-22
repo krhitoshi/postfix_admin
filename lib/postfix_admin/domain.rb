@@ -23,7 +23,22 @@ module PostfixAdmin
     has_many :rel_aliases, class_name: "Alias", foreign_key: :domain,
                            dependent: :destroy
 
+    # It causes errors to set `dependent: :destroy` as other columns
+    # because the domain_admins table doesn't have a single primary key.
+    #
+    # PostfixAdmin::DomainAdmin Load (0.5ms)  SELECT `domain_admins`.* FROM `domain_admins` WHERE `domain_admins`.`domain` = 'example.com'
+    # PostfixAdmin::DomainAdmin Destroy (1.1ms)  DELETE FROM `domain_admins` WHERE `domain_admins`.`` IS NULL
+    #
+    # ActiveRecord::StatementInvalid: Mysql2::Error: Unknown column 'domain_admins.' in 'where clause'
+    # from /usr/local/bundle/gems/mysql2-0.5.4/lib/mysql2/client.rb:148:in `_query'
+    # Caused by Mysql2::Error: Unknown column 'domain_admins.' in 'where clause'
+    # from /usr/local/bundle/gems/mysql2-0.5.4/lib/mysql2/client.rb:148:in `_query'
+    #
+    # It works well with `dependent: :delete_all` instead.
+    #
+    # PostfixAdmin::DomainAdmin Destroy (0.4ms)  DELETE FROM `domain_admins` WHERE `domain_admins`.`domain` = 'example.com'
     has_many :domain_admins, foreign_key: :domain, dependent: :delete_all
+
     has_many :admins, through: :domain_admins
 
     before_validation do |domain|

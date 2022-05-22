@@ -194,6 +194,7 @@ module PostfixAdmin
 
       domain.destroy
 
+      # Remove admins who had the deleted domain only
       admin_names.each do |name|
         next unless Admin.exists?(name)
 
