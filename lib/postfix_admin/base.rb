@@ -111,9 +111,7 @@ module PostfixAdmin
         raise Error, "Could not find domain: #{domain_name}"
       end
 
-      if Alias.exists?(address)
-        raise Error, "Alias has already been registered: #{address}"
-      end
+      alias_must_not_exist!(address)
 
       domain = Domain.find(domain_name)
 
@@ -140,9 +138,7 @@ module PostfixAdmin
         raise Error, "Mailbox has already been registered: #{address}"
       end
 
-      if Alias.exists?(address)
-        raise Error, "Alias has already been registered: #{address}"
-      end
+      alias_must_not_exist!(address)
 
       local_part, domain_name = address_split(address)
 
@@ -247,6 +243,12 @@ module PostfixAdmin
     end
 
     private
+
+    def alias_must_not_exist!(address)
+      if Alias.exists?(address)
+        raise Error, "Alias has already been registered: #{address}"
+      end
+    end
 
     def admin_domain_check(user_name, domain_name)
       raise Error, "#{user_name} is not registered as admin." unless Admin.exists?(user_name)
