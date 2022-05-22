@@ -31,7 +31,9 @@ module PostfixAdmin
     end
 
     def db_setup
-      raise "'database' parameter is required in '#{CLI.config_file}'" unless @config[:database]
+      unless @config[:database]
+        raise_error "'database' parameter is required in '#{CLI.config_file}'"
+      end
 
       database = ENV.fetch("DATABASE_URL") { @config[:database] }
       uri = URI.parse(database)
@@ -42,7 +44,7 @@ module PostfixAdmin
       end
 
       if uri.scheme != "mysql2"
-        raise "'#{uri.scheme}' is not supported as a DB adopter. Use 'mysql2' instead in '#{CLI.config_file}'."
+        raise_error "'#{uri.scheme}' is not supported as a DB adopter. Use 'mysql2' instead in '#{CLI.config_file}'."
       end
 
       ActiveRecord::Base.establish_connection(uri.to_s)
@@ -58,11 +60,11 @@ module PostfixAdmin
       domain = Domain.find(domain_name)
 
       if admin.has_domain?(domain)
-        raise Error, "Admin '#{user_name}' has already been registered for Domain '#{domain_name}'"
+        raise_error "Admin '#{user_name}' has already been registered for Domain '#{domain_name}'"
       end
 
       admin.rel_domains << domain
-      admin.save or raise "Relation Error: Domain of Admin"
+      admin.save || raise_error("Relation Error: Domain of Admin")
     end
 
     def delete_admin_domain(user_name, domain_name)
@@ -72,7 +74,7 @@ module PostfixAdmin
       domain_admin_query = admin.domain_admins.where(domain: domain_name)
 
       unless domain_admin_query.take
-        raise Error, "#{user_name} is not registered as admin of #{domain_name}."
+        raise_error "#{user_name} is not registered as admin of #{domain_name}."
       end
 
       domain_admin_query.delete_all
@@ -82,7 +84,7 @@ module PostfixAdmin
       password_check(password)
 
       if Admin.exists?(username)
-        raise Error, "Admin has already been registered: #{username}"
+        raise_error "Admin has already been registered: #{username}"
       end
 
       admin = Admin.new
@@ -92,7 +94,7 @@ module PostfixAdmin
       }
 
       unless admin.save
-        raise "Could not save Admin #{admin.errors.map(&:to_s).join}"
+        raise_error "Could not save Admin #{admin.errors.map(&:to_s).join}"
       end
     end
 
@@ -101,14 +103,14 @@ module PostfixAdmin
       password_check(password)
 
       if address !~ /.+\@.+\..+/
-        raise Error, "Invalid mail address: #{address}"
+        raise_error "Invalid mail address: #{address}"
       end
 
       user, domain_name = address_split(address)
       path = "#{domain_name}/#{address}/"
 
       unless Domain.exists?(domain_name)
-        raise Error, "Could not find domain: #{domain_name}"
+        raise_error "Could not find domain: #{domain_name}"
       end
 
       alias_must_not_exist!(address)
@@ -135,7 +137,7 @@ module PostfixAdmin
 
     def add_alias(address, goto)
       if Mailbox.exists?(address)
-        raise Error, "Mailbox has already been registered: #{address}"
+        raise_error "Mailbox has already been registered: #{address}"
       end
 
       alias_must_not_exist!(address)
@@ -143,7 +145,7 @@ module PostfixAdmin
       local_part, domain_name = address_split(address)
 
       unless Domain.exists?(domain_name)
-        raise Error, "Invalid domain! #{domain_name}"
+        raise_error "Invalid domain! #{domain_name}"
       end
 
       domain = Domain.find(domain_name)
@@ -159,11 +161,11 @@ module PostfixAdmin
 
     def delete_alias(address)
       if Mailbox.exists?(address)
-        raise Error, "Can not delete mailbox by delete_alias. Use delete_account"
+        raise_error "Can not delete mailbox by delete_alias. Use delete_account"
       end
 
       unless Alias.exists?(address)
-        raise Error, "#{address} is not found!"
+        raise_error "#{address} is not found!"
       end
 
       Alias.where(address: address).delete_all
@@ -173,11 +175,11 @@ module PostfixAdmin
       domain_name = domain_name.downcase
 
       unless valid_domain_name?(domain_name)
-        raise Error, "Invalid domain name: #{domain_name}"
+        raise_error "Invalid domain name: #{domain_name}"
       end
 
       if Domain.exists?(domain_name)
-        raise Error, "Domain has already been registered: #{domain_name}"
+        raise_error "Domain has already been registered: #{domain_name}"
       end
 
       domain = Domain.new
@@ -195,7 +197,7 @@ module PostfixAdmin
       domain_name = domain_name.downcase
 
       unless Domain.exists?(domain_name)
-        raise Error, "Could not find domain #{domain_name}"
+        raise_error "Could not find domain #{domain_name}"
       end
 
       domain = Domain.find(domain_name)
@@ -222,7 +224,7 @@ module PostfixAdmin
 
     def delete_admin(user_name)
       unless Admin.exists?(user_name)
-        raise Error, "Could not find admin #{user_name}"
+        raise_error "Could not find admin #{user_name}"
       end
 
       admin = Admin.find(user_name)
@@ -232,7 +234,7 @@ module PostfixAdmin
 
     def delete_account(address)
       unless Alias.exists?(address) && Mailbox.exists?(address)
-        raise Error, "Could not find account #{address}"
+        raise_error "Could not find account #{address}"
       end
 
       Mailbox.where(username: address).delete_all
@@ -240,6 +242,10 @@ module PostfixAdmin
     end
 
     private
+
+    def raise_error(message)
+      raise PostfixAdmin::Error, message
+    end
 
     def address_split(address)
       address.split('@')
@@ -251,22 +257,22 @@ module PostfixAdmin
 
     def alias_must_not_exist!(address)
       if Alias.exists?(address)
-        raise Error, "Alias has already been registered: #{address}"
+        raise_error "Alias has already been registered: #{address}"
       end
     end
 
     def admin_domain_check(user_name, domain_name)
       unless Admin.exists?(user_name)
-        raise Error, "#{user_name} is not registered as admin."
+        raise_error "#{user_name} is not registered as admin."
       end
 
       unless Domain.exists?(domain_name)
-        raise Error, "Could not find domain #{domain_name}"
+        raise_error "Could not find domain #{domain_name}"
       end
     end
 
     def password_check(password)
-      raise Error, "Empty password" if password.nil? || password.empty?
+      raise_error "Empty password" if password.nil? || password.empty?
     end
   end
 end
