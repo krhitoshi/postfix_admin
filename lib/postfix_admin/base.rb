@@ -102,8 +102,7 @@ module PostfixAdmin
     def add_account(address, password, in_name = nil)
       validate_account(address, password)
 
-      local_part, domain_name = address_split(address)
-      path = "#{domain_name}/#{address}/"
+      local_part, domain_name, maildir = account_attributes_from_address(address)
 
       domain = find_domain(domain_name)
 
@@ -112,7 +111,7 @@ module PostfixAdmin
         username: address,
         password: password,
         name: name,
-        maildir: path,
+        maildir: maildir,
         local_part: local_part,
         quota_mb: @config[:maxquota]
       }
@@ -277,6 +276,12 @@ module PostfixAdmin
       end
 
       alias_must_not_exist!(address)
+    end
+
+    def account_attributes_from_address(address)
+      local_part, domain_name = address_split(address)
+      maildir = "#{domain_name}/#{address}/"
+      [local_part, domain_name, maildir]
     end
   end
 end
