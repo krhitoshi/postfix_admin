@@ -57,7 +57,7 @@ class BaseTest < ActiveSupport::TestCase
     end
   end
 
-  test "#add_account can add a new account" do
+  test "#add_account adds a new account" do
     create(:domain, domain: "example.com")
     assert_account_difference do
       @base.add_account("new_account@example.com", "password")
@@ -66,7 +66,11 @@ class BaseTest < ActiveSupport::TestCase
     assert Alias.exists?("new_account@example.com")
 
     mailbox = Mailbox.find("new_account@example.com")
+    assert_equal "", mailbox.name
+    assert_equal "new_account@example.com", mailbox.username
+    assert_equal "new_account", mailbox.local_part
     assert_equal "example.com/new_account@example.com/", mailbox.maildir
+    assert_equal 102_400_000, mailbox.quota
   end
 
   test "#add_account raises an error for an empty password" do
