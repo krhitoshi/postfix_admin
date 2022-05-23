@@ -3,6 +3,13 @@ require "test_helper"
 class BaseTest < ActiveSupport::TestCase
   setup do
     db_reset
+    @domain = create(:domain, domain: "example.com")
+    @domain.admins << build(:admin, username: "admin@example.com")
+    @domain.rel_aliases   << build(:alias, address: "alias@example.com")
+    @domain.rel_aliases   << build(:alias, address: "user@example.com")
+    @domain.rel_mailboxes << build(:mailbox, local_part: "user")
+    @domain.save!
+
     config = { "database" => "mysql2://postfix:password@localhost/postfix" }
     @base = Base.new(config)
   end
@@ -42,7 +49,6 @@ class BaseTest < ActiveSupport::TestCase
   end
 
   test "#add_domain raises an error for an existing domain" do
-    create(:domain, domain: "example.com")
     assert Domain.exists?("example.com")
     assert_difference("Domain.count", 0) do
       error = assert_raise(PostfixAdmin::Error) { @base.add_domain("example.com") }
@@ -59,7 +65,6 @@ class BaseTest < ActiveSupport::TestCase
 
   test "#add_account adds a new account" do
     encrypted_password = "{CRAM-MD5}9186d855e11eba527a7a52ca82b313e180d62234f0acc9051b527243d41e2740"
-    create(:domain, domain: "example.com")
     assert_account_difference do
       @base.add_account("new_account@example.com", encrypted_password)
     end
@@ -117,11 +122,6 @@ class BaseTest < ActiveSupport::TestCase
   end
 
   test "#add_account raises an error for an existing mailbox or an alias" do
-    domain = create(:domain, domain: "example.com")
-    domain.rel_aliases   << build(:alias, address: "alias@example.com")
-    domain.rel_aliases   << build(:alias, address: "user@example.com")
-    domain.rel_mailboxes << build(:mailbox, local_part: "user")
-    domain.save!
     assert_account_difference(0) do
       error = assert_raise(PostfixAdmin::Error) do
         @base.add_account("user@example.com", "password")
@@ -138,13 +138,6 @@ class BaseTest < ActiveSupport::TestCase
   end
 
   test "#delete_domain deletes a domain" do
-    domain = create(:domain, domain: "example.com")
-    domain.admins << build(:admin, username: "admin@example.com")
-    domain.rel_aliases   << build(:alias, address: "alias@example.com")
-    domain.rel_aliases   << build(:alias, address: "user@example.com")
-    domain.rel_mailboxes << build(:mailbox, local_part: "user")
-    domain.save!
-
     assert Domain.exists?("example.com")
     assert Admin.exists?("admin@example.com")
     assert DomainAdmin.exists?(username: "admin@example.com",
@@ -167,17 +160,13 @@ class BaseTest < ActiveSupport::TestCase
   end
 
   test "#delete_domain raises an error for a non-existent domain name" do
-    error = assert_raise(PostfixAdmin::Error) { @base.delete_domain("example.com") }
-    assert_match "Could not find domain: example.com", error.to_s
+    error = assert_raise(PostfixAdmin::Error) do
+      @base.delete_domain("non-existent.test")
+    end
+    assert_match "Could not find domain: non-existent.test", error.to_s
   end
 
   test "#delete_account deletes an account" do
-    domain = create(:domain, domain: "example.com")
-    domain.admins << build(:admin, username: "admin@example.com")
-    domain.rel_aliases   << build(:alias, address: "user@example.com")
-    domain.rel_mailboxes << build(:mailbox, local_part: "user")
-    domain.save!
-
     assert Alias.exists?("user@example.com")
     assert Mailbox.exists?("user@example.com")
 
