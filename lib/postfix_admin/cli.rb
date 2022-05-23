@@ -388,7 +388,7 @@ module PostfixAdmin
     end
 
     def config_file
-      config_file = File.expand_path(CLI.config_file)
+      File.expand_path(CLI.config_file)
     end
 
     def load_config

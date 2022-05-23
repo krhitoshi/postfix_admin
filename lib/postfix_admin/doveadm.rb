@@ -11,8 +11,9 @@ module PostfixAdmin
 
     def self.password(in_password, in_scheme, prefix)
       password = Shellwords.escape(in_password)
-      scheme  = Shellwords.escape(in_scheme)
-      stdin, stdout, stderr = Open3.popen3("#{self.command_name} -s #{scheme} -p #{password}")
+      scheme = Shellwords.escape(in_scheme)
+      _stdin, stdout, stderr = Open3.popen3("#{self.command_name} -s #{scheme} -p #{password}")
+
       if stderr.readlines.to_s =~ /Fatal:/
         raise Error, stderr.readlines
       else
