@@ -170,4 +170,24 @@ class BaseTest < ActiveSupport::TestCase
     error = assert_raise(PostfixAdmin::Error) { @base.delete_domain("example.com") }
     assert_match "Could not find domain: example.com", error.to_s
   end
+
+  test "#delete_account deletes an account" do
+    domain = create(:domain, domain: "example.com")
+    domain.admins << build(:admin, username: "admin@example.com")
+    domain.rel_aliases   << build(:alias, address: "user@example.com")
+    domain.rel_mailboxes << build(:mailbox, local_part: "user")
+    domain.save!
+
+    assert Alias.exists?("user@example.com")
+    assert Mailbox.exists?("user@example.com")
+
+    assert_account_difference(-1) do
+      assert_nothing_raised do
+        @base.delete_account("user@example.com")
+      end
+    end
+
+    assert_not Alias.exists?("user@example.com")
+    assert_not Mailbox.exists?("user@example.com")
+  end
 end

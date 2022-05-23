@@ -117,12 +117,6 @@ RSpec.describe PostfixAdmin::Base do
   end
 
   describe "#delete_account" do
-    it "can delete an account" do
-      expect { @base.delete_account('user@example.com') }.to_not raise_error
-      expect(Mailbox.exists?('user@example.com')).to be false
-      expect(Alias.exists?('user@example.com')).to be false
-    end
-
     it "can not delete unknown account" do
       expect { @base.delete_account('unknown@example.com') }.to raise_error Error
     end
