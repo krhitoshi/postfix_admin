@@ -107,7 +107,7 @@ class BaseTest < ActiveSupport::TestCase
     end
   end
 
-  test "#add_account raises an error for an unknown domain name" do
+  test "#add_account raises an error for a non-existent domain name" do
     assert_account_difference(0) do
       error = assert_raise(PostfixAdmin::Error) do
         @base.add_account("user@unknown.example.com", "password")
@@ -166,7 +166,7 @@ class BaseTest < ActiveSupport::TestCase
     assert_not Mailbox.exists?(domain: "example.com")
   end
 
-  test "#delete_domain raises an error for an unknown domain name" do
+  test "#delete_domain raises an error for a non-existent domain name" do
     error = assert_raise(PostfixAdmin::Error) { @base.delete_domain("example.com") }
     assert_match "Could not find domain: example.com", error.to_s
   end
