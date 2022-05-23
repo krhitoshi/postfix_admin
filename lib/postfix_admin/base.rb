@@ -31,11 +31,12 @@ module PostfixAdmin
     end
 
     def db_setup
-      unless @config[:database]
-        raise_error "'database' parameter is required in '#{CLI.config_file}'"
+      database = ENV.fetch("DATABASE_URL") { @config[:database] }
+
+      unless database
+        raise_error "'database' parameter is required in '#{CLI.config_file}' or specify 'DATABASE_URL' environment variable"
       end
 
-      database = ENV.fetch("DATABASE_URL") { @config[:database] }
       uri = URI.parse(database)
 
       ActiveRecord::Base.establish_connection(uri.to_s)
