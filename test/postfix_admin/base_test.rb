@@ -66,6 +66,9 @@ class BaseTest < ActiveSupport::TestCase
     assert Mailbox.exists?("new_account@example.com")
     assert Alias.exists?("new_account@example.com")
 
+    domain = Domain.find("example.com")
+    assert domain.rel_mailboxes.exists?("new_account@example.com")
+
     mailbox = Mailbox.find("new_account@example.com")
     assert_equal "", mailbox.name
     assert_equal "new_account@example.com", mailbox.username
@@ -73,6 +76,14 @@ class BaseTest < ActiveSupport::TestCase
     assert_equal "example.com/new_account@example.com/", mailbox.maildir
     assert_equal encrypted_password, mailbox.password
     assert_equal 102_400_000, mailbox.quota
+
+    assert_account_difference do
+      @base.add_account("new_account2@example.com", encrypted_password,
+                        "New Account #2")
+    end
+
+    mailbox2 = Mailbox.find("new_account2@example.com")
+    assert_equal "New Account #2", mailbox2.name
   end
 
   test "#add_account raises an error for an empty password" do

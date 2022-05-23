@@ -99,29 +99,25 @@ module PostfixAdmin
     end
 
     # Adds an email account that consists of a Mailbox and an Alias.
-    def add_account(address, password, in_name = nil)
+    def add_account(address, password, name = "")
       validate_account(address, password)
 
       local_part, domain_name = address_split(address)
+      domain_must_exist!(domain_name)
 
-      domain = find_domain(domain_name)
-
-      name = in_name || ''
       attributes = {
-        username: address,
+        local_part: local_part,
+        domain: domain_name,
         password: password,
         name: name,
-        local_part: local_part,
         quota_mb: @config[:maxquota]
       }
 
       # An Alias also will be added when a Mailbox is saved.
       mailbox = Mailbox.new(attributes)
 
-      domain.rel_mailboxes << mailbox
-
-      unless domain.save
-        raise_error "Failed to save Mailbox and Domain #{mailbox.errors.map(&:to_s).join} #{domain.errors.map(&:to_s).join}"
+      unless mailbox.save
+        raise_error "Failed to save Mailbox: #{mailbox.errors.map(&:to_s).join}"
       end
     end
 
