@@ -190,4 +190,11 @@ class BaseTest < ActiveSupport::TestCase
     assert_not Alias.exists?("user@example.com")
     assert_not Mailbox.exists?("user@example.com")
   end
+
+  test "#delete_account raises an error for a non-existent account" do
+    error = assert_raise(PostfixAdmin::Error) do
+      @base.delete_account("unknown@example.com")
+    end
+    assert_match "Could not find account: unknown@example.com", error.to_s
+  end
 end

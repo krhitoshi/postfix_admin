@@ -206,7 +206,7 @@ module PostfixAdmin
 
     def delete_account(address)
       unless Alias.exists?(address) && Mailbox.exists?(address)
-        raise_error "Could not find account #{address}"
+        raise_error "Could not find account: #{address}"
       end
 
       Mailbox.where(username: address).delete_all
