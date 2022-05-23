@@ -1,7 +1,14 @@
 version: '3.8'
 
 # docker compose up -d
-# docker compose exec app bundle exec rake
+#
+# Run tests on service app
+# docker compose exec app bundle exec rake test
+# docker compose exec app bundle exec rake spec
+#
+# Run tests on local machine
+# DATABASE_URL="mysql2://postfix:password@127.0.0.1:13306/postfix" bundle exec rake test
+# DATABASE_URL="mysql2://postfix:password@127.0.0.1:13306/postfix" bundle exec rake spec
 
 services:
   app:
