@@ -321,7 +321,7 @@ RSpec.describe PostfixAdmin::Runner do
     describe "scheme" do
       it "--scheme require argument" do
         expect(exit_capture { Runner.start(@args + ['--scheme']) }).to match /Specify password scheme/
-    end
+      end
 
       it "can use CRAM-MD5 using --scheme" do
         expect(capture(:stdout) { Runner.start(@args + ['--scheme', 'CRAM-MD5']) }).to match EX_REGISTERED
