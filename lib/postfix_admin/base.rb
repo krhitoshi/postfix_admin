@@ -23,10 +23,10 @@ module PostfixAdmin
       @config[:mailboxes] = config["mailboxes"] || DEFAULT_CONFIG["mailboxes"]
       @config[:maxquota]  = config["maxquota"]  || DEFAULT_CONFIG["maxquota"]
       @config[:scheme]    = config["scheme"]    || DEFAULT_CONFIG["scheme"]
-      @config[:passwordhash_prefix] = if config['passwordhash_prefix'].nil?
-                                        true
+      @config[:passwordhash_prefix] = if config.has_key?("passwordhash_prefix")
+                                        config["passwordhash_prefix"]
                                       else
-                                        config['passwordhash_prefix']
+                                        DEFAULT_CONFIG["passwordhash_prefix"]
                                       end
     end
 
