@@ -79,12 +79,12 @@ class BaseTest < ActiveSupport::TestCase
 
     # with name
     assert_account_difference do
-      @base.add_account("new_account2@example.com", encrypted_password,
-                        "New Account #2")
+      @base.add_account("john_smith@example.com", encrypted_password,
+                        "John Smith")
     end
 
-    mailbox2 = Mailbox.find("new_account2@example.com")
-    assert_equal "New Account #2", mailbox2.name
+    mailbox_with_name = Mailbox.find("john_smith@example.com")
+    assert_equal "John Smith", mailbox_with_name.name
   end
 
   test "#add_account raises an error for an empty password" do
