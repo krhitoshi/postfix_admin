@@ -35,6 +35,13 @@ class BaseTest < ActiveSupport::TestCase
     assert_equal 30, @base.config[:mailboxes]
     assert_equal 100, @base.config[:maxquota]
     assert_equal "CRAM-MD5", @base.config[:scheme]
+    assert_equal true, @base.config[:passwordhash_prefix]
+  end
+
+  test "#config[:passwordhash_prefix]" do
+    assert_equal true, Base.new({}).config[:passwordhash_prefix]
+    assert_equal true, Base.new({"passwordhash_prefix" => true}).config[:passwordhash_prefix]
+    assert_equal false, Base.new({"passwordhash_prefix" => false}).config[:passwordhash_prefix]
   end
 
   test "config database" do
