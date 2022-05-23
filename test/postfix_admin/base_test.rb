@@ -77,6 +77,7 @@ class BaseTest < ActiveSupport::TestCase
     assert_equal encrypted_password, mailbox.password
     assert_equal 102_400_000, mailbox.quota
 
+    # with name
     assert_account_difference do
       @base.add_account("new_account2@example.com", encrypted_password,
                         "New Account #2")
