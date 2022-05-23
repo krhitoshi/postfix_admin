@@ -18,8 +18,4 @@ COPY docker-app/my.cnf /root/.my.cnf
 RUN curl https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh -so /wait-for-it.sh && \
     chmod 755 /wait-for-it.sh
 
-COPY docker-app/docker-entrypoint.sh /docker-entrypoint.sh
-RUN chmod +x /docker-entrypoint.sh
-ENTRYPOINT ["/docker-entrypoint.sh"]
-
 CMD ["irb"]
