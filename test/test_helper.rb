@@ -29,4 +29,22 @@ class ActiveSupport::TestCase
       block.call
     end
   end
+
+  def capture(stream)
+    begin
+      stream = stream.to_s
+      eval("$#{stream} = StringIO.new")
+      $stderr = StringIO.new if stream != "stderr"
+      yield
+      result = eval("$#{stream}").string
+    rescue SystemExit => e
+      message = $stderr.string
+      message += e.message
+      raise message
+    ensure
+      eval("$#{stream} = #{stream.upcase}")
+    end
+
+    result
+  end
 end
