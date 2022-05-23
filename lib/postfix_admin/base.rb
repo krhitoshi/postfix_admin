@@ -38,15 +38,6 @@ module PostfixAdmin
       database = ENV.fetch("DATABASE_URL") { @config[:database] }
       uri = URI.parse(database)
 
-      if uri.scheme == "mysql"
-        uri.scheme = "mysql2"
-        warn("Deprecation Warning: Use 'mysql2' as a DB adopter instead of 'mysql' in '#{CLI.config_file}'")
-      end
-
-      if uri.scheme != "mysql2"
-        raise_error "'#{uri.scheme}' is not supported as a DB adopter. Use 'mysql2' instead in '#{CLI.config_file}'."
-      end
-
       ActiveRecord::Base.establish_connection(uri.to_s)
 
     rescue LoadError => e
