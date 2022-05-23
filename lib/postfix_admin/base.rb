@@ -18,11 +18,11 @@ module PostfixAdmin
 
     def initialize(config)
       @config = {}
-      @config[:database]  = config['database']
-      @config[:aliases]   = config['aliases']   || 30
-      @config[:mailboxes] = config['mailboxes'] || 30
-      @config[:maxquota]  = config['maxquota']  || 100
-      @config[:scheme]    = config['scheme']    || 'CRAM-MD5'
+      @config[:database]  = config["database"]
+      @config[:aliases]   = config["aliases"]   || DEFAULT_CONFIG["aliases"]
+      @config[:mailboxes] = config["mailboxes"] || DEFAULT_CONFIG["mailboxes"]
+      @config[:maxquota]  = config["maxquota"]  || DEFAULT_CONFIG["maxquota"]
+      @config[:scheme]    = config["scheme"]    || DEFAULT_CONFIG["scheme"]
       @config[:passwordhash_prefix] = if config['passwordhash_prefix'].nil?
                                         true
                                       else
