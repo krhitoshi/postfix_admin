@@ -58,9 +58,10 @@ class BaseTest < ActiveSupport::TestCase
   end
 
   test "#add_account adds a new account" do
+    encrypted_password = "{CRAM-MD5}9186d855e11eba527a7a52ca82b313e180d62234f0acc9051b527243d41e2740"
     create(:domain, domain: "example.com")
     assert_account_difference do
-      @base.add_account("new_account@example.com", "password")
+      @base.add_account("new_account@example.com", encrypted_password)
     end
     assert Mailbox.exists?("new_account@example.com")
     assert Alias.exists?("new_account@example.com")
@@ -70,6 +71,7 @@ class BaseTest < ActiveSupport::TestCase
     assert_equal "new_account@example.com", mailbox.username
     assert_equal "new_account", mailbox.local_part
     assert_equal "example.com/new_account@example.com/", mailbox.maildir
+    assert_equal encrypted_password, mailbox.password
     assert_equal 102_400_000, mailbox.quota
   end
 
