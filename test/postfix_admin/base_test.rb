@@ -64,6 +64,9 @@ class BaseTest < ActiveSupport::TestCase
     end
     assert Mailbox.exists?("new_account@example.com")
     assert Alias.exists?("new_account@example.com")
+
+    mailbox = Mailbox.find("new_account@example.com")
+    assert_equal "example.com/new_account@example.com/", mailbox.maildir
   end
 
   test "#add_account raises an error for an empty password" do
