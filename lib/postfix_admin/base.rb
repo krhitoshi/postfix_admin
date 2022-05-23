@@ -93,9 +93,7 @@ module PostfixAdmin
         password: password
       }
 
-      unless admin.save
-        raise_error "Failed to save Admin #{admin.errors.map(&:to_s).join}"
-      end
+      raise_save_error(admin) unless admin.save
     end
 
     # Adds an email account that consists of a Mailbox and an Alias.
@@ -116,9 +114,7 @@ module PostfixAdmin
       # An Alias also will be added when a Mailbox is saved.
       mailbox = Mailbox.new(attributes)
 
-      unless mailbox.save
-        raise_error "Failed to save Mailbox: #{mailbox.errors.map(&:to_s).join}"
-      end
+      raise_save_error(mailbox) unless mailbox.save
     end
 
     def add_alias(address, goto)
@@ -138,7 +134,8 @@ module PostfixAdmin
       }
 
       domain.rel_aliases << Alias.new(attributes)
-      domain.save || raise_error("Failed to save Alias")
+
+      raise_save_error(domain) unless domain.save
     end
 
     def delete_alias(address)
@@ -225,6 +222,10 @@ module PostfixAdmin
 
     def raise_error(message)
       raise PostfixAdmin::Error, message
+    end
+
+    def raise_save_error(obj)
+      raise_error "Failed to save #{obj.class}: #{obj.errors.full_messages.join(', ')}"
     end
 
     def address_split(address)
