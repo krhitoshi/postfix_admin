@@ -38,6 +38,8 @@ jobs:
           bundler-cache: true # runs 'bundle install' and caches installed gems automatically
       - name: Install dovecotpw
         run: sudo apt-get install -y dovecot-core
+      - name: Copy configure file
+        run: cp ./test/misc/postfix_admin.conf ~/.postfix_admin.conf
       - name: docker-compose up
         run: docker-compose up -d db
       - name: Sleep (work around)
