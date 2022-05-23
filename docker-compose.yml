@@ -3,7 +3,7 @@ version: '3.8'
 # docker compose up -d
 #
 # Run tests on service app
-# You may need to run tests on Docker because of the requirement of dovecotpw
+# You may need to run tests on Docker because of its requirement of doveadm
 # docker compose exec app bundle exec rake test
 # docker compose exec app bundle exec rake spec
 

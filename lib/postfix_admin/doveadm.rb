@@ -27,12 +27,7 @@ module PostfixAdmin
     end
 
     def self.command_name
-      begin
-        Open3.capture3("doveadm pw -l")[2].exited?
-        "doveadm pw"
-      rescue Errno::ENOENT
-        "dovecotpw"
-      end
+      "doveadm pw"
     end
   end
 end
