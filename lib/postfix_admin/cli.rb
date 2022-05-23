@@ -271,7 +271,7 @@ module PostfixAdmin
     def add_account(address, password, scheme = nil, name = nil)
       validate_password(password)
 
-      @base.add_account(address, hashed_password(password, scheme), name)
+      @base.add_account(address, hashed_password(password, scheme), name: name)
       puts_registered(address, "an account")
       show_account_details(address)
     end

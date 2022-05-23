@@ -97,7 +97,7 @@ module PostfixAdmin
     end
 
     # Adds an email account that consists of a Mailbox and an Alias.
-    def add_account(address, password, name = "")
+    def add_account(address, password, name: "")
       validate_account(address, password)
 
       local_part, domain_name = address_split(address)

@@ -80,7 +80,7 @@ class BaseTest < ActiveSupport::TestCase
     # with name
     assert_account_difference do
       @base.add_account("john_smith@example.com", encrypted_password,
-                        "John Smith")
+                        name: "John Smith")
     end
 
     mailbox_with_name = Mailbox.find("john_smith@example.com")
