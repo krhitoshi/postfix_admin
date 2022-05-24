@@ -29,5 +29,6 @@ class RunnerTest < ActiveSupport::TestCase
       res = capture(:stdout) { Runner.start(%w[add_admin admin@new-domain.test password]) }
       assert_match '"admin@new-domain.test" was successfully registered as an admin', res
     end
+    assert Admin.exists?("admin@new-domain.test")
   end
 end
