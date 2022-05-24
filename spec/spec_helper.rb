@@ -119,9 +119,11 @@ RSpec.configure do |config|
     result
   end
 
+  # Returns STDERR when application exits suppressing STDOUT
   def exit_capture
     begin
       $stderr = StringIO.new
+      $stdout = StringIO.new
       yield
     rescue SystemExit => e
     ensure

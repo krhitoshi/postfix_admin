@@ -308,7 +308,7 @@ RSpec.describe PostfixAdmin::Runner do
       end
 
       it "can change full name" do
-        Runner.start(@args + ['-n', @name])
+        capture(:stdout) { Runner.start(@args + ['-n', @name]) }
         expect(Mailbox.find(@user).name).to eq @name
       end
 
