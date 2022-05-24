@@ -30,12 +30,14 @@ class ActiveSupport::TestCase
     end
   end
 
-  def capture(stream)
+  def capture(stream, &block)
     begin
       stream = stream.to_s
       eval("$#{stream} = StringIO.new")
       $stderr = StringIO.new if stream != "stderr"
-      yield
+
+      block.call
+
       result = eval("$#{stream}").string
     rescue SystemExit => e
       message = $stderr.string
