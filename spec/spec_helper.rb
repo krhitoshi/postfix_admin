@@ -128,6 +128,8 @@ RSpec.configure do |config|
     rescue SystemExit => e
     ensure
       result = $stderr.string
+      $stderr = STDERR
+      $stdout = STDOUT
     end
     result
   end

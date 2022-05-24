@@ -13,7 +13,14 @@ RSpec.describe PostfixAdmin::CLI, "when config file does not exist" do
   end
 
   it "#new should raise SystemExit and create config_file, permission should be 600" do
-    expect { CLI.new }.to raise_error SystemExit
+    expect do
+      $stderr = StringIO.new
+      $stdout = StringIO.new
+      CLI.new
+    ensure
+      $stderr = STDERR
+      $stdout = STDOUT
+    end.to raise_error SystemExit
     expect(File.exists?(@file)).to be true
     expect("%o" % File.stat(@file).mode).to eq "100600"
   end
@@ -23,7 +30,7 @@ RSpec.describe PostfixAdmin::CLI do
   before do
     db_initialize
     CLI.config_file = CLI::DEFAULT_CONFIG_PATH
-    @cli = CLI.new
+   @cli = CLI.new
   end
 
   describe "#show" do
@@ -45,7 +52,7 @@ RSpec.describe PostfixAdmin::CLI do
     end
 
     it "when unknown domain, raises Error" do
-      expect { @cli.show('unknown.example.com') }.to raise_error Error
+      expect { capture(:stdout) { @cli.show('unknown.example.com') } }.to raise_error Error
     end
   end
 
@@ -63,7 +70,7 @@ RSpec.describe PostfixAdmin::CLI do
     end
 
     it "raises error when unknown account" do
-      expect { @cli.show_account_details('unknown@example.com') }.to raise_error Error
+      expect { capture(:stdout) { @cli.show_account_details('unknown@example.com') } }.to raise_error Error
     end
   end
 
@@ -81,7 +88,7 @@ RSpec.describe PostfixAdmin::CLI do
     end
 
     it "when unknown domain, raises Error" do
-      expect { @cli.show_summary('unknown.example.com') }.to raise_error Error
+      expect { capture(:stdout) { @cli.show_summary('unknown.example.com') } }.to raise_error Error
     end
   end
 
@@ -91,7 +98,7 @@ RSpec.describe PostfixAdmin::CLI do
 
   it "#show_address" do
     expect { capture(:stdout) { @cli.show_address('example.com') } }.to_not raise_error
-    expect { @cli.show_address('unknown.example.com') }.to raise_error Error
+    expect { capture(:stdout) { @cli.show_address('unknown.example.com') } }.to raise_error Error
   end
 
   it "#show_admin_domain" do
@@ -100,23 +107,23 @@ RSpec.describe PostfixAdmin::CLI do
 
   it "#show_alias" do
     expect { capture(:stdout) { @cli.show_alias('example.com') } }.to_not raise_error
-    expect { @cli.show_alias('unknown.example.com') }.to raise_error Error
+    expect { capture(:stdout) { @cli.show_alias('unknown.example.com') } }.to raise_error Error
   end
 
   describe "change password" do
     it "#change_admin_password" do
       expect { capture(:stdout) { @cli.change_admin_password('admin@example.com', 'new_password') } }.to_not raise_error
       expect(Admin.find('admin@example.com').password).to eq CRAM_MD5_NEW_PASS
-      expect { @cli.change_admin_password('unknown_admin@example.com', 'new_password') }.to raise_error Error
+      expect { capture(:stdout) { @cli.change_admin_password('unknown_admin@example.com', 'new_password') } }.to raise_error Error
 
-      expect { @cli.change_admin_password('admin@example.com', '1234') }.to raise_error ArgumentError
+      expect { capture(:stdout) { @cli.change_admin_password('admin@example.com', '1234') } }.to raise_error ArgumentError
     end
 
     it "#change_account_password" do
       expect { capture(:stdout) { @cli.change_account_password('user@example.com', 'new_password') } }.to_not raise_error
       expect(Mailbox.find('user@example.com').password).to eq CRAM_MD5_NEW_PASS
-      expect { @cli.change_account_password('unknown@example.com', 'new_password') }.to raise_error Error
-      expect { @cli.change_account_password('user@example.com', '1234') }.to raise_error ArgumentError
+      expect { capture(:stdout) { @cli.change_account_password('unknown@example.com', 'new_password') } }.to raise_error Error
+      expect { capture(:stdout) { @cli.change_account_password('user@example.com', '1234') } }.to raise_error ArgumentError
     end
 
     describe "without prefix" do
@@ -129,16 +136,16 @@ RSpec.describe PostfixAdmin::CLI do
       it "#change_admin_password without prefix" do
         expect { capture(:stdout) { @cli.change_admin_password('admin@example.com', 'new_password') } }.to_not raise_error
         expect(Admin.find('admin@example.com').password).to eq CRAM_MD5_NEW_PASS_WITHOUT_PREFIX
-        expect { @cli.change_admin_password('unknown_admin@example.com', 'new_password') }.to raise_error Error
+        expect { capture(:stdout) { @cli.change_admin_password('unknown_admin@example.com', 'new_password') } }.to raise_error Error
 
-        expect { @cli.change_admin_password('admin@example.com', '1234') }.to raise_error ArgumentError
+        expect { capture(:stdout) { @cli.change_admin_password('admin@example.com', '1234') } }.to raise_error ArgumentError
       end
 
       it "#change_account_password" do
         expect { capture(:stdout) { @cli.change_account_password('user@example.com', 'new_password') } }.to_not raise_error
         expect(Mailbox.find('user@example.com').password).to eq CRAM_MD5_NEW_PASS_WITHOUT_PREFIX
-        expect { @cli.change_account_password('unknown@example.com', 'new_password') }.to raise_error Error
-        expect { @cli.change_account_password('user@example.com', '1234') }.to raise_error ArgumentError
+        expect { capture(:stdout) { @cli.change_account_password('unknown@example.com', 'new_password') } }.to raise_error Error
+        expect { capture(:stdout) { @cli.change_account_password('user@example.com', '1234') } }.to raise_error ArgumentError
       end
     end
   end
@@ -150,11 +157,11 @@ RSpec.describe PostfixAdmin::CLI do
     end
 
     it "can not add exist admin" do
-      expect { @cli.add_admin('admin@example.com', 'password') }.to raise_error Error
+      expect { capture(:stdout) { @cli.add_admin('admin@example.com', 'password') } }.to raise_error Error
     end
 
     it "does not allow too short password (<5)" do
-      expect { @cli.add_admin('admin@example.com', '1234') }.to raise_error ArgumentError
+      expect { capture(:stdout) { @cli.add_admin('admin@example.com', '1234') } }.to raise_error ArgumentError
     end
   end
 
@@ -170,20 +177,20 @@ RSpec.describe PostfixAdmin::CLI do
     end
 
     it "can delete an admin whish has multiple domains" do
-      @cli.add_admin_domain('admin@example.com', 'example.org')
+      capture(:stdout) { @cli.add_admin_domain('admin@example.com', 'example.org') }
       expect { capture(:stdout) { @cli.delete_admin('admin@example.com') } }.to_not raise_error
       expect(Admin.exists?('admin@example.com')).to be false
     end
 
     it "can not delete unknown admin" do
-      expect { @cli.delete_admin('unknown_admin@example.com') }.to raise_error Error
+      expect { capture(:stdout) { @cli.delete_admin('unknown_admin@example.com') } }.to raise_error Error
     end
   end
 
   it "#add_alias and #delete_alias" do
-    expect { @cli.add_alias('user@example.com', 'goto@example.jp') }.to raise_error Error
-    expect { @cli.delete_alias('user@example.com') }.to raise_error Error
-    expect { @cli.delete_alias('unknown@example.com') }.to raise_error Error
+    expect { capture(:stdout) { @cli.add_alias('user@example.com', 'goto@example.jp') } }.to raise_error Error
+    expect { capture(:stdout) { @cli.delete_alias('user@example.com') } }.to raise_error Error
+    expect { capture(:stdout) { @cli.delete_alias('unknown@example.com') } }.to raise_error Error
 
     expect { capture(:stdout) { @cli.add_alias('new_alias@example.com', 'goto@example.jp') } }.to_not raise_error
     expect(Alias.exists?('new_alias@example.com')).to be true
@@ -200,23 +207,23 @@ RSpec.describe PostfixAdmin::CLI do
     end
 
     it "can not add account of unknown domain" do
-      expect { @cli.add_account('user@unknown.example.com', 'password') }.to raise_error Error
+      expect { capture(:stdout) { @cli.add_account('user@unknown.example.com', 'password') } }.to raise_error Error
     end
 
     it "does not allow too short password (<5)" do
-      expect { @cli.add_account('new_user@example.com', '1234') }.to raise_error ArgumentError
+      expect { capture(:stdout) { @cli.add_account('new_user@example.com', '1234') } }.to raise_error ArgumentError
     end
   end
 
   describe "#delete_accont" do
     it "can delete an account" do
-      expect { @cli.delete_account('user@example.com') }.to_not raise_error
+      expect { capture(:stdout) { @cli.delete_account('user@example.com') } }.to_not raise_error
       expect(Mailbox.exists?('user@example.com')).to be false
       expect(Alias.exists?('user@example.com')).to be false
     end
 
     it "can not delete unknown account" do
-      expect { @cli.delete_account('unknown@example.com') }.to raise_error Error
+      expect { capture(:stdout) { @cli.delete_account('unknown@example.com') } }.to raise_error Error
     end
   end
 
@@ -231,8 +238,8 @@ RSpec.describe PostfixAdmin::CLI do
     end
 
     it "can not add exist domain" do
-      expect { @cli.add_domain('example.com') }.to raise_error Error
-      expect { @cli.add_domain('ExAmPle.Com') }.to raise_error Error
+      expect { capture(:stdout) { @cli.add_domain('example.com') } }.to raise_error Error
+      expect { capture(:stdout) { @cli.add_domain('ExAmPle.Com') } }.to raise_error Error
     end
   end
 
@@ -261,7 +268,7 @@ RSpec.describe PostfixAdmin::CLI do
     end
 
     it "raise error when unknown account" do
-      expect { @cli.edit_account('unknown@example.com', {quota: 50}) }.to raise_error Error
+      expect { capture(:stdout) { @cli.edit_account('unknown@example.com', {quota: 50}) } }.to raise_error Error
     end
   end
 
@@ -296,14 +303,16 @@ RSpec.describe PostfixAdmin::CLI do
     end
 
     it "can delete related admins, addresses and aliases" do
-      @cli.add_admin('admin@example.org', 'password')
-      @cli.add_admin_domain('admin@example.org', 'example.org')
-      @cli.add_account('user2@example.com', 'password')
+      capture(:stdout) do
+        @cli.add_admin('admin@example.org', 'password')
+        @cli.add_admin_domain('admin@example.org', 'example.org')
+        @cli.add_account('user2@example.com', 'password')
 
-      @cli.add_admin('other_admin@example.com', 'password')
-      @cli.add_admin_domain('other_admin@example.com', 'example.com')
+        @cli.add_admin('other_admin@example.com', 'password')
+        @cli.add_admin_domain('other_admin@example.com', 'example.com')
 
-      @cli.add_admin('no_related@example.com', 'password')
+        @cli.add_admin('no_related@example.com', 'password')
+      end
 
       expect { capture(:stdout) { @cli.delete_domain('example.com') } }.to_not raise_error
       expect(Admin.exists?('admin@example.com')).to be false
