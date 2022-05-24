@@ -7,7 +7,7 @@ class RunnerTest < ActiveSupport::TestCase
     @domain = create(:domain, domain: "example.test")
   end
 
-  test "#add_domain adds a new domain" do
+  test "#add_domain adds a new Domain" do
     assert_difference("Domain.count") do
       res = capture(:stdout) { Runner.start(%w[add_domain new-domain.test]) }
       assert_match '"new-domain.test" was successfully registered as a domain', res
@@ -15,7 +15,7 @@ class RunnerTest < ActiveSupport::TestCase
     assert Domain.exists?("new-domain.test")
   end
 
-  test "#delete_domain deletes a domain" do
+  test "#delete_domain deletes a Domain" do
     assert Domain.exists?("example.test")
     assert_difference("Domain.count", -1) do
       res = capture(:stdout) { Runner.start(%w[delete_domain example.test]) }
