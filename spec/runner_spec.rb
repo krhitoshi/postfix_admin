@@ -342,16 +342,6 @@ RSpec.describe PostfixAdmin::Runner do
     end
   end
 
-  it "add and delete methods" do
-    expect { Runner.start(['add_domain', 'example.net']) }.to_not raise_error
-    Runner.start(['add_admin', 'admin@example.net', 'password'])
-    Runner.start(['add_admin_domain', 'admin@example.net', 'example.net'])
-
-    expect { Runner.start(['add_account', 'user1@example.net', 'password']) }.to_not raise_error
-    expect { Runner.start(['add_account', 'user2@example.net', 'password']) }.to_not raise_error
-    expect { Runner.start(['delete_domain', 'example.net']) }.to_not raise_error
-  end
-
   describe "log" do
     it "does not raise error" do
       expect(exit_capture { Runner.start(['log']) }).to eq ""

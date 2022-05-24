@@ -8,6 +8,20 @@ class RunnerTest < ActiveSupport::TestCase
     @domain.admins << build(:admin, username: "admin@example.test")
   end
 
+  test "usual flow with add/delete methods" do
+    assert_nothing_raised do
+      capture(:stdout) do
+        Runner.start(%w[add_domain new-domain.test])
+        Runner.start(%w[add_admin admin@new-domain.test password])
+        Runner.start(%w[add_admin_domain admin@new-domain.test new-domain.test])
+
+        Runner.start(%w[add_account user1@new-domain.test password])
+        Runner.start(%w[add_account user2@new-domain.test password])
+        Runner.start(%w[delete_domain new-domain.test])
+      end
+    end
+  end
+
   test "#add_domain adds a new Domain" do
     assert_difference("Domain.count") do
       res = capture(:stdout) { Runner.start(%w[add_domain new-domain.test]) }
