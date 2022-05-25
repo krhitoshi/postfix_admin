@@ -22,6 +22,11 @@ class RunnerTest < ActiveSupport::TestCase
     end
   end
 
+  test "#version" do
+    res = capture { Runner.start(["version"]) }
+    assert_match /postfix_admin \d+\.\d+\.\d/, res
+  end
+
   test "#add_domain adds a new Domain" do
     assert_difference("Domain.count") do
       res = capture { Runner.start(%w[add_domain new-domain.test]) }

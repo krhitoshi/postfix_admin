@@ -6,10 +6,6 @@ RSpec.describe PostfixAdmin::Runner do
     db_initialize
   end
 
-  it "version" do
-    expect(capture(:stdout) { Runner.start(["version"]) }).to match /postfix_admin \d+\.\d+\.\d/
-  end
-
   it "summary" do
     expect(capture(:stdout) { Runner.start(["summary"]) }).to match /\[Summary\]/
     expect(capture(:stdout) { Runner.start(["summary", "example.com"]) }).to match /\[Summary of example.com\]/
