@@ -49,4 +49,5 @@ class ActiveSupport::TestCase
 
     result
   end
+  alias silent capture
 end

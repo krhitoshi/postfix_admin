@@ -10,7 +10,7 @@ class RunnerTest < ActiveSupport::TestCase
 
   test "usual flow with add/delete methods" do
     assert_nothing_raised do
-      capture do
+      silent do
         Runner.start(%w[add_domain new-domain.test])
         Runner.start(%w[add_admin admin@new-domain.test password])
         Runner.start(%w[add_admin_domain admin@new-domain.test new-domain.test])
