@@ -30,11 +30,10 @@ class ActiveSupport::TestCase
     end
   end
 
-  def capture(stream, &block)
+  def capture(stream = :stdout, &block)
     begin
-      stream = stream.to_s
-      eval("$#{stream} = StringIO.new")
-      $stderr = StringIO.new if stream != "stderr"
+      $stdout = StringIO.new
+      $stderr = StringIO.new
 
       block.call
 
@@ -44,7 +43,8 @@ class ActiveSupport::TestCase
       message += e.message
       raise message
     ensure
-      eval("$#{stream} = #{stream.upcase}")
+      $stdout = STDOUT
+      $stderr = STDERR
     end
 
     result
