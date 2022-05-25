@@ -6,11 +6,6 @@ RSpec.describe PostfixAdmin::Runner do
     db_initialize
   end
 
-  it "summary" do
-    expect(capture(:stdout) { Runner.start(["summary"]) }).to match /\[Summary\]/
-    expect(capture(:stdout) { Runner.start(["summary", "example.com"]) }).to match /\[Summary of example.com\]/
-  end
-
   describe "show" do
     it "shows information of example.com" do
       expect(capture(:stdout) { Runner.start(["show"]) }).to match \

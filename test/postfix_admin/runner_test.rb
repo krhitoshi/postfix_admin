@@ -27,6 +27,14 @@ class RunnerTest < ActiveSupport::TestCase
     assert_match /postfix_admin \d+\.\d+\.\d/, res
   end
 
+  test "#summary" do
+    res = capture { Runner.start(["summary"]) }
+    assert_match "[Summary]", res
+
+    res = capture { Runner.start(%w[summary example.test]) }
+    assert_match "[Summary of example.test]", res
+  end
+
   test "#schemes" do
     res = capture { Runner.start(["schemes"]) }
     assert_match "CRAM-MD5", res
