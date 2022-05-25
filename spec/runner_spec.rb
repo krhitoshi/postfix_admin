@@ -48,11 +48,6 @@ RSpec.describe PostfixAdmin::Runner do
     end
   end
 
-  it "setup" do
-    expect(capture(:stdout) { Runner.start(['setup', 'example.net', 'password']) }).to match EX_REGISTERED
-    expect(capture(:stdout) { Runner.start(['delete_domain', 'example.net']) }).to match EX_DELETED
-  end
-
   describe "admin_passwd" do
     it "can change password of an admin" do
       expect(capture(:stdout) { Runner.start(['admin_passwd', 'admin@example.com', 'new_password']) }).to match /successfully changed/
