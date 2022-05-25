@@ -11,10 +11,6 @@ RSpec.describe PostfixAdmin::Runner do
     expect(capture(:stdout) { Runner.start(["summary", "example.com"]) }).to match /\[Summary of example.com\]/
   end
 
-  it "schemes" do
-    expect(capture(:stdout) { Runner.start(["schemes"]) }).to match /CLEARTEXT/
-  end
-
   describe "show" do
     it "shows information of example.com" do
       expect(capture(:stdout) { Runner.start(["show"]) }).to match \

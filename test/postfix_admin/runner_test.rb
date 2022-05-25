@@ -27,6 +27,12 @@ class RunnerTest < ActiveSupport::TestCase
     assert_match /postfix_admin \d+\.\d+\.\d/, res
   end
 
+  test "#schemes" do
+    res = capture { Runner.start(["schemes"]) }
+    assert_match "CRAM-MD5", res
+    assert_match "CLEARTEXT", res
+  end
+
   test "#add_domain adds a new Domain" do
     assert_difference("Domain.count") do
       res = capture { Runner.start(%w[add_domain new-domain.test]) }
