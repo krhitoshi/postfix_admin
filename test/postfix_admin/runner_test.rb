@@ -24,7 +24,7 @@ class RunnerTest < ActiveSupport::TestCase
 
   test "#version" do
     res = capture { Runner.start(["version"]) }
-    assert_match /postfix_admin \d+\.\d+\.\d/, res
+    assert_match(/postfix_admin \d+\.\d+\.\d/, res)
   end
 
   test "#summary" do
