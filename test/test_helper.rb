@@ -30,6 +30,8 @@ class ActiveSupport::TestCase
     end
   end
 
+  # Returns STDOUT or STDERR as String suppressing both STDOUT and STDERR.
+  # Raises StandardError when tests unexpectedly exit.
   def capture(stream = :stdout, &block)
     begin
       $stdout = StringIO.new
@@ -41,7 +43,7 @@ class ActiveSupport::TestCase
     rescue SystemExit => e
       message = $stderr.string
       message += e.message
-      raise message
+      raise StandardError, message
     ensure
       $stdout = STDOUT
       $stderr = STDERR
