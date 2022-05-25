@@ -1,6 +1,6 @@
 ## 0.2.2
- * Supports only `doveadm pw` for password hash generation.  
-   `dovecotpw` is not supported any more
+ * No longer supports `dovecotpw` for password hash generation.  
+   `doveadm pw` is only supported.
 
 ## 0.2.1
  * Supported `superadmin` column of `admin` table
