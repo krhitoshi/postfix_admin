@@ -104,9 +104,8 @@ RSpec.configure do |config|
   def capture(stream)
     begin
       stream = stream.to_s
-      eval "$#{stream} = StringIO.new"
-      $stdout = StringIO.new if stream == "stderr"
-      $stderr = StringIO.new if stream == "stdout"
+      $stdout = StringIO.new
+      $stderr = StringIO.new
       yield
       result = eval("$#{stream}").string
     rescue SystemExit => e
@@ -114,9 +113,8 @@ RSpec.configure do |config|
       message += e.message
       raise message
     ensure
-      eval("$#{stream} = #{stream.upcase}")
-      $stdout = STDOUT if stream == "stderr"
-      $stderr = STDERR if stream == "stdout"
+      $stdout = STDOUT
+      $stderr = STDERR
     end
 
     result
