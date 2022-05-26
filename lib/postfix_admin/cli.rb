@@ -480,8 +480,6 @@ module PostfixAdmin
       end
     end
 
-    private
-
     def hashed_password(password, in_scheme = nil)
       prefix = @base.config[:passwordhash_prefix]
       scheme = in_scheme || @base.config[:scheme]
