@@ -324,12 +324,6 @@ RSpec.describe PostfixAdmin::Runner do
     end
   end
 
-  describe "log" do
-    it "does not raise error" do
-      expect(exit_capture { Runner.start(['log']) }).to eq ""
-    end
-  end
-
   describe "dump" do
     it "does not raise error" do
       expect(exit_capture { Runner.start(['dump']) }).to eq ""

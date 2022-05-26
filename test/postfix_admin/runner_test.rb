@@ -90,4 +90,10 @@ class RunnerTest < ActiveSupport::TestCase
     admin = Admin.find("admin@new-domain.test")
     assert admin.rel_domains.exists?("new-domain.test")
   end
+
+  test "#log" do
+    assert_nothing_raised do
+      silent { Runner.start(["log"]) }
+    end
+  end
 end
