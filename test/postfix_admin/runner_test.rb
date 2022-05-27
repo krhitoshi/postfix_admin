@@ -96,4 +96,13 @@ class RunnerTest < ActiveSupport::TestCase
       silent { Runner.start(["log"]) }
     end
   end
+
+  test "#dump" do
+    assert_nothing_raised do
+      res = capture { Runner.start(["dump"]) }
+      assert_match "Domains", res
+      assert_match "example.test", res
+      assert_match "admin@example.test", res
+    end
+  end
 end

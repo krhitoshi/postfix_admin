@@ -323,15 +323,4 @@ RSpec.describe PostfixAdmin::Runner do
       end
     end
   end
-
-  describe "dump" do
-    it "does not raise error" do
-      expect(exit_capture { Runner.start(['dump']) }).to eq ""
-    end
-
-    it "all data" do
-      result = capture(:stdout) { Runner.start(['dump']) }
-      expect(result).to match /Domains/
-    end
-  end
 end
