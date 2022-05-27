@@ -99,6 +99,20 @@ class RunnerTest < ActiveSupport::TestCase
     assert admin.rel_domains.exists?("example.test")
   end
 
+  test "#delete_admin_domain deletes a DomainAdmin" do
+    admin = Admin.find("admin@example.test")
+    assert admin.rel_domains.exists?("example.test")
+    assert_difference("DomainAdmin.count", -1) do
+      res = capture do
+        Runner.start(%w[delete_admin_domain admin@example.test example.test])
+      end
+      expected = "example.test was successfully deleted from admin@example.test"
+      assert_match expected, res
+    end
+    admin.reload
+    assert_not admin.rel_domains.exists?("example.test")
+  end
+
   test "#setup adds a Domain and its Admin" do
     assert_difference(%w[Domain.count Admin.count DomainAdmin.count]) do
       res = capture { Runner.start(%w[setup new-domain.test password]) }
