@@ -243,10 +243,6 @@ RSpec.describe PostfixAdmin::Runner do
     end
   end
 
-  it "add_admin_domain" do
-    expect(capture(:stdout) { Runner.start(['add_admin_domain', 'admin@example.com', 'example.org']) }).to match EX_REGISTERED
-  end
-
   it "delete_admin_domain" do
     expect(capture(:stdout) { Runner.start(['delete_admin_domain', 'admin@example.com', 'example.com']) }).to match EX_DELETED
   end

@@ -86,6 +86,19 @@ class RunnerTest < ActiveSupport::TestCase
     assert_not Admin.exists?("admin@example.test")
   end
 
+  test "#add_admin_domain adds a DomainAdmin" do
+    create(:admin, username: "new-admin@example.test")
+    assert_difference("DomainAdmin.count") do
+      res = capture do
+        Runner.start(%w[add_admin_domain new-admin@example.test example.test])
+      end
+      expected = '"example.test" was successfully registered as a domain of new-admin@example.test'
+      assert_match expected, res
+    end
+    admin = Admin.find("new-admin@example.test")
+    assert admin.rel_domains.exists?("example.test")
+  end
+
   test "#setup adds a Domain and its Admin" do
     assert_difference(%w[Domain.count Admin.count DomainAdmin.count]) do
       res = capture { Runner.start(%w[setup new-domain.test password]) }
