@@ -6,6 +6,7 @@ class RunnerTest < ActiveSupport::TestCase
     db_reset
     @domain = create(:domain, domain: "example.test")
     @domain.admins << build(:admin, username: "admin@example.test")
+    @domain.save!
   end
 
   test "usual flow with add/delete methods" do
