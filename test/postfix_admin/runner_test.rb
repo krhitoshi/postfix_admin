@@ -11,6 +11,7 @@ class RunnerTest < ActiveSupport::TestCase
   test "usual flow with add/delete methods" do
     assert_nothing_raised do
       silent do
+        # Use add_domain subcommand
         Runner.start(%w[add_domain new-domain.test])
         Runner.start(%w[add_admin admin@new-domain.test password])
         Runner.start(%w[add_admin_domain admin@new-domain.test new-domain.test])
@@ -18,6 +19,12 @@ class RunnerTest < ActiveSupport::TestCase
         Runner.start(%w[add_account user1@new-domain.test password])
         Runner.start(%w[add_account user2@new-domain.test password])
         Runner.start(%w[delete_domain new-domain.test])
+
+        # Use setup subcommand
+        Runner.start(%w[setup new-domain2.test password])
+        Runner.start(%w[add_account user1@new-domain2.test password])
+        Runner.start(%w[add_account user2@new-domain2.test password])
+        Runner.start(%w[delete_domain new-domain2.test])
       end
     end
   end
