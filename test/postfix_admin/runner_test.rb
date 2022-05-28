@@ -183,6 +183,13 @@ class RunnerTest < ActiveSupport::TestCase
     assert_not Alias.exists?("alias@example.test")
   end
 
+  test "#delete_alias can not delete an Alias that belongs to a Mailbox" do
+    e = assert_raise(SystemExit) do
+      silent { Runner.start(%w[delete_alias user@example.test]) }
+    end
+    assert_match "Can not delete mailbox by delete_alias", e.message
+  end
+
   test "#log" do
     assert_nothing_raised do
       silent { Runner.start(["log"]) }

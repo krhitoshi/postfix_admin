@@ -30,26 +30,43 @@ class ActiveSupport::TestCase
     end
   end
 
-  # Returns STDOUT or STDERR as String suppressing both STDOUT and STDERR.
-  # Raises StandardError when tests unexpectedly exit.
-  def capture(stream = :stdout, &block)
+  # Returns STDOUT and STDERR without rescuing SystemExit
+  def capture_base(&block)
     begin
       $stdout = StringIO.new
       $stderr = StringIO.new
 
       block.call
-
-      result = eval("$#{stream}").string
-    rescue SystemExit => e
-      message = $stderr.string
-      message += e.message
-      raise StandardError, message
+      out = $stdout.string
+      err = $stderr.string
     ensure
       $stdout = STDOUT
       $stderr = STDERR
     end
 
-    result
+    [out, err]
   end
-  alias silent capture
+  alias silent capture_base
+
+  # Returns STDOUT or STDERR as String suppressing both STDOUT and STDERR.
+  # Raises StandardError when tests unexpectedly exit.
+  def capture(stream = :stdout, &block)
+    out, err = capture_base do
+      block.call
+      # Raises SystemExit with STDERR when a test unexpectedly exits.
+    rescue SystemExit => e
+      message = $stderr.string
+      message += e.message
+      raise StandardError, message
+    end
+
+    case stream
+    when :stdout
+      out
+    when :stderr
+      err
+    else
+      raise "MUST NOT HAPPEN"
+    end
+  end
 end
