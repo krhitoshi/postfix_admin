@@ -174,6 +174,11 @@ class RunnerTest < ActiveSupport::TestCase
     assert_equal "goto@example2.test", new_alias.goto
   end
 
+  test "#add_alias can not add an Alias for an existing Mailbox with the same address" do
+    res = exit_capture { Runner.start(%w[add_alias user@example.test goto@example2.test]) }
+    assert_match "Mailbox has already been registered: user@example.test", res
+  end
+
   test "#delete_alias deletes an Alias" do
     assert Alias.exists?("alias@example.test")
     assert_difference("Alias.count", -1) do
