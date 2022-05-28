@@ -243,11 +243,6 @@ RSpec.describe PostfixAdmin::Runner do
     end
   end
 
-  it "add_account and delete_account" do
-    expect(capture(:stdout) { Runner.start(['add_account', 'user2@example.com', 'password']) }).to match EX_REGISTERED
-    expect(capture(:stdout) { Runner.start(['delete_account', 'user2@example.com']) }).to match EX_DELETED
-  end
-
   describe "add_account" do
     before do
       @user = 'user2@example.com'

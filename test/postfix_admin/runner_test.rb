@@ -6,6 +6,8 @@ class RunnerTest < ActiveSupport::TestCase
     db_reset
     @domain = create(:domain, domain: "example.test")
     @domain.admins << build(:admin, username: "admin@example.test")
+    @domain.rel_aliases   << build(:alias, address: "user@example.test")
+    @domain.rel_mailboxes << build(:mailbox, local_part: "user")
     @domain.save!
   end
 
@@ -136,6 +138,21 @@ class RunnerTest < ActiveSupport::TestCase
     mailbox = Mailbox.find("new_account@example.test")
     expected = "{CRAM-MD5}9186d855e11eba527a7a52ca82b313e180d62234f0acc9051b527243d41e2740"
     assert_equal expected, mailbox.password
+  end
+
+  test "#delete_account deletes a Mailbox and an Alias" do
+    assert Alias.exists?("user@example.test")
+    assert Mailbox.exists?("user@example.test")
+
+    assert_account_difference(-1) do
+      assert_nothing_raised do
+        res = capture { Runner.start(%w[delete_account user@example.test]) }
+        assert_match '"user@example.test" was successfully deleted', res
+      end
+    end
+
+    assert_not Alias.exists?("user@example.test")
+    assert_not Mailbox.exists?("user@example.test")
   end
 
   test "#log" do
