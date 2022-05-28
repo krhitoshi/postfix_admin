@@ -22,14 +22,20 @@ class RunnerTest < ActiveSupport::TestCase
 
         Runner.start(%w[add_account user1@new-domain.test password])
         Runner.start(%w[add_account user2@new-domain.test password])
+        Runner.start(%w[add_alias alias1@new-domain.test goto1@@new-domain2.test])
+        Runner.start(%w[add_alias alias2@new-domain.test goto2@@new-domain2.test])
         Runner.start(%w[delete_account user2@new-domain.test])
+        Runner.start(%w[delete_alias alias2@new-domain.test])
         Runner.start(%w[delete_domain new-domain.test])
 
         # Use setup subcommand
         Runner.start(%w[setup new-domain2.test password])
         Runner.start(%w[add_account user1@new-domain2.test password])
         Runner.start(%w[add_account user2@new-domain2.test password])
+        Runner.start(%w[add_alias alias1@new-domain2.test goto1@@new-domain2.test])
+        Runner.start(%w[add_alias alias2@new-domain2.test goto2@@new-domain2.test])
         Runner.start(%w[delete_account user2@new-domain2.test])
+        Runner.start(%w[delete_alias alias2@new-domain2.test])
         Runner.start(%w[delete_domain new-domain2.test])
       end
     end
