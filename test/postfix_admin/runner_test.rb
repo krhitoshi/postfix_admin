@@ -157,6 +157,16 @@ class RunnerTest < ActiveSupport::TestCase
     assert_not Mailbox.exists?("user@example.test")
   end
 
+  test "#add_alias adds an Alias" do
+    assert_difference("Alias.count") do
+      res = capture { Runner.start(%w[add_alias new_alias@example.test goto@example2.test]) }
+      assert_match '"new_alias@example.test: goto@example2.test" was successfully registered as an alias', res
+    end
+    assert Alias.exists?("new_alias@example.test")
+    new_alias = Alias.find("new_alias@example.test")
+    assert_equal "goto@example2.test", new_alias.goto
+  end
+
   test "#log" do
     assert_nothing_raised do
       silent { Runner.start(["log"]) }
