@@ -78,11 +78,6 @@ RSpec.describe PostfixAdmin::Runner do
   end
 
   describe "add_alias and delete_alias" do
-    it "can add and delete an new alias." do
-      expect(capture(:stdout) { Runner.start(['add_alias', 'new_alias@example.com', 'goto@example.jp']) }).to match EX_REGISTERED
-      expect(capture(:stdout) { Runner.start(['delete_alias', 'new_alias@example.com']) }).to match EX_DELETED
-    end
-
     it "can not delete mailbox alias." do
       expect(exit_capture { Runner.start(['delete_alias', 'user@example.com']) }).to match /Can not delete mailbox/
     end
