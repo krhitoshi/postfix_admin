@@ -201,9 +201,9 @@ module PostfixAdmin
 
     private
 
-    def runner
+    def runner(&block)
       @cli.db_setup
-      yield
+      block.call
     rescue StandardError => e
       abort "Error: #{e.message}"
     end
