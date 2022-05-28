@@ -126,6 +126,18 @@ class RunnerTest < ActiveSupport::TestCase
     assert admin.rel_domains.exists?("new-domain.test")
   end
 
+  test "#add_account adds a Mailbox and an Alias" do
+    assert_account_difference do
+      res = capture { Runner.start(%w[add_account new_account@example.test password]) }
+      assert_match '"new_account@example.test" was successfully registered as an account', res
+    end
+    assert Mailbox.exists?("new_account@example.test")
+    assert Alias.exists?("new_account@example.test")
+    mailbox = Mailbox.find("new_account@example.test")
+    expected = "{CRAM-MD5}9186d855e11eba527a7a52ca82b313e180d62234f0acc9051b527243d41e2740"
+    assert_equal expected, mailbox.password
+  end
+
   test "#log" do
     assert_nothing_raised do
       silent { Runner.start(["log"]) }
