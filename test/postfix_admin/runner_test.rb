@@ -6,6 +6,7 @@ class RunnerTest < ActiveSupport::TestCase
     db_reset
     @domain = create(:domain, domain: "example.test")
     @domain.admins << build(:admin, username: "admin@example.test")
+    @domain.rel_aliases   << build(:alias, address: "alias@example.test")
     @domain.rel_aliases   << build(:alias, address: "user@example.test")
     @domain.rel_mailboxes << build(:mailbox, local_part: "user")
     @domain.save!
@@ -165,6 +166,15 @@ class RunnerTest < ActiveSupport::TestCase
     assert Alias.exists?("new_alias@example.test")
     new_alias = Alias.find("new_alias@example.test")
     assert_equal "goto@example2.test", new_alias.goto
+  end
+
+  test "#delete_alias deletes an Alias" do
+    assert Alias.exists?("alias@example.test")
+    assert_difference("Alias.count", -1) do
+      res = capture { Runner.start(%w[delete_alias alias@example.test]) }
+      assert_match '"alias@example.test" was successfully deleted', res
+    end
+    assert_not Alias.exists?("alias@example.test")
   end
 
   test "#log" do
