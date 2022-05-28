@@ -70,7 +70,7 @@ class BaseTest < ActiveSupport::TestCase
     end
   end
 
-  test "#add_account adds a new account" do
+  test "#add_account adds a Mailbox and an Alias" do
     encrypted_password = "{CRAM-MD5}9186d855e11eba527a7a52ca82b313e180d62234f0acc9051b527243d41e2740"
     assert_account_difference do
       @base.add_account("new_account@example.test", encrypted_password)
@@ -173,7 +173,7 @@ class BaseTest < ActiveSupport::TestCase
     assert_match "Could not find domain: non-existent.test", error.to_s
   end
 
-  test "#delete_account deletes an account" do
+  test "#delete_account deletes a Mailbox and an Alias" do
     assert Alias.exists?("user@example.test")
     assert Mailbox.exists?("user@example.test")
 
