@@ -184,10 +184,8 @@ class RunnerTest < ActiveSupport::TestCase
   end
 
   test "#delete_alias can not delete an Alias that belongs to a Mailbox" do
-    e = assert_raise(SystemExit) do
-      silent { Runner.start(%w[delete_alias user@example.test]) }
-    end
-    assert_match "Can not delete mailbox by delete_alias", e.message
+    res = exit_capture { Runner.start(%w[delete_alias user@example.test]) }
+    assert_match "Can not delete mailbox by delete_alias", res
   end
 
   test "#log" do

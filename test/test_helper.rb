@@ -69,4 +69,14 @@ class ActiveSupport::TestCase
       raise "MUST NOT HAPPEN"
     end
   end
+
+  # Returns STDERR when application exits suppressing STDOUT
+  def exit_capture(&block)
+    _out, err = capture_base do
+      block.call
+    rescue SystemExit
+      # do nothing
+    end
+    err
+  end
 end
