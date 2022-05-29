@@ -77,16 +77,6 @@ RSpec.describe PostfixAdmin::Runner do
     end
   end
 
-  describe "add_alias and delete_alias" do
-    it "can not delete mailbox alias." do
-      expect(exit_capture { Runner.start(['delete_alias', 'user@example.com']) }).to match /Can not delete mailbox/
-    end
-
-    it "can not add an alias for existed mailbox" do
-      expect(exit_capture { Runner.start(['add_alias', 'user@example.com', 'goto@example.jp']) }).to match /Mailbox has already been registered: user@example\.com/
-    end
-  end
-
   describe "edit_alias" do
     it "can update active status" do
       output = capture(:stdout) { Runner.start(['edit_alias', 'alias@example.com', '--no-active']) }
