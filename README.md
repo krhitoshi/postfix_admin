@@ -10,19 +10,19 @@ Command Line Tools for Postfix Admin
   + Web Site http://postfixadmin.sourceforge.net/
   + GitHub https://github.com/postfixadmin/postfixadmin
 
-* Postfix Admin 3.2 is supported.
+* Supports Postfix Admin 3.2
 
-* MySQL/MariaDB is supported.
+* Supports MySQL/MariaDB
 
-* Other database engines are not supported.
+* Other database engines are not supported
 
 ## Installation
 
-Install postfix_admin as:
+Install `postfix_admin` using:
 
     $ gem install postfix_admin
 
-Just execute `postfix_admin` command to generate your config file: `~/.postfix_admin.conf`
+Execute the `postfix_admin` command to generate your config file at `~/.postfix_admin.conf`:
 
     $ postfix_admin
 
@@ -30,13 +30,13 @@ Edit the file for your environment:
 
     $ vi ~/.postfix_admin.conf
 
-You can see domains on your host if the `database` parameter is set properly:
+You can see the domains on your host if the `database` parameter is set properly:
 
     $ postfix_admin show
 
 ## Usage
 
-List the postfix_admin subcommands as:
+List the `postfix_admin` subcommands with:
 
     $ postfix_admin
 
