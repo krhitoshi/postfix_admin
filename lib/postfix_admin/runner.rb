@@ -184,8 +184,9 @@ module PostfixAdmin
     end
 
     desc "log", "Show action logs"
+    method_option :domain, type: :string, aliases: "-d", desc: "Filter by domain"
     def log
-      runner { @cli.log }
+      runner { @cli.log(domain: options[:domain]) }
     end
 
     desc "dump", "Dump all data"

@@ -326,10 +326,17 @@ module PostfixAdmin
       puts_deleted(address)
     end
 
-    def log
+    def log(domain: nil)
       headings = %w[Timestamp Admin Domain Action Data]
       rows = []
-      Log.all.each do |l|
+
+      logs = if domain
+               Log.where(domain: domain)
+             else
+               Log.all
+             end
+
+      logs.each do |l|
         time = l.timestamp.strftime("%Y-%m-%d %X %Z")
         rows << [time, l.username, l.domain, l.action, l.data]
       end
