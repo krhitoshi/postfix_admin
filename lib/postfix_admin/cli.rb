@@ -67,15 +67,7 @@ module PostfixAdmin
       if domain_name
         show_domain_summary(domain_name)
       else
-        rows = []
-        title = "Summary"
-        rows << ["Domains", Domain.without_all.count]
-        rows << ["Admins", Admin.count]
-        rows << ["Mailboxes", Mailbox.count]
-        rows << ["Aliases", Alias.pure.count]
-
-        puts_title(title)
-        puts_table(rows: rows)
+        show_general_summary
       end
     end
 
@@ -401,6 +393,18 @@ module PostfixAdmin
     end
 
     private
+
+    def show_general_summary
+      rows = []
+      title = "Summary"
+      rows << ["Domains", Domain.without_all.count]
+      rows << ["Admins", Admin.count]
+      rows << ["Mailboxes", Mailbox.count]
+      rows << ["Aliases", Alias.pure.count]
+
+      puts_title(title)
+      puts_table(rows: rows)
+    end
 
     def show_domain_summary(domain_name)
       domain_name = domain_name.downcase
