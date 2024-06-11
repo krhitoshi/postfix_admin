@@ -44,11 +44,13 @@ module PostfixAdmin
       end
 
       show_summary(name)
+      puts
 
       if name
         show_domain_details(name)
       else
         show_domain
+        puts
         show_admin
       end
     end
@@ -238,6 +240,7 @@ module PostfixAdmin
       end
 
       show_alias_base("Forwards", forwards)
+      puts
       show_alias_base("Aliases",  aliases)
     end
 
@@ -388,21 +391,28 @@ module PostfixAdmin
 
     def show_domain_details(domain_name)
       show_admin(domain_name)
+      puts
       show_address(domain_name)
+      puts
       show_alias(domain_name)
     end
 
     def show_alias_base(title, addresses)
-      report(title, " No. Address                                  Active Go to") do
-        if addresses.empty?
-          puts " No #{title.downcase}"
-          next
-        end
+      rows = []
+      puts "| #{title} |"
 
-        addresses.each_with_index do |a, i|
-          puts "%4d %-40s   %-3s  %s" % [i+1, a.address, a.active_str, a.goto]
-        end
+      if addresses.empty?
+        puts "No #{title.downcase}"
+        return
       end
+
+      headings = ["No.", "Address", "Active", "Go to"]
+      addresses.each_with_index do |a, i|
+        no = i + 1
+        rows << [no.to_s, a.address, a.active_str, a.goto]
+      end
+
+      puts Terminal::Table.new(headings: headings, rows: rows)
     end
 
     def puts_registered(name, as_str)
