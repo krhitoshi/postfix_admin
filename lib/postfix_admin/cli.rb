@@ -34,17 +34,17 @@ module PostfixAdmin
         if Admin.exists?(name)
           # admin
           show_admin_details(name)
-        end
-
-        if Mailbox.exists?(name)
+        elsif Mailbox.exists?(name)
           # mailbox
           show_account_details(name)
         elsif Alias.exists?(name)
           # alias
           show_alias_details(name)
+        else
+          raise Error, "Could not find #{name}"
         end
 
-        raise Error, "Could not find #{name}"
+        return
       end
 
       show_summary(name)
