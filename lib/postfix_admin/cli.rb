@@ -84,7 +84,7 @@ module PostfixAdmin
         rows << ["Aliases", Alias.pure.count]
       end
 
-      puts Terminal::Table.new(rows: rows)
+      puts_table(rows: rows)
     end
 
     def setup_domain(domain_name, password)
@@ -108,7 +108,7 @@ module PostfixAdmin
       rows << ["Go to", mail_alias.goto]
       rows << ["Active", mailbox.active_str]
 
-      puts Terminal::Table.new(rows: rows)
+      puts_table(rows: rows)
     end
 
     def show_admin_details(name)
@@ -123,7 +123,7 @@ module PostfixAdmin
       rows << ["Role", admin.super_admin? ? "Super admin" : "Admin"]
       rows << ["Active", admin.active_str]
 
-      puts Terminal::Table.new(rows: rows)
+      puts_table(rows: rows)
     end
 
     def show_alias_details(name)
@@ -136,7 +136,7 @@ module PostfixAdmin
       rows << ["Go to", mail_alias.goto]
       rows << ["Active", mail_alias.active_str]
 
-      puts Terminal::Table.new(rows: rows)
+      puts_table(rows: rows)
     end
 
     def show_domain
@@ -157,7 +157,7 @@ module PostfixAdmin
                  max_str(d.maxquota), d.active_str]
       end
 
-      puts Terminal::Table.new(headings: headings, rows: rows)
+      puts_table(headings: headings, rows: rows)
     end
 
     def add_domain(domain_name)
@@ -223,7 +223,7 @@ module PostfixAdmin
         rows << [no.to_s, a.username, domains.to_s, a.active_str]
       end
 
-      puts Terminal::Table.new(headings: headings, rows: rows)
+      puts_table(headings: headings, rows: rows)
     end
 
     def show_address(domain_name)
@@ -246,7 +246,7 @@ module PostfixAdmin
                  m.active_str, m.maildir]
       end
 
-      puts Terminal::Table.new(headings: headings, rows: rows)
+      puts_table(headings: headings, rows: rows)
     end
 
     def show_alias(domain_name)
@@ -431,7 +431,7 @@ module PostfixAdmin
         rows << [no.to_s, a.address, a.active_str, a.goto]
       end
 
-      puts Terminal::Table.new(headings: headings, rows: rows)
+      puts_table(headings: headings, rows: rows)
     end
 
     def puts_registered(name, as_str)
@@ -475,6 +475,10 @@ module PostfixAdmin
       print_line
       yield
       print_line
+    end
+
+    def puts_table(args)
+      puts Terminal::Table.new(args)
     end
 
     def puts_title(title)
