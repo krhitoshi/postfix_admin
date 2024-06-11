@@ -43,7 +43,7 @@ module PostfixAdmin
           # alias
           show_alias_details(name)
         else
-          raise Error, "Could not find #{name}"
+          raise Error, "Could not find admin/mailbox/alias #{name}"
         end
 
         return
