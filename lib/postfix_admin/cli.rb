@@ -128,8 +128,7 @@ module PostfixAdmin
 
     def show_domain
       rows = []
-      heddings = ["No.", "Domain", "Aliases", "Mailboxes","Quota (MB)", "Active"]
-      index = " No. Domain                          Aliases   Mailboxes     Quota (MB)  Active"
+      headings = ["No.", "Domain", "Aliases", "Mailboxes","Quota (MB)", "Active"]
 
       puts "| Domains |"
       if Domain.without_all.empty?
@@ -145,7 +144,7 @@ module PostfixAdmin
                  max_str(d.maxquota), d.active_str]
       end
 
-      puts Terminal::Table.new(headings: heddings, rows: rows)
+      puts Terminal::Table.new(headings: headings, rows: rows)
     end
 
     def add_domain(domain_name)
