@@ -468,19 +468,6 @@ module PostfixAdmin
       File.chmod(0600, file)
     end
 
-    def print_line
-      puts "-"*120
-    end
-
-    def report(title, index = nil)
-      puts "\n[#{title}]"
-      print_line if index
-      puts index if index
-      print_line
-      yield
-      print_line
-    end
-
     def puts_table(args)
       puts Terminal::Table.new(args)
     end
