@@ -187,18 +187,22 @@ module PostfixAdmin
 
     def show_admin(domain_name = nil)
       admins = domain_name ? Admin.select { |a| a.rel_domains.exists?(domain_name) } : Admin.all
-      index = " No. Admin                                        Domains Active"
-      report("Admins", index) do
-        if admins.empty?
-          puts " No admins"
-          next
-        end
+      headings = %w[No. Admin Domains Active]
 
-        admins.each_with_index do |a, i|
-          domains = a.super_admin? ? 'Super admin' : a.rel_domains.count
-          puts "%4d %-40s %11s   %-3s" % [i+1, a.username, domains, a.active_str]
-        end
+      puts "| Admins |"
+      if admins.empty?
+        puts "No admins"
+        return
       end
+
+      rows = []
+      admins.each_with_index do |a, i|
+        no = i + 1
+        domains = a.super_admin? ? 'Super admin' : a.rel_domains.count
+        rows << [no.to_s, a.username, domains.to_s, a.active_str]
+      end
+
+      puts Terminal::Table.new(headings: headings, rows: rows)
     end
 
     def show_address(domain_name)
