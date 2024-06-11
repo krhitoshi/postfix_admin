@@ -30,25 +30,31 @@ module PostfixAdmin
       name = name.downcase if name
 
       if name =~ /@/
+        # address like argument
         if Admin.exists?(name)
+          # admin
           show_admin_details(name)
         end
 
         if Mailbox.exists?(name)
+          # mailbox
           show_account_details(name)
         elsif Alias.exists?(name)
+          # alias
           show_alias_details(name)
         end
 
-        return
+        raise Error, "Could not find #{name}"
       end
 
       show_summary(name)
       puts
 
       if name
+        # domain name
         show_domain_details(name)
       else
+        # no argument: show all domains and admins
         show_domain
         puts
         show_admin
