@@ -1,6 +1,7 @@
 require 'yaml'
 require 'postfix_admin'
 require 'postfix_admin/doveadm'
+require 'terminal-table'
 
 module PostfixAdmin
   class CLI
@@ -326,10 +327,14 @@ module PostfixAdmin
     end
 
     def log
+      headings = %w[Timestamp Admin Domain Action Data]
+      rows = []
       Log.all.each do |l|
         time = l.timestamp.strftime("%Y-%m-%d %X %Z")
-        puts "#{time}  #{l.username}  #{l.domain}  #{l.action}  #{l.data}"
+        rows << [time, l.username, l.domain, l.action, l.data]
       end
+      table = Terminal::Table.new(headings: headings, rows: rows)
+      puts table
     end
 
     def dump
