@@ -13,8 +13,8 @@ Gem::Specification.new do |gem|
   gem.required_ruby_version = ">= 2.6.0"
 
   gem.add_dependency "thor", "~> 1.2.1"
-  gem.add_dependency "activerecord", "~> 6.0.3"
-  gem.add_dependency "mysql2", ">= 0.5.3"
+  gem.add_dependency "activerecord", "~> 6.1.7"
+  gem.add_dependency "mysql2", "~> 0.5"
   gem.add_dependency "terminal-table", "~> 3.0.2"
   gem.add_development_dependency "pry"
   gem.add_development_dependency "factory_bot", "~> 6.2.1"
