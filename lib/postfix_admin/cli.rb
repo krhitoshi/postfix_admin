@@ -65,28 +65,18 @@ module PostfixAdmin
 
     def show_summary(domain_name = nil)
       if domain_name
-        domain_name = domain_name.downcase
-        domain_check(domain_name)
-      end
-
-      rows = []
-      if domain_name
-        title = domain_name
-        domain = Domain.find(domain_name)
-        rows << ["Mailboxes", "%4d / %4s" % [domain.rel_mailboxes.count, max_str(domain.mailboxes)]]
-        rows << ["Aliases", "%4d / %4s" % [domain.pure_aliases.count, max_str(domain.aliases)]]
-        rows << ["Max Quota", "%d MB" % domain.maxquota]
-        rows << ["Active", domain.active_str]
+        show_domain_summary(domain_name)
       else
+        rows = []
         title = "Summary"
         rows << ["Domains", Domain.without_all.count]
         rows << ["Admins", Admin.count]
         rows << ["Mailboxes", Mailbox.count]
         rows << ["Aliases", Alias.pure.count]
-      end
 
-      puts_title(title)
-      puts_table(rows: rows)
+        puts_title(title)
+        puts_table(rows: rows)
+      end
     end
 
     def setup_domain(domain_name, password)
@@ -411,6 +401,21 @@ module PostfixAdmin
     end
 
     private
+
+    def show_domain_summary(domain_name)
+      domain_name = domain_name.downcase
+      domain_check(domain_name)
+
+      rows = []
+      domain = Domain.find(domain_name)
+      rows << ["Mailboxes", "%4d / %4s" % [domain.rel_mailboxes.count, max_str(domain.mailboxes)]]
+      rows << ["Aliases", "%4d / %4s" % [domain.pure_aliases.count, max_str(domain.aliases)]]
+      rows << ["Max Quota", "%d MB" % domain.maxquota]
+      rows << ["Active", domain.active_str]
+
+      puts_title(domain_name)
+      puts_table(rows: rows)
+    end
 
     def show_domain_details(domain_name)
       show_admin(domain_name)
