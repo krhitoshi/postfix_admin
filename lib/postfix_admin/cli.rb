@@ -374,8 +374,8 @@ module PostfixAdmin
         time = l.timestamp.strftime("%Y-%m-%d %X %Z")
         rows << [time, l.username, l.domain, l.action, l.data]
       end
-      table = Terminal::Table.new(headings: headings, rows: rows)
-      puts table
+
+      puts_table(headings: headings, rows: rows)
     end
 
     def dump
