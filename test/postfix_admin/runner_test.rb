@@ -199,6 +199,12 @@ class RunnerTest < ActiveSupport::TestCase
     end
   end
 
+  test "#log with domain filter" do
+    assert_nothing_raised do
+      silent { Runner.start(%w[log -d example.com]) }
+    end
+  end
+
   test "#dump" do
     assert_nothing_raised do
       res = capture { Runner.start(["dump"]) }
