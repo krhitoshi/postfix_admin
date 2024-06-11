@@ -18,7 +18,8 @@ RSpec.describe PostfixAdmin::Runner do
     end
 
     it "show the detail of example.com" do
-      expect(capture(:stdout) { Runner.start(["show", "example.com"]) }).to match /user@example.com\s+100\s+Active/
+      expect(capture(:stdout) { Runner.start(["show", "example.com"]) }).to \
+        match /user@example.com[|\s]+100[|\s]+Active/
     end
 
     it "when no admins, no aliases and no addresses" do

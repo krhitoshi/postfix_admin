@@ -204,19 +204,24 @@ module PostfixAdmin
     def show_address(domain_name)
       domain_check(domain_name)
 
+      rows = []
       mailboxes = Domain.find(domain_name).rel_mailboxes
-      index = " No. Email                           Name                 Quota (MB) Active         Maildir"
-      report("Addresses", index) do
-        if mailboxes.empty?
-          puts " No addresses"
-          next
-        end
+      headings = ["No.", "Email", "Name", "Quota (MB)", "Active", "Maildir"]
 
-        mailboxes.each_with_index do |m, i|
-          quota = m.quota.to_f/ KB_TO_MB.to_f
-          puts "%4d %-30s  %-20s %10s   %-3s  %s" % [i+1, m.username, m.name, max_str(quota.to_i), m.active_str, m.maildir]
-        end
+      puts "| Addresses |"
+      if mailboxes.empty?
+        puts "No addresses"
+        return
       end
+
+      mailboxes.each_with_index do |m, i|
+        no = i + 1
+        quota = m.quota.to_f/ KB_TO_MB.to_f
+        rows << [no.to_s, m.username, m.name, max_str(quota.to_i),
+                 m.active_str, m.maildir]
+      end
+
+      puts Terminal::Table.new(headings: headings, rows: rows)
     end
 
     def show_alias(domain_name)
