@@ -1,5 +1,3 @@
-version: '3.8'
-
 # docker compose up -d
 #
 # Run tests on service app
