@@ -48,7 +48,7 @@ class RunnerTest < ActiveSupport::TestCase
 
   test "#summary" do
     res = capture { Runner.start(["summary"]) }
-    assert_match "Summary", res
+    assert_match "| Summary |", res
     assert_match "Admins", res
     assert_match "Mailboxes", res
     assert_match "Aliases", res
@@ -56,7 +56,7 @@ class RunnerTest < ActiveSupport::TestCase
 
   test "#summary with domain" do
     res = capture { Runner.start(%w[summary example.test]) }
-    assert_match "Summary of example.test", res
+    assert_match "| example.test |", res
     assert_match "Mailboxes", res
     assert_match "Aliases", res
     assert_match "Max Quota", res

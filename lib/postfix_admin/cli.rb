@@ -60,24 +60,25 @@ module PostfixAdmin
       if domain_name
         domain_name = domain_name.downcase
         domain_check(domain_name)
-        title = "Summary of #{domain_name}"
       end
 
       rows = []
       if domain_name
+        puts "| #{domain_name} |"
         domain = Domain.find(domain_name)
         rows << ["Mailboxes", "%4d / %4s" % [domain.rel_mailboxes.count, max_str(domain.mailboxes)]]
         rows << ["Aliases", "%4d / %4s" % [domain.pure_aliases.count, max_str(domain.aliases)]]
         rows << ["Max Quota", "%d MB" % domain.maxquota]
         rows << ["Active", domain.active_str]
       else
+        puts "| Summary |"
         rows << ["Domains", Domain.without_all.count]
         rows << ["Admins", Admin.count]
         rows << ["Mailboxes", Mailbox.count]
         rows << ["Aliases", Alias.pure.count]
       end
 
-      puts Terminal::Table.new(title: title, rows: rows)
+      puts Terminal::Table.new(rows: rows)
     end
 
     def setup_domain(domain_name, password)
