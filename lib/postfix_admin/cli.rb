@@ -126,19 +126,25 @@ module PostfixAdmin
     end
 
     def show_domain
+      rows = []
+      heddings = ["No.", "Domain", "Aliases", "Mailboxes","Quota (MB)", "Active"]
       index = " No. Domain                          Aliases   Mailboxes     Quota (MB)  Active"
-      report('Domains', index) do
-        if Domain.without_all.empty?
-          puts " No domains"
-          next
-        end
 
-        Domain.without_all.each_with_index do |d, i|
-          puts "%4d %-30s %3d /%3s   %3d /%3s %10d         %-3s" %
-            [i+1, d.domain, d.pure_aliases.count, max_str(d.aliases),
-             d.rel_mailboxes.count, max_str(d.mailboxes), d.maxquota, d.active_str]
-        end
+      puts "| Domains |"
+      if Domain.without_all.empty?
+        puts "No domains"
+        return
       end
+
+      Domain.without_all.each_with_index do |d, i|
+        no = i + 1
+        aliases_str = "%3d /%3s" % [d.pure_aliases.count, max_str(d.aliases)]
+        mailboxes_str = "%3d /%3s" % [d.rel_mailboxes.count, max_str(d.mailboxes)]
+        rows << [no.to_s, d.domain, aliases_str, mailboxes_str,
+                 max_str(d.maxquota), d.active_str]
+      end
+
+      puts Terminal::Table.new(headings: heddings, rows: rows)
     end
 
     def add_domain(domain_name)

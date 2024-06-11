@@ -9,7 +9,7 @@ RSpec.describe PostfixAdmin::Runner do
   describe "show" do
     it "shows information of example.com" do
       expect(capture(:stdout) { Runner.start(["show"]) }).to match \
-        /example.com\s+1\s+\/\s+30\s+1\s+\/\s+30\s+100/
+        /example.com[|\s]+1[|\s]+\/[|\s]+30[|\s]+1[|\s]+\/[|\s]+30[|\s]+100/
     end
 
     it "shows information of admin@example.com" do
