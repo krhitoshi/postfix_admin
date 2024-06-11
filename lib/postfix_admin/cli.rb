@@ -46,9 +46,7 @@ module PostfixAdmin
       show_summary(name)
 
       if name
-        show_admin(name)
-        show_address(name)
-        show_alias(name)
+        show_domain_details(name)
       else
         show_domain
         show_admin
@@ -378,6 +376,12 @@ module PostfixAdmin
     end
 
     private
+
+    def show_domain_details(domain_name)
+      show_admin(domain_name)
+      show_address(domain_name)
+      show_alias(domain_name)
+    end
 
     def show_alias_base(title, addresses)
       report(title, " No. Address                                  Active Go to") do
