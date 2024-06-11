@@ -192,7 +192,7 @@ module PostfixAdmin
       runner { @cli.delete_alias(address) }
     end
 
-    desc "log", "Show action logs"
+    desc "log", "Display action logs"
     method_option :domain, type: :string, aliases: "-d", desc: "Filter by domain"
     def log
       runner { @cli.log(domain: options[:domain]) }

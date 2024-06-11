@@ -60,7 +60,7 @@ Commands:
   postfix_admin edit_alias alias@example.com                               # Edit an alias
   postfix_admin edit_domain example.com                                    # Edit a domain
   postfix_admin help [COMMAND]                                             # Describe available commands or one specific command
-  postfix_admin log                                                        # Show action logs
+  postfix_admin log                                                        # Display action logs
   postfix_admin schemes                                                    # List all supported password schemes
   postfix_admin setup example.com password                                 # Set up a domain
   postfix_admin show [example.com | admin@example.com | user@example.com]  # Display details about domains, admins, or accounts
