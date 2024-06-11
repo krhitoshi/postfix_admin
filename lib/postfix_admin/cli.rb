@@ -34,6 +34,8 @@ module PostfixAdmin
         if Admin.exists?(name)
           # admin
           show_admin_details(name)
+          puts
+          show_admin_domain(name)
         elsif Mailbox.exists?(name)
           # mailbox
           show_account_details(name)
@@ -265,16 +267,18 @@ module PostfixAdmin
 
     def show_admin_domain(user_name)
       admin = Admin.find(user_name)
+      puts_title("Admin Domains (#{user_name})")
       if admin.rel_domains.empty?
-        puts "\nNo domain in database"
+        puts "\nNo domains for #{user_name}"
         return
       end
 
-      report("Domains (#{user_name})", " No. Domain") do
-        admin.rel_domains.each_with_index do |d, i|
-          puts "%4d %-30s" % [i + 1, d.domain]
-        end
+      rows = []
+      admin.rel_domains.each_with_index do |d, i|
+        no = i + 1
+        rows << [no.to_s, d.domain]
       end
+      puts_table(rows: rows, headings: %w[No. Domain])
     end
 
     def add_admin(user_name, password, super_admin = false, scheme = nil)
