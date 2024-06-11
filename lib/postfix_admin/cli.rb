@@ -93,37 +93,44 @@ module PostfixAdmin
       mailbox    = Mailbox.find(user_name)
       mail_alias = Alias.find(user_name)
 
-      report("Mailbox") do
-        puts "Address  : %s" % mailbox.username
-        puts "Name     : %s" % mailbox.name
-        puts "Password : %s" % mailbox.password
-        puts "Quota    : %d MB" % max_str(mailbox.quota / KB_TO_MB)
-        puts "Go to    : %s" % mail_alias.goto
-        puts "Active   : %s" % mailbox.active_str
-      end
+      rows = []
+      puts_title("Mailbox")
+      rows << ["Address", mailbox.username]
+      rows << ["Name", mailbox.name]
+      rows << ["Password", mailbox.password]
+      rows << ["Quota", "%d MB" % max_str(mailbox.quota / KB_TO_MB)]
+      rows << ["Go to", mail_alias.goto]
+      rows << ["Active", mailbox.active_str]
+
+      puts Terminal::Table.new(rows: rows)
     end
 
     def show_admin_details(name)
       admin_check(name)
       admin = Admin.find(name)
 
-      report("Admin") do
-        puts "Name     : %s" % admin.username
-        puts "Password : %s" % admin.password
-        puts "Domains  : %s" % (admin.super_admin? ? "ALL" : admin.rel_domains.count)
-        puts "Role     : %s" % (admin.super_admin? ? "Super admin" : "Admin")
-        puts "Active   : %s" % admin.active_str
-      end
+      rows = []
+      puts_title("Admin")
+      rows << ["Name", admin.username]
+      rows << ["Password", admin.password]
+      rows << ["Domains", admin.super_admin? ? "ALL" : admin.rel_domains.count.to_s]
+      rows << ["Role", admin.super_admin? ? "Super admin" : "Admin"]
+      rows << ["Active", admin.active_str]
+
+      puts Terminal::Table.new(rows: rows)
     end
 
     def show_alias_details(name)
       alias_check(name)
       mail_alias = Alias.find(name)
-      report("Alias") do
-        puts "Address  : %s" % mail_alias.address
-        puts "Go to    : %s" % mail_alias.goto
-        puts "Active   : %s" % mail_alias.active_str
-      end
+
+      rows = []
+      puts_title("Alias")
+      rows << ["Address", mail_alias.address]
+      rows << ["Go to", mail_alias.goto]
+      rows << ["Active", mail_alias.active_str]
+
+      puts Terminal::Table.new(rows: rows)
     end
 
     def show_domain
@@ -462,6 +469,10 @@ module PostfixAdmin
       print_line
       yield
       print_line
+    end
+
+    def puts_title(title)
+      puts "| #{title} |"
     end
 
     def account_check(user_name)
