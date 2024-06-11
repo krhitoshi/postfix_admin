@@ -62,7 +62,6 @@ module PostfixAdmin
     end
 
     def show_summary(domain_name = nil)
-      title = "Summary"
       if domain_name
         domain_name = domain_name.downcase
         domain_check(domain_name)
@@ -70,20 +69,21 @@ module PostfixAdmin
 
       rows = []
       if domain_name
-        puts "| #{domain_name} |"
+        title = domain_name
         domain = Domain.find(domain_name)
         rows << ["Mailboxes", "%4d / %4s" % [domain.rel_mailboxes.count, max_str(domain.mailboxes)]]
         rows << ["Aliases", "%4d / %4s" % [domain.pure_aliases.count, max_str(domain.aliases)]]
         rows << ["Max Quota", "%d MB" % domain.maxquota]
         rows << ["Active", domain.active_str]
       else
-        puts "| Summary |"
+        title = "Summary"
         rows << ["Domains", Domain.without_all.count]
         rows << ["Admins", Admin.count]
         rows << ["Mailboxes", Mailbox.count]
         rows << ["Aliases", Alias.pure.count]
       end
 
+      puts_title(title)
       puts_table(rows: rows)
     end
 
@@ -143,7 +143,7 @@ module PostfixAdmin
       rows = []
       headings = ["No.", "Domain", "Aliases", "Mailboxes","Quota (MB)", "Active"]
 
-      puts "| Domains |"
+      puts_title("Domains")
       if Domain.without_all.empty?
         puts "No domains"
         return
@@ -210,7 +210,7 @@ module PostfixAdmin
       admins = domain_name ? Admin.select { |a| a.rel_domains.exists?(domain_name) } : Admin.all
       headings = %w[No. Admin Domains Active]
 
-      puts "| Admins |"
+      puts_title("Admins")
       if admins.empty?
         puts "No admins"
         return
@@ -233,7 +233,7 @@ module PostfixAdmin
       mailboxes = Domain.find(domain_name).rel_mailboxes
       headings = ["No.", "Email", "Name", "Quota (MB)", "Active", "Maildir"]
 
-      puts "| Addresses |"
+      puts_title("Addresses")
       if mailboxes.empty?
         puts "No addresses"
         return
@@ -418,7 +418,7 @@ module PostfixAdmin
 
     def show_alias_base(title, addresses)
       rows = []
-      puts "| #{title} |"
+      puts_title(title)
 
       if addresses.empty?
         puts "No #{title.downcase}"
