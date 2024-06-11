@@ -482,6 +482,8 @@ module PostfixAdmin
       end
     end
 
+    #  0: unlimited
+    # -1: disabled
     def max_str(value)
       case value
       when 0
