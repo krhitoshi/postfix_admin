@@ -24,32 +24,35 @@ module PostfixAdmin
       runner { puts PostfixAdmin::Doveadm.schemes.join(' ') }
     end
 
-    desc "show [example.com | admin@example.com | user@example.com]", "Show domains or admins or mailboxes"
+    desc "show [example.com | admin@example.com | user@example.com]",
+         "Display details about domains, admins, or accounts"
     def show(name = nil)
       runner { @cli.show(name) }
     end
 
-    desc "setup example.com password", "Setup a domain"
+    desc "setup example.com password", "Set up a domain"
     def setup(domain_name, password)
       runner { @cli.setup_domain(domain_name, password) }
     end
 
-    desc "admin_passwd admin@example.com new_password", "Change password of admin"
+    desc "admin_passwd admin@example.com new_password",
+         "Change the password of an admin user"
     def admin_passwd(user_name, password)
       runner { @cli.change_admin_password(user_name, password) }
     end
 
-    desc "account_passwd user@example.com new_password", "Change password of account"
+    desc "account_passwd user@example.com new_password",
+         "Change the password of an account"
     def account_passwd(user_name, password)
       runner { @cli.change_account_password(user_name, password) }
     end
 
-    desc "add_domain example.com", "Add a domain"
+    desc "add_domain example.com", "Add a new domain"
     def add_domain(domain_name)
       runner { @cli.add_domain(domain_name) }
     end
 
-    desc "edit_domain example.com", "Edit a domain limitation"
+    desc "edit_domain example.com", "Edit a domain"
     method_option :aliases,   type: :numeric, aliases: "-a", desc: "Edit aliases limitation"
     method_option :mailboxes, type: :numeric, aliases: "-m", desc: "Edit mailboxes limitation"
     method_option :maxquota,  type: :numeric, aliases: "-q", desc: "Edit max quota limitation"
@@ -70,7 +73,7 @@ module PostfixAdmin
       runner { @cli.delete_domain(domain_name) }
     end
 
-    desc "delete_admin admin@example.com", "Delete an admin"
+    desc "delete_admin admin@example.com", "Delete an admin user"
     def delete_admin(user_name)
       runner { @cli.delete_admin(user_name) }
     end
@@ -80,7 +83,7 @@ module PostfixAdmin
       runner { @cli.delete_account(address) }
     end
 
-    desc "add_account user@example.com password", "Add an account"
+    desc "add_account user@example.com password", "Add a new account"
     method_option :scheme, type: :string, aliases: "-s", desc: "password scheme"
     method_option :name,   type: :string, aliases: "-n", desc: "full name"
     def add_account(address, password)
@@ -100,10 +103,14 @@ module PostfixAdmin
     end
 
     desc "edit_account user@example.com", "Edit an account"
-    method_option :goto,  type: :string,  aliases: "-g", desc: "mailboxes, addresses e-mails are delivered to"
-    method_option :quota, type: :numeric, aliases: "-q", desc: "quota limitation (MB)"
-    method_option :name,  type: :string,  aliases: "-n", desc: "full name"
-    method_option :active, type: :boolean, desc: "Update active status"
+    method_option :goto,  type: :string,  aliases: "-g",
+                  desc: "mailboxes, addresses e-mails are delivered to"
+    method_option :quota, type: :numeric, aliases: "-q",
+                  desc: "quota limitation (MB)"
+    method_option :name,  type: :string,  aliases: "-n",
+                  desc: "full name"
+    method_option :active, type: :boolean,
+                  desc: "Update active status"
     def edit_account(address)
       runner do
         if options.size == 0
@@ -134,7 +141,7 @@ module PostfixAdmin
       end
     end
 
-    desc "add_admin admin@example.com password", "Add an admin user"
+    desc "add_admin admin@example.com password", "Add a new admin user"
     method_option :super, type: :boolean, aliases: "-S", desc: "register as a super admin"
     method_option :scheme, type: :string, aliases: "-s", desc: "password scheme"
     def add_admin(user_name, password)
@@ -148,12 +155,14 @@ module PostfixAdmin
       end
     end
 
-    desc "add_admin_domain admin@example.com example.com", "Add admin_domain"
+    desc "add_admin_domain admin@example.com example.com",
+         "Grant an admin user access to a specific domain"
     def add_admin_domain(user_name, domain_name)
       runner { @cli.add_admin_domain(user_name, domain_name) }
     end
 
-    desc "delete_admin_domain admin@example.com example.com", "Delete admin_domain"
+    desc "delete_admin_domain admin@example.com example.com",
+         "Revoke an admin user's access to a specific domain"
     def delete_admin_domain(user_name, domain_name)
       runner { @cli.delete_admin_domain(user_name, domain_name) }
     end
@@ -173,7 +182,7 @@ module PostfixAdmin
       end
     end
 
-    desc "add_alias alias@example.com goto@example.net", "Add an alias"
+    desc "add_alias alias@example.com goto@example.net", "Add a new alias"
     def add_alias(address, goto)
       runner { @cli.add_alias(address, goto) }
     end
@@ -194,7 +203,7 @@ module PostfixAdmin
       runner { @cli.dump }
     end
 
-    desc "version", "Show postfix_admin version"
+    desc "version", "Display the version of postfix_admin"
     def version
       require 'postfix_admin/version'
       runner { say "postfix_admin #{VERSION}" }
