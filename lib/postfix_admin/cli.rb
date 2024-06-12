@@ -226,7 +226,6 @@ module PostfixAdmin
 
       mailboxes.each_with_index do |m, i|
         no = i + 1
-        quota = m.quota.to_f/ KB_TO_MB.to_f
         rows << [no.to_s, m.username, m.name, m.quota_mb_str,
                  m.active_str, m.maildir]
       end
