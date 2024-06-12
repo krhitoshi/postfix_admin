@@ -194,8 +194,9 @@ module PostfixAdmin
 
     desc "log", "Display action logs"
     method_option :domain, type: :string, aliases: "-d", desc: "Filter by domain"
+    method_option :last,   type: :numeric, aliases: "-l", desc: "Display the last N lines"
     def log
-      runner { @cli.log(domain: options[:domain]) }
+      runner { @cli.log(domain: options[:domain], last: options[:last]) }
     end
 
     desc "dump", "Dump all data"

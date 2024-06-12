@@ -220,6 +220,12 @@ class RunnerTest < ActiveSupport::TestCase
     end
   end
 
+  test "#log with lines" do
+    assert_nothing_raised do
+      silent { Runner.start(%w[log -l 100]) }
+    end
+  end
+
   test "#dump" do
     assert_nothing_raised do
       res = capture { Runner.start(["dump"]) }

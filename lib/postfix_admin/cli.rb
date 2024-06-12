@@ -343,7 +343,7 @@ module PostfixAdmin
       puts_deleted(address)
     end
 
-    def log(domain: nil)
+    def log(domain: nil, last: nil)
       headings = %w[Timestamp Admin Domain Action Data]
       rows = []
 
@@ -352,6 +352,8 @@ module PostfixAdmin
              else
                Log.all
              end
+
+      logs = logs.last(last) if last
 
       logs.each do |l|
         # TODO: Consider if zone should be included ('%Z').
