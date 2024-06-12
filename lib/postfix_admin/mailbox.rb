@@ -84,6 +84,7 @@ module PostfixAdmin
     def quota_mb_str
       case quota
       when -1
+        # It's not sure what 'disabled' means for quota.
         "Disabled"
       when 0
         "Unlimited"
