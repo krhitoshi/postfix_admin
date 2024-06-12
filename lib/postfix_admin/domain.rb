@@ -86,7 +86,7 @@ module PostfixAdmin
       when 0
         "Unlimited"
       else
-        "#{maxquota} MB"
+        maxquota.to_s
       end
     end
 

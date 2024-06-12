@@ -125,7 +125,7 @@ module PostfixAdmin
 
     def show_domain
       rows = []
-      headings = ["No.", "Domain", "Aliases", "Mailboxes","Quota (MB)",
+      headings = ["No.", "Domain", "Aliases", "Mailboxes","Max Quota (MB)",
                   "Active", "Description"]
 
       puts_title("Domains")
@@ -416,7 +416,7 @@ module PostfixAdmin
       domain = Domain.find(domain_name)
       rows << ["Mailboxes", "%4d / %4s" % [domain.rel_mailboxes.count, max_str(domain.mailboxes)]]
       rows << ["Aliases", "%4d / %4s" % [domain.pure_aliases.count, max_str(domain.aliases)]]
-      rows << ["Max Quota", domain.maxquota_str]
+      rows << ["Max Quota (MB)", domain.maxquota_str]
       rows << ["Active", domain.active_str]
       rows << ["Description", domain.description]
 
