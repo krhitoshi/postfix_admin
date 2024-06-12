@@ -56,12 +56,28 @@ class RunnerTest < ActiveSupport::TestCase
 
   test "#summary with domain" do
     res = capture { Runner.start(%w[summary example.test]) }
+
+    # parse table
+    inside_table = false
+    list = {}
+    res.each_line do |line|
+      if line.start_with?("+-")
+        inside_table = !inside_table
+        next
+      end
+
+      next unless inside_table
+      elems = line.chomp.split("|").map(&:strip)[1..]
+      list[elems.first] = elems.last
+    end
+
     assert_match "| example.test |", res
-    assert_match "Mailboxes", res
-    assert_match "Aliases", res
-    assert_match(/Max Quota \(MB\)[|\s]+100/, res)
-    assert_match "Active", res
+    assert list.has_key?("Mailboxes"), "Mailboxes not found"
+    assert list.has_key?("Aliases"), "Aliases not found"
+    assert_equal "100", list["Max Quota (MB)"]
+    assert_equal "Active", list["Active"]
     assert_match(/Description[|\s]+example.test Description/, res)
+    assert_equal "example.test Description", list["Description"]
 
     # set maxquota to 0 (unlimited)
     @domain.update(maxquota: 0)
