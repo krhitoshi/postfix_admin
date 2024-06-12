@@ -59,14 +59,14 @@ class RunnerTest < ActiveSupport::TestCase
     assert_match "| example.test |", res
     assert_match "Mailboxes", res
     assert_match "Aliases", res
-    assert_match /Max Quota[|\s]+100 MB/, res
+    assert_match /Max Quota \(MB\)[|\s]+100/, res
     assert_match "Active", res
     assert_match /Description[|\s]+example.test Description/, res
 
     # set maxquota to 0 (unlimited)
     @domain.update(maxquota: 0)
     res = capture { Runner.start(%w[summary example.test]) }
-    assert_match /Max Quota[|\s]+Unlimited/, res
+    assert_match /Max Quota \(MB\)[|\s]+Unlimited/, res
   end
 
   test "#schemes" do
