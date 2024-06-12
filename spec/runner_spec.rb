@@ -171,6 +171,13 @@ RSpec.describe PostfixAdmin::Runner do
       expect(output).to match /Active.+Inactive/
     end
 
+    it "can edit description" do
+      output = capture(:stdout) { Runner.start(['edit_domain', 'example.com', '-d', 'New Description']) }
+      expect(output).to match EX_UPDATED
+      domain = Domain.find('example.com')
+      expect(domain.description).to eq "New Description"
+    end
+
     it "aliases options -a, -m, -q" do
       expect(capture(:stdout) { Runner.start(['edit_domain', 'example.com', '-a', '40', '-m', '40', '-m', '400']) }).to match EX_UPDATED
     end

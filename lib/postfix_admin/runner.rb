@@ -57,6 +57,7 @@ module PostfixAdmin
     method_option :mailboxes, type: :numeric, aliases: "-m", desc: "Edit mailboxes limitation"
     method_option :maxquota,  type: :numeric, aliases: "-q", desc: "Edit max quota limitation"
     method_option :active, type: :boolean, desc: "Update active status"
+    method_option :description, type: :string, aliases: "-d", desc: "Edit description"
     def edit_domain(domain_name)
       runner do
         if options.size == 0

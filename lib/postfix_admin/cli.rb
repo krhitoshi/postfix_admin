@@ -180,6 +180,7 @@ module PostfixAdmin
       domain.mailboxes = options[:mailboxes] if options[:mailboxes]
       domain.maxquota     = options[:maxquota]  if options[:maxquota]
       domain.active       = options[:active] unless options[:active].nil?
+      domain.description  = options[:description] if options[:description]
       domain.save!
 
       puts "Successfully updated #{domain_name}"
