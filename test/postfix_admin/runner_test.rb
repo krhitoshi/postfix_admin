@@ -48,19 +48,23 @@ class RunnerTest < ActiveSupport::TestCase
 
   test "#summary" do
     res = capture { Runner.start(["summary"]) }
+    list = parse_table(res)
+    keys = list.keys
+
     assert_match "| Summary |", res
-    assert_match "Admins", res
-    assert_match "Mailboxes", res
-    assert_match "Aliases", res
+    assert_includes keys, "Admins"
+    assert_includes keys, "Mailboxes"
+    assert_includes keys, "Aliases"
   end
 
   test "#summary with domain" do
     res = capture { Runner.start(%w[summary example.test]) }
     list = parse_table(res)
+    keys = list.keys
 
     assert_match "| example.test |", res
-    assert list.has_key?("Mailboxes"), "Mailboxes not found"
-    assert list.has_key?("Aliases"), "Aliases not found"
+    assert_includes keys, "Mailboxes"
+    assert_includes keys, "Aliases"
     assert_equal "100", list["Max Quota (MB)"]
     assert_equal "Active", list["Active"]
     assert_match(/Description[|\s]+example.test Description/, res)
@@ -75,8 +79,9 @@ class RunnerTest < ActiveSupport::TestCase
 
   test "#schemes" do
     res = capture { Runner.start(["schemes"]) }
-    assert_match "CRAM-MD5", res
-    assert_match "CLEARTEXT", res
+    schemes = res.split
+    assert_includes schemes, "CRAM-MD5"
+    assert_includes schemes, "CLEARTEXT"
   end
 
   test "#add_domain adds a new Domain" do
