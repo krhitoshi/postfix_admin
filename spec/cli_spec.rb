@@ -5,7 +5,7 @@ RSpec.describe PostfixAdmin::CLI, "when config file does not exist" do
   before do
     @file = File.join(File.dirname(__FILE__) , 'tmp/postfix_admin.conf')
     CLI.config_file = @file
-    FileUtils.rm(@file) if File.exists?(@file)
+    FileUtils.rm(@file) if File.exist?(@file)
   end
 
   it "::config_file#=" do
@@ -21,7 +21,7 @@ RSpec.describe PostfixAdmin::CLI, "when config file does not exist" do
       $stderr = STDERR
       $stdout = STDOUT
     end.to raise_error SystemExit
-    expect(File.exists?(@file)).to be true
+    expect(File.exist?(@file)).to be true
     expect("%o" % File.stat(@file).mode).to eq "100600"
   end
 end
