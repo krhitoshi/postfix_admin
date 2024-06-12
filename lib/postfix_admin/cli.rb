@@ -139,7 +139,7 @@ module PostfixAdmin
         aliases_str = "%3d /%3s" % [d.pure_aliases.count, max_str(d.aliases)]
         mailboxes_str = "%3d /%3s" % [d.rel_mailboxes.count, max_str(d.mailboxes)]
         rows << [no.to_s, d.domain, aliases_str, mailboxes_str,
-                 max_str(d.maxquota), d.active_str, d.description]
+                 d.maxquota_str, d.active_str, d.description]
       end
 
       puts_table(headings: headings, rows: rows)
