@@ -22,6 +22,11 @@ module PostfixAdmin
       admin.errors.add(:username, 'cannot be changed') if admin.username_changed?
     end
 
+    def reload
+      @super_admin = nil
+      super
+    end
+
     def super_admin?
       if @super_admin.nil?
         @super_admin = if has_superadmin_column?

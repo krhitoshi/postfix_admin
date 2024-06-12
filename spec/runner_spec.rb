@@ -82,7 +82,7 @@ RSpec.describe PostfixAdmin::Runner do
     it "can update active status" do
       output = capture(:stdout) { Runner.start(['edit_alias', 'alias@example.com', '--no-active']) }
       expect(output).to match EX_UPDATED
-      expect(output).to match /Active.+Inactive/
+      expect(Alias.find('alias@example.com').active).to be false
     end
 
     it "can update goto" do
@@ -143,17 +143,22 @@ RSpec.describe PostfixAdmin::Runner do
     end
 
     it "can update active status" do
+      admin = Admin.find('admin@example.com')
+      expect(admin.active).to be true
       output = capture(:stdout) { Runner.start(['edit_admin', 'admin@example.com', '--no-active']) }
       expect(output).to match EX_UPDATED
-      expect(output).to match /Active.+Inactive/
+      expect(admin.reload.active).to be false
       expect(output).to match /Role.+Admin/
     end
 
     it "can update super admin status" do
+      admin = Admin.find('admin@example.com')
+      expect(admin.super_admin?).to be false
       output = capture(:stdout) {
         Runner.start(['edit_admin', 'admin@example.com', '--super'])
       }
       expect(output).to match EX_UPDATED
+      expect(admin.reload.super_admin?).to be true
       expect(output).to match /Domains.+ALL/
       expect(output).to match /Active.+Active/
       expect(output).to match /Role.+Super admin/
