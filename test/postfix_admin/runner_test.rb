@@ -61,6 +61,7 @@ class RunnerTest < ActiveSupport::TestCase
     assert_match "Aliases", res
     assert_match /Max Quota[|\s]+100 MB/, res
     assert_match "Active", res
+    assert_match /Description[|\s]+example.test Description/, res
 
     # set maxquota to 0 (unlimited)
     @domain.update(maxquota: 0)

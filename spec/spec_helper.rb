@@ -55,8 +55,8 @@ end
 def db_initialize
   db_clear
 
-  create(:domain, domain: "example.com")
-  create(:domain, domain: "example.org")
+  create(:domain, domain: "example.com", description: "example.com Description")
+  create(:domain, domain: "example.org", description: "example.org Description")
 
   all_admin = create(:admin, username: "all@example.com")
   all_admin.rel_domains << Domain.find('ALL')

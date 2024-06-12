@@ -19,7 +19,8 @@ FactoryBot.define do
     active { true }
 
     after(:build) do |domain|
-      domain.description = domain.domain unless domain.description
+      description = "#{domain.domain} Description"
+      domain.description = description unless domain.description
     end
   end
 

@@ -125,7 +125,8 @@ module PostfixAdmin
 
     def show_domain
       rows = []
-      headings = ["No.", "Domain", "Aliases", "Mailboxes","Quota (MB)", "Active"]
+      headings = ["No.", "Domain", "Aliases", "Mailboxes","Quota (MB)",
+                  "Active", "Description"]
 
       puts_title("Domains")
       if Domain.without_all.empty?
@@ -138,7 +139,7 @@ module PostfixAdmin
         aliases_str = "%3d /%3s" % [d.pure_aliases.count, max_str(d.aliases)]
         mailboxes_str = "%3d /%3s" % [d.rel_mailboxes.count, max_str(d.mailboxes)]
         rows << [no.to_s, d.domain, aliases_str, mailboxes_str,
-                 max_str(d.maxquota), d.active_str]
+                 max_str(d.maxquota), d.active_str, d.description]
       end
 
       puts_table(headings: headings, rows: rows)
@@ -416,6 +417,7 @@ module PostfixAdmin
       rows << ["Aliases", "%4d / %4s" % [domain.pure_aliases.count, max_str(domain.aliases)]]
       rows << ["Max Quota", domain.maxquota_str]
       rows << ["Active", domain.active_str]
+      rows << ["Description", domain.description]
 
       puts_title(domain_name)
       puts_table(rows: rows)
