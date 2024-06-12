@@ -354,7 +354,8 @@ module PostfixAdmin
              end
 
       logs.each do |l|
-        time = l.timestamp.strftime("%Y-%m-%d %X %Z")
+        # TODO: Consider if zone should be included ('%Z').
+        time = l.timestamp.strftime("%Y-%m-%d %X")
         rows << [time, l.username, l.domain, l.action, l.data]
       end
 
