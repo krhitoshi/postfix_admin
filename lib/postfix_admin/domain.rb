@@ -90,14 +90,6 @@ module PostfixAdmin
       end
     end
 
-    def maxquota_short_str
-      if maxquota.zero?
-        "--"
-      else
-        "#{maxquota} MB"
-      end
-    end
-
     private
 
     def num_str(num)
