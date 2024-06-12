@@ -14,6 +14,8 @@ module PostfixAdmin
     validates :mailboxes, presence: true,
                           numericality: { only_integer: true,
                                           greater_than_or_equal_to: 0 }
+
+    # max quota (MB) for each mailbox
     validates :maxquota, presence: true,
                          numericality: { only_integer: true,
                                          greater_than_or_equal_to: 0 }

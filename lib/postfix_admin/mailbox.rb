@@ -12,9 +12,13 @@ module PostfixAdmin
                                    message: "must be a valid email address" }
     validates :maildir, presence: true, uniqueness: { case_sensitive: false }
     validates :local_part, presence: true
+
+    # quota (KB)
     validates :quota, presence: true,
                       numericality: { only_integer: true,
                                       greater_than_or_equal_to: 0 }
+
+    # quota (MB), which actually doesn't exist in DB
     validates :quota_mb, presence: true,
                          numericality: { only_integer: true,
                                          greater_than_or_equal_to: 0 }
