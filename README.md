@@ -16,6 +16,12 @@ Command Line Tools for Postfix Admin
 
 * Other database engines are not supported
 
+## Requirements
+
+* Ruby 2.6 or higher
+* MySQL/MariaDB
+* Dovecot (required for setting passwords using the `doveadm pw` subcommand)
+
 ## Installation
 
 Install `postfix_admin` using:
