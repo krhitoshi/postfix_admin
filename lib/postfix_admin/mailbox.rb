@@ -81,12 +81,15 @@ module PostfixAdmin
       end
     end
 
-    def quota_str
-      if quota.zero?
-        "--"
+    def quota_mb_str
+      case quota
+      when -1
+        "Disabled"
+      when 0
+        "Unlimited"
       else
-        quota_mb = quota / KB_TO_MB
-        "#{quota_mb} MB"
+        mb_size = quota / KB_TO_MB
+        mb_size.to_s
       end
     end
   end
