@@ -79,7 +79,11 @@ module PostfixAdmin
     end
 
     def maxquota_str
-      if maxquota.zero?
+      case maxquota
+      when -1
+        # It's not sure what 'disabled' means for max quota.
+        "Disabled"
+      when 0
         "Unlimited"
       else
         "#{maxquota} MB"
