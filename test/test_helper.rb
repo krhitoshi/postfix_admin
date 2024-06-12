@@ -79,4 +79,21 @@ class ActiveSupport::TestCase
     end
     err
   end
+
+  def parse_table(text)
+    inside_table = false
+    res = {}
+    text.each_line do |line|
+      if line.start_with?("+-")
+        inside_table = !inside_table
+        next
+      end
+
+      next unless inside_table
+      elems = line.chomp.split("|").map(&:strip)[1..]
+      res[elems.first] = elems.last
+    end
+
+    res
+  end
 end

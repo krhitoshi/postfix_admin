@@ -56,20 +56,7 @@ class RunnerTest < ActiveSupport::TestCase
 
   test "#summary with domain" do
     res = capture { Runner.start(%w[summary example.test]) }
-
-    # parse table
-    inside_table = false
-    list = {}
-    res.each_line do |line|
-      if line.start_with?("+-")
-        inside_table = !inside_table
-        next
-      end
-
-      next unless inside_table
-      elems = line.chomp.split("|").map(&:strip)[1..]
-      list[elems.first] = elems.last
-    end
+    list = parse_table(res)
 
     assert_match "| example.test |", res
     assert list.has_key?("Mailboxes"), "Mailboxes not found"
@@ -82,7 +69,8 @@ class RunnerTest < ActiveSupport::TestCase
     # set maxquota to 0 (unlimited)
     @domain.update(maxquota: 0)
     res = capture { Runner.start(%w[summary example.test]) }
-    assert_match(/Max Quota \(MB\)[|\s]+Unlimited/, res)
+    list = parse_table(res)
+    assert_equal "Unlimited", list["Max Quota (MB)"]
   end
 
   test "#schemes" do
