@@ -24,8 +24,10 @@ module PostfixAdmin
                          numericality: { only_integer: true,
                                          greater_than_or_equal_to: 0 }
 
+    # mailboxes that belong to this domain
     has_many :rel_mailboxes, class_name: "Mailbox", foreign_key: :domain,
                              dependent: :destroy
+    # aliases that belong to this domain
     has_many :rel_aliases, class_name: "Alias", foreign_key: :domain,
                            dependent: :destroy
 
