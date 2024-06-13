@@ -12,6 +12,7 @@ RSpec::Core::RakeTask.new(:spec)
 
 task default: :test
 
+desc "Set up test database"
 task :setup_test_db do
   create_db_cmd = "mysql -e 'CREATE DATABASE `postfix_test`;'"
   puts create_db_cmd
