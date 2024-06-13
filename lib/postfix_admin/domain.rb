@@ -56,6 +56,7 @@ module PostfixAdmin
 
     scope :without_all, -> { where.not(domain: "ALL") }
 
+    # aliases that don't belong to a mailbox
     def pure_aliases
       rel_aliases.pure
     end
