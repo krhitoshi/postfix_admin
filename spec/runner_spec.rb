@@ -148,7 +148,7 @@ RSpec.describe PostfixAdmin::Runner do
       output = capture(:stdout) { Runner.start(['edit_admin', 'admin@example.com', '--no-active']) }
       expect(output).to match EX_UPDATED
       expect(admin.reload.active).to be false
-      expect(output).to match /Role.+Admin/
+      expect(output).to match /Role.+Standard Admin/
     end
 
     it "can update super admin status" do
@@ -161,7 +161,7 @@ RSpec.describe PostfixAdmin::Runner do
       expect(admin.reload.super_admin?).to be true
       expect(output).to match /Domains.+ALL/
       expect(output).to match /Active.+Active/
-      expect(output).to match /Role.+Super admin/
+      expect(output).to match /Role.+Super Admin/
     end
   end
 

@@ -104,7 +104,7 @@ module PostfixAdmin
       rows << ["Name", admin.username]
       rows << ["Password", admin.password]
       rows << ["Domains", admin.super_admin? ? "ALL" : admin.rel_domains.count.to_s]
-      rows << ["Role", admin.super_admin? ? "Super admin" : "Admin"]
+      rows << ["Role", admin.super_admin? ? "Super Admin" : "Standard Admin"]
       rows << ["Active", admin.active_str]
 
       puts_table(rows: rows)
