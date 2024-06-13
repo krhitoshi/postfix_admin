@@ -16,6 +16,7 @@ class ActiveSupport::TestCase
              else
                "mysql2://root:ScRgkaMz4YwHN5dyxfQj@db:3306/postfix_test"
              end
+  ENV["DATABASE_URL"] = database
   ActiveRecord::Base.establish_connection(database)
 
   def db_reset
