@@ -17,7 +17,9 @@ module PostfixAdmin
                           numericality: { only_integer: true,
                                           greater_than_or_equal_to: -1 }
 
-    # max quota (MB) for each mailbox
+    # max quota (MB) for each mailbox (Unlimited: 0)
+    # It's not sure what 'disabled' means for max quota.
+    # So it's better not to allow users to set `maxquota` to -1.
     validates :maxquota, presence: true,
                          numericality: { only_integer: true,
                                          greater_than_or_equal_to: 0 }
