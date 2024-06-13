@@ -138,8 +138,8 @@ module PostfixAdmin
 
       Domain.without_all.each_with_index do |d, i|
         no = i + 1
-        aliases_str = "%3d /%3s" % [d.pure_aliases.count, d.aliases_short_str]
-        mailboxes_str = "%3d /%3s" % [d.rel_mailboxes.count, d.mailboxes_short_str]
+        aliases_str = "%4d / %4s" % [d.pure_aliases.count, d.aliases_str]
+        mailboxes_str = "%4d / %4s" % [d.rel_mailboxes.count, d.mailboxes_str]
         rows << [no.to_s, d.domain, aliases_str, mailboxes_str,
                  d.maxquota_str, d.active_str, d.description]
       end

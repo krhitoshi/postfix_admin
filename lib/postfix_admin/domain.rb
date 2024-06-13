@@ -72,14 +72,6 @@ module PostfixAdmin
       max_num_str(mailboxes)
     end
 
-    def aliases_short_str
-      max_num_short_str(aliases)
-    end
-
-    def mailboxes_short_str
-      max_num_short_str(mailboxes)
-    end
-
     def maxquota_str
       case maxquota
       when -1
@@ -100,19 +92,6 @@ module PostfixAdmin
         "Disabled"
       when 0
         "Unlimited"
-      else
-        num.to_s
-      end
-    end
-
-    # -1: Disabled
-    #  0: Unlimited
-    def max_num_short_str(num)
-      case num
-      when -1
-        "0"
-      when 0
-        "--"
       else
         num.to_s
       end
