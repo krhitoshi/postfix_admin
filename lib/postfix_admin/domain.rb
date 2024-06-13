@@ -50,7 +50,7 @@ module PostfixAdmin
     has_many :admins, through: :domain_admins
 
     before_validation do |domain|
-      domain.domain = domain.domain.downcase unless domain.domain.empty?
+      domain.domain = domain.domain&.downcase
       domain.transport = "virtual"
     end
 
