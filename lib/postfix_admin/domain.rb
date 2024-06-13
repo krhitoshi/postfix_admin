@@ -11,11 +11,11 @@ module PostfixAdmin
     # max aliases
     validates :aliases, presence: true,
                         numericality: { only_integer: true,
-                                        greater_than_or_equal_to: 0 }
+                                        greater_than_or_equal_to: -1 }
     # max mailboxes
     validates :mailboxes, presence: true,
                           numericality: { only_integer: true,
-                                          greater_than_or_equal_to: 0 }
+                                          greater_than_or_equal_to: -1 }
 
     # max quota (MB) for each mailbox
     validates :maxquota, presence: true,
