@@ -39,7 +39,7 @@ jobs:
         run: sudo apt-get install -y dovecot-core
       - name: Copy configure file
         run: cp ./test/misc/postfix_admin.conf ~/.postfix_admin.conf
-      - name: Copy my.cnf
+      - name: Copy my.cnf (for `rake setup_test_db`)
         run: cp ./my.cnf ~/.my.cnf
       - name: docker-compose up
         run: docker-compose up -d db
