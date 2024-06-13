@@ -2,6 +2,7 @@
 #
 # Run tests on service app
 # You may need to run tests on Docker because of its requirement of doveadm
+# docker compose exec app bundle exec rake setup_test_db
 # docker compose exec app bundle exec rake test
 # docker compose exec app bundle exec rake spec
 
@@ -38,8 +39,6 @@ services:
     volumes:
       - db-data:/var/lib/mysql
       - ./docker-db/postfix.v1841.sql:/docker-entrypoint-initdb.d/postfix.sql
-    # TODO: find a way to duplicate database for postfix_test
-      - ./docker-db/postfix_test.v1841.sql:/docker-entrypoint-initdb.d/postfix_test.sql
 #      - ./docker-db/postfix.v740.sql:/docker-entrypoint-initdb.d/postfix.sql
 #      - ./docker-db/postfix.v352.sql:/docker-entrypoint-initdb.d/postfix.sql
     environment:

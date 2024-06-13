@@ -11,3 +11,13 @@ end
 RSpec::Core::RakeTask.new(:spec)
 
 task default: :test
+
+task :setup_test_db do
+  create_db_cmd = "mysql -e 'CREATE DATABASE `postfix_test`;'"
+  puts create_db_cmd
+  puts `#{create_db_cmd}`
+
+  import_db_cmd = "mysql postfix_test < docker-db/postfix.v1841.sql"
+  puts import_db_cmd
+  puts `#{import_db_cmd}`
+end
