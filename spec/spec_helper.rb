@@ -73,8 +73,13 @@ def db_initialize
   domain.save!
 end
 
-DATABASE_URL = ENV.fetch("DATABASE_URL") { 'mysql2://postfix:password@127.0.0.1:13306/postfix' }
-ActiveRecord::Base.establish_connection(DATABASE_URL)
+database = if ENV["CI"]
+             "mysql2://root:ScRgkaMz4YwHN5dyxfQj@127.0.0.1:13306/postfix_test"
+           else
+             "mysql2://root:ScRgkaMz4YwHN5dyxfQj@db:3306/postfix_test"
+           end
+ENV["DATABASE_URL"] = database
+ActiveRecord::Base.establish_connection(database)
 # db_initialize
 
 module PostfixAdmin

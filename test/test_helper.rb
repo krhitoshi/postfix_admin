@@ -11,9 +11,12 @@ class ActiveSupport::TestCase
 
   FactoryBot.find_definitions
 
-  database = ENV.fetch("DATABASE_URL") do
-    "mysql2://postfix:password@127.0.0.1:13306/postfix"
-  end
+  database = if ENV["CI"]
+               "mysql2://root:ScRgkaMz4YwHN5dyxfQj@127.0.0.1:13306/postfix_test"
+             else
+               "mysql2://root:ScRgkaMz4YwHN5dyxfQj@db:3306/postfix_test"
+             end
+  ENV["DATABASE_URL"] = database
   ActiveRecord::Base.establish_connection(database)
 
   def db_reset
