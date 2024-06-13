@@ -8,11 +8,11 @@ module PostfixAdmin
                                  message: "must be a valid domain name" }
     validates :transport, presence: true
 
-    # max aliases
+    # max aliases (Disabled: -1, Unlimited: 0)
     validates :aliases, presence: true,
                         numericality: { only_integer: true,
                                         greater_than_or_equal_to: -1 }
-    # max mailboxes
+    # max mailboxes (Disabled: -1, Unlimited: 0)
     validates :mailboxes, presence: true,
                           numericality: { only_integer: true,
                                           greater_than_or_equal_to: -1 }
