@@ -41,7 +41,7 @@ services:
 #      - ./docker-db/postfix.v740.sql:/docker-entrypoint-initdb.d/postfix.sql
 #      - ./docker-db/postfix.v352.sql:/docker-entrypoint-initdb.d/postfix.sql
     environment:
-      - MYSQL_RANDOM_ROOT_PASSWORD=yes
+      - MYSQL_ROOT_PASSWORD=ScRgkaMz4YwHN5dyxfQj
       - MYSQL_USER=postfix
       - MYSQL_PASSWORD=password
       - MYSQL_DATABASE=postfix
