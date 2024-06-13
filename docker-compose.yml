@@ -2,6 +2,7 @@
 #
 # Run tests on service app
 # You may need to run tests on Docker because of its requirement of doveadm
+# docker compose exec app bundle exec rake setup_test_db
 # docker compose exec app bundle exec rake test
 # docker compose exec app bundle exec rake spec
 
