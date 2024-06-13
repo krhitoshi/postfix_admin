@@ -20,7 +20,7 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency "factory_bot", "~> 6.2.1"
   gem.add_development_dependency "rake", "~> 13.2.1"
   gem.add_development_dependency "rubocop"
-  gem.add_development_dependency "rspec", "~> 3.9.0"
+  gem.add_development_dependency "rspec", "~> 3.13.0"
 
   # Specify which files should be added to the gem when it is released.
   # The `git ls-files -z` loads the files in the RubyGem that have been added into git.
