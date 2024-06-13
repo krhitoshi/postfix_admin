@@ -418,8 +418,8 @@ module PostfixAdmin
 
       rows = []
       domain = Domain.find(domain_name)
-      rows << ["Mailboxes", "%4d / %4s" % [domain.rel_mailboxes.count, max_str(domain.mailboxes)]]
-      rows << ["Aliases", "%4d / %4s" % [domain.pure_aliases.count, max_str(domain.aliases)]]
+      rows << ["Mailboxes", "%4d / %4s" % [domain.rel_mailboxes.count, domain.mailboxes_str]]
+      rows << ["Aliases", "%4d / %4s" % [domain.pure_aliases.count, domain.aliases_str]]
       rows << ["Max Quota (MB)", domain.maxquota_str]
       rows << ["Active", domain.active_str]
       rows << ["Description", domain.description]

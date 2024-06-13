@@ -65,11 +65,11 @@ module PostfixAdmin
     end
 
     def aliases_str
-      num_str(aliases)
+      max_num_str(aliases)
     end
 
     def mailboxes_str
-      num_str(mailboxes)
+      max_num_str(mailboxes)
     end
 
     def aliases_short_str
@@ -94,8 +94,11 @@ module PostfixAdmin
 
     private
 
-    def num_str(num)
-      if num.zero?
+    def max_num_str(num)
+      case num
+      when -1
+        "Disabled"
+      when 0
         "Unlimited"
       else
         num.to_s
