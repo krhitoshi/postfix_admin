@@ -60,14 +60,6 @@ module PostfixAdmin
       rel_aliases.pure
     end
 
-    def aliases_unlimited?
-      aliases.zero?
-    end
-
-    def mailboxes_unlimited?
-      mailboxes.zero?
-    end
-
     def aliases_str
       max_num_str(aliases)
     end
