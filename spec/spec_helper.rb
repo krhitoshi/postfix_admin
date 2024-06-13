@@ -6,6 +6,7 @@ require 'bundler/setup'
 Bundler.require(:default, :development)
 require 'postfix_admin'
 require 'postfix_admin/cli'
+require File.join(File.dirname(__FILE__), "..", "test", "test_helper_base")
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
@@ -73,13 +74,7 @@ def db_initialize
   domain.save!
 end
 
-database = if ENV["CI"]
-             "mysql2://root:ScRgkaMz4YwHN5dyxfQj@127.0.0.1:13306/postfix_test"
-           else
-             "mysql2://root:ScRgkaMz4YwHN5dyxfQj@db:3306/postfix_test"
-           end
-ENV["DATABASE_URL"] = database
-ActiveRecord::Base.establish_connection(database)
+setup_db_connection
 # db_initialize
 
 module PostfixAdmin
