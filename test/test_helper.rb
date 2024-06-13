@@ -14,14 +14,6 @@ class ActiveSupport::TestCase
 
   setup_db_connection
 
-  def db_reset
-    DomainAdmin.delete_all
-    Mailbox.delete_all
-    Alias.delete_all
-    Domain.without_all.delete_all
-    Admin.delete_all
-  end
-
   def assert_account_difference(*args, &block)
     assert_difference(%w[Mailbox.count Alias.count], *args) do
       block.call

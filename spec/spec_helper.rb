@@ -44,17 +44,8 @@ include PostfixAdmin
 # Alias:
 #  alias@example.com -> goto@example.jp
 
-def db_clear
-  # ::PostfixAdmin::Config.all.destroy
-  DomainAdmin.delete_all
-  Mailbox.delete_all
-  Alias.delete_all
-  Domain.without_all.delete_all
-  Admin.delete_all
-end
-
 def db_initialize
-  db_clear
+  db_reset
 
   create(:domain, domain: "example.com", description: "example.com Description")
   create(:domain, domain: "example.org", description: "example.org Description")

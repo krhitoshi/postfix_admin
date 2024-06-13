@@ -9,3 +9,11 @@ def setup_db_connection
   ENV["DATABASE_URL"] = database
   ActiveRecord::Base.establish_connection(database)
 end
+
+def db_reset
+  DomainAdmin.delete_all
+  Mailbox.delete_all
+  Alias.delete_all
+  Domain.without_all.delete_all
+  Admin.delete_all
+end
