@@ -73,11 +73,11 @@ module PostfixAdmin
     end
 
     def aliases_short_str
-      num_short_str(aliases)
+      max_num_short_str(aliases)
     end
 
     def mailboxes_short_str
-      num_short_str(mailboxes)
+      max_num_short_str(mailboxes)
     end
 
     def maxquota_str
@@ -105,8 +105,13 @@ module PostfixAdmin
       end
     end
 
-    def num_short_str(num)
-      if num.zero?
+    # -1: Disabled
+    #  0: Unlimited
+    def max_num_short_str(num)
+      case num
+      when -1
+        "0"
+      when 0
         "--"
       else
         num.to_s

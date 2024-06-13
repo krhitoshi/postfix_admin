@@ -138,8 +138,8 @@ module PostfixAdmin
 
       Domain.without_all.each_with_index do |d, i|
         no = i + 1
-        aliases_str = "%3d /%3s" % [d.pure_aliases.count, max_str(d.aliases)]
-        mailboxes_str = "%3d /%3s" % [d.rel_mailboxes.count, max_str(d.mailboxes)]
+        aliases_str = "%3d /%3s" % [d.pure_aliases.count, d.aliases_short_str]
+        mailboxes_str = "%3d /%3s" % [d.rel_mailboxes.count, d.mailboxes_short_str]
         rows << [no.to_s, d.domain, aliases_str, mailboxes_str,
                  d.maxquota_str, d.active_str, d.description]
       end
@@ -536,19 +536,6 @@ module PostfixAdmin
         puts "the password of #{user_name} was successfully changed."
       else
         raise "Could not change password of #{klass.name}"
-      end
-    end
-
-    #  0: unlimited
-    # -1: disabled
-    def max_str(value)
-      case value
-      when 0
-        '--'
-      when -1
-        '0'
-      else
-        value.to_s
       end
     end
 
