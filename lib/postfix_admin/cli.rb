@@ -33,12 +33,12 @@ module PostfixAdmin
         # address like argument
         if Admin.exists?(name)
           # admin
-          show_admin_details(name)
+          show_admin_details(name, display_password: true)
           puts
           show_admin_domain(name)
         elsif Mailbox.exists?(name)
           # mailbox
-          show_account_details(name)
+          show_account_details(name, display_password: true)
         elsif Alias.exists?(name)
           # alias
           show_alias_details(name)
@@ -80,7 +80,7 @@ module PostfixAdmin
       add_admin_domain(admin, domain_name)
     end
 
-    def show_account_details(user_name)
+    def show_account_details(user_name, display_password: false)
       account_check(user_name)
       mailbox    = Mailbox.find(user_name)
       mail_alias = Alias.find(user_name)
@@ -89,7 +89,7 @@ module PostfixAdmin
       puts_title("Mailbox")
       rows << ["Address", mailbox.username]
       rows << ["Name", mailbox.name]
-      rows << ["Password", mailbox.password]
+      rows << ["Password", mailbox.password] if display_password
       rows << ["Quota (MB)", mailbox.quota_mb_str]
       rows << ["Go to", mail_alias.goto]
       rows << ["Active", mailbox.active_str]
@@ -97,14 +97,14 @@ module PostfixAdmin
       puts_table(rows: rows)
     end
 
-    def show_admin_details(name)
+    def show_admin_details(name, display_password: false)
       admin_check(name)
       admin = Admin.find(name)
 
       rows = []
       puts_title("Admin")
       rows << ["Name", admin.username]
-      rows << ["Password", admin.password]
+      rows << ["Password", admin.password] if display_password
       rows << ["Domains", admin.super_admin? ? "ALL" : admin.rel_domains.count.to_s]
       rows << ["Role", admin.super_admin? ? "Super Admin" : "Standard Admin"]
       rows << ["Active", admin.active_str]

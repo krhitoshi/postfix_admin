@@ -13,8 +13,8 @@ RSpec.describe PostfixAdmin::Runner do
     end
 
     it "shows information of admin@example.com" do
-      expect(capture(:stdout) { Runner.start(["show"]) }).to match \
-        /admin@example.com[|\s]+1[|\s]+Active/
+      out = capture(:stdout) { Runner.start(["show"]) }
+      expect(out).to match /admin@example.com[|\s]+1[|\s]+Active/
     end
 
     it "show the detail of example.com" do
@@ -31,11 +31,15 @@ RSpec.describe PostfixAdmin::Runner do
     end
 
     it "shows information of an admin" do
-      expect(capture(:stdout) {  Runner.start(["show", "admin@example.com"]) }).to match /admin@example.com/
+      out = capture(:stdout) {  Runner.start(["show", "admin@example.com"]) }
+      expect(out).to match /admin@example.com/
+      expect(out).to match /Password/
     end
 
     it "shows information of an account" do
-      expect(capture(:stdout) {  Runner.start(["show", "user@example.com"]) }).to match /user@example.com/
+      out = capture(:stdout) { Runner.start(["show", "user@example.com"]) }
+      expect(out).to match /user@example.com/
+      expect(out).to match /Password/
     end
 
     it "shows information of an alias" do
@@ -148,6 +152,7 @@ RSpec.describe PostfixAdmin::Runner do
       output = capture(:stdout) { Runner.start(['edit_admin', 'admin@example.com', '--no-active']) }
       expect(output).to match EX_UPDATED
       expect(admin.reload.active).to be false
+      expect(output).not_to match /Password/
       expect(output).to match /Role.+Standard Admin/
     end
 
@@ -205,6 +210,7 @@ RSpec.describe PostfixAdmin::Runner do
       output = capture(:stdout) { Runner.start(@args + ['--quota', '50', '--no-active']) }
       expect(output).to match EX_UPDATED
       expect(output).to match /Quota/
+      expect(output).not_to match /Password/
       expect(output).to match /Active.+Inactive/
     end
 
