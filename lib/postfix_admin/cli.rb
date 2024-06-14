@@ -207,7 +207,7 @@ module PostfixAdmin
       rows = []
       admins.each_with_index do |a, i|
         no = i + 1
-        domains = a.super_admin? ? 'Super admin' : a.rel_domains.count
+        domains = a.super_admin? ? 'Super Admin' : a.rel_domains.count
         rows << [no.to_s, a.username, domains.to_s, a.active_str]
       end
 
