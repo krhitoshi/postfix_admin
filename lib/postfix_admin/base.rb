@@ -142,7 +142,7 @@ module PostfixAdmin
       Alias.where(address: address).delete_all
     end
 
-    def add_domain(domain_name)
+    def add_domain(domain_name, description: nil)
       domain_name = domain_name.downcase
 
       unless valid_domain_name?(domain_name)
@@ -153,10 +153,12 @@ module PostfixAdmin
         raise_error "Domain has already been registered: #{domain_name}"
       end
 
+      new_description = description || domain_name
+
       domain = Domain.new
       domain.attributes = {
         domain: domain_name,
-        description: domain_name,
+        description: new_description,
         aliases: @config[:aliases],
         mailboxes: @config[:mailboxes],
         maxquota: @config[:maxquota]

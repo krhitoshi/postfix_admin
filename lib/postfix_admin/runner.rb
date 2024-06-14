@@ -48,8 +48,9 @@ module PostfixAdmin
     end
 
     desc "add_domain example.com", "Add a new domain"
+    method_option :description, type: :string, aliases: "-d", desc: "Description"
     def add_domain(domain_name)
-      runner { @cli.add_domain(domain_name) }
+      runner { @cli.add_domain(domain_name, description: options[:description]) }
     end
 
     desc "edit_domain example.com", "Edit a domain"

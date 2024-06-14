@@ -147,8 +147,8 @@ module PostfixAdmin
       puts_table(headings: headings, rows: rows)
     end
 
-    def add_domain(domain_name)
-      @base.add_domain(domain_name)
+    def add_domain(domain_name, description: nil)
+      @base.add_domain(domain_name, description: description)
       puts_registered(domain_name, "a domain")
     end
 
