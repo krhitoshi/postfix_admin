@@ -98,17 +98,22 @@ RSpec.describe PostfixAdmin::Runner do
 
   describe "add_admin" do
     before do
-      @args = ['add_admin', 'admin@example.jp', 'password']
+      @args = %w[add_admin admin@new-domain.test password]
     end
 
-    it "can add an new admin" do
-      expect(capture(:stdout) { Runner.start(@args) }).to match EX_REGISTERED
+    it "can add an new admin user" do
+      expect(capture(:stdout) {
+        expect{ Runner.start(@args) }.to change{ Admin.count }.by(1)
+      }).to match EX_REGISTERED
+      expect(Admin.exists?("admin@new-domain.test")).to be true
+      admin = Admin.find("admin@new-domain.test")
+      expect(admin.password).to eq CRAM_MD5_PASS
     end
 
     describe "scheme option" do
       it "--scheme does not show error" do
         expect(exit_capture { Runner.start(@args + ['--scheme', 'CRAM-MD5']) }).to eq ""
-        expect(Admin.find('admin@example.jp').password).to eq CRAM_MD5_PASS
+        expect(Admin.find("admin@new-domain.test").password).to eq CRAM_MD5_PASS
       end
 
       it "--shceme can register admin" do
@@ -129,7 +134,7 @@ RSpec.describe PostfixAdmin::Runner do
     end
 
     it "can use long password" do
-      expect(capture(:stdout) { Runner.start(['add_admin', 'admin@example.jp', '{CRAM-MD5}9c5e77f2da26fc03e9fa9e13ccd77aeb50c85539a4d90b70812715aea9ebda1d']) }).to match EX_REGISTERED
+      expect(capture(:stdout) { Runner.start(['add_admin', "admin@new-domain.test", '{CRAM-MD5}9c5e77f2da26fc03e9fa9e13ccd77aeb50c85539a4d90b70812715aea9ebda1d']) }).to match EX_REGISTERED
     end
 
     it "--super option" do

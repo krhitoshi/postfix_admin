@@ -102,17 +102,6 @@ class RunnerTest < ActiveSupport::TestCase
     assert_not Domain.exists?("example.test")
   end
 
-  test "#add_admin adds an Admin" do
-    assert_difference("Admin.count") do
-      res = capture { Runner.start(%w[add_admin admin@new-domain.test password]) }
-      assert_match '"admin@new-domain.test" was successfully registered as an admin', res
-    end
-    assert Admin.exists?("admin@new-domain.test")
-    admin = Admin.find("admin@new-domain.test")
-    expected = "{CRAM-MD5}9186d855e11eba527a7a52ca82b313e180d62234f0acc9051b527243d41e2740"
-    assert_equal expected, admin.password
-  end
-
   test "#delete_admin deletes an Admin" do
     assert Admin.exists?("admin@example.test")
     assert_difference("Admin.count", -1) do
