@@ -293,7 +293,6 @@ module PostfixAdmin
 
       @base.add_account(address, hashed_password(password, scheme), name: name)
       puts_registered(address, "an account")
-      show_account_details(address)
     end
 
     def add_alias(address, goto)
@@ -542,7 +541,6 @@ module PostfixAdmin
     def hashed_password(password, in_scheme = nil)
       prefix = @base.config[:passwordhash_prefix]
       scheme = in_scheme || @base.config[:scheme]
-      puts "scheme: #{scheme}"
       PostfixAdmin::Doveadm.password(password, scheme, prefix)
     end
   end

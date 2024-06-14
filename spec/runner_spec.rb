@@ -249,7 +249,7 @@ RSpec.describe PostfixAdmin::Runner do
     end
 
     it "default scheme (CRAM-MD5) is applied" do
-      expect(capture(:stdout) { Runner.start(@args) }).to match /scheme: CRAM-MD5/
+      expect(capture(:stdout) { Runner.start(@args) }).to match EX_REGISTERED
       expect(Mailbox.find('user2@example.com').password).to eq CRAM_MD5_PASS
     end
 
@@ -299,7 +299,6 @@ RSpec.describe PostfixAdmin::Runner do
       it "can use MD5-CRYPT using -s" do
         result = capture(:stdout) { Runner.start(@args + ['-s', 'MD5-CRYPT']) }
         expect(result).to match EX_REGISTERED
-        expect(result).to match /scheme: MD5-CRYPT/
         expect(Mailbox.find('user2@example.com').password).to match EX_MD5_CRYPT
       end
     end
