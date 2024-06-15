@@ -1,7 +1,7 @@
+# CHANGELOG
+
 ## 0.3.0
  * Added support for table display format
-
-## 0.2.2
  * No longer supports `dovecotpw` for password hash generation
    + Only `doveadm pw` is supported
 
