@@ -294,24 +294,18 @@ RSpec.describe PostfixAdmin::Runner do
     end
 
     describe "scheme" do
-      it "--scheme require argument" do
-        expect(exit_capture { Runner.start(@args + ['--scheme']) }).to match /Specify password scheme/
-      end
+      %w[--scheme -s].each do |opt|
+        it "'#{opt}' allows to set password schema" do
+          expect(capture(:stdout) {
+            Runner.start(@args + [opt, "BLF-CRYPT"])
+          }).to match EX_REGISTERED
+          expect(Mailbox.find('user2@example.com').password).to match EX_BLF_CRYPT
+        end
 
-      it "can use CRAM-MD5 using --scheme" do
-        expect(capture(:stdout) { Runner.start(@args + ['--scheme', 'CRAM-MD5']) }).to match EX_REGISTERED
-        expect(Mailbox.find('user2@example.com').password).to eq CRAM_MD5_PASS
-      end
-
-      it "can use CRAM-MD5 using -s" do
-        expect(capture(:stdout) { Runner.start(@args + ['-s', 'CRAM-MD5']) }).to match EX_REGISTERED
-        expect(Mailbox.find('user2@example.com').password).to eq CRAM_MD5_PASS
-      end
-
-      it "can use MD5-CRYPT using -s" do
-        result = capture(:stdout) { Runner.start(@args + ['-s', 'MD5-CRYPT']) }
-        expect(result).to match EX_REGISTERED
-        expect(Mailbox.find('user2@example.com').password).to match EX_MD5_CRYPT
+        it "'#{opt}' requires argument" do
+          expect(exit_capture { Runner.start(@args + [opt]) }).to \
+            match /Specify password scheme/
+        end
       end
     end
   end
