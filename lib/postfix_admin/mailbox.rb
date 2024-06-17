@@ -72,8 +72,15 @@ module PostfixAdmin
                           domain: mailbox.domain)
     end
 
+    # example: {CRAM-MD5}, {BLF-CRYPT}, {PLAIN}
+    # return nil if no scheme prefix
     def scheme_prefix
-      password&.match(/^\{.*?\}/)[0]
+      res = password&.match(/^\{.*?\}/)
+      if res
+        res[0]
+      else
+        nil
+      end
     end
 
     def quota_usage_str

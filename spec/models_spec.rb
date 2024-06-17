@@ -173,6 +173,10 @@ RSpec.describe PostfixAdmin::Mailbox do
     blowfish_password = "{BLF-CRYPT}$2y$05$Nkx/QGy0PMR4CgQhfRDnROfMn4JmU8A2eVxROXTWeHlNnQMYs/Aaq"
     @mailbox.update(password: blowfish_password)
     expect(@mailbox.scheme_prefix).to eq "{BLF-CRYPT}"
+
+    no_prefix_password = "password"
+    @mailbox.update(password: no_prefix_password)
+    expect(@mailbox.scheme_prefix).to be nil
   end
 end
 
