@@ -130,10 +130,11 @@ end
 RSpec.describe PostfixAdmin::Mailbox do
   before do
     db_initialize
+    @mailbox = Mailbox.find('user@example.com')
   end
 
   it "active" do
-    expect(Mailbox.find('user@example.com').active).to be true
+    expect(@mailbox.active).to be true
     domain = Domain.find('example.com')
     domain.rel_mailboxes << build(:mailbox, local_part: "non_active_user",
                                             active: false)
@@ -167,12 +168,11 @@ RSpec.describe PostfixAdmin::Mailbox do
   end
 
   it "scheme_prefix" do
-    @user = Mailbox.find('user@example.com')
-    expect(@user.scheme_prefix).to eq "{CRAM-MD5}"
+    expect(@mailbox.scheme_prefix).to eq "{CRAM-MD5}"
 
     blowfish_password = "{BLF-CRYPT}$2y$05$Nkx/QGy0PMR4CgQhfRDnROfMn4JmU8A2eVxROXTWeHlNnQMYs/Aaq"
-    @user.update(password: blowfish_password)
-    expect(@user.scheme_prefix).to eq "{BLF-CRYPT}"
+    @mailbox.update(password: blowfish_password)
+    expect(@mailbox.scheme_prefix).to eq "{BLF-CRYPT}"
   end
 end
 
