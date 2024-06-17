@@ -13,6 +13,7 @@ require 'postfix_admin/quota'
 RSpec.describe PostfixAdmin::Admin do
   before do
     db_initialize
+    @admin = Admin.find('admin@example.com')
   end
 
   it ".exists?" do
@@ -75,6 +76,18 @@ RSpec.describe PostfixAdmin::Admin do
       d = Domain.find('example.org')
       expect(Admin.find('all@example.com').has_domain?(d)).to be true
     end
+  end
+
+  it "scheme_prefix" do
+    expect(@admin.scheme_prefix).to eq "{CRAM-MD5}"
+
+    blowfish_password = "{BLF-CRYPT}$2y$05$Nkx/QGy0PMR4CgQhfRDnROfMn4JmU8A2eVxROXTWeHlNnQMYs/Aaq"
+    @admin.update(password: blowfish_password)
+    expect(@admin.scheme_prefix).to eq "{BLF-CRYPT}"
+
+    no_prefix_password = "password"
+    @admin.update(password: no_prefix_password)
+    expect(@admin.scheme_prefix).to be nil
   end
 end
 

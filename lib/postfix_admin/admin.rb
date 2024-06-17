@@ -63,5 +63,14 @@ module PostfixAdmin
     def has_domain?(domain)
       !rel_domains.where(domain: ["ALL", domain.domain]).empty?
     end
+
+    def scheme_prefix
+      res = password&.match(/^\{.*?\}/)
+      if res
+        res[0]
+      else
+        nil
+      end
+    end
   end
 end
