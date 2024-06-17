@@ -72,6 +72,10 @@ module PostfixAdmin
                           domain: mailbox.domain)
     end
 
+    def scheme_prefix
+      password&.match(/^\{.*?\}/)[0]
+    end
+
     def quota_usage_str
       if quota_usage
         usage_mb = quota_usage.bytes / KB_TO_MB

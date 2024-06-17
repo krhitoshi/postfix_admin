@@ -165,6 +165,15 @@ RSpec.describe PostfixAdmin::Mailbox do
       expect(Mailbox.exists?('unknown@unknown.example.com')).to be false
     end
   end
+
+  it "scheme_prefix" do
+    @user = Mailbox.find('user@example.com')
+    expect(@user.scheme_prefix).to eq "{CRAM-MD5}"
+
+    blowfish_password = "{BLF-CRYPT}$2y$05$Nkx/QGy0PMR4CgQhfRDnROfMn4JmU8A2eVxROXTWeHlNnQMYs/Aaq"
+    @user.update(password: blowfish_password)
+    expect(@user.scheme_prefix).to eq "{BLF-CRYPT}"
+  end
 end
 
 RSpec.describe PostfixAdmin::Alias do
