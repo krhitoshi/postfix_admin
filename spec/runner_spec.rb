@@ -107,29 +107,22 @@ RSpec.describe PostfixAdmin::Runner do
       }).to match EX_REGISTERED
       expect(Admin.exists?("admin@new-domain.test")).to be true
       admin = Admin.find("admin@new-domain.test")
+      # default scheme CRAM-MD5
       expect(admin.password).to eq CRAM_MD5_PASS
     end
 
     describe "scheme option" do
-      it "--scheme does not show error" do
-        expect(exit_capture { Runner.start(@args + ['--scheme', 'CRAM-MD5']) }).to eq ""
-        expect(Admin.find("admin@new-domain.test").password).to eq CRAM_MD5_PASS
-      end
+      %w[--scheme -s].each do |opt|
+        it "'#{opt}' allows to set password schema" do
+          expect(capture(:stdout) {
+            Runner.start(@args + [opt, "BLF-CRYPT"])
+          }).to match EX_REGISTERED
+          expect(Admin.find("admin@new-domain.test").password).to match /^\{BLF-CRYPT\}\$2y\$\d\d\$.{53}$/
+        end
 
-      it "--shceme can register admin" do
-        expect(capture(:stdout) { Runner.start(@args + ['--scheme', 'CRAM-MD5']) }).to match EX_REGISTERED
-      end
-
-      it "-s does not show error" do
-        expect(exit_capture { Runner.start(@args + ['-s', 'CRAM-MD5']) }).to eq ""
-      end
-
-      it "-s can register admin" do
-        expect(capture(:stdout) { Runner.start(@args + ['-s', 'CRAM-MD5']) }).to match EX_REGISTERED
-      end
-
-      it "-s require argument" do
-        expect(exit_capture { Runner.start(@args + ['-s']) }).to match /Specify password scheme/
+        it "'#{opt}' requires argument" do
+          expect(exit_capture { Runner.start(@args + ['-s']) }).to match /Specify password scheme/
+        end
       end
     end
 
