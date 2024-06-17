@@ -91,11 +91,27 @@ RSpec.describe PostfixAdmin::Runner do
   end
 
   describe "account_passwd" do
+    before do
+      @mailbox = Mailbox.find("user@example.com")
+    end
+
     it "can change password of an account" do
       expect(capture(:stdout) {
         Runner.start(['account_passwd', 'user@example.com', 'new_password'])
       }).to match EX_UPDATED
-      expect(Mailbox.find('user@example.com').password).to eq CRAM_MD5_NEW_PASS
+      expect(@mailbox.reload.password).to eq CRAM_MD5_NEW_PASS
+    end
+
+    describe "scheme option" do
+      %w[--scheme -s].each do |opt|
+        it "'#{opt}' allows to set password schema" do
+          expect(capture(:stdout) {
+            Runner.start(["account_passwd", "user@example.com", "new_password",
+                          opt, "BLF-CRYPT"])
+          }).to match EX_UPDATED
+          expect(@mailbox.reload.password).to match EX_BLF_CRYPT
+        end
+      end
     end
 
     it "can not use too short password (< 5)" do

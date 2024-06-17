@@ -156,8 +156,8 @@ module PostfixAdmin
       change_password(Admin, user_name, password, scheme: scheme)
     end
 
-    def change_account_password(user_name, password)
-      change_password(Mailbox, user_name, password)
+    def change_account_password(user_name, password, scheme: nil)
+      change_password(Mailbox, user_name, password, scheme: scheme)
     end
 
     def edit_admin(admin_name, options)
