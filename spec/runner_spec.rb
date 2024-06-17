@@ -122,7 +122,8 @@ RSpec.describe PostfixAdmin::Runner do
         end
 
         it "'#{opt}' requires argument" do
-          expect(exit_capture { Runner.start(@args + ['-s']) }).to match /Specify password scheme/
+          expect(exit_capture { Runner.start(@args + ['-s']) }).to \
+            match /Specify password scheme/
         end
       end
     end
@@ -132,17 +133,21 @@ RSpec.describe PostfixAdmin::Runner do
     end
 
     it "--super option" do
-      expect(capture(:stdout) { Runner.start(@args + ['--super']) }).to match /registered as a super admin/
+      expect(capture(:stdout) { Runner.start(@args + ['--super']) }).to \
+        match /registered as a super admin/
     end
 
     it "-S (--super) option" do
-      expect(capture(:stdout) { Runner.start(@args + ['-S']) }).to match /registered as a super admin/
+      expect(capture(:stdout) { Runner.start(@args + ['-S']) }).to \
+        match /registered as a super admin/
     end
   end
 
   describe "edit_admin" do
     it "when no options, shows usage" do
-      expect(capture(:stderr) { Runner.start(['edit_admin', 'admin@example.com']) }).to match /Use one or more options/
+      expect(capture(:stderr) {
+        Runner.start(['edit_admin', 'admin@example.com'])
+      }).to match /Use one or more options/
     end
 
     it "can update active status" do
@@ -171,7 +176,9 @@ RSpec.describe PostfixAdmin::Runner do
 
   describe "edit_domain" do
     it "when no options, shows usage" do
-      expect(exit_capture { Runner.start(['edit_domain', 'example.com']) }).to match /Use one or more options/
+      expect(exit_capture {
+        Runner.start(['edit_domain', 'example.com'])
+      }).to match /Use one or more options/
     end
 
     it "can edit limitations of domain" do
