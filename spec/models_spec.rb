@@ -84,8 +84,7 @@ RSpec.describe PostfixAdmin::Admin do
     @admin.update(password: BLF_CRYPT_PASS)
     expect(@admin.scheme_prefix).to eq "{BLF-CRYPT}"
 
-    no_prefix_password = "password"
-    @admin.update(password: no_prefix_password)
+    @admin.update(password: CRAM_MD5_PASS_WITHOUT_PREFIX)
     expect(@admin.scheme_prefix).to be nil
   end
 end
@@ -185,8 +184,7 @@ RSpec.describe PostfixAdmin::Mailbox do
     @mailbox.update(password: BLF_CRYPT_PASS)
     expect(@mailbox.scheme_prefix).to eq "{BLF-CRYPT}"
 
-    no_prefix_password = "password"
-    @mailbox.update(password: no_prefix_password)
+    @mailbox.update(password: CRAM_MD5_PASS_WITHOUT_PREFIX)
     expect(@mailbox.scheme_prefix).to be nil
   end
 end
