@@ -81,8 +81,7 @@ RSpec.describe PostfixAdmin::Admin do
   it "scheme_prefix" do
     expect(@admin.scheme_prefix).to eq "{CRAM-MD5}"
 
-    blowfish_password = "{BLF-CRYPT}$2y$05$Nkx/QGy0PMR4CgQhfRDnROfMn4JmU8A2eVxROXTWeHlNnQMYs/Aaq"
-    @admin.update(password: blowfish_password)
+    @admin.update(password: BLF_CRYPT_PASS)
     expect(@admin.scheme_prefix).to eq "{BLF-CRYPT}"
 
     no_prefix_password = "password"
@@ -183,8 +182,7 @@ RSpec.describe PostfixAdmin::Mailbox do
   it "scheme_prefix" do
     expect(@mailbox.scheme_prefix).to eq "{CRAM-MD5}"
 
-    blowfish_password = "{BLF-CRYPT}$2y$05$Nkx/QGy0PMR4CgQhfRDnROfMn4JmU8A2eVxROXTWeHlNnQMYs/Aaq"
-    @mailbox.update(password: blowfish_password)
+    @mailbox.update(password: BLF_CRYPT_PASS)
     expect(@mailbox.scheme_prefix).to eq "{BLF-CRYPT}"
 
     no_prefix_password = "password"
