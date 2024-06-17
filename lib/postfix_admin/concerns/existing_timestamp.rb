@@ -14,5 +14,4 @@ module ExistingTimestamp
       ["modified"]
     end
   end
-
 end
