@@ -1,9 +1,12 @@
+require 'postfix_admin/concerns/has_password'
+
 module PostfixAdmin
   class Mailbox < ApplicationRecord
     self.table_name = :mailbox
     self.primary_key = :username
 
     include DovecotCramMD5Password
+    include HasPassword
 
     attribute :quota_mb, :integer
 
@@ -70,17 +73,6 @@ module PostfixAdmin
       mailbox.maildir ||= "#{mailbox.domain}/#{mailbox.username}/"
       mailbox.build_alias(local_part: mailbox.local_part, goto: mailbox.username,
                           domain: mailbox.domain)
-    end
-
-    # example: {CRAM-MD5}, {BLF-CRYPT}, {PLAIN}
-    # return nil if no scheme prefix
-    def scheme_prefix
-      res = password&.match(/^\{.*?\}/)
-      if res
-        res[0]
-      else
-        nil
-      end
     end
 
     def quota_usage_str

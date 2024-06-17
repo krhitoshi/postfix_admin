@@ -1,4 +1,5 @@
 require 'postfix_admin/concerns/dovecot_cram_md5_password'
+require 'postfix_admin/concerns/has_password'
 
 module PostfixAdmin
   class Admin < ApplicationRecord
@@ -6,6 +7,7 @@ module PostfixAdmin
     self.primary_key = :username
 
     include DovecotCramMD5Password
+    include HasPassword
 
     validates :username, presence: true, uniqueness: { case_sensitive: false },
                          format: { with: RE_EMAIL_LIKE_WITH_ANCHORS,
@@ -62,15 +64,6 @@ module PostfixAdmin
 
     def has_domain?(domain)
       !rel_domains.where(domain: ["ALL", domain.domain]).empty?
-    end
-
-    def scheme_prefix
-      res = password&.match(/^\{.*?\}/)
-      if res
-        res[0]
-      else
-        nil
-      end
     end
   end
 end
