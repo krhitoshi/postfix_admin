@@ -117,7 +117,8 @@ RSpec.describe PostfixAdmin::Runner do
           expect(capture(:stdout) {
             Runner.start(@args + [opt, "BLF-CRYPT"])
           }).to match EX_REGISTERED
-          expect(Admin.find("admin@new-domain.test").password).to match /^\{BLF-CRYPT\}\$2y\$\d\d\$.{53}$/
+          expect(Admin.find("admin@new-domain.test").password).to \
+            match EX_BLF_CRYPT
         end
 
         it "'#{opt}' requires argument" do
