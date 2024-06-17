@@ -86,7 +86,7 @@ CRAM_MD5_NEW_PASS_WITHOUT_PREFIX = '820de4c70957274d41111c5fbcae4c87240c9f047fc5
 
 EX_DELETED    = /successfully deleted/
 EX_REGISTERED = /successfully registered/
-EX_UPDATED    = /Successfully updated/
+EX_UPDATED    = /successfully updated/
 EX_MD5_CRYPT  = /^\{MD5-CRYPT\}\$1\$[\.\/0-9A-Za-z]{8}\$[\.\/0-9A-Za-z]{22}$/
 EX_MD5_CRYPT_WITHOUT_PREFIX = /^\$1\$[\.\/0-9A-Za-z]{8}\$[\.\/0-9A-Za-z]{22}$/
 EX_BLF_CRYPT  = /^\{BLF-CRYPT\}\$2y\$\d\d\$.{53}$/

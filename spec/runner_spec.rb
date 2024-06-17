@@ -61,7 +61,7 @@ RSpec.describe PostfixAdmin::Runner do
     it "can change password of an admin" do
       expect(capture(:stdout) {
         Runner.start(['admin_passwd', 'admin@example.com', 'new_password'])
-      }).to match /successfully changed/
+      }).to match EX_UPDATED
       expect(@admin.reload.password).to eq CRAM_MD5_NEW_PASS
     end
 
@@ -69,7 +69,7 @@ RSpec.describe PostfixAdmin::Runner do
       expect(capture(:stdout) {
         Runner.start(["admin_passwd", "admin@example.com", "new_password",
                       "--scheme", "BLF-CRYPT"])
-      }).to match /successfully changed/
+      }).to match EX_UPDATED
       expect(@admin.reload.password).to match EX_BLF_CRYPT
     end
 
@@ -90,7 +90,7 @@ RSpec.describe PostfixAdmin::Runner do
     it "can change password of an account" do
       expect(capture(:stdout) {
         Runner.start(['account_passwd', 'user@example.com', 'new_password'])
-      }).to match /successfully changed/
+      }).to match EX_UPDATED
       expect(Mailbox.find('user@example.com').password).to eq CRAM_MD5_NEW_PASS
     end
 

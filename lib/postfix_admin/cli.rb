@@ -171,7 +171,7 @@ module PostfixAdmin
       admin.active = options[:active] unless options[:active].nil?
       admin.save!
 
-      puts "Successfully updated #{admin_name}"
+      puts "successfully updated #{admin_name}"
       show_admin_details(admin_name)
     end
 
@@ -185,7 +185,7 @@ module PostfixAdmin
       domain.description  = options[:description] if options[:description]
       domain.save!
 
-      puts "Successfully updated #{domain_name}"
+      puts "successfully updated #{domain_name}"
       show_summary(domain_name)
     end
 
@@ -315,7 +315,7 @@ module PostfixAdmin
         mail_alias.save!
       end
 
-      puts "Successfully updated #{address}"
+      puts "successfully updated #{address}"
       show_account_details(address)
     end
 
@@ -326,7 +326,7 @@ module PostfixAdmin
       mail_alias.active = options[:active] unless options[:active].nil?
       mail_alias.save or raise "Could not save Alias"
 
-      puts "Successfully updated #{address}"
+      puts "successfully updated #{address}"
       show_alias_details(address)
     end
 
@@ -533,7 +533,7 @@ module PostfixAdmin
       obj = klass.find(user_name)
 
       if obj.update(password: hashed_password(password, scheme))
-        puts "the password of #{user_name} was successfully changed."
+        puts "the password of #{user_name} was successfully updated."
       else
         raise "Could not change password of #{klass.name}"
       end
