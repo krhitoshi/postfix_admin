@@ -55,30 +55,42 @@ RSpec.describe PostfixAdmin::Runner do
 
   describe "admin_passwd" do
     it "can change password of an admin" do
-      expect(capture(:stdout) { Runner.start(['admin_passwd', 'admin@example.com', 'new_password']) }).to match /successfully changed/
+      expect(capture(:stdout) {
+        Runner.start(['admin_passwd', 'admin@example.com', 'new_password'])
+      }).to match /successfully changed/
     end
 
     it "can not use too short password (< 5)" do
-      expect(exit_capture { Runner.start(['admin_passwd', 'admin@example.com', '124']) }).to match /too short/
+      expect(exit_capture {
+        Runner.start(['admin_passwd', 'admin@example.com', '124'])
+      }).to match /too short/
     end
 
     it "can not use for unknown admin" do
-      expect(exit_capture { Runner.start(['admin_passwd', 'unknown@example.com', 'new_password']) }).to match /Could not find/
+      expect(exit_capture {
+        Runner.start(['admin_passwd', 'unknown@example.com', 'new_password'])
+      }).to match /Could not find/
     end
   end
 
   describe "account_passwd" do
     it "can change password of an account" do
-      expect(capture(:stdout) { Runner.start(['account_passwd', 'user@example.com', 'new_password']) }).to match /successfully changed/
+      expect(capture(:stdout) {
+        Runner.start(['account_passwd', 'user@example.com', 'new_password'])
+      }).to match /successfully changed/
       expect(Mailbox.find('user@example.com').password).to eq CRAM_MD5_NEW_PASS
     end
 
     it "can not use too short password (< 5)" do
-      expect(exit_capture { Runner.start(['account_passwd', 'user@example.com', '1234']) }).to match /too short/
+      expect(exit_capture {
+        Runner.start(['account_passwd', 'user@example.com', '1234'])
+      }).to match /too short/
     end
 
     it "can not use for unknown account" do
-      expect(exit_capture { Runner.start(['account_passwd', 'unknown@example.com', 'new_password']) }).to match /Could not find/
+      expect(exit_capture {
+        Runner.start(['account_passwd', 'unknown@example.com', 'new_password'])
+      }).to match /Could not find/
     end
   end
 
