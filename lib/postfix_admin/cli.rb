@@ -196,7 +196,7 @@ module PostfixAdmin
 
     def show_admin(domain_name = nil)
       admins = domain_name ? Admin.select { |a| a.rel_domains.exists?(domain_name) } : Admin.all
-      headings = %w[No. Admin Domains Active]
+      headings = ["No.", "Admin", "Domains", "Active", "Scheme Prefix"]
 
       puts_title("Admins")
       if admins.empty?
@@ -208,7 +208,7 @@ module PostfixAdmin
       admins.each_with_index do |a, i|
         no = i + 1
         domains = a.super_admin? ? 'Super Admin' : a.rel_domains.count
-        rows << [no.to_s, a.username, domains.to_s, a.active_str]
+        rows << [no.to_s, a.username, domains.to_s, a.active_str, a.scheme_prefix]
       end
 
       puts_table(headings: headings, rows: rows)
@@ -219,7 +219,8 @@ module PostfixAdmin
 
       rows = []
       mailboxes = Domain.find(domain_name).rel_mailboxes
-      headings = ["No.", "Email", "Name", "Quota (MB)", "Active", "Maildir"]
+      headings = ["No.", "Email", "Name", "Quota (MB)", "Active",
+                  "Scheme Prefix", "Maildir"]
 
       puts_title("Addresses")
       if mailboxes.empty?
@@ -230,7 +231,7 @@ module PostfixAdmin
       mailboxes.each_with_index do |m, i|
         no = i + 1
         rows << [no.to_s, m.username, m.name, m.quota_mb_str,
-                 m.active_str, m.maildir]
+                 m.active_str, m.scheme_prefix, m.maildir]
       end
 
       puts_table(headings: headings, rows: rows)
