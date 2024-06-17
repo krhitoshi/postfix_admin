@@ -65,12 +65,16 @@ RSpec.describe PostfixAdmin::Runner do
       expect(@admin.reload.password).to eq CRAM_MD5_NEW_PASS
     end
 
-    it "scheme option" do
-      expect(capture(:stdout) {
-        Runner.start(["admin_passwd", "admin@example.com", "new_password",
-                      "--scheme", "BLF-CRYPT"])
-      }).to match EX_UPDATED
-      expect(@admin.reload.password).to match EX_BLF_CRYPT
+    describe "scheme option" do
+      %w[--scheme -s].each do |opt|
+        it "'#{opt}' allows to set password schema" do
+          expect(capture(:stdout) {
+            Runner.start(["admin_passwd", "admin@example.com", "new_password",
+                          opt, "BLF-CRYPT"])
+          }).to match EX_UPDATED
+          expect(@admin.reload.password).to match EX_BLF_CRYPT
+        end
+      end
     end
 
     it "can not use too short password (< 5)" do
