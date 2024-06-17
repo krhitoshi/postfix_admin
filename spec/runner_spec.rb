@@ -54,10 +54,23 @@ RSpec.describe PostfixAdmin::Runner do
   end
 
   describe "admin_passwd" do
+    before do
+      @admin = Admin.find("admin@example.com")
+    end
+
     it "can change password of an admin" do
       expect(capture(:stdout) {
         Runner.start(['admin_passwd', 'admin@example.com', 'new_password'])
       }).to match /successfully changed/
+      expect(@admin.reload.password).to eq CRAM_MD5_NEW_PASS
+    end
+
+    it "scheme option" do
+      expect(capture(:stdout) {
+        Runner.start(["admin_passwd", "admin@example.com", "new_password",
+                      "--scheme", "BLF-CRYPT"])
+      }).to match /successfully changed/
+      expect(@admin.reload.password).to match EX_BLF_CRYPT
     end
 
     it "can not use too short password (< 5)" do
