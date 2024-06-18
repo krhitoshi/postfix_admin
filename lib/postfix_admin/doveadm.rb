@@ -11,10 +11,10 @@ module PostfixAdmin
       result.split
     end
 
-    def self.password(in_password, in_scheme, prefix)
-      password = Shellwords.escape(in_password)
-      scheme = Shellwords.escape(in_scheme)
-      cmd = "#{CMD_DOVEADM_PW} -s #{scheme} -p #{password}"
+    def self.password(password, scheme, prefix)
+      escaped_password = Shellwords.escape(password)
+      escaped_scheme   = Shellwords.escape(scheme)
+      cmd = "#{CMD_DOVEADM_PW} -s #{escaped_scheme} -p #{escaped_password}"
       output, error, status = Open3.capture3(cmd)
 
       if status.success?
@@ -22,7 +22,7 @@ module PostfixAdmin
         if prefix
           res
         else
-          res.gsub("{#{scheme}}", "")
+          res.gsub("{#{escaped_scheme}}", "")
         end
       else
         raise Error, "#{CMD_DOVEADM_PW}: #{error}"
