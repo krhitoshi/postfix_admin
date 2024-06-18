@@ -11,11 +11,11 @@ module PostfixAdmin
       result.split
     end
 
-    def self.password(password, scheme, prefix)
+    def self.password(password, scheme, prefix, rounds: nil)
       escaped_password = Shellwords.escape(password)
       escaped_scheme   = Shellwords.escape(scheme)
       cmd = "#{CMD_DOVEADM_PW} -s #{escaped_scheme} -p #{escaped_password}"
-      cmd << " -r 10" if scheme == "BLF-CRYPT"
+      cmd << " -r #{rounds}" if rounds
       output, error, status = Open3.capture3(cmd)
 
       if status.success?

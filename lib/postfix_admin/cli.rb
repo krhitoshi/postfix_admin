@@ -539,10 +539,13 @@ module PostfixAdmin
       end
     end
 
-    def hashed_password(password, in_scheme = nil)
+    def hashed_password(password, scheme = nil)
       prefix = @base.config[:passwordhash_prefix]
-      scheme = in_scheme || @base.config[:scheme]
-      PostfixAdmin::Doveadm.password(password, scheme, prefix)
+      new_scheme = scheme || @base.config[:scheme]
+      rounds = if new_scheme == "BLF-CRYPT"
+                 10
+               end
+      PostfixAdmin::Doveadm.password(password, new_scheme, prefix, rounds: rounds)
     end
   end
 end
