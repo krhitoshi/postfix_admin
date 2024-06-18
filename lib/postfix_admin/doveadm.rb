@@ -15,6 +15,7 @@ module PostfixAdmin
       escaped_password = Shellwords.escape(password)
       escaped_scheme   = Shellwords.escape(scheme)
       cmd = "#{CMD_DOVEADM_PW} -s #{escaped_scheme} -p #{escaped_password}"
+      cmd << " -r 10" if scheme == "BLF-CRYPT"
       output, error, status = Open3.capture3(cmd)
 
       if status.success?

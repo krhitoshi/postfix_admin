@@ -109,7 +109,7 @@ RSpec.describe PostfixAdmin::Runner do
             Runner.start(["account_passwd", "user@example.com", "new_password",
                           opt, "BLF-CRYPT"])
           }).to match EX_UPDATED
-          expect(@mailbox.reload.password).to match EX_BLF_CRYPT
+          expect(@mailbox.reload.password).to match EX_BLF_CRYPT_ROUNDS_10
         end
       end
     end
