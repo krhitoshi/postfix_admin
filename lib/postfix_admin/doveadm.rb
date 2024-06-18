@@ -3,6 +3,7 @@ require 'shellwords'
 
 module PostfixAdmin
   class Doveadm
+    # doveadm-pw: https://doc.dovecot.org/3.0/man/doveadm-pw.1/
     CMD_DOVEADM_PW = "doveadm pw"
 
     def self.schemes
