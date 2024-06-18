@@ -15,17 +15,17 @@ module PostfixAdmin
       password = Shellwords.escape(in_password)
       scheme = Shellwords.escape(in_scheme)
       cmd = "#{CMD_DOVEADM_PW} -s #{scheme} -p #{password}"
-      _stdin, stdout, stderr = Open3.popen3(cmd)
+      output, error, status = Open3.capture3(cmd)
 
-      if stderr.readlines.to_s =~ /Fatal:/
-        raise Error, stderr.readlines
-      else
-        res = stdout.readlines.first.chomp
+      if status.success?
+        res = output.chomp
         if prefix
           res
         else
           res.gsub("{#{scheme}}", "")
         end
+      else
+        raise Error, "#{CMD_DOVEADM_PW}: #{error}"
       end
     end
   end
