@@ -270,7 +270,7 @@ module PostfixAdmin
     def add_admin(user_name, password, super_admin: false, scheme: nil)
       validate_password(password)
 
-      @base.add_admin(user_name, hashed_password(password, scheme))
+      @base.add_admin(user_name, hashed_password(password, scheme: scheme))
       if super_admin
         Admin.find(user_name).super_admin = true
         puts_registered(user_name, "a super admin")
@@ -292,7 +292,7 @@ module PostfixAdmin
     def add_account(address, password, scheme = nil, name = nil)
       validate_password(password)
 
-      @base.add_account(address, hashed_password(password, scheme), name: name)
+      @base.add_account(address, hashed_password(password, scheme: scheme), name: name)
       puts_registered(address, "an account")
     end
 
@@ -532,14 +532,14 @@ module PostfixAdmin
 
       obj = klass.find(user_name)
 
-      if obj.update(password: hashed_password(password, scheme))
+      if obj.update(password: hashed_password(password, scheme: scheme))
         puts "the password of #{user_name} was successfully updated."
       else
         raise "Could not change password of #{klass.name}"
       end
     end
 
-    def hashed_password(password, scheme = nil)
+    def hashed_password(password, scheme: nil)
       prefix = @base.config[:passwordhash_prefix]
       new_scheme = scheme || @base.config[:scheme]
       rounds = if new_scheme == "BLF-CRYPT"
