@@ -93,8 +93,9 @@ module PostfixAdmin
     end
 
     desc "add_account user@example.com password", "Add a new account"
-    method_option :scheme, type: :string, aliases: "-s", desc: "password scheme"
     method_option :name,   type: :string, aliases: "-n", desc: "full name"
+    method_option :scheme, type: :string, aliases: "-s", desc: "password scheme"
+    method_option :rounds, type: :string, aliases: "-r", desc: "encryption rounds for BLF-CRYPT, SHA256-CRYPT and SHA512-CRYPT schemes"
     def add_account(address, password)
       runner do
         if options[:scheme] == 'scheme'
@@ -105,7 +106,8 @@ module PostfixAdmin
             warn "Specify name"
             help('add_account')
           else
-            @cli.add_account(address, password, options[:scheme], options[:name])
+            @cli.add_account(address, password, name: options[:name],
+                             scheme: options[:scheme], rounds: options[:rounds])
           end
         end
       end
