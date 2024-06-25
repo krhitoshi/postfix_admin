@@ -93,23 +93,31 @@ RSpec.describe PostfixAdmin::Runner do
   describe "account_passwd" do
     before do
       @mailbox = Mailbox.find("user@example.com")
+      @args = %w[account_passwd user@example.com new_password]
     end
 
     it "can change password of an account" do
-      expect(capture(:stdout) {
-        Runner.start(['account_passwd', 'user@example.com', 'new_password'])
-      }).to match EX_UPDATED
+      expect(capture(:stdout) { Runner.start(@args) }).to match EX_UPDATED
       expect(@mailbox.reload.password).to eq CRAM_MD5_NEW_PASS
     end
 
     describe "scheme option" do
-      %w[--scheme -s].each do |opt|
-        it "'#{opt}' allows to set password schema" do
+      %w[--scheme -s].each do |s_opt|
+        it "'#{s_opt}' allows to set password schema" do
           expect(capture(:stdout) {
-            Runner.start(["account_passwd", "user@example.com", "new_password",
-                          opt, "BLF-CRYPT"])
+            Runner.start(@args + [s_opt, "BLF-CRYPT"])
           }).to match EX_UPDATED
           expect(@mailbox.reload.password).to match EX_BLF_CRYPT_ROUNDS_10
+        end
+
+        %w[--rounds -r].each do |r_opt|
+          it "'#{r_opt}' allows to set rounds" do
+            expect(capture(:stdout) {
+              Runner.start(@args + [s_opt, "BLF-CRYPT", r_opt, "13"])
+            }).to match EX_UPDATED
+
+            expect(@mailbox.reload.password).to match EX_BLF_CRYPT_ROUNDS_13
+          end
         end
       end
     end

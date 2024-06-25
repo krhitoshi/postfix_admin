@@ -48,9 +48,11 @@ module PostfixAdmin
     desc "account_passwd user@example.com new_password",
          "Change the password of an account"
     method_option :scheme, type: :string, aliases: "-s", desc: "password scheme"
+    method_option :rounds, type: :string, aliases: "-r", desc: "encryption rounds for BLF-CRYPT, SHA256-CRYPT and SHA512-CRYPT schemes"
     def account_passwd(user_name, password)
       runner do
-        @cli.change_account_password(user_name, password, scheme: options[:scheme])
+        @cli.change_account_password(user_name, password,
+                                     scheme: options[:scheme], rounds: options[:rounds])
       end
     end
 

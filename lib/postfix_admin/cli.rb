@@ -156,8 +156,8 @@ module PostfixAdmin
       change_password(Admin, user_name, password, scheme: scheme)
     end
 
-    def change_account_password(user_name, password, scheme: nil)
-      change_password(Mailbox, user_name, password, scheme: scheme)
+    def change_account_password(user_name, password, scheme: nil, rounds: nil)
+      change_password(Mailbox, user_name, password, scheme: scheme, rounds: rounds)
     end
 
     def edit_admin(admin_name, options)
@@ -529,14 +529,15 @@ module PostfixAdmin
       end
     end
 
-    def change_password(klass, user_name, password, scheme: nil)
+    def change_password(klass, user_name, password, scheme: nil, rounds: nil)
       raise Error, "Could not find #{user_name}" unless klass.exists?(user_name)
 
       validate_password(password)
 
       obj = klass.find(user_name)
+      h_password = hashed_password(password, scheme: scheme, rounds: rounds)
 
-      if obj.update(password: hashed_password(password, scheme: scheme))
+      if obj.update(password: h_password)
         puts "the password of #{user_name} was successfully updated."
       else
         raise "Could not change password of #{klass.name}"
