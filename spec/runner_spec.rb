@@ -374,5 +374,16 @@ RSpec.describe PostfixAdmin::Runner do
       admin = Admin.find("admin@new-domain.test")
       expect(admin.rel_domains.exists?("new-domain.test")).to be true
     end
+
+    describe "scheme" do
+      %w[--scheme -s].each do |opt|
+        it "'#{opt}' allows to set password schema" do
+          expect(capture(:stdout) {
+            Runner.start(%w[setup new-domain.test password] + [opt, "BLF-CRYPT"])
+          }).to match EX_REGISTERED
+          expect(Admin.find("admin@new-domain.test").password).to match EX_BLF_CRYPT
+        end
+      end
+    end
   end
 end

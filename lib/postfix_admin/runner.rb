@@ -31,8 +31,9 @@ module PostfixAdmin
     end
 
     desc "setup example.com password", "Set up a domain"
+    method_option :scheme, type: :string, aliases: "-s", desc: "password scheme"
     def setup(domain_name, password)
-      runner { @cli.setup_domain(domain_name, password) }
+      runner { @cli.setup_domain(domain_name, password, scheme: options[:scheme]) }
     end
 
     desc "admin_passwd admin@example.com new_password",
