@@ -152,8 +152,8 @@ module PostfixAdmin
       puts_registered(domain_name, "a domain")
     end
 
-    def change_admin_password(user_name, password, scheme: nil)
-      change_password(Admin, user_name, password, scheme: scheme)
+    def change_admin_password(user_name, password, scheme: nil, rounds: nil)
+      change_password(Admin, user_name, password, scheme: scheme, rounds: rounds)
     end
 
     def change_account_password(user_name, password, scheme: nil, rounds: nil)
