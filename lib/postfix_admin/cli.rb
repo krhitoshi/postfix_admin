@@ -544,8 +544,9 @@ module PostfixAdmin
       end
     end
 
-    # `doveadm pw`'s default rounds for BLF-CRYPT is 5.
-    # But this method uses 10 as default rounds as password_hash() does in PHP.
+    # The default number of rounds for BLF-CRYPT in `doveadm pw` is 5.
+    # However, this method uses 10 rounds by default, similar to
+    # the password_hash() function in PHP.
     #
     # https://www.php.net/manual/en/function.password-hash.php
     # <?php
