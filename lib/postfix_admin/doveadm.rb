@@ -6,11 +6,13 @@ module PostfixAdmin
     # doveadm-pw: https://doc.dovecot.org/3.0/man/doveadm-pw.1/
     CMD_DOVEADM_PW = "doveadm pw"
 
+    # List all supported password schemes
     def self.schemes
       result = `#{CMD_DOVEADM_PW} -l`
       result.split
     end
 
+    # Generate a password hash using `doveadm pw` command
     def self.password(password, scheme, rounds: nil, user_name: nil,
                       prefix: true)
       escaped_password = Shellwords.escape(password)
