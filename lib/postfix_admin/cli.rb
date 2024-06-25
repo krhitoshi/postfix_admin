@@ -544,6 +544,16 @@ module PostfixAdmin
       end
     end
 
+    # `doveadm pw`'s default rounds for BLF-CRYPT is 5.
+    # But this method uses 10 as default rounds as password_hash() does in PHP.
+    #
+    # https://www.php.net/manual/en/function.password-hash.php
+    # <?php
+    #   echo password_hash("password", PASSWORD_BCRYPT);
+    #
+    # $2y$10$qzRgjWZWfH4VsNQGvp/DNObFSaMiZxXJSzgXqOOS/qtF68qIhhwFe
+    DEFAULT_BLF_CRYPT_ROUNDS = 10
+
     # Generate a hashed password
     def hashed_password(password, scheme: nil, rounds: nil)
       prefix = @base.config[:passwordhash_prefix]
@@ -551,7 +561,7 @@ module PostfixAdmin
       new_rounds = if rounds
                      rounds
                    elsif new_scheme == "BLF-CRYPT"
-                     10
+                     DEFAULT_BLF_CRYPT_ROUNDS
                    end
       PostfixAdmin::Doveadm.password(password, new_scheme, prefix: prefix,
                                      rounds: new_rounds)
