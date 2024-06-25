@@ -35,6 +35,7 @@ module PostfixAdmin
         if prefix
           res
         else
+          # Remove the prefix
           res.gsub("{#{escaped_scheme}}", "")
         end
       else
