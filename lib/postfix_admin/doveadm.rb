@@ -11,11 +11,17 @@ module PostfixAdmin
       result.split
     end
 
-    def self.password(password, scheme, prefix, rounds: nil)
+    def self.password(password, scheme, prefix, rounds: nil, user_name: nil)
       escaped_password = Shellwords.escape(password)
       escaped_scheme   = Shellwords.escape(scheme)
 
       cmd = "#{CMD_DOVEADM_PW} -s #{escaped_scheme} -p #{escaped_password}"
+
+      # DIGEST-MD5 requires -u option (user name)
+      if scheme == "DIGEST-MD5"
+        escaped_user_name = Shellwords.escape(user_name)
+        cmd << " -u #{escaped_user_name}"
+      end
 
       if rounds
         escaped_rounds   = Shellwords.escape(rounds.to_s)

@@ -22,6 +22,12 @@ RSpec.describe PostfixAdmin::Doveadm do
           eq '{CRAM-MD5}2dc40f88a4c2142c3b10cc4b4d11382a648f600301b78a4070172782192898d6'
       end
 
+      it "DIGEST-MD5" do
+        expect(Doveadm.password("password", "DIGEST-MD5", true,
+                                user_name: "user@example.test")).to \
+          eq "{DIGEST-MD5}9f3d9373fd9b572b64b6c8eb1a2ed384"
+      end
+
       it "SHA256" do
         expect(Doveadm.password('password', 'SHA256', true)).to \
           eq '{SHA256}XohImNooBHFR0OVvjcYpJ3NgPQ1qq73WKhHvch0VQtg='
