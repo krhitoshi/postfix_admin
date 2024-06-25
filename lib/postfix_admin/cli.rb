@@ -76,7 +76,7 @@ module PostfixAdmin
     def setup_domain(domain_name, password, scheme: nil)
       admin = "admin@#{domain_name}"
       add_domain(domain_name)
-      add_admin(admin, password, false, scheme)
+      add_admin(admin, password, scheme: scheme)
       add_admin_domain(admin, domain_name)
     end
 
@@ -267,7 +267,7 @@ module PostfixAdmin
       puts_table(rows: rows, headings: %w[No. Domain])
     end
 
-    def add_admin(user_name, password, super_admin = false, scheme = nil)
+    def add_admin(user_name, password, super_admin: false, scheme: nil)
       validate_password(password)
 
       @base.add_admin(user_name, hashed_password(password, scheme))
