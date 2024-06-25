@@ -73,10 +73,10 @@ module PostfixAdmin
 
     # Set up a domain
     # Add a domain, add an admin, and grant the admin access to the domain
-    def setup_domain(domain_name, password, scheme: nil)
+    def setup_domain(domain_name, password, scheme: nil, rounds: nil)
       admin = "admin@#{domain_name}"
       add_domain(domain_name)
-      add_admin(admin, password, scheme: scheme)
+      add_admin(admin, password, scheme: scheme, rounds: rounds)
       add_admin_domain(admin, domain_name)
     end
 
@@ -152,12 +152,12 @@ module PostfixAdmin
       puts_registered(domain_name, "a domain")
     end
 
-    def change_admin_password(user_name, password, scheme: nil)
-      change_password(Admin, user_name, password, scheme: scheme)
+    def change_admin_password(user_name, password, scheme: nil, rounds: nil)
+      change_password(Admin, user_name, password, scheme: scheme, rounds: rounds)
     end
 
-    def change_account_password(user_name, password, scheme: nil)
-      change_password(Mailbox, user_name, password, scheme: scheme)
+    def change_account_password(user_name, password, scheme: nil, rounds: nil)
+      change_password(Mailbox, user_name, password, scheme: scheme, rounds: rounds)
     end
 
     def edit_admin(admin_name, options)
@@ -267,10 +267,13 @@ module PostfixAdmin
       puts_table(rows: rows, headings: %w[No. Domain])
     end
 
-    def add_admin(user_name, password, super_admin: false, scheme: nil)
+    def add_admin(user_name, password, super_admin: false,
+                  scheme: nil, rounds: nil)
       validate_password(password)
 
-      @base.add_admin(user_name, hashed_password(password, scheme: scheme))
+      h_password = hashed_password(password, scheme: scheme, rounds: rounds)
+      @base.add_admin(user_name, h_password)
+
       if super_admin
         Admin.find(user_name).super_admin = true
         puts_registered(user_name, "a super admin")
@@ -289,10 +292,11 @@ module PostfixAdmin
       puts "#{domain_name} was successfully deleted from #{user_name}"
     end
 
-    def add_account(address, password, scheme = nil, name = nil)
+    def add_account(address, password, name: nil, scheme: nil, rounds: nil)
       validate_password(password)
 
-      @base.add_account(address, hashed_password(password, scheme: scheme), name: name)
+      h_password = hashed_password(password, scheme: scheme, rounds: rounds)
+      @base.add_account(address, h_password, name: name)
       puts_registered(address, "an account")
     end
 
@@ -525,27 +529,32 @@ module PostfixAdmin
       end
     end
 
-    def change_password(klass, user_name, password, scheme: nil)
+    def change_password(klass, user_name, password, scheme: nil, rounds: nil)
       raise Error, "Could not find #{user_name}" unless klass.exists?(user_name)
 
       validate_password(password)
 
       obj = klass.find(user_name)
+      h_password = hashed_password(password, scheme: scheme, rounds: rounds)
 
-      if obj.update(password: hashed_password(password, scheme: scheme))
+      if obj.update(password: h_password)
         puts "the password of #{user_name} was successfully updated."
       else
         raise "Could not change password of #{klass.name}"
       end
     end
 
-    def hashed_password(password, scheme: nil)
+    # Generate a hashed password
+    def hashed_password(password, scheme: nil, rounds: nil)
       prefix = @base.config[:passwordhash_prefix]
       new_scheme = scheme || @base.config[:scheme]
-      rounds = if new_scheme == "BLF-CRYPT"
-                 10
-               end
-      PostfixAdmin::Doveadm.password(password, new_scheme, prefix, rounds: rounds)
+      new_rounds = if rounds
+                     rounds
+                   elsif new_scheme == "BLF-CRYPT"
+                     10
+                   end
+      PostfixAdmin::Doveadm.password(password, new_scheme, prefix,
+                                     rounds: new_rounds)
     end
   end
 end

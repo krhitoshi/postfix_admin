@@ -32,25 +32,33 @@ module PostfixAdmin
 
     desc "setup example.com password", "Set up a domain"
     method_option :scheme, type: :string, aliases: "-s", desc: "password scheme"
+    method_option :rounds, type: :string, aliases: "-r", desc: "encryption rounds for BLF-CRYPT, SHA256-CRYPT and SHA512-CRYPT schemes"
     def setup(domain_name, password)
-      runner { @cli.setup_domain(domain_name, password, scheme: options[:scheme]) }
+      runner do
+        @cli.setup_domain(domain_name, password,
+                          scheme: options[:scheme], rounds: options[:rounds])
+      end
     end
 
     desc "admin_passwd admin@example.com new_password",
          "Change the password of an admin user"
     method_option :scheme, type: :string, aliases: "-s", desc: "password scheme"
+    method_option :rounds, type: :string, aliases: "-r", desc: "encryption rounds for BLF-CRYPT, SHA256-CRYPT and SHA512-CRYPT schemes"
     def admin_passwd(user_name, password)
       runner do
-        @cli.change_admin_password(user_name, password, scheme: options[:scheme])
+        @cli.change_admin_password(user_name, password,
+                                   scheme: options[:scheme], rounds: options[:rounds])
       end
     end
 
     desc "account_passwd user@example.com new_password",
          "Change the password of an account"
     method_option :scheme, type: :string, aliases: "-s", desc: "password scheme"
+    method_option :rounds, type: :string, aliases: "-r", desc: "encryption rounds for BLF-CRYPT, SHA256-CRYPT and SHA512-CRYPT schemes"
     def account_passwd(user_name, password)
       runner do
-        @cli.change_account_password(user_name, password, scheme: options[:scheme])
+        @cli.change_account_password(user_name, password,
+                                     scheme: options[:scheme], rounds: options[:rounds])
       end
     end
 
@@ -93,8 +101,9 @@ module PostfixAdmin
     end
 
     desc "add_account user@example.com password", "Add a new account"
-    method_option :scheme, type: :string, aliases: "-s", desc: "password scheme"
     method_option :name,   type: :string, aliases: "-n", desc: "full name"
+    method_option :scheme, type: :string, aliases: "-s", desc: "password scheme"
+    method_option :rounds, type: :string, aliases: "-r", desc: "encryption rounds for BLF-CRYPT, SHA256-CRYPT and SHA512-CRYPT schemes"
     def add_account(address, password)
       runner do
         if options[:scheme] == 'scheme'
@@ -105,7 +114,8 @@ module PostfixAdmin
             warn "Specify name"
             help('add_account')
           else
-            @cli.add_account(address, password, options[:scheme], options[:name])
+            @cli.add_account(address, password, name: options[:name],
+                             scheme: options[:scheme], rounds: options[:rounds])
           end
         end
       end
@@ -153,6 +163,7 @@ module PostfixAdmin
     desc "add_admin admin@example.com password", "Add a new admin user"
     method_option :super, type: :boolean, aliases: "-S", desc: "register as a super admin"
     method_option :scheme, type: :string, aliases: "-s", desc: "password scheme"
+    method_option :rounds, type: :string, aliases: "-r", desc: "encryption rounds for BLF-CRYPT, SHA256-CRYPT and SHA512-CRYPT schemes"
     def add_admin(user_name, password)
       runner do
         if options[:scheme] == 'scheme'
@@ -160,7 +171,8 @@ module PostfixAdmin
           help('add_admin')
         else
           @cli.add_admin(user_name, password,
-                         super_admin: options[:super], scheme: options[:scheme])
+                         super_admin: options[:super], scheme: options[:scheme],
+                         rounds: options[:rounds])
         end
       end
     end

@@ -91,6 +91,7 @@ EX_MD5_CRYPT  = /^\{MD5-CRYPT\}\$1\$[\.\/0-9A-Za-z]{8}\$[\.\/0-9A-Za-z]{22}$/
 EX_MD5_CRYPT_WITHOUT_PREFIX = /^\$1\$[\.\/0-9A-Za-z]{8}\$[\.\/0-9A-Za-z]{22}$/
 EX_BLF_CRYPT  = /^\{BLF-CRYPT\}\$2y\$\d\d\$.{53}$/
 EX_BLF_CRYPT_ROUNDS_10  = /^\{BLF-CRYPT\}\$2y\$10\$.{53}$/
+EX_BLF_CRYPT_ROUNDS_13  = /^\{BLF-CRYPT\}\$2y\$13\$.{53}$/
 
 RSpec.configure do |config|
   config.before do
