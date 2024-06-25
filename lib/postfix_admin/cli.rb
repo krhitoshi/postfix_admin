@@ -267,10 +267,13 @@ module PostfixAdmin
       puts_table(rows: rows, headings: %w[No. Domain])
     end
 
-    def add_admin(user_name, password, super_admin: false, scheme: nil)
+    def add_admin(user_name, password, super_admin: false,
+                  scheme: nil, rounds: nil)
       validate_password(password)
 
-      @base.add_admin(user_name, hashed_password(password, scheme: scheme))
+      h_password = hashed_password(password, scheme: scheme, rounds: rounds)
+      @base.add_admin(user_name, h_password)
+
       if super_admin
         Admin.find(user_name).super_admin = true
         puts_registered(user_name, "a super admin")
@@ -539,13 +542,17 @@ module PostfixAdmin
       end
     end
 
-    def hashed_password(password, scheme: nil)
+    # Generate a hashed password
+    def hashed_password(password, scheme: nil, rounds: nil)
       prefix = @base.config[:passwordhash_prefix]
       new_scheme = scheme || @base.config[:scheme]
-      rounds = if new_scheme == "BLF-CRYPT"
-                 10
-               end
-      PostfixAdmin::Doveadm.password(password, new_scheme, prefix, rounds: rounds)
+      new_rounds = if rounds
+                     rounds
+                   elsif new_scheme == "BLF-CRYPT"
+                     10
+                   end
+      PostfixAdmin::Doveadm.password(password, new_scheme, prefix,
+                                     rounds: new_rounds)
     end
   end
 end

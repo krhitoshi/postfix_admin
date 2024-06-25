@@ -153,6 +153,7 @@ module PostfixAdmin
     desc "add_admin admin@example.com password", "Add a new admin user"
     method_option :super, type: :boolean, aliases: "-S", desc: "register as a super admin"
     method_option :scheme, type: :string, aliases: "-s", desc: "password scheme"
+    method_option :rounds, type: :string, aliases: "-r", desc: "encryption rounds for BLF-CRYPT, SHA256-CRYPT and SHA512-CRYPT schemes"
     def add_admin(user_name, password)
       runner do
         if options[:scheme] == 'scheme'
@@ -160,7 +161,8 @@ module PostfixAdmin
           help('add_admin')
         else
           @cli.add_admin(user_name, password,
-                         super_admin: options[:super], scheme: options[:scheme])
+                         super_admin: options[:super], scheme: options[:scheme],
+                         rounds: options[:rounds])
         end
       end
     end

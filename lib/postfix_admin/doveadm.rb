@@ -14,8 +14,14 @@ module PostfixAdmin
     def self.password(password, scheme, prefix, rounds: nil)
       escaped_password = Shellwords.escape(password)
       escaped_scheme   = Shellwords.escape(scheme)
+
       cmd = "#{CMD_DOVEADM_PW} -s #{escaped_scheme} -p #{escaped_password}"
-      cmd << " -r #{rounds}" if rounds
+
+      if rounds
+        escaped_rounds   = Shellwords.escape(rounds.to_s)
+        cmd << " -r #{rounds}"
+      end
+
       output, error, status = Open3.capture3(cmd)
 
       if status.success?

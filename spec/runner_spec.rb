@@ -157,18 +157,29 @@ RSpec.describe PostfixAdmin::Runner do
     end
 
     describe "scheme option" do
-      %w[--scheme -s].each do |opt|
-        it "'#{opt}' allows to set password schema" do
+      %w[--scheme -s].each do |s_opt|
+        it "'#{s_opt}' allows to set password schema" do
           expect(capture(:stdout) {
-            Runner.start(@args + [opt, "BLF-CRYPT"])
+            Runner.start(@args + [s_opt, "BLF-CRYPT"])
           }).to match EX_REGISTERED
           expect(Admin.find("admin@new-domain.test").password).to \
             match EX_BLF_CRYPT
         end
 
-        it "'#{opt}' requires argument" do
+        it "'#{s_opt}' requires argument" do
           expect(exit_capture { Runner.start(@args + ['-s']) }).to \
             match /Specify password scheme/
+        end
+
+        %w[--rounds -r].each do |r_opt|
+          it "'#{r_opt}' allows to set rounds" do
+            expect(capture(:stdout) {
+              Runner.start(@args + [s_opt, "BLF-CRYPT", r_opt, "13"])
+            }).to match EX_REGISTERED
+
+            expect(Admin.find("admin@new-domain.test").password).to \
+              match EX_BLF_CRYPT_ROUNDS_13
+          end
         end
       end
     end
