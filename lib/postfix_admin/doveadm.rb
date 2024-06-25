@@ -11,7 +11,8 @@ module PostfixAdmin
       result.split
     end
 
-    def self.password(password, scheme, prefix, rounds: nil, user_name: nil)
+    def self.password(password, scheme, rounds: nil, user_name: nil,
+                      prefix: true)
       escaped_password = Shellwords.escape(password)
       escaped_scheme   = Shellwords.escape(scheme)
 

@@ -553,7 +553,7 @@ module PostfixAdmin
                    elsif new_scheme == "BLF-CRYPT"
                      10
                    end
-      PostfixAdmin::Doveadm.password(password, new_scheme, prefix,
+      PostfixAdmin::Doveadm.password(password, new_scheme, prefix: prefix,
                                      rounds: new_rounds)
     end
   end
