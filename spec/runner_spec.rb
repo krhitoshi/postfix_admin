@@ -394,10 +394,15 @@ RSpec.describe PostfixAdmin::Runner do
   end
 
   describe "setup" do
+    before do
+      @admin = "admin@new-domain.test"
+      @args = %w[setup new-domain.test password]
+    end
+    
     it "setup adds a Domain and an Admin for it" do
       res = capture(:stdout) do
         expect{
-          Runner.start(%w[setup new-domain.test password])
+          Runner.start(@args)
         }.to change{ Admin.count }.by(1).and \
              change{ Domain.count }.by(1).and \
              change{ DomainAdmin.count }.by(1)
@@ -408,18 +413,28 @@ RSpec.describe PostfixAdmin::Runner do
       expect(res).to match '"new-domain.test" was successfully registered as a domain of admin@new-domain.test'
 
       expect(Domain.exists?("new-domain.test")).to be true
-      expect(Admin.exists?("admin@new-domain.test")).to be true
-      admin = Admin.find("admin@new-domain.test")
+      expect(Admin.exists?(@admin)).to be true
+      admin = Admin.find(@admin)
       expect(admin.rel_domains.exists?("new-domain.test")).to be true
     end
 
     describe "scheme" do
-      %w[--scheme -s].each do |opt|
-        it "'#{opt}' allows to set password schema" do
+      %w[--scheme -s].each do |s_opt|
+        it "'#{s_opt}' allows to set password schema" do
           expect(capture(:stdout) {
-            Runner.start(%w[setup new-domain.test password] + [opt, "BLF-CRYPT"])
+            Runner.start(@args + [s_opt, "BLF-CRYPT"])
           }).to match EX_REGISTERED
-          expect(Admin.find("admin@new-domain.test").password).to match EX_BLF_CRYPT
+          expect(Admin.find(@admin).password).to match EX_BLF_CRYPT
+        end
+
+        %w[--rounds -r].each do |r_opt|
+          it "'#{r_opt}' allows to set rounds" do
+            expect(capture(:stdout) {
+              Runner.start(@args + [s_opt, "BLF-CRYPT", r_opt, "13"])
+            }).to match EX_REGISTERED
+
+            expect(Admin.find(@admin).password).to match EX_BLF_CRYPT_ROUNDS_13
+          end
         end
       end
     end

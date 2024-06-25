@@ -73,10 +73,10 @@ module PostfixAdmin
 
     # Set up a domain
     # Add a domain, add an admin, and grant the admin access to the domain
-    def setup_domain(domain_name, password, scheme: nil)
+    def setup_domain(domain_name, password, scheme: nil, rounds: nil)
       admin = "admin@#{domain_name}"
       add_domain(domain_name)
-      add_admin(admin, password, scheme: scheme)
+      add_admin(admin, password, scheme: scheme, rounds: rounds)
       add_admin_domain(admin, domain_name)
     end
 
