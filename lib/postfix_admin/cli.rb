@@ -271,7 +271,8 @@ module PostfixAdmin
                   scheme: nil, rounds: nil)
       validate_password(password)
 
-      h_password = hashed_password(password, scheme: scheme, rounds: rounds)
+      h_password = hashed_password(password, user_name: user_name,
+                                   scheme: scheme, rounds: rounds)
       @base.add_admin(user_name, h_password)
 
       if super_admin
@@ -295,7 +296,8 @@ module PostfixAdmin
     def add_account(address, password, name: nil, scheme: nil, rounds: nil)
       validate_password(password)
 
-      h_password = hashed_password(password, scheme: scheme, rounds: rounds)
+      h_password = hashed_password(password, user_name: address,
+                                   scheme: scheme, rounds: rounds)
       @base.add_account(address, h_password, name: name)
       puts_registered(address, "an account")
     end
@@ -535,7 +537,8 @@ module PostfixAdmin
       validate_password(password)
 
       obj = klass.find(user_name)
-      h_password = hashed_password(password, scheme: scheme, rounds: rounds)
+      h_password = hashed_password(password, scheme: scheme, rounds: rounds,
+                                   user_name: user_name)
 
       if obj.update(password: h_password)
         puts "the password of #{user_name} was successfully updated."
@@ -556,7 +559,7 @@ module PostfixAdmin
     DEFAULT_BLF_CRYPT_ROUNDS = 10
 
     # Generate a hashed password
-    def hashed_password(password, scheme: nil, rounds: nil)
+    def hashed_password(password, scheme: nil, rounds: nil, user_name: nil)
       prefix = @base.config[:passwordhash_prefix]
       new_scheme = scheme || @base.config[:scheme]
       new_rounds = if rounds
@@ -564,8 +567,8 @@ module PostfixAdmin
                    elsif new_scheme == "BLF-CRYPT"
                      DEFAULT_BLF_CRYPT_ROUNDS
                    end
-      PostfixAdmin::Doveadm.password(password, new_scheme, prefix: prefix,
-                                     rounds: new_rounds)
+      PostfixAdmin::Doveadm.password(password, new_scheme, rounds: new_rounds,
+                                     user_name: user_name, prefix: prefix)
     end
   end
 end

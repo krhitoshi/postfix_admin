@@ -71,6 +71,13 @@ RSpec.describe PostfixAdmin::Runner do
             Runner.start(@args + [s_opt, "BLF-CRYPT"])
           }).to match EX_UPDATED
           expect(@admin.reload.password).to match EX_BLF_CRYPT
+
+          # doveadm pw -u admin@example.com -s DIGEST-MD5 -p new_password
+          # {DIGEST-MD5}d08d89dcc9ed079cba21cd9083c30b9b
+          expect(capture(:stdout) {
+            Runner.start(@args + [s_opt, "DIGEST-MD5"])
+          }).to match EX_UPDATED
+          expect(@admin.reload.password).to eq "{DIGEST-MD5}d08d89dcc9ed079cba21cd9083c30b9b"
         end
 
         %w[--rounds -r].each do |r_opt|
@@ -116,6 +123,13 @@ RSpec.describe PostfixAdmin::Runner do
             Runner.start(@args + [s_opt, "BLF-CRYPT"])
           }).to match EX_UPDATED
           expect(@mailbox.reload.password).to match EX_BLF_CRYPT_ROUNDS_10
+
+          # doveadm pw -u user@example.com -s DIGEST-MD5 -p new_password
+          # {DIGEST-MD5}b2b609fd153bc5f2e57d2788626c9aad
+          expect(capture(:stdout) {
+            Runner.start(@args + [s_opt, "DIGEST-MD5"])
+          }).to match EX_UPDATED
+          expect(@mailbox.reload.password).to eq "{DIGEST-MD5}b2b609fd153bc5f2e57d2788626c9aad"
         end
 
         %w[--rounds -r].each do |r_opt|
@@ -180,6 +194,16 @@ RSpec.describe PostfixAdmin::Runner do
           }).to match EX_REGISTERED
           expect(Admin.find("admin@new-domain.test").password).to \
             match EX_BLF_CRYPT
+        end
+
+        # doveadm pw -u admin@new-domain.test -s DIGEST-MD5 -p password
+        # {DIGEST-MD5}a8f914093e24bac3aabd5eaa1217d72f
+        it "'#{s_opt}' allows to set DIGEST-MD5 schema" do
+          expect(capture(:stdout) {
+            Runner.start(@args + [s_opt, "DIGEST-MD5"])
+          }).to match EX_REGISTERED
+          expect(Admin.find("admin@new-domain.test").password).to \
+            eq "{DIGEST-MD5}a8f914093e24bac3aabd5eaa1217d72f"
         end
 
         it "'#{s_opt}' requires argument" do
@@ -374,6 +398,16 @@ RSpec.describe PostfixAdmin::Runner do
           expect(Mailbox.find(@user).password).to match EX_BLF_CRYPT
         end
 
+        # doveadm pw -u user2@example.com -s DIGEST-MD5 -p password
+        # {DIGEST-MD5}0fe1fb25d6134c9df70eb79d88c91ff5
+        it "'#{s_opt}' allows to set DIGEST-MD5 schema" do
+          expect(capture(:stdout) {
+            Runner.start(@args + [s_opt, "DIGEST-MD5"])
+          }).to match EX_REGISTERED
+          expect(Mailbox.find(@user).password).to \
+            eq "{DIGEST-MD5}0fe1fb25d6134c9df70eb79d88c91ff5"
+        end
+
         it "'#{s_opt}' requires argument" do
           expect(exit_capture { Runner.start(@args + [s_opt]) }).to \
             match /Specify password scheme/
@@ -425,6 +459,16 @@ RSpec.describe PostfixAdmin::Runner do
             Runner.start(@args + [s_opt, "BLF-CRYPT"])
           }).to match EX_REGISTERED
           expect(Admin.find(@admin).password).to match EX_BLF_CRYPT
+        end
+
+        # doveadm pw -u admin@new-domain.test -s DIGEST-MD5 -p password
+        # {DIGEST-MD5}a8f914093e24bac3aabd5eaa1217d72f
+        it "'#{s_opt}' allows to set DIGEST-MD5 schema" do
+          expect(capture(:stdout) {
+            Runner.start(@args + [s_opt, "DIGEST-MD5"])
+          }).to match EX_REGISTERED
+          expect(Admin.find(@admin).password).to \
+            eq "{DIGEST-MD5}a8f914093e24bac3aabd5eaa1217d72f"
         end
 
         %w[--rounds -r].each do |r_opt|
