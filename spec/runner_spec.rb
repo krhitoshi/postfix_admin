@@ -595,6 +595,39 @@ RSpec.describe PostfixAdmin::Runner do
     end
   end
 
+  describe "#add_alias" do
+    it "adds an Alias" do
+      expect {
+        res = capture { Runner.start(%w[add_alias new_alias@example.com goto@example2.test]) }
+        expect(res).to match('"new_alias@example.com: goto@example2.test" was successfully registered as an alias')
+      }.to change { Alias.count }.by(1)
+      expect(Alias.exists?("new_alias@example.com")).to be true
+      new_alias = Alias.find("new_alias@example.com")
+      expect(new_alias.goto).to eq("goto@example2.test")
+    end
+
+    it "cannot add an Alias for an existing Mailbox with the same address" do
+      res = exit_capture { Runner.start(%w[add_alias user@example.com goto@example2.test]) }
+      expect(res).to match("Mailbox has already been registered: user@example.com")
+    end
+  end
+
+  describe "#delete_alias" do
+    it "deletes an Alias" do
+      expect(Alias.exists?("alias@example.com")).to be true
+      expect {
+        res = capture { Runner.start(%w[delete_alias alias@example.com]) }
+        expect(res).to match('"alias@example.com" was successfully deleted')
+      }.to change { Alias.count }.by(-1)
+      expect(Alias.exists?("alias@example.com")).to be false
+    end
+
+    it "cannot delete an Alias that belongs to a Mailbox" do
+      res = exit_capture { Runner.start(%w[delete_alias user@example.com]) }
+      expect(res).to match("Can not delete mailbox by delete_alias")
+    end
+  end
+
   describe "#setup" do
     before do
       @admin = "admin@new-domain.test"
