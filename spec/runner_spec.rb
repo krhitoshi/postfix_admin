@@ -88,7 +88,7 @@ RSpec.describe PostfixAdmin::Runner do
     end
   end
 
-  describe "show" do
+  describe "#show" do
     it "shows information of example.com" do
       expect(capture(:stdout) { Runner.start(["show"]) }).to match \
         /example.com[|\s]+1[|\s]+\/[|\s]+30[|\s]+1[|\s]+\/[|\s]+30[|\s]+100[|\s]+Active[|\s]+example.com Description/
@@ -135,7 +135,7 @@ RSpec.describe PostfixAdmin::Runner do
     end
   end
 
-  describe "admin_passwd" do
+  describe "#admin_passwd" do
     before do
       @admin = Admin.find("admin@example.com")
       @args = %w[admin_passwd admin@example.com new_password]
@@ -146,7 +146,7 @@ RSpec.describe PostfixAdmin::Runner do
       expect(@admin.reload.password).to eq CRAM_MD5_NEW_PASS
     end
 
-    describe "scheme option" do
+    context "with scheme option" do
       %w[--scheme -s].each do |s_opt|
         it "'#{s_opt}' allows to set password schema" do
           expect(capture(:stdout) {
@@ -187,7 +187,7 @@ RSpec.describe PostfixAdmin::Runner do
     end
   end
 
-  describe "account_passwd" do
+  describe "#account_passwd" do
     before do
       @mailbox = Mailbox.find("user@example.com")
       @args = %w[account_passwd user@example.com new_password]
@@ -198,7 +198,7 @@ RSpec.describe PostfixAdmin::Runner do
       expect(@mailbox.reload.password).to eq CRAM_MD5_NEW_PASS
     end
 
-    describe "scheme option" do
+    context "with scheme option" do
       %w[--scheme -s].each do |s_opt|
         it "'#{s_opt}' allows to set password schema" do
           expect(capture(:stdout) {
@@ -239,7 +239,7 @@ RSpec.describe PostfixAdmin::Runner do
     end
   end
 
-  describe "edit_alias" do
+  describe "#edit_alias" do
     it "can update active status" do
       output = capture(:stdout) { Runner.start(['edit_alias', 'alias@example.com', '--no-active']) }
       expect(output).to match EX_UPDATED
@@ -253,7 +253,7 @@ RSpec.describe PostfixAdmin::Runner do
     end
   end
 
-  describe "add_admin" do
+  describe "#add_admin" do
     before do
       @args = %w[add_admin admin@new-domain.test password]
     end
@@ -268,7 +268,7 @@ RSpec.describe PostfixAdmin::Runner do
       expect(admin.password).to eq CRAM_MD5_PASS
     end
 
-    describe "scheme option" do
+    context "with scheme option" do
       %w[--scheme -s].each do |s_opt|
         it "'#{s_opt}' allows to set password schema" do
           expect(capture(:stdout) {
@@ -321,7 +321,7 @@ RSpec.describe PostfixAdmin::Runner do
     end
   end
 
-  describe "edit_admin" do
+  describe "#edit_admin" do
     it "when no options, shows usage" do
       expect(capture(:stderr) {
         Runner.start(['edit_admin', 'admin@example.com'])
@@ -352,7 +352,7 @@ RSpec.describe PostfixAdmin::Runner do
     end
   end
 
-  describe "edit_domain" do
+  describe "#edit_domain" do
     it "when no options, shows usage" do
       expect(exit_capture {
         Runner.start(['edit_domain', 'example.com'])
@@ -381,7 +381,7 @@ RSpec.describe PostfixAdmin::Runner do
     end
   end
 
-  describe "edit_account" do
+  describe "#edit_account" do
     before do
       @args = ['edit_account', 'user@example.com']
     end
@@ -431,7 +431,7 @@ RSpec.describe PostfixAdmin::Runner do
     end
   end
 
-  describe "add_account" do
+  describe "#add_account" do
     before do
       @user = 'user2@example.com'
       @args = ['add_account', @user, 'password']
@@ -471,7 +471,7 @@ RSpec.describe PostfixAdmin::Runner do
       end
     end
 
-    describe "scheme" do
+    context "with scheme option" do
       %w[--scheme -s].each do |s_opt|
         it "'#{s_opt}' allows to set password schema" do
           expect(capture(:stdout) {
@@ -509,7 +509,7 @@ RSpec.describe PostfixAdmin::Runner do
     end
   end
 
-  describe "setup" do
+  describe "#setup" do
     before do
       @admin = "admin@new-domain.test"
       @args = %w[setup new-domain.test password]
@@ -534,7 +534,7 @@ RSpec.describe PostfixAdmin::Runner do
       expect(admin.rel_domains.exists?("new-domain.test")).to be true
     end
 
-    describe "scheme" do
+    context "with scheme option" do
       %w[--scheme -s].each do |s_opt|
         it "'#{s_opt}' allows to set password schema" do
           expect(capture(:stdout) {
@@ -566,7 +566,7 @@ RSpec.describe PostfixAdmin::Runner do
     end
   end
 
-  describe "log" do
+  describe "#log" do
     it "does not raise an error" do
       expect { silent { Runner.start(["log"]) } }.not_to raise_error
     end
