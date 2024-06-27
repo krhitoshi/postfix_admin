@@ -39,14 +39,14 @@ RSpec.describe PostfixAdmin::Runner do
 
   describe "#version" do
     it "matches the version pattern" do
-      res = capture(:stdout) { Runner.start(["version"]) }
+      res = capture { Runner.start(["version"]) }
       expect(res).to match(/postfix_admin \d+\.\d+\.\d/)
     end
   end
 
   describe "#schemes" do
     it "includes the expected schemes" do
-      res = capture(:stdout) { Runner.start(["schemes"]) }
+      res = capture { Runner.start(["schemes"]) }
       schemes = res.split
       expect(schemes).to include("CRAM-MD5")
       expect(schemes).to include("CLEARTEXT")
@@ -55,7 +55,7 @@ RSpec.describe PostfixAdmin::Runner do
 
   describe "#summary" do
     it "contains the expected summary keys" do
-      res = capture(:stdout) { Runner.start(["summary"]) }
+      res = capture { Runner.start(["summary"]) }
       list = parse_table(res)
       keys = list.keys
 
@@ -90,48 +90,48 @@ RSpec.describe PostfixAdmin::Runner do
 
   describe "#show" do
     it "shows information of example.com" do
-      expect(capture(:stdout) { Runner.start(["show"]) }).to match \
+      expect(capture { Runner.start(["show"]) }).to match \
         /example.com[|\s]+1[|\s]+\/[|\s]+30[|\s]+1[|\s]+\/[|\s]+30[|\s]+100[|\s]+Active[|\s]+example.com Description/
     end
 
     it "shows information of admin@example.com" do
-      out = capture(:stdout) { Runner.start(["show"]) }
+      out = capture { Runner.start(["show"]) }
       expect(out).to match /admin@example.com[|\s]+1[|\s]+Active[|\s]+\{CRAM-MD5\}/
     end
 
     it "show the detail of example.com" do
-      expect(capture(:stdout) { Runner.start(["show", "example.com"]) }).to \
+      expect(capture { Runner.start(["show", "example.com"]) }).to \
         match /user@example.com[|\s]+100[|\s]+Active[|\s]+\{CRAM-MD5\}/
     end
 
     it "when no admins, no aliases and no addresses" do
       Admin.find('all@example.com').super_admin = false
-      out = capture(:stdout) { Runner.start(["show", "example.org"]) }
+      out = capture { Runner.start(["show", "example.org"]) }
       expect(out).to match /No admins/
       expect(out).to match /No addresses/
       expect(out).to match /No aliases/
     end
 
     it "shows information of an admin" do
-      out = capture(:stdout) {  Runner.start(["show", "admin@example.com"]) }
+      out = capture {  Runner.start(["show", "admin@example.com"]) }
       expect(out).to match /admin@example.com/
       expect(out).to match /Password/
     end
 
     it "shows information of an account" do
-      out = capture(:stdout) { Runner.start(["show", "user@example.com"]) }
+      out = capture { Runner.start(["show", "user@example.com"]) }
       expect(out).to match /user@example.com/
       expect(out).to match /Password/
     end
 
     it "shows information of an alias" do
-      expect(capture(:stdout) {  Runner.start(["show", "alias@example.com"]) }).to match /alias@example.com/
+      expect(capture {  Runner.start(["show", "alias@example.com"]) }).to match /alias@example.com/
     end
 
     it "when no domains" do
-      expect(capture(:stdout) { Runner.start(['delete_domain', 'example.com']) }).to match EX_DELETED
-      expect(capture(:stdout) { Runner.start(['delete_domain', 'example.org']) }).to match EX_DELETED
-      expect(capture(:stdout) { Runner.start(["show"]) }).to match /No domains/
+      expect(capture { Runner.start(['delete_domain', 'example.com']) }).to match EX_DELETED
+      expect(capture { Runner.start(['delete_domain', 'example.org']) }).to match EX_DELETED
+      expect(capture { Runner.start(["show"]) }).to match /No domains/
     end
   end
 
@@ -164,21 +164,21 @@ RSpec.describe PostfixAdmin::Runner do
     end
 
     it "can change password of an admin" do
-      expect(capture(:stdout) { Runner.start(@args) }).to match EX_UPDATED
+      expect(capture { Runner.start(@args) }).to match EX_UPDATED
       expect(@admin.reload.password).to eq CRAM_MD5_NEW_PASS
     end
 
     context "with scheme option" do
       %w[--scheme -s].each do |s_opt|
         it "'#{s_opt}' allows to set password schema" do
-          expect(capture(:stdout) {
+          expect(capture {
             Runner.start(@args + [s_opt, "BLF-CRYPT"])
           }).to match EX_UPDATED
           expect(@admin.reload.password).to match EX_BLF_CRYPT
 
           # doveadm pw -u admin@example.com -s DIGEST-MD5 -p new_password
           # {DIGEST-MD5}d08d89dcc9ed079cba21cd9083c30b9b
-          expect(capture(:stdout) {
+          expect(capture {
             Runner.start(@args + [s_opt, "DIGEST-MD5"])
           }).to match EX_UPDATED
           expect(@admin.reload.password).to eq "{DIGEST-MD5}d08d89dcc9ed079cba21cd9083c30b9b"
@@ -186,7 +186,7 @@ RSpec.describe PostfixAdmin::Runner do
 
         %w[--rounds -r].each do |r_opt|
           it "'#{r_opt}' allows to set rounds" do
-            expect(capture(:stdout) {
+            expect(capture {
               Runner.start(@args + [s_opt, "BLF-CRYPT", r_opt, "13"])
             }).to match EX_UPDATED
 
@@ -216,21 +216,21 @@ RSpec.describe PostfixAdmin::Runner do
     end
 
     it "can change password of an account" do
-      expect(capture(:stdout) { Runner.start(@args) }).to match EX_UPDATED
+      expect(capture { Runner.start(@args) }).to match EX_UPDATED
       expect(@mailbox.reload.password).to eq CRAM_MD5_NEW_PASS
     end
 
     context "with scheme option" do
       %w[--scheme -s].each do |s_opt|
         it "'#{s_opt}' allows to set password schema" do
-          expect(capture(:stdout) {
+          expect(capture {
             Runner.start(@args + [s_opt, "BLF-CRYPT"])
           }).to match EX_UPDATED
           expect(@mailbox.reload.password).to match EX_BLF_CRYPT_ROUNDS_10
 
           # doveadm pw -u user@example.com -s DIGEST-MD5 -p new_password
           # {DIGEST-MD5}b2b609fd153bc5f2e57d2788626c9aad
-          expect(capture(:stdout) {
+          expect(capture {
             Runner.start(@args + [s_opt, "DIGEST-MD5"])
           }).to match EX_UPDATED
           expect(@mailbox.reload.password).to eq "{DIGEST-MD5}b2b609fd153bc5f2e57d2788626c9aad"
@@ -238,7 +238,7 @@ RSpec.describe PostfixAdmin::Runner do
 
         %w[--rounds -r].each do |r_opt|
           it "'#{r_opt}' allows to set rounds" do
-            expect(capture(:stdout) {
+            expect(capture {
               Runner.start(@args + [s_opt, "BLF-CRYPT", r_opt, "13"])
             }).to match EX_UPDATED
 
@@ -263,13 +263,13 @@ RSpec.describe PostfixAdmin::Runner do
 
   describe "#edit_alias" do
     it "can update active status" do
-      output = capture(:stdout) { Runner.start(['edit_alias', 'alias@example.com', '--no-active']) }
+      output = capture { Runner.start(['edit_alias', 'alias@example.com', '--no-active']) }
       expect(output).to match EX_UPDATED
       expect(Alias.find('alias@example.com').active).to be false
     end
 
     it "can update goto" do
-      output = capture(:stdout) { Runner.start(['edit_alias', 'alias@example.com', '-g', 'goto@example.com,user@example.com']) }
+      output = capture { Runner.start(['edit_alias', 'alias@example.com', '-g', 'goto@example.com,user@example.com']) }
       expect(output).to match EX_UPDATED
       expect(Alias.find('alias@example.com').goto).to eq 'goto@example.com,user@example.com'
     end
@@ -281,7 +281,7 @@ RSpec.describe PostfixAdmin::Runner do
     end
 
     it "can add an new admin user" do
-      expect(capture(:stdout) {
+      expect(capture {
         expect{ Runner.start(@args) }.to change{ Admin.count }.by(1)
       }).to match EX_REGISTERED
       expect(Admin.exists?("admin@new-domain.test")).to be true
@@ -293,7 +293,7 @@ RSpec.describe PostfixAdmin::Runner do
     context "with scheme option" do
       %w[--scheme -s].each do |s_opt|
         it "'#{s_opt}' allows to set password schema" do
-          expect(capture(:stdout) {
+          expect(capture {
             Runner.start(@args + [s_opt, "BLF-CRYPT"])
           }).to match EX_REGISTERED
           expect(Admin.find("admin@new-domain.test").password).to \
@@ -303,7 +303,7 @@ RSpec.describe PostfixAdmin::Runner do
         # doveadm pw -u admin@new-domain.test -s DIGEST-MD5 -p password
         # {DIGEST-MD5}a8f914093e24bac3aabd5eaa1217d72f
         it "'#{s_opt}' allows to set DIGEST-MD5 schema" do
-          expect(capture(:stdout) {
+          expect(capture {
             Runner.start(@args + [s_opt, "DIGEST-MD5"])
           }).to match EX_REGISTERED
           expect(Admin.find("admin@new-domain.test").password).to \
@@ -317,7 +317,7 @@ RSpec.describe PostfixAdmin::Runner do
 
         %w[--rounds -r].each do |r_opt|
           it "'#{r_opt}' allows to set rounds" do
-            expect(capture(:stdout) {
+            expect(capture {
               Runner.start(@args + [s_opt, "BLF-CRYPT", r_opt, "13"])
             }).to match EX_REGISTERED
 
@@ -329,16 +329,16 @@ RSpec.describe PostfixAdmin::Runner do
     end
 
     it "can use long password" do
-      expect(capture(:stdout) { Runner.start(['add_admin', "admin@new-domain.test", '{CRAM-MD5}9c5e77f2da26fc03e9fa9e13ccd77aeb50c85539a4d90b70812715aea9ebda1d']) }).to match EX_REGISTERED
+      expect(capture { Runner.start(['add_admin', "admin@new-domain.test", '{CRAM-MD5}9c5e77f2da26fc03e9fa9e13ccd77aeb50c85539a4d90b70812715aea9ebda1d']) }).to match EX_REGISTERED
     end
 
     it "--super option" do
-      expect(capture(:stdout) { Runner.start(@args + ['--super']) }).to \
+      expect(capture { Runner.start(@args + ['--super']) }).to \
         match /registered as a super admin/
     end
 
     it "-S (--super) option" do
-      expect(capture(:stdout) { Runner.start(@args + ['-S']) }).to \
+      expect(capture { Runner.start(@args + ['-S']) }).to \
         match /registered as a super admin/
     end
   end
@@ -364,7 +364,7 @@ RSpec.describe PostfixAdmin::Runner do
     it "can update active status" do
       admin = Admin.find('admin@example.com')
       expect(admin.active).to be true
-      output = capture(:stdout) { Runner.start(['edit_admin', 'admin@example.com', '--no-active']) }
+      output = capture { Runner.start(['edit_admin', 'admin@example.com', '--no-active']) }
       expect(output).to match EX_UPDATED
       expect(admin.reload.active).to be false
       expect(output).not_to match /Password/
@@ -374,7 +374,7 @@ RSpec.describe PostfixAdmin::Runner do
     it "can update super admin status" do
       admin = Admin.find('admin@example.com')
       expect(admin.super_admin?).to be false
-      output = capture(:stdout) {
+      output = capture {
         Runner.start(['edit_admin', 'admin@example.com', '--super'])
       }
       expect(output).to match EX_UPDATED
@@ -393,20 +393,20 @@ RSpec.describe PostfixAdmin::Runner do
     end
 
     it "can edit limitations of domain" do
-      output = capture(:stdout) { Runner.start(['edit_domain', 'example.com', '--aliases', '40', '--mailboxes', '40', '--maxquota', '400', '--no-active']) }
+      output = capture { Runner.start(['edit_domain', 'example.com', '--aliases', '40', '--mailboxes', '40', '--maxquota', '400', '--no-active']) }
       expect(output).to match EX_UPDATED
       expect(output).to match /Active.+Inactive/
     end
 
     it "can edit description" do
-      output = capture(:stdout) { Runner.start(['edit_domain', 'example.com', '-d', 'New Description']) }
+      output = capture { Runner.start(['edit_domain', 'example.com', '-d', 'New Description']) }
       expect(output).to match EX_UPDATED
       domain = Domain.find('example.com')
       expect(domain.description).to eq "New Description"
     end
 
     it "aliases options -a, -m, -q" do
-      expect(capture(:stdout) { Runner.start(['edit_domain', 'example.com', '-a', '40', '-m', '40', '-m', '400']) }).to match EX_UPDATED
+      expect(capture { Runner.start(['edit_domain', 'example.com', '-a', '40', '-m', '40', '-m', '400']) }).to match EX_UPDATED
     end
 
     it "can not use unknown domain" do
@@ -449,7 +449,7 @@ RSpec.describe PostfixAdmin::Runner do
     end
 
     it "can edit quota limitation" do
-      output = capture(:stdout) { Runner.start(@args + ['--quota', '50', '--no-active']) }
+      output = capture { Runner.start(@args + ['--quota', '50', '--no-active']) }
       expect(output).to match EX_UPDATED
       expect(output).to match /Quota/
       expect(output).not_to match /Password/
@@ -457,7 +457,7 @@ RSpec.describe PostfixAdmin::Runner do
     end
 
     it "can use alias -q option" do
-      expect(capture(:stdout) { Runner.start(@args + ['-q', '50']) }).to match EX_UPDATED
+      expect(capture { Runner.start(@args + ['-q', '50']) }).to match EX_UPDATED
     end
 
     it "-q option require an argment" do
@@ -465,17 +465,17 @@ RSpec.describe PostfixAdmin::Runner do
     end
 
     it "can update name using --name option" do
-      expect(capture(:stdout) { Runner.start(@args + ['--name', 'Hitoshi Kurokawa']) }).to match EX_UPDATED
+      expect(capture { Runner.start(@args + ['--name', 'Hitoshi Kurokawa']) }).to match EX_UPDATED
       expect(Mailbox.find('user@example.com').name).to eq 'Hitoshi Kurokawa'
     end
 
     it "can update name using -n option" do
-      expect(capture(:stdout) { Runner.start(@args + ['-n', 'Hitoshi Kurokawa']) }).to match EX_UPDATED
+      expect(capture { Runner.start(@args + ['-n', 'Hitoshi Kurokawa']) }).to match EX_UPDATED
       expect(Mailbox.find('user@example.com').name).to eq 'Hitoshi Kurokawa'
     end
 
     it "-n option supports Japanese" do
-      expect(capture(:stdout) { Runner.start(@args + ['-n', '黒川　仁']) }).to match EX_UPDATED
+      expect(capture { Runner.start(@args + ['-n', '黒川　仁']) }).to match EX_UPDATED
       expect(Mailbox.find('user@example.com').name).to eq '黒川　仁'
     end
 
@@ -484,7 +484,7 @@ RSpec.describe PostfixAdmin::Runner do
     end
 
     it "can update goto" do
-      expect(capture(:stdout) { Runner.start(@args + ['-g', 'user@example.com,forward@example.com']) }).to match EX_UPDATED
+      expect(capture { Runner.start(@args + ['-g', 'user@example.com,forward@example.com']) }).to match EX_UPDATED
       expect(Alias.find('user@example.com').goto).to eq 'user@example.com,forward@example.com'
     end
   end
@@ -510,12 +510,12 @@ RSpec.describe PostfixAdmin::Runner do
     end
 
     it "default scheme (CRAM-MD5) is applied" do
-      expect(capture(:stdout) { Runner.start(@args) }).to match EX_REGISTERED
+      expect(capture { Runner.start(@args) }).to match EX_REGISTERED
       expect(Mailbox.find('user2@example.com').password).to eq CRAM_MD5_PASS
     end
 
     it "add_account can use long password" do
-      expect(capture(:stdout) { Runner.start(['add_account', 'user2@example.com', '{CRAM-MD5}9c5e77f2da26fc03e9fa9e13ccd77aeb50c85539a4d90b70812715aea9ebda1d']) }).to match EX_REGISTERED
+      expect(capture { Runner.start(['add_account', 'user2@example.com', '{CRAM-MD5}9c5e77f2da26fc03e9fa9e13ccd77aeb50c85539a4d90b70812715aea9ebda1d']) }).to match EX_REGISTERED
     end
 
     describe "name option" do
@@ -532,7 +532,7 @@ RSpec.describe PostfixAdmin::Runner do
       end
 
       it "can change full name" do
-        capture(:stdout) { Runner.start(@args + ['-n', @name]) }
+        capture { Runner.start(@args + ['-n', @name]) }
         expect(Mailbox.find(@user).name).to eq @name
       end
 
@@ -545,7 +545,7 @@ RSpec.describe PostfixAdmin::Runner do
     context "with scheme option" do
       %w[--scheme -s].each do |s_opt|
         it "'#{s_opt}' allows to set password schema" do
-          expect(capture(:stdout) {
+          expect(capture {
             Runner.start(@args + [s_opt, "BLF-CRYPT"])
           }).to match EX_REGISTERED
           expect(Mailbox.find(@user).password).to match EX_BLF_CRYPT
@@ -554,7 +554,7 @@ RSpec.describe PostfixAdmin::Runner do
         # doveadm pw -u user2@example.com -s DIGEST-MD5 -p password
         # {DIGEST-MD5}0fe1fb25d6134c9df70eb79d88c91ff5
         it "'#{s_opt}' allows to set DIGEST-MD5 schema" do
-          expect(capture(:stdout) {
+          expect(capture {
             Runner.start(@args + [s_opt, "DIGEST-MD5"])
           }).to match EX_REGISTERED
           expect(Mailbox.find(@user).password).to \
@@ -568,7 +568,7 @@ RSpec.describe PostfixAdmin::Runner do
 
         %w[--rounds -r].each do |r_opt|
           it "'#{r_opt}' allows to set rounds" do
-            expect(capture(:stdout) {
+            expect(capture {
               Runner.start(@args + [s_opt, "BLF-CRYPT", r_opt, "13"])
             }).to match EX_REGISTERED
 
@@ -602,7 +602,7 @@ RSpec.describe PostfixAdmin::Runner do
     end
     
     it "setup adds a Domain and an Admin for it" do
-      res = capture(:stdout) do
+      res = capture do
         expect{
           Runner.start(@args)
         }.to change{ Admin.count }.by(1).and \
@@ -623,7 +623,7 @@ RSpec.describe PostfixAdmin::Runner do
     context "with scheme option" do
       %w[--scheme -s].each do |s_opt|
         it "'#{s_opt}' allows to set password schema" do
-          expect(capture(:stdout) {
+          expect(capture {
             Runner.start(@args + [s_opt, "BLF-CRYPT"])
           }).to match EX_REGISTERED
           expect(Admin.find(@admin).password).to match EX_BLF_CRYPT
@@ -632,7 +632,7 @@ RSpec.describe PostfixAdmin::Runner do
         # doveadm pw -u admin@new-domain.test -s DIGEST-MD5 -p password
         # {DIGEST-MD5}a8f914093e24bac3aabd5eaa1217d72f
         it "'#{s_opt}' allows to set DIGEST-MD5 schema" do
-          expect(capture(:stdout) {
+          expect(capture {
             Runner.start(@args + [s_opt, "DIGEST-MD5"])
           }).to match EX_REGISTERED
           expect(Admin.find(@admin).password).to \
@@ -641,7 +641,7 @@ RSpec.describe PostfixAdmin::Runner do
 
         %w[--rounds -r].each do |r_opt|
           it "'#{r_opt}' allows to set rounds" do
-            expect(capture(:stdout) {
+            expect(capture {
               Runner.start(@args + [s_opt, "BLF-CRYPT", r_opt, "13"])
             }).to match EX_REGISTERED
 
@@ -673,7 +673,7 @@ RSpec.describe PostfixAdmin::Runner do
   describe "#dump" do
     it "does not raise an error and matches expected output" do
       expect {
-        res = capture(:stdout) { Runner.start(["dump"]) }
+        res = capture { Runner.start(["dump"]) }
         expect(res).to match(/Domains/)
         expect(res).to match(/example.com/)
         expect(res).to match(/admin@example.com/)
