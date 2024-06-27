@@ -2,10 +2,6 @@ require File.expand_path(File.dirname(__FILE__) + "/spec_helper")
 require 'postfix_admin/runner'
 
 RSpec.describe PostfixAdmin::Runner do
-  before do
-    db_initialize
-  end
-
   describe "usual work flow with add/delete methods" do
     it "does not raise an error" do
       expect do

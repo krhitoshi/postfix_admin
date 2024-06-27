@@ -3,7 +3,6 @@ require 'postfix_admin/base'
 
 RSpec.describe PostfixAdmin::Base do
   before do
-    db_initialize
     @base = Base.new({'database' => 'mysql2://postfix:password@localhost/postfix'})
   end
 

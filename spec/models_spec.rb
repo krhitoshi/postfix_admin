@@ -12,7 +12,6 @@ require 'postfix_admin/quota'
 
 RSpec.describe PostfixAdmin::Admin do
   before do
-    db_initialize
     @admin = Admin.find('admin@example.com')
   end
 
@@ -91,7 +90,6 @@ end
 
 RSpec.describe PostfixAdmin::Domain do
   before do
-    db_initialize
     @base = PostfixAdmin::Base.new({'database' => 'sqlite::memory:'})
   end
 
@@ -140,7 +138,6 @@ end
 
 RSpec.describe PostfixAdmin::Mailbox do
   before do
-    db_initialize
     @mailbox = Mailbox.find('user@example.com')
   end
 
@@ -190,10 +187,6 @@ RSpec.describe PostfixAdmin::Mailbox do
 end
 
 RSpec.describe PostfixAdmin::Alias do
-  before do
-    db_initialize
-  end
-
   it "active" do
     domain = Domain.find('example.com')
     domain.rel_aliases << build(:alias, address: "non_active_alias@example.com",

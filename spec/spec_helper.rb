@@ -20,6 +20,10 @@ RSpec.configure do |config|
     FactoryBot.find_definitions
   end
 
+  config.before(:example) do
+    db_initialize
+  end
+
   config.expect_with :rspec do |c|
     c.syntax = :expect
   end

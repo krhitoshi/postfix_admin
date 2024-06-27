@@ -28,7 +28,6 @@ end
 
 RSpec.describe PostfixAdmin::CLI do
   before do
-    db_initialize
     CLI.config_file = CLI::DEFAULT_CONFIG_PATH
    @cli = CLI.new
   end
