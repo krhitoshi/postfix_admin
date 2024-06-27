@@ -20,24 +20,6 @@ class ActiveSupport::TestCase
     end
   end
 
-  # Returns STDOUT and STDERR without rescuing SystemExit
-  def capture_base(&block)
-    begin
-      $stdout = StringIO.new
-      $stderr = StringIO.new
-
-      block.call
-      out = $stdout.string
-      err = $stderr.string
-    ensure
-      $stdout = STDOUT
-      $stderr = STDERR
-    end
-
-    [out, err]
-  end
-  alias silent capture_base
-
   # Returns STDOUT or STDERR as String suppressing both STDOUT and STDERR.
   # Raises StandardError when tests unexpectedly exit.
   def capture(stream = :stdout, &block)
@@ -68,22 +50,5 @@ class ActiveSupport::TestCase
       # do nothing
     end
     err
-  end
-
-  def parse_table(text)
-    inside_table = false
-    res = {}
-    text.each_line do |line|
-      if line.start_with?("+-")
-        inside_table = !inside_table
-        next
-      end
-
-      next unless inside_table
-      elems = line.chomp.split("|").map(&:strip)[1..]
-      res[elems.first] = elems.last
-    end
-
-    res
   end
 end

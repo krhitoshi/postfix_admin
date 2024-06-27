@@ -6,6 +6,35 @@ RSpec.describe PostfixAdmin::Runner do
     db_initialize
   end
 
+  describe "#version" do
+    it "matches the version pattern" do
+      res = capture(:stdout) { Runner.start(["version"]) }
+      expect(res).to match(/postfix_admin \d+\.\d+\.\d/)
+    end
+  end
+
+  describe "#schemes" do
+    it "includes the expected schemes" do
+      res = capture(:stdout) { Runner.start(["schemes"]) }
+      schemes = res.split
+      expect(schemes).to include("CRAM-MD5")
+      expect(schemes).to include("CLEARTEXT")
+    end
+  end
+
+  describe "#summary" do
+    it "contains the expected summary keys" do
+      res = capture(:stdout) { Runner.start(["summary"]) }
+      list = parse_table(res)
+      keys = list.keys
+
+      expect(res).to match(/\| Summary \|/)
+      expect(keys).to include("Admins")
+      expect(keys).to include("Mailboxes")
+      expect(keys).to include("Aliases")
+    end
+  end
+
   describe "show" do
     it "shows information of example.com" do
       expect(capture(:stdout) { Runner.start(["show"]) }).to match \
@@ -481,6 +510,35 @@ RSpec.describe PostfixAdmin::Runner do
           end
         end
       end
+    end
+  end
+
+  describe "log" do
+    it "does not raise an error" do
+      expect { silent { Runner.start(["log"]) } }.not_to raise_error
+    end
+
+    context "with domain filter" do
+      it "does not raise an error" do
+        expect { silent { Runner.start(%w[log -d example.com]) } }.not_to raise_error
+      end
+    end
+
+    context "with lines" do
+      it "does not raise an error" do
+        expect { silent { Runner.start(%w[log -l 100]) } }.not_to raise_error
+      end
+    end
+  end
+
+  describe "#dump" do
+    it "does not raise an error and matches expected output" do
+      expect {
+        res = capture(:stdout) { Runner.start(["dump"]) }
+        expect(res).to match(/Domains/)
+        expect(res).to match(/example.com/)
+        expect(res).to match(/admin@example.com/)
+      }.not_to raise_error
     end
   end
 end

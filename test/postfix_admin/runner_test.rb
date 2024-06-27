@@ -41,11 +41,6 @@ class RunnerTest < ActiveSupport::TestCase
     end
   end
 
-  test "#version" do
-    res = capture { Runner.start(["version"]) }
-    assert_match(/postfix_admin \d+\.\d+\.\d/, res)
-  end
-
   test "#summary" do
     res = capture { Runner.start(["summary"]) }
     list = parse_table(res)
@@ -75,13 +70,6 @@ class RunnerTest < ActiveSupport::TestCase
     res = capture { Runner.start(%w[summary example.test]) }
     list = parse_table(res)
     assert_equal "Unlimited", list["Max Quota (MB)"]
-  end
-
-  test "#schemes" do
-    res = capture { Runner.start(["schemes"]) }
-    schemes = res.split
-    assert_includes schemes, "CRAM-MD5"
-    assert_includes schemes, "CLEARTEXT"
   end
 
   test "#add_domain adds a new Domain" do
@@ -192,32 +180,5 @@ class RunnerTest < ActiveSupport::TestCase
   test "#delete_alias can not delete an Alias that belongs to a Mailbox" do
     res = exit_capture { Runner.start(%w[delete_alias user@example.test]) }
     assert_match "Can not delete mailbox by delete_alias", res
-  end
-
-  test "#log" do
-    assert_nothing_raised do
-      silent { Runner.start(["log"]) }
-    end
-  end
-
-  test "#log with domain filter" do
-    assert_nothing_raised do
-      silent { Runner.start(%w[log -d example.com]) }
-    end
-  end
-
-  test "#log with lines" do
-    assert_nothing_raised do
-      silent { Runner.start(%w[log -l 100]) }
-    end
-  end
-
-  test "#dump" do
-    assert_nothing_raised do
-      res = capture { Runner.start(["dump"]) }
-      assert_match "Domains", res
-      assert_match "example.test", res
-      assert_match "admin@example.test", res
-    end
   end
 end
