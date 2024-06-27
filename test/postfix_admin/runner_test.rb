@@ -12,66 +12,6 @@ class RunnerTest < ActiveSupport::TestCase
     @domain.save!
   end
 
-  test "usual flow with add/delete methods" do
-    assert_nothing_raised do
-      silent do
-        # Use add_domain subcommand
-        Runner.start(%w[add_domain new-domain.test])
-        Runner.start(%w[add_admin admin@new-domain.test password])
-        Runner.start(%w[add_admin_domain admin@new-domain.test new-domain.test])
-
-        Runner.start(%w[add_account user1@new-domain.test password])
-        Runner.start(%w[add_account user2@new-domain.test password])
-        Runner.start(%w[add_alias alias1@new-domain.test goto1@@new-domain2.test])
-        Runner.start(%w[add_alias alias2@new-domain.test goto2@@new-domain2.test])
-        Runner.start(%w[delete_account user2@new-domain.test])
-        Runner.start(%w[delete_alias alias2@new-domain.test])
-        Runner.start(%w[delete_domain new-domain.test])
-
-        # Use setup subcommand
-        Runner.start(%w[setup new-domain2.test password])
-        Runner.start(%w[add_account user1@new-domain2.test password])
-        Runner.start(%w[add_account user2@new-domain2.test password])
-        Runner.start(%w[add_alias alias1@new-domain2.test goto1@@new-domain2.test])
-        Runner.start(%w[add_alias alias2@new-domain2.test goto2@@new-domain2.test])
-        Runner.start(%w[delete_account user2@new-domain2.test])
-        Runner.start(%w[delete_alias alias2@new-domain2.test])
-        Runner.start(%w[delete_domain new-domain2.test])
-      end
-    end
-  end
-
-  test "#summary" do
-    res = capture { Runner.start(["summary"]) }
-    list = parse_table(res)
-    keys = list.keys
-
-    assert_match "| Summary |", res
-    assert_includes keys, "Admins"
-    assert_includes keys, "Mailboxes"
-    assert_includes keys, "Aliases"
-  end
-
-  test "#summary with domain" do
-    res = capture { Runner.start(%w[summary example.test]) }
-    list = parse_table(res)
-    keys = list.keys
-
-    assert_match "| example.test |", res
-    assert_includes keys, "Mailboxes"
-    assert_includes keys, "Aliases"
-    assert_equal "100", list["Max Quota (MB)"]
-    assert_equal "Active", list["Active"]
-    assert_match(/Description[|\s]+example.test Description/, res)
-    assert_equal "example.test Description", list["Description"]
-
-    # set maxquota to 0 (unlimited)
-    @domain.update(maxquota: 0)
-    res = capture { Runner.start(%w[summary example.test]) }
-    list = parse_table(res)
-    assert_equal "Unlimited", list["Max Quota (MB)"]
-  end
-
   test "#add_domain adds a new Domain" do
     assert_difference("Domain.count") do
       res = capture { Runner.start(%w[add_domain new-domain.test -d NewDomain]) }

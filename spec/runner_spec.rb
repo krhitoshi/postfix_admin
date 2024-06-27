@@ -6,6 +6,37 @@ RSpec.describe PostfixAdmin::Runner do
     db_initialize
   end
 
+  describe "usual work flow with add/delete methods" do
+    it "does not raise an error" do
+      expect do
+        silent do
+          # Use add_domain subcommand
+          Runner.start(%w[add_domain new-domain.test])
+          Runner.start(%w[add_admin admin@new-domain.test password])
+          Runner.start(%w[add_admin_domain admin@new-domain.test new-domain.test])
+
+          Runner.start(%w[add_account user1@new-domain.test password])
+          Runner.start(%w[add_account user2@new-domain.test password])
+          Runner.start(%w[add_alias alias1@new-domain.test goto1@@new-domain2.test])
+          Runner.start(%w[add_alias alias2@new-domain.test goto2@@new-domain2.test])
+          Runner.start(%w[delete_account user2@new-domain.test])
+          Runner.start(%w[delete_alias alias2@new-domain.test])
+          Runner.start(%w[delete_domain new-domain.test])
+
+          # Use setup subcommand
+          Runner.start(%w[setup new-domain2.test password])
+          Runner.start(%w[add_account user1@new-domain2.test password])
+          Runner.start(%w[add_account user2@new-domain2.test password])
+          Runner.start(%w[add_alias alias1@new-domain2.test goto1@@new-domain2.test])
+          Runner.start(%w[add_alias alias2@new-domain2.test goto2@@new-domain2.test])
+          Runner.start(%w[delete_account user2@new-domain2.test])
+          Runner.start(%w[delete_alias alias2@new-domain2.test])
+          Runner.start(%w[delete_domain new-domain2.test])
+        end
+      end.not_to raise_error
+    end
+  end
+
   describe "#version" do
     it "matches the version pattern" do
       res = capture(:stdout) { Runner.start(["version"]) }
@@ -32,6 +63,28 @@ RSpec.describe PostfixAdmin::Runner do
       expect(keys).to include("Admins")
       expect(keys).to include("Mailboxes")
       expect(keys).to include("Aliases")
+    end
+
+    context "with domain" do
+      it "contains the expected domain summary and updates quota" do
+        res = capture { Runner.start(%w[summary example.com]) }
+        list = parse_table(res)
+        keys = list.keys
+
+        expect(res).to match(/\| example.com \|/)
+        expect(keys).to include("Mailboxes")
+        expect(keys).to include("Aliases")
+        expect(list["Max Quota (MB)"]).to eq("100")
+        expect(list["Active"]).to eq("Active")
+        expect(res).to match(/Description[|\s]+example.com Description/)
+        expect(list["Description"]).to eq("example.com Description")
+
+        # set maxquota to 0 (unlimited)
+        Domain.find("example.com").update(maxquota: 0)
+        res = capture { Runner.start(%w[summary example.com]) }
+        list = parse_table(res)
+        expect(list["Max Quota (MB)"]).to eq("Unlimited")
+      end
     end
   end
 
