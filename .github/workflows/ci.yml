@@ -38,9 +38,9 @@ jobs:
       - name: Install dovecotpw
         run: sudo apt-get install -y dovecot-core
       - name: Copy configure file
-        run: cp ./test/misc/postfix_admin.conf ~/.postfix_admin.conf
+        run: cp ./spec/misc/postfix_admin.conf ~/.postfix_admin.conf
       - name: Copy my.cnf (for `rake setup_test_db`)
-        run: cp ./test/misc/ci.my.cnf ~/.my.cnf
+        run: cp ./spec/misc/ci.my.cnf ~/.my.cnf
       - name: docker-compose up
         run: docker-compose up -d db
       - name: Sleep (work around)
@@ -48,7 +48,5 @@ jobs:
         run: sleep 10
       - name: Set up test database
         run: bundle exec rake setup_test_db
-      - name: Run tests
-        run: bundle exec rake test
       - name: Run specs
         run: bundle exec rake spec
