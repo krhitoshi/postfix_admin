@@ -36,6 +36,38 @@ def capture_base(&block)
 end
 alias silent capture_base
 
+# Returns STDOUT or STDERR as String suppressing both STDOUT and STDERR.
+# Raises StandardError when tests unexpectedly exit.
+def capture(stream = :stdout, &block)
+  out, err = capture_base do
+    block.call
+    # Raises SystemExit with STDERR when a test unexpectedly exits.
+  rescue SystemExit => e
+    message = $stderr.string
+    message += e.message
+    raise StandardError, message
+  end
+
+  case stream
+  when :stdout
+    out
+  when :stderr
+    err
+  else
+    raise "MUST NOT HAPPEN"
+  end
+end
+
+# Returns STDERR when application exits suppressing STDOUT
+def exit_capture(&block)
+  _out, err = capture_base do
+    block.call
+  rescue SystemExit
+    # do nothing
+  end
+  err
+end
+
 def parse_table(text)
   inside_table = false
   res = {}

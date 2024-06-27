@@ -98,40 +98,6 @@ RSpec.configure do |config|
     ARGV.replace []
   end
 
-  def capture(stream)
-    begin
-      stream = stream.to_s
-      $stdout = StringIO.new
-      $stderr = StringIO.new
-      yield
-      result = eval("$#{stream}").string
-    rescue SystemExit => e
-      message = $stderr.string
-      message += e.message
-      raise message
-    ensure
-      $stdout = STDOUT
-      $stderr = STDERR
-    end
-
-    result
-  end
-
-  # Returns STDERR when application exits suppressing STDOUT
-  def exit_capture
-    begin
-      $stderr = StringIO.new
-      $stdout = StringIO.new
-      yield
-    rescue SystemExit => e
-    ensure
-      result = $stderr.string
-      $stderr = STDERR
-      $stdout = STDOUT
-    end
-    result
-  end
-
   def source_root
     File.join(File.dirname(__FILE__), 'fixtures')
   end
