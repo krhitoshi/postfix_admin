@@ -97,8 +97,7 @@ RSpec.describe PostfixAdmin::Runner do
       end
 
       it "when no domains" do
-        expect(capture { Runner.start(['delete_domain', 'example.com']) }).to match EX_DELETED
-        expect(capture { Runner.start(['delete_domain', 'example.org']) }).to match EX_DELETED
+        Domain.without_all.delete_all
         expect(capture { Runner.start(["show"]) }).to match /No domains/
       end
     end
