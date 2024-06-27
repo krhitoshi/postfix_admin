@@ -85,49 +85,59 @@ RSpec.describe PostfixAdmin::Runner do
   end
 
   describe "#show" do
-    it "shows information of example.com" do
-      expect(capture { Runner.start(["show"]) }).to match \
-        /example.com[|\s]+1[|\s]+\/[|\s]+30[|\s]+1[|\s]+\/[|\s]+30[|\s]+100[|\s]+Active[|\s]+example.com Description/
+    context "without argument" do
+      it "shows information of example.com" do
+        expect(capture { Runner.start(["show"]) }).to match \
+          /example.com[|\s]+1[|\s]+\/[|\s]+30[|\s]+1[|\s]+\/[|\s]+30[|\s]+100[|\s]+Active[|\s]+example.com Description/
+      end
+
+      it "shows information of admin@example.com" do
+        out = capture { Runner.start(["show"]) }
+        expect(out).to match /admin@example.com[|\s]+1[|\s]+Active[|\s]+\{CRAM-MD5\}/
+      end
+
+      it "when no domains" do
+        expect(capture { Runner.start(['delete_domain', 'example.com']) }).to match EX_DELETED
+        expect(capture { Runner.start(['delete_domain', 'example.org']) }).to match EX_DELETED
+        expect(capture { Runner.start(["show"]) }).to match /No domains/
+      end
     end
 
-    it "shows information of admin@example.com" do
-      out = capture { Runner.start(["show"]) }
-      expect(out).to match /admin@example.com[|\s]+1[|\s]+Active[|\s]+\{CRAM-MD5\}/
+    context "with domain" do
+      it "show the detail of example.com" do
+        expect(capture { Runner.start(["show", "example.com"]) }).to \
+          match /user@example.com[|\s]+100[|\s]+Active[|\s]+\{CRAM-MD5\}/
+      end
+
+      it "when no admins, no aliases and no addresses" do
+        Admin.find('all@example.com').super_admin = false
+        out = capture { Runner.start(["show", "example.org"]) }
+        expect(out).to match /No admins/
+        expect(out).to match /No addresses/
+        expect(out).to match /No aliases/
+      end
     end
 
-    it "show the detail of example.com" do
-      expect(capture { Runner.start(["show", "example.com"]) }).to \
-        match /user@example.com[|\s]+100[|\s]+Active[|\s]+\{CRAM-MD5\}/
+    context "with admin" do
+      it "shows information of an admin" do
+        out = capture {  Runner.start(["show", "admin@example.com"]) }
+        expect(out).to match /admin@example.com/
+        expect(out).to match /Password/
+      end
     end
 
-    it "when no admins, no aliases and no addresses" do
-      Admin.find('all@example.com').super_admin = false
-      out = capture { Runner.start(["show", "example.org"]) }
-      expect(out).to match /No admins/
-      expect(out).to match /No addresses/
-      expect(out).to match /No aliases/
+    context "with account" do
+      it "shows information of an account" do
+        out = capture { Runner.start(["show", "user@example.com"]) }
+        expect(out).to match /user@example.com/
+        expect(out).to match /Password/
+      end
     end
 
-    it "shows information of an admin" do
-      out = capture {  Runner.start(["show", "admin@example.com"]) }
-      expect(out).to match /admin@example.com/
-      expect(out).to match /Password/
-    end
-
-    it "shows information of an account" do
-      out = capture { Runner.start(["show", "user@example.com"]) }
-      expect(out).to match /user@example.com/
-      expect(out).to match /Password/
-    end
-
-    it "shows information of an alias" do
-      expect(capture {  Runner.start(["show", "alias@example.com"]) }).to match /alias@example.com/
-    end
-
-    it "when no domains" do
-      expect(capture { Runner.start(['delete_domain', 'example.com']) }).to match EX_DELETED
-      expect(capture { Runner.start(['delete_domain', 'example.org']) }).to match EX_DELETED
-      expect(capture { Runner.start(["show"]) }).to match /No domains/
+    context "with alias" do
+      it "shows information of an alias" do
+        expect(capture {  Runner.start(["show", "alias@example.com"]) }).to match /alias@example.com/
+      end
     end
   end
 
