@@ -67,6 +67,7 @@ module PostfixAdmin
     # It works well with `dependent: :delete_all` instead.
     #
     # PostfixAdmin::DomainAdmin Destroy (0.4ms)  DELETE FROM `domain_admins` WHERE `domain_admins`.`domain` = 'example.com'
+    # Domain <-> DomainAdmin <-> Admin
     has_many :domain_admins, foreign_key: :domain, dependent: :delete_all
 
     has_many :admins, through: :domain_admins
