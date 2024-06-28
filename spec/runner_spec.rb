@@ -153,13 +153,21 @@ RSpec.describe PostfixAdmin::Runner do
   describe "#delete_domain" do
     it "deletes a Domain" do
       expect(Domain.exists?("example.com")).to be true
-      expect(Log.where(domain: "example.com").count).to be > 0
+      expect(DomainAdmin.exists?(domain: "example.com")).to be true
+      expect(Mailbox.exists?(domain: "example.com")).to be true
+      expect(Alias.exists?(domain: "example.com")).to be true
+      expect(Quota2.exists?(["username LIKE ?", "%@example.com"])).to be true
+      expect(Log.exists?(domain: "example.com")).to be true
       expect {
         res = capture { Runner.start(%w[delete_domain example.com]) }
         expect(res).to match('"example.com" was successfully deleted')
       }.to change { Domain.count }.by(-1)
       expect(Domain.exists?("example.com")).to be false
-      expect(Log.where(domain: "example.com").count).to eq 0
+      expect(DomainAdmin.exists?(domain: "example.com")).to be false
+      expect(Mailbox.exists?(domain: "example.com")).to be false
+      expect(Alias.exists?(domain: "example.com")).to be false
+      expect(Quota2.exists?(["username LIKE ?", "%@example.com"])).to be false
+      expect(Log.exists?(domain: "example.com")).to be false
     end
   end
 
@@ -352,11 +360,14 @@ RSpec.describe PostfixAdmin::Runner do
   describe "#delete_admin" do
     it "deletes an Admin" do
       expect(Admin.exists?("admin@example.com")).to be true
+      expect(DomainAdmin.exists?(username: "admin@example.com")).to be true
       expect {
         res = capture { Runner.start(%w[delete_admin admin@example.com]) }
         expect(res).to match('"admin@example.com" was successfully deleted')
       }.to change { Admin.count }.by(-1)
+
       expect(Admin.exists?("admin@example.com")).to be false
+      expect(DomainAdmin.exists?(username: "admin@example.com")).to be false
     end
   end
 

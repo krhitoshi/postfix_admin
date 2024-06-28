@@ -194,7 +194,6 @@ module PostfixAdmin
       end
 
       admin = Admin.find(user_name)
-      admin.rel_domains.delete_all
       admin.destroy!
     end
 
