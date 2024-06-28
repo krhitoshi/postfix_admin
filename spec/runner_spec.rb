@@ -46,6 +46,7 @@ RSpec.describe PostfixAdmin::Runner do
       schemes = res.split
       expect(schemes).to include("CRAM-MD5")
       expect(schemes).to include("CLEARTEXT")
+      expect(schemes).to include("BLF-CRYPT")
     end
   end
 
@@ -86,56 +87,54 @@ RSpec.describe PostfixAdmin::Runner do
 
   describe "#show" do
     context "without argument" do
-      it "shows information of example.com" do
-        expect(capture { Runner.start(["show"]) }).to match \
-          /example.com[|\s]+1[|\s]+\/[|\s]+30[|\s]+1[|\s]+\/[|\s]+30[|\s]+100[|\s]+Active[|\s]+example.com Description/
+      it "shows list of domains and admins" do
+        res = capture { Runner.start(["show"]) }
+        expect(res).to match /example.com[|\s]+1[|\s]+\/[|\s]+30[|\s]+1[|\s]+\/[|\s]+30[|\s]+100[|\s]+Active[|\s]+example.com Description/
+        expect(res).to match /admin@example.com[|\s]+1[|\s]+Active[|\s]+\{CRAM-MD5\}/
       end
 
-      it "shows information of admin@example.com" do
-        out = capture { Runner.start(["show"]) }
-        expect(out).to match /admin@example.com[|\s]+1[|\s]+Active[|\s]+\{CRAM-MD5\}/
-      end
-
-      it "when no domains" do
-        Domain.without_all.delete_all
-        expect(capture { Runner.start(["show"]) }).to match /No domains/
+      it "when there are no domains and no admins" do
+        db_reset
+        res = capture { Runner.start(["show"]) }
+        expect(res).to match /No domains/
+        expect(res).to match /No admins/
       end
     end
 
     context "with domain" do
-      it "show the detail of example.com" do
-        expect(capture { Runner.start(["show", "example.com"]) }).to \
-          match /user@example.com[|\s]+100[|\s]+Active[|\s]+\{CRAM-MD5\}/
+      it "show the detail of domain" do
+        res = capture { Runner.start(%w[show example.com]) }
+        expect(res).to match /user@example.com[|\s]+100[|\s]+Active[|\s]+\{CRAM-MD5\}/
       end
 
-      it "when no admins, no aliases and no addresses" do
-        Admin.find('all@example.com').super_admin = false
-        out = capture { Runner.start(["show", "example.org"]) }
-        expect(out).to match /No admins/
-        expect(out).to match /No addresses/
-        expect(out).to match /No aliases/
+      it "when there are no admins, no aliases and no addresses" do
+        res = capture { Runner.start(%w[show example.org]) }
+        expect(res).to match /No admins/
+        expect(res).to match /No addresses/
+        expect(res).to match /No aliases/
       end
     end
 
     context "with admin" do
       it "shows information of an admin" do
-        out = capture {  Runner.start(["show", "admin@example.com"]) }
-        expect(out).to match /admin@example.com/
-        expect(out).to match /Password/
+        res = capture {  Runner.start(%w[show admin@example.com]) }
+        expect(res).to match /admin@example.com/
+        expect(res).to match /Password/
       end
     end
 
     context "with account" do
       it "shows information of an account" do
-        out = capture { Runner.start(["show", "user@example.com"]) }
-        expect(out).to match /user@example.com/
-        expect(out).to match /Password/
+        res = capture { Runner.start(%w[show user@example.com]) }
+        expect(res).to match /user@example.com/
+        expect(res).to match /Password/
       end
     end
 
     context "with alias" do
       it "shows information of an alias" do
-        expect(capture {  Runner.start(["show", "alias@example.com"]) }).to match /alias@example.com/
+        res = capture {  Runner.start(%w[show alias@example.com]) }
+        expect(res).to match /alias@example.com/
       end
     end
   end
@@ -268,14 +267,14 @@ RSpec.describe PostfixAdmin::Runner do
 
   describe "#edit_alias" do
     it "can update active status" do
-      output = capture { Runner.start(['edit_alias', 'alias@example.com', '--no-active']) }
-      expect(output).to match EX_UPDATED
+      res = capture { Runner.start(['edit_alias', 'alias@example.com', '--no-active']) }
+      expect(res).to match EX_UPDATED
       expect(Alias.find('alias@example.com').active).to be false
     end
 
     it "can update goto" do
-      output = capture { Runner.start(['edit_alias', 'alias@example.com', '-g', 'goto@example.com,user@example.com']) }
-      expect(output).to match EX_UPDATED
+      res = capture { Runner.start(['edit_alias', 'alias@example.com', '-g', 'goto@example.com,user@example.com']) }
+      expect(res).to match EX_UPDATED
       expect(Alias.find('alias@example.com').goto).to eq 'goto@example.com,user@example.com'
     end
   end
@@ -369,24 +368,24 @@ RSpec.describe PostfixAdmin::Runner do
     it "can update active status" do
       admin = Admin.find('admin@example.com')
       expect(admin.active).to be true
-      output = capture { Runner.start(['edit_admin', 'admin@example.com', '--no-active']) }
-      expect(output).to match EX_UPDATED
+      res = capture { Runner.start(['edit_admin', 'admin@example.com', '--no-active']) }
+      expect(res).to match EX_UPDATED
       expect(admin.reload.active).to be false
-      expect(output).not_to match /Password/
-      expect(output).to match /Role.+Standard Admin/
+      expect(res).not_to match /Password/
+      expect(res).to match /Role.+Standard Admin/
     end
 
     it "can update super admin status" do
       admin = Admin.find('admin@example.com')
       expect(admin.super_admin?).to be false
-      output = capture {
+      res = capture {
         Runner.start(['edit_admin', 'admin@example.com', '--super'])
       }
-      expect(output).to match EX_UPDATED
+      expect(res).to match EX_UPDATED
       expect(admin.reload.super_admin?).to be true
-      expect(output).to match /Domains.+ALL/
-      expect(output).to match /Active.+Active/
-      expect(output).to match /Role.+Super Admin/
+      expect(res).to match /Domains.+ALL/
+      expect(res).to match /Active.+Active/
+      expect(res).to match /Role.+Super Admin/
     end
   end
 
@@ -398,14 +397,14 @@ RSpec.describe PostfixAdmin::Runner do
     end
 
     it "can edit limitations of domain" do
-      output = capture { Runner.start(['edit_domain', 'example.com', '--aliases', '40', '--mailboxes', '40', '--maxquota', '400', '--no-active']) }
-      expect(output).to match EX_UPDATED
-      expect(output).to match /Active.+Inactive/
+      res = capture { Runner.start(['edit_domain', 'example.com', '--aliases', '40', '--mailboxes', '40', '--maxquota', '400', '--no-active']) }
+      expect(res).to match EX_UPDATED
+      expect(res).to match /Active.+Inactive/
     end
 
     it "can edit description" do
-      output = capture { Runner.start(['edit_domain', 'example.com', '-d', 'New Description']) }
-      expect(output).to match EX_UPDATED
+      res = capture { Runner.start(['edit_domain', 'example.com', '-d', 'New Description']) }
+      expect(res).to match EX_UPDATED
       domain = Domain.find('example.com')
       expect(domain.description).to eq "New Description"
     end
@@ -454,11 +453,11 @@ RSpec.describe PostfixAdmin::Runner do
     end
 
     it "can edit quota limitation" do
-      output = capture { Runner.start(@args + ['--quota', '50', '--no-active']) }
-      expect(output).to match EX_UPDATED
-      expect(output).to match /Quota/
-      expect(output).not_to match /Password/
-      expect(output).to match /Active.+Inactive/
+      res = capture { Runner.start(@args + ['--quota', '50', '--no-active']) }
+      expect(res).to match EX_UPDATED
+      expect(res).to match /Quota/
+      expect(res).not_to match /Password/
+      expect(res).to match /Active.+Inactive/
     end
 
     it "can use alias -q option" do
