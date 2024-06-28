@@ -153,11 +153,13 @@ RSpec.describe PostfixAdmin::Runner do
   describe "#delete_domain" do
     it "deletes a Domain" do
       expect(Domain.exists?("example.com")).to be true
+      expect(Log.where(domain: "example.com").count).to be > 0
       expect {
         res = capture { Runner.start(%w[delete_domain example.com]) }
         expect(res).to match('"example.com" was successfully deleted')
       }.to change { Domain.count }.by(-1)
       expect(Domain.exists?("example.com")).to be false
+      expect(Log.where(domain: "example.com").count).to eq 0
     end
   end
 

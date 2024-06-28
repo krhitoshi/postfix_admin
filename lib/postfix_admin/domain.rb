@@ -31,6 +31,10 @@ module PostfixAdmin
     has_many :rel_aliases, class_name: "Alias", foreign_key: :domain,
                            dependent: :destroy
 
+    # logs that belong to this domain
+    has_many :logs, class_name: "Log", foreign_key: :domain,
+             dependent: :destroy
+
     # It causes errors to set `dependent: :destroy` as other columns
     # because the domain_admins table doesn't have a single primary key.
     #
