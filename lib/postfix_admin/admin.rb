@@ -28,6 +28,7 @@ module PostfixAdmin
                          format: { with: RE_EMAIL_LIKE_WITH_ANCHORS,
                                    message: "must be a valid email address" }
 
+    # Admin <-> DomainAdmin <-> Domain
     has_many :domain_admins, foreign_key: :username, dependent: :delete_all
     has_many :rel_domains, through: :domain_admins
 
