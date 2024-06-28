@@ -1,13 +1,13 @@
 module PostfixAdmin
   class Quota < ApplicationRecord
     # version: 1841
-    # > describe quota;
+    # > describe quota2;
     # +----------+--------------+------+-----+---------+-------+
     # | Field    | Type         | Null | Key | Default | Extra |
     # +----------+--------------+------+-----+---------+-------+
-    # | username | varchar(255) | NO   | PRI | NULL    |       |
-    # | path     | varchar(100) | NO   | PRI | NULL    |       |
-    # | current  | bigint(20)   | YES  |     | NULL    |       |
+    # | username | varchar(100) | NO   | PRI | NULL    |       |
+    # | bytes    | bigint(20)   | NO   |     | 0       |       |
+    # | messages | int(11)      | NO   |     | 0       |       |
     # +----------+--------------+------+-----+---------+-------+
 
     self.table_name = :quota2
