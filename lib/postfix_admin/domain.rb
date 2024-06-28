@@ -1,5 +1,23 @@
 module PostfixAdmin
   class Domain < ApplicationRecord
+    # version: 1841
+    # > describe domain;
+    # +-------------+--------------+------+-----+---------------------+-------+
+    # | Field       | Type         | Null | Key | Default             | Extra |
+    # +-------------+--------------+------+-----+---------------------+-------+
+    # | domain      | varchar(255) | NO   | PRI | NULL                |       |
+    # | description | varchar(255) | NO   |     | NULL                |       |
+    # | aliases     | int(10)      | NO   |     | 0                   |       |
+    # | mailboxes   | int(10)      | NO   |     | 0                   |       |
+    # | maxquota    | bigint(20)   | NO   |     | 0                   |       |
+    # | quota       | bigint(20)   | NO   |     | 0                   |       |
+    # | transport   | varchar(255) | NO   |     | NULL                |       |
+    # | backupmx    | tinyint(1)   | NO   |     | 0                   |       |
+    # | created     | datetime     | NO   |     | 2000-01-01 00:00:00 |       |
+    # | modified    | datetime     | NO   |     | 2000-01-01 00:00:00 |       |
+    # | active      | tinyint(1)   | NO   |     | 1                   |       |
+    # +-------------+--------------+------+-----+---------------------+-------+
+
     self.table_name = :domain
     self.primary_key = :domain
 

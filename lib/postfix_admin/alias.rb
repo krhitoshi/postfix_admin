@@ -1,5 +1,18 @@
 module PostfixAdmin
   class Alias < ApplicationRecord
+    # version: 1841
+    # > describe alias;
+    # +----------+--------------+------+-----+---------------------+-------+
+    # | Field    | Type         | Null | Key | Default             | Extra |
+    # +----------+--------------+------+-----+---------------------+-------+
+    # | address  | varchar(255) | NO   | PRI | NULL                |       |
+    # | goto     | text         | NO   |     | NULL                |       |
+    # | domain   | varchar(255) | NO   | MUL | NULL                |       |
+    # | created  | datetime     | NO   |     | 2000-01-01 00:00:00 |       |
+    # | modified | datetime     | NO   |     | 2000-01-01 00:00:00 |       |
+    # | active   | tinyint(1)   | NO   |     | 1                   |       |
+    # +----------+--------------+------+-----+---------------------+-------+
+
     self.table_name = :alias
     self.primary_key = :address
 

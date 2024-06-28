@@ -2,6 +2,27 @@ require 'postfix_admin/concerns/has_password'
 
 module PostfixAdmin
   class Mailbox < ApplicationRecord
+    # version: 1841
+    # > describe mailbox;
+    # +----------------+--------------+------+-----+---------------------+-------+
+    # | Field          | Type         | Null | Key | Default             | Extra |
+    # +----------------+--------------+------+-----+---------------------+-------+
+    # | username       | varchar(255) | NO   | PRI | NULL                |       |
+    # | password       | varchar(255) | NO   |     | NULL                |       |
+    # | name           | varchar(255) | NO   |     | NULL                |       |
+    # | maildir        | varchar(255) | NO   |     | NULL                |       |
+    # | quota          | bigint(20)   | NO   |     | 0                   |       |
+    # | local_part     | varchar(255) | NO   |     | NULL                |       |
+    # | domain         | varchar(255) | NO   | MUL | NULL                |       |
+    # | created        | datetime     | NO   |     | 2000-01-01 00:00:00 |       |
+    # | modified       | datetime     | NO   |     | 2000-01-01 00:00:00 |       |
+    # | active         | tinyint(1)   | NO   |     | 1                   |       |
+    # | phone          | varchar(30)  | NO   |     |                     |       |
+    # | email_other    | varchar(255) | NO   |     |                     |       |
+    # | token          | varchar(255) | NO   |     |                     |       |
+    # | token_validity | datetime     | NO   |     | 2000-01-01 00:00:00 |       |
+    # +----------------+--------------+------+-----+---------------------+-------+
+
     self.table_name = :mailbox
     self.primary_key = :username
 
