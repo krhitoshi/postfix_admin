@@ -16,8 +16,10 @@ $CONF['password_validation'] = array(
 
 $CONF['encrypt'] = 'dovecot:CRAM-MD5';
 
+$CONF['default_aliases'] = array();
 $CONF['domain_quota'] = 'NO';
 $CONF['quota'] = 'YES';
+$CONF['emailcheck_resolve_domain']='NO';
 
 // setup_password: 'password'
 $CONF['setup_password'] = '87745eb0269b2f42813b23601be3231a:6e41880f73d97321f2f0b25a5ee30f57f5ab3be8';
