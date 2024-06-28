@@ -690,13 +690,20 @@ RSpec.describe PostfixAdmin::Runner do
   end
 
   describe "#log" do
-    it "does not raise an error" do
-      expect { silent { Runner.start(["log"]) } }.not_to raise_error
+    it "display logs" do
+      res = capture { Runner.start(["log"]) }
+      expect(res).to match(/all@example.com \(192.0.2.1\)/)
+      expect(res).to match(/example\.com.*create_domain/)
+      expect(res).to match(/example\.com.*delete_domain/)
+      expect(res).to match(/example\.org.*create_domain/)
     end
 
     context "with domain filter" do
-      it "does not raise an error" do
-        expect { silent { Runner.start(%w[log -d example.com]) } }.not_to raise_error
+      it "display logs of a domain" do
+        res = capture { Runner.start(%w[log -d example.com]) }
+        expect(res).to match(/example\.com.*create_domain/)
+        expect(res).to match(/example\.com.*delete_domain/)
+        expect(res).not_to match(/example\.org.*create_domain/)
       end
     end
 

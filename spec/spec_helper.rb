@@ -66,6 +66,10 @@ def db_initialize
   domain.rel_mailboxes << build(:mailbox, local_part: "user")
 
   domain.save!
+
+  create(:log)
+  create(:log, action: "delete_domain", data: "user@example.com")
+  create(:log, domain: "example.org", data: "example.org")
 end
 
 # common methods for tests and specs
@@ -86,6 +90,7 @@ def db_reset
   Alias.delete_all
   Domain.without_all.delete_all
   Admin.delete_all
+  Log.delete_all
 end
 
 # Returns STDOUT and STDERR without rescuing SystemExit

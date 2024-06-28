@@ -43,4 +43,12 @@ FactoryBot.define do
     domain { "example.test" }
     active { true }
   end
+
+  factory :log do
+    username { "all@example.com (192.0.2.1)" }
+    domain { "example.com" }
+    action { "create_domain" }
+    data { "example.com" }
+    timestamp { Time.now }
+  end
 end
