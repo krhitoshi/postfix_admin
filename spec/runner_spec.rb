@@ -152,22 +152,25 @@ RSpec.describe PostfixAdmin::Runner do
 
   describe "#delete_domain" do
     it "deletes a Domain" do
-      expect(Domain.exists?("example.com")).to be true
-      expect(DomainAdmin.exists?(domain: "example.com")).to be true
-      expect(Mailbox.exists?(domain: "example.com")).to be true
-      expect(Alias.exists?(domain: "example.com")).to be true
+      domain = "example.com"
+      expect(Domain.exists?(domain)).to be true
+      expect(DomainAdmin.exists?(domain: domain)).to be true
+      expect(Mailbox.exists?(domain: domain)).to be true
+      expect(Alias.exists?(domain: domain)).to be true
       expect(Quota2.exists?(["username LIKE ?", "%@example.com"])).to be true
-      expect(Log.exists?(domain: "example.com")).to be true
+      expect(Log.exists?(domain: domain)).to be true
+
       expect {
-        res = capture { Runner.start(%w[delete_domain example.com]) }
+        res = capture { Runner.start(["delete_domain", domain]) }
         expect(res).to match('"example.com" was successfully deleted')
       }.to change { Domain.count }.by(-1)
-      expect(Domain.exists?("example.com")).to be false
-      expect(DomainAdmin.exists?(domain: "example.com")).to be false
-      expect(Mailbox.exists?(domain: "example.com")).to be false
-      expect(Alias.exists?(domain: "example.com")).to be false
+
+      expect(Domain.exists?(domain)).to be false
+      expect(DomainAdmin.exists?(domain: domain)).to be false
+      expect(Mailbox.exists?(domain: domain)).to be false
+      expect(Alias.exists?(domain: domain)).to be false
       expect(Quota2.exists?(["username LIKE ?", "%@example.com"])).to be false
-      expect(Log.exists?(domain: "example.com")).to be false
+      expect(Log.exists?(domain: domain)).to be false
     end
   end
 
@@ -210,15 +213,15 @@ RSpec.describe PostfixAdmin::Runner do
       end
     end
 
-    it "can not use too short password (< 5)" do
+    it "does not accept a short password (< 5)" do
       expect(exit_capture {
-        Runner.start(['admin_passwd', 'admin@example.com', '124'])
+        Runner.start(%w[admin_passwd admin@example.com 124])
       }).to match /too short/
     end
 
-    it "can not use for unknown admin" do
+    it "does not accept an invalid admin" do
       expect(exit_capture {
-        Runner.start(['admin_passwd', 'unknown@example.com', 'new_password'])
+        Runner.start(%w[admin_passwd unknown@example.com new_password])
       }).to match /Could not find/
     end
   end
@@ -262,27 +265,27 @@ RSpec.describe PostfixAdmin::Runner do
       end
     end
 
-    it "can not use too short password (< 5)" do
+    it "does not accept a short password (< 5)" do
       expect(exit_capture {
-        Runner.start(['account_passwd', 'user@example.com', '1234'])
+        Runner.start(%w[account_passwd user@example.com 1234])
       }).to match /too short/
     end
 
-    it "can not use for unknown account" do
+    it "does not accept an invalid account" do
       expect(exit_capture {
-        Runner.start(['account_passwd', 'unknown@example.com', 'new_password'])
+        Runner.start(%w[account_passwd unknown@example.com new_password])
       }).to match /Could not find/
     end
   end
 
   describe "#edit_alias" do
-    it "can update active status" do
+    it "updates active status" do
       res = capture { Runner.start(['edit_alias', 'alias@example.com', '--no-active']) }
       expect(res).to match EX_UPDATED
       expect(Alias.find('alias@example.com').active).to be false
     end
 
-    it "can update goto" do
+    it "updates goto" do
       res = capture { Runner.start(['edit_alias', 'alias@example.com', '-g', 'goto@example.com,user@example.com']) }
       expect(res).to match EX_UPDATED
       expect(Alias.find('alias@example.com').goto).to eq 'goto@example.com,user@example.com'
@@ -294,7 +297,7 @@ RSpec.describe PostfixAdmin::Runner do
       @args = %w[add_admin admin@new-domain.test password]
     end
 
-    it "can add an new admin user" do
+    it "adds an new admin user" do
       expect(capture {
         expect{ Runner.start(@args) }.to change{ Admin.count }.by(1)
       }).to match EX_REGISTERED
@@ -342,8 +345,12 @@ RSpec.describe PostfixAdmin::Runner do
       end
     end
 
-    it "can use long password" do
-      expect(capture { Runner.start(['add_admin', "admin@new-domain.test", '{CRAM-MD5}9c5e77f2da26fc03e9fa9e13ccd77aeb50c85539a4d90b70812715aea9ebda1d']) }).to match EX_REGISTERED
+    it "accepts a long password" do
+      res = capture do
+        Runner.start(['add_admin', "admin@new-domain.test",
+                      '{CRAM-MD5}9c5e77f2da26fc03e9fa9e13ccd77aeb50c85539a4d90b70812715aea9ebda1d'])
+      end
+      expect(res).to match EX_REGISTERED
     end
 
     it "--super option" do
@@ -378,7 +385,7 @@ RSpec.describe PostfixAdmin::Runner do
       }).to match /Use one or more options/
     end
 
-    it "can update active status" do
+    it "updates active status" do
       admin = Admin.find('admin@example.com')
       expect(admin.active).to be true
       res = capture { Runner.start(['edit_admin', 'admin@example.com', '--no-active']) }
@@ -388,7 +395,7 @@ RSpec.describe PostfixAdmin::Runner do
       expect(res).to match /Role.+Standard Admin/
     end
 
-    it "can update super admin status" do
+    it "updates super admin status" do
       admin = Admin.find('admin@example.com')
       expect(admin.super_admin?).to be false
       res = capture {
@@ -409,13 +416,13 @@ RSpec.describe PostfixAdmin::Runner do
       }).to match /Use one or more options/
     end
 
-    it "can edit limitations of domain" do
+    it "updates limitations of domain" do
       res = capture { Runner.start(['edit_domain', 'example.com', '--aliases', '40', '--mailboxes', '40', '--maxquota', '400', '--no-active']) }
       expect(res).to match EX_UPDATED
       expect(res).to match /Active.+Inactive/
     end
 
-    it "can edit description" do
+    it "updates description" do
       res = capture { Runner.start(['edit_domain', 'example.com', '-d', 'New Description']) }
       expect(res).to match EX_UPDATED
       domain = Domain.find('example.com')
@@ -426,7 +433,7 @@ RSpec.describe PostfixAdmin::Runner do
       expect(capture { Runner.start(['edit_domain', 'example.com', '-a', '40', '-m', '40', '-m', '400']) }).to match EX_UPDATED
     end
 
-    it "can not use unknown domain" do
+    it "does not accept an invalid domain" do
       expect(exit_capture { Runner.start(['edit_domain', 'unknown.example.com', '--aliases', '40', '--mailboxes', '40', '--maxquota', '400']) }).to match /Could not find/
     end
   end
@@ -465,7 +472,7 @@ RSpec.describe PostfixAdmin::Runner do
       expect(exit_capture { Runner.start(@args) }).to match /Use one or more options/
     end
 
-    it "can edit quota limitation" do
+    it "updates quota limitation" do
       res = capture { Runner.start(@args + ['--quota', '50', '--no-active']) }
       expect(res).to match EX_UPDATED
       expect(res).to match /Quota/
@@ -474,25 +481,29 @@ RSpec.describe PostfixAdmin::Runner do
     end
 
     it "can use alias -q option" do
-      expect(capture { Runner.start(@args + ['-q', '50']) }).to match EX_UPDATED
+      res = capture { Runner.start(@args + ['-q', '50']) }
+      expect(res).to match EX_UPDATED
     end
 
-    it "-q option require an argment" do
+    it "-q option require an argument" do
       expect(exit_capture { Runner.start(@args + ['-q']) }).to_not eq ""
     end
 
-    it "can update name using --name option" do
-      expect(capture { Runner.start(@args + ['--name', 'Hitoshi Kurokawa']) }).to match EX_UPDATED
+    it "updates name using --name option" do
+      res = capture { Runner.start(@args + ['--name', 'Hitoshi Kurokawa']) }
+      expect(res).to match EX_UPDATED
       expect(Mailbox.find('user@example.com').name).to eq 'Hitoshi Kurokawa'
     end
 
-    it "can update name using -n option" do
-      expect(capture { Runner.start(@args + ['-n', 'Hitoshi Kurokawa']) }).to match EX_UPDATED
+    it "updates name using -n option" do
+      res = capture { Runner.start(@args + ['-n', 'Hitoshi Kurokawa']) }
+      expect(res).to match EX_UPDATED
       expect(Mailbox.find('user@example.com').name).to eq 'Hitoshi Kurokawa'
     end
 
     it "-n option supports Japanese" do
-      expect(capture { Runner.start(@args + ['-n', '黒川　仁']) }).to match EX_UPDATED
+      res = capture { Runner.start(@args + ['-n', '黒川　仁']) }
+      expect(res).to match EX_UPDATED
       expect(Mailbox.find('user@example.com').name).to eq '黒川　仁'
     end
 
@@ -500,8 +511,9 @@ RSpec.describe PostfixAdmin::Runner do
       expect(exit_capture { Runner.start(@args + ['-n']) }).to_not eq ""
     end
 
-    it "can update goto" do
-      expect(capture { Runner.start(@args + ['-g', 'user@example.com,forward@example.com']) }).to match EX_UPDATED
+    it "updates goto" do
+      res = capture { Runner.start(@args + ['-g', 'user@example.com,forward@example.com']) }
+      expect(res).to match EX_UPDATED
       expect(Alias.find('user@example.com').goto).to eq 'user@example.com,forward@example.com'
     end
   end
@@ -531,8 +543,10 @@ RSpec.describe PostfixAdmin::Runner do
       expect(Mailbox.find('user2@example.com').password).to eq CRAM_MD5_PASS
     end
 
-    it "add_account can use long password" do
-      expect(capture { Runner.start(['add_account', 'user2@example.com', '{CRAM-MD5}9c5e77f2da26fc03e9fa9e13ccd77aeb50c85539a4d90b70812715aea9ebda1d']) }).to match EX_REGISTERED
+    it "accepts a long password" do
+      res = capture { Runner.start(['add_account', 'user2@example.com',
+                                    '{CRAM-MD5}9c5e77f2da26fc03e9fa9e13ccd77aeb50c85539a4d90b70812715aea9ebda1d']) }
+      expect(res).to match EX_REGISTERED
     end
 
     describe "name option" do
@@ -599,18 +613,21 @@ RSpec.describe PostfixAdmin::Runner do
 
   describe "#delete_account" do
     it "deletes a Mailbox and an Alias" do
-      expect(Alias.exists?("user@example.com")).to be true
-      expect(Mailbox.exists?("user@example.com")).to be true
-      expect(Quota2.exists?("user@example.com")).to be true
+      user = "user@example.com"
+      expect(Alias.exists?("#{user}")).to be true
+      expect(Mailbox.exists?("#{user}")).to be true
+      expect(Quota2.exists?("#{user}")).to be true
 
       expect {
         res = capture { Runner.start(%w[delete_account user@example.com]) }
         expect(res).to match('"user@example.com" was successfully deleted')
-      }.to change{ Mailbox.count }.by(-1).and change{ Alias.count }.by(-1)
+      }.to change{ Mailbox.count }.by(-1).and \
+           change{ Alias.count }.by(-1).and \
+           change{ Quota2.count }.by(-1)
 
-      expect(Alias.exists?("user@example.com")).to be false
-      expect(Mailbox.exists?("user@example.com")).to be false
-      expect(Quota2.exists?("user@example.com")).to be false
+      expect(Alias.exists?("#{user}")).to be false
+      expect(Mailbox.exists?("#{user}")).to be false
+      expect(Quota2.exists?("#{user}")).to be false
     end
   end
 
@@ -653,7 +670,7 @@ RSpec.describe PostfixAdmin::Runner do
       @args = %w[setup new-domain.test password]
     end
     
-    it "setup adds a Domain and an Admin for it" do
+    it "adds a Domain and an Admin for it" do
       res = capture do
         expect{
           Runner.start(@args)
@@ -730,13 +747,11 @@ RSpec.describe PostfixAdmin::Runner do
   end
 
   describe "#dump" do
-    it "does not raise an error and matches expected output" do
-      expect {
-        res = capture { Runner.start(["dump"]) }
-        expect(res).to match(/Domains/)
-        expect(res).to match(/example.com/)
-        expect(res).to match(/admin@example.com/)
-      }.not_to raise_error
+    it "matches expected output" do
+      res = capture { Runner.start(["dump"]) }
+      expect(res).to match(/Domains/)
+      expect(res).to match(/example.com/)
+      expect(res).to match(/admin@example.com/)
     end
   end
 end
