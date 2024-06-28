@@ -67,6 +67,8 @@ def db_initialize
 
   domain.save!
 
+  create(:quota, username: "user@example.com")
+
   create(:log)
   create(:log, action: "delete_domain", data: "user@example.com")
   create(:log, domain: "example.org", data: "example.org")
@@ -90,6 +92,7 @@ def db_reset
   Alias.delete_all
   Domain.without_all.delete_all
   Admin.delete_all
+  Quota.delete_all
   Log.delete_all
 end
 

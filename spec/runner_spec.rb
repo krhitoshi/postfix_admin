@@ -590,6 +590,7 @@ RSpec.describe PostfixAdmin::Runner do
     it "deletes a Mailbox and an Alias" do
       expect(Alias.exists?("user@example.com")).to be true
       expect(Mailbox.exists?("user@example.com")).to be true
+      expect(Quota.exists?("user@example.com")).to be true
 
       expect {
         res = capture { Runner.start(%w[delete_account user@example.com]) }
@@ -598,6 +599,7 @@ RSpec.describe PostfixAdmin::Runner do
 
       expect(Alias.exists?("user@example.com")).to be false
       expect(Mailbox.exists?("user@example.com")).to be false
+      expect(Quota.exists?("user@example.com")).to be false
     end
   end
 

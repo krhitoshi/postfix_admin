@@ -203,8 +203,8 @@ module PostfixAdmin
         raise_error "Could not find account: #{address}"
       end
 
-      Mailbox.where(username: address).delete_all
-      Alias.where(address: address).delete_all
+      mailbox = Mailbox.find(address)
+      mailbox.destroy!
     end
 
     private

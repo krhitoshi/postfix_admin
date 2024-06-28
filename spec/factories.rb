@@ -37,6 +37,12 @@ FactoryBot.define do
     active { true }
   end
 
+  factory :quota do
+    username { nil }
+    bytes { 0 }
+    messages { 0 }
+  end
+
   factory :alias do
     sequence(:address) { |n| "address#{n}@example.test" }
     goto { "goto@example.jp" }

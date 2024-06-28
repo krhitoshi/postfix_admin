@@ -12,5 +12,7 @@ module PostfixAdmin
 
     self.table_name = :quota2
     self.primary_key = :username
+
+    belongs_to :rel_mailbox, class_name: "Mailbox", foreign_key: :username
   end
 end
