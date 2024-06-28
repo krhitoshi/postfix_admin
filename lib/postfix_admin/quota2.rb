@@ -1,5 +1,5 @@
 module PostfixAdmin
-  class Quota < ApplicationRecord
+  class Quota2 < ApplicationRecord
     # version: 1841
     # > describe quota2;
     # +----------+--------------+------+-----+---------+-------+

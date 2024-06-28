@@ -48,7 +48,7 @@ module PostfixAdmin
 
     belongs_to :rel_domain, class_name: "Domain", foreign_key: :domain
     has_one :alias, foreign_key: :address, dependent: :destroy
-    has_one :quota_usage, class_name: "Quota", foreign_key: :username,
+    has_one :quota_usage, class_name: "Quota2", foreign_key: :username,
             dependent: :destroy
 
     validate on: :create do |mailbox|

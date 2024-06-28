@@ -7,7 +7,7 @@ require 'postfix_admin/mailbox'
 require 'postfix_admin/alias'
 require 'postfix_admin/domain_admin'
 require 'postfix_admin/log'
-require 'postfix_admin/quota'
+require 'postfix_admin/quota2'
 
 RSpec.describe PostfixAdmin::Admin do
   before do

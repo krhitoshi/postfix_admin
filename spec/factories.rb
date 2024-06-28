@@ -37,7 +37,7 @@ FactoryBot.define do
     active { true }
   end
 
-  factory :quota do
+  factory :quota2 do
     username { nil }
     bytes { 0 }
     messages { 0 }
