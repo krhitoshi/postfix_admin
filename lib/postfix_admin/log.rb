@@ -12,6 +12,7 @@ module PostfixAdmin
     # | data      | text         | NO   |     | NULL                |                |
     # | id        | int(11)      | NO   | PRI | NULL                | auto_increment |
     # +-----------+--------------+------+-----+---------------------+----------------+
+
     self.table_name = :log
 
     belongs_to :rel_domain, class_name: "Domain", foreign_key: :domain
