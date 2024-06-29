@@ -78,7 +78,8 @@ RSpec.describe PostfixAdmin::Base do
       }.to change { Domain.count }.by(-1)
 
       expect(Domain.exists?("example.com")).to be false
-      expect(Admin.exists?("admin@example.com")).to be false
+      # `delete_domain` does not delete a admin user anymore
+      expect(Admin.exists?("admin@example.com")).to be true
       expect(DomainAdmin.exists?(username: "admin@example.com", domain: "example.com")).to be false
       expect(Alias.exists?(domain: "example.com")).to be false
       expect(Mailbox.exists?(domain: "example.com")).to be false
