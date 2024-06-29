@@ -1,9 +1,10 @@
 # CHANGELOG
 
 ## 0.3.1
+  * Added `teardown` subcommand for the opposite operation of `setup`
   * `delete_domain` subcommand removes logs associated with the domain
-  * Added -s (scheme) and -r (rounds) options for subcommands that require password arguments
-    + Encryption rounds are supported only for BLF-CRYPT, SHA256-CRYPT, and SHA512-CRYPT schemes
+  * Added `-s` (scheme) and `-r` (rounds) options for subcommands that require password arguments
+    + Encryption rounds are supported only for `BLF-CRYPT`, `SHA256-CRYPT`, and `SHA512-CRYPT` schemes
 
 ## 0.3.0
   * Added support for table display format
@@ -19,11 +20,11 @@
   * Stored password hashes now include scheme prefixes, such as `{CRAM-MD5}` and `{PLAIN}`
 
 ## 0.1.4
-  * Added "log" subcommand
+  * Added `log` subcommand
 
 ## 0.1.3
   * Added support for activation and deactivation of domains, admins, and accounts
-  * Added "edit_admin" subcommand
+  * Added `edit_admin` subcommand
 
 ## 0.1.2
   * Added support for password hashing by doveadm (external subcommand)
