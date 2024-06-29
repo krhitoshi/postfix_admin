@@ -174,18 +174,6 @@ module PostfixAdmin
       admin_names = domain.admins.map(&:username)
 
       domain.destroy!
-
-      # Remove admins who had the deleted domain only
-      admin_names.each do |name|
-        next unless Admin.exists?(name)
-
-        admin = Admin.find(name)
-
-        # check if the admin is needed or not
-        if admin.rel_domains.empty?
-          admin.destroy!
-        end
-      end
     end
 
     def delete_admin(user_name)

@@ -153,7 +153,9 @@ RSpec.describe PostfixAdmin::Runner do
   describe "#delete_domain" do
     it "deletes a Domain" do
       domain = "example.com"
+      admin = "admin@#{domain}"
       expect(Domain.exists?(domain)).to be true
+      expect(Admin.exists?(admin)).to be true
       expect(DomainAdmin.exists?(domain: domain)).to be true
       expect(Mailbox.exists?(domain: domain)).to be true
       expect(Alias.exists?(domain: domain)).to be true
@@ -166,6 +168,8 @@ RSpec.describe PostfixAdmin::Runner do
       }.to change { Domain.count }.by(-1)
 
       expect(Domain.exists?(domain)).to be false
+      # `delete_domain` does not delete a admin user anymore
+      expect(Admin.exists?(admin)).to be true
       expect(DomainAdmin.exists?(domain: domain)).to be false
       expect(Mailbox.exists?(domain: domain)).to be false
       expect(Alias.exists?(domain: domain)).to be false
@@ -718,6 +722,20 @@ RSpec.describe PostfixAdmin::Runner do
           end
         end
       end
+    end
+  end
+
+  describe "#teardown" do
+    it "delete a domain and a admin user for it" do
+      domain = "example.com"
+      admin = "admin@#{domain}"
+      expect(Domain.exists?(domain)).to be true
+      expect(Admin.exists?(admin)).to be true
+      res = capture { Runner.start(["teardown", domain]) }
+      expect(res).to match('"example.com" was successfully deleted')
+      expect(res).to match('"admin@example.com" was successfully deleted')
+      expect(Domain.exists?(domain)).to be false
+      expect(Admin.exists?(admin)).to be false
     end
   end
 

@@ -40,6 +40,11 @@ module PostfixAdmin
       end
     end
 
+    desc "teardown example.com", "Tear down a domain (delete a domain and an admin user for it)"
+    def teardown(domain_name)
+      runner { @cli.teardown_domain(domain_name) }
+    end
+
     desc "admin_passwd admin@example.com new_password",
          "Change the password of an admin user"
     method_option :scheme, type: :string, aliases: "-s", desc: "password scheme"

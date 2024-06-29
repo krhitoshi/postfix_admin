@@ -80,6 +80,14 @@ module PostfixAdmin
       add_admin_domain(admin, domain_name)
     end
 
+    # Tear down a domain
+    # Delete a domain and delete an admin user for it
+    def teardown_domain(domain_name)
+      admin = "admin@#{domain_name}"
+      delete_domain(domain_name)
+      delete_admin(admin)
+    end
+
     def show_account_details(user_name, display_password: false)
       account_check(user_name)
       mailbox    = Mailbox.find(user_name)
