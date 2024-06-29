@@ -30,7 +30,7 @@ module PostfixAdmin
       runner { @cli.show(name) }
     end
 
-    desc "setup example.com password", "Set up a domain"
+    desc "setup example.com password", "Set up a domain (add a domain and an admin user for it)"
     method_option :scheme, type: :string, aliases: "-s", desc: "password scheme"
     method_option :rounds, type: :string, aliases: "-r", desc: "encryption rounds for BLF-CRYPT, SHA256-CRYPT and SHA512-CRYPT schemes"
     def setup(domain_name, password)
