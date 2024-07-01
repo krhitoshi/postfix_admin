@@ -183,6 +183,16 @@ RSpec.describe PostfixAdmin::Mailbox do
     @mailbox.update(password: CRAM_MD5_PASS_WITHOUT_PREFIX)
     expect(@mailbox.scheme_prefix).to be nil
   end
+
+  it "#quota_mb_str" do
+    expect(@mailbox.quota_mb_str).to eq " 100.0"
+    expect(@mailbox.quota_mb_str(format: "%.1f")).to eq "100.0"
+  end
+
+  it "#quota_usage_str" do
+    expect(@mailbox.quota_usage_str).to eq "  75.0"
+    expect(@mailbox.quota_usage_str(format: "%.1f")).to eq "75.0"
+  end
 end
 
 RSpec.describe PostfixAdmin::Alias do
