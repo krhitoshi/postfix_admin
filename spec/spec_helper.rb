@@ -67,7 +67,7 @@ def db_initialize
 
   domain.save!
 
-  create(:quota2, username: "user@example.com")
+  create(:quota2, username: "user@example.com", bytes: 75 * PostfixAdmin::KB_TO_MB)
 
   create(:log)
   create(:log, action: "delete_domain", data: "user@example.com")

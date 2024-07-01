@@ -95,16 +95,19 @@ module PostfixAdmin
                           domain: mailbox.domain)
     end
 
-    def quota_usage_str
-      if quota_usage
-        usage_mb = quota_usage.bytes / KB_TO_MB
-        usage_mb.to_s
-      else
-        "0"
-      end
+    def quota_usage_str(format: "%6.1f")
+      usage_mb =
+        if quota_usage
+          usage_mb = quota_usage.bytes / KB_TO_MB.to_f
+
+        else
+          0.0
+        end
+
+      format % usage_mb
     end
 
-    def quota_mb_str
+    def quota_mb_str(format: "%6.1f")
       case quota
       when -1
         # It's not sure what 'disabled' means for quota.
@@ -112,9 +115,13 @@ module PostfixAdmin
       when 0
         "Unlimited"
       else
-        mb_size = quota / KB_TO_MB
-        mb_size.to_s
+        quota_mb = quota / KB_TO_MB.to_f
+        format % quota_mb
       end
+    end
+
+    def quota_display_str(format: "%6.1f")
+      "%s / %s" % [quota_usage_str(format: format), quota_mb_str(format: format)]
     end
   end
 end

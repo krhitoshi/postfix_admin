@@ -104,7 +104,7 @@ RSpec.describe PostfixAdmin::Runner do
     context "with domain" do
       it "show the detail of domain" do
         res = capture { Runner.start(%w[show example.com]) }
-        expect(res).to match /user@example.com[|\s]+100[|\s]+Active[|\s]+\{CRAM-MD5\}/
+        expect(res).to match /user@example.com[|\s]+75.0\s*\/\s*100.0[|\s]+Active[|\s]+\{CRAM-MD5\}/
       end
 
       it "when there are no admins, no aliases and no addresses" do

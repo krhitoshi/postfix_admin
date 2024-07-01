@@ -98,7 +98,7 @@ module PostfixAdmin
       rows << ["Address", mailbox.username]
       rows << ["Name", mailbox.name]
       rows << ["Password", mailbox.password] if display_password
-      rows << ["Quota (MB)", mailbox.quota_mb_str]
+      rows << ["Quota (MB)", mailbox.quota_display_str(format: "%.1f")]
       rows << ["Go to", mail_alias.goto]
       rows << ["Active", mailbox.active_str]
 
@@ -238,7 +238,7 @@ module PostfixAdmin
 
       mailboxes.each_with_index do |m, i|
         no = i + 1
-        rows << [no.to_s, m.username, m.name, m.quota_mb_str,
+        rows << [no.to_s, m.username, m.name, m.quota_display_str,
                  m.active_str, m.scheme_prefix, m.maildir]
       end
 
