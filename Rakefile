@@ -37,4 +37,24 @@ namespace :db do
     PostfixAdmin::CLI.new.db_setup
     require_relative "db/seeds"
   end
+
+  namespace :seed do
+    desc "Truncates tables of each database for current environment and loads the seeds"
+    task :replant do
+      include FactoryBot::Syntax::Methods
+      FactoryBot.find_definitions
+
+      PostfixAdmin::CLI.new.db_setup
+
+      DomainAdmin.delete_all
+      Mailbox.delete_all
+      Alias.delete_all
+      Domain.without_all.delete_all
+      Admin.delete_all
+      Quota2.delete_all
+      Log.delete_all
+
+      require_relative "db/seeds"
+    end
+  end
 end
