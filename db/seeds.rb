@@ -1,13 +1,3 @@
-require "bundler/setup"
-Bundler.require(:default, :development)
-require "postfix_admin"
-require "postfix_admin/cli"
-
-include FactoryBot::Syntax::Methods
-FactoryBot.find_definitions
-
-PostfixAdmin::CLI.new.db_setup
-
 create(:domain, domain: "example.com", description: "example.com Description")
 create(:domain, domain: "example.org", description: "example.org Description")
 

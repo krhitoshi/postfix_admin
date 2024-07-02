@@ -2,6 +2,11 @@ require "bundler/gem_tasks"
 require "rake/testtask"
 require "rspec/core/rake_task"
 
+require "bundler/setup"
+Bundler.require(:default, :development)
+require "postfix_admin"
+require "postfix_admin/cli"
+
 Rake::TestTask.new(:test) do |t|
   t.libs << "test"
   t.libs << "lib"
@@ -21,4 +26,15 @@ task :setup_test_db do
   import_db_cmd = "mysql postfix_test < docker-db/postfix.v1841.sql"
   puts import_db_cmd
   puts `#{import_db_cmd}`
+end
+
+namespace :db do
+  desc "Loads the seed data from db/seeds.rb"
+  task :seed do
+    include FactoryBot::Syntax::Methods
+    FactoryBot.find_definitions
+
+    PostfixAdmin::CLI.new.db_setup
+    require_relative "db/seeds"
+  end
 end
