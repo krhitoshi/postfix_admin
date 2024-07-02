@@ -222,11 +222,15 @@ module PostfixAdmin
       puts_table(headings: headings, rows: rows)
     end
 
-    def show_accounts(domain_name)
-      domain_check(domain_name)
+    def show_accounts(domain_name=nil)
+      domain_check(domain_name) if domain_name
 
       rows = []
-      mailboxes = Domain.find(domain_name).rel_mailboxes
+      mailboxes = if domain_name
+                    Domain.find(domain_name).rel_mailboxes
+                  else
+                    Mailbox.all
+                  end
       headings = ["No.", "Email", "Name", "Quota (MB)", "Active",
                   "Scheme Prefix", "Maildir"]
 
