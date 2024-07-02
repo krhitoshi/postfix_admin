@@ -184,14 +184,32 @@ RSpec.describe PostfixAdmin::Mailbox do
     expect(@mailbox.scheme_prefix).to be nil
   end
 
-  it "#quota_mb_str" do
-    expect(@mailbox.quota_mb_str).to eq " 100.0"
-    expect(@mailbox.quota_mb_str(format: "%.1f")).to eq "100.0"
+  describe "#quota_mb_str" do
+    it "returns quota string in MB" do
+      expect(@mailbox.quota_mb_str).to eq " 100.0"
+      expect(@mailbox.quota_mb_str(format: "%.1f")).to eq "100.0"
+    end
+
+    context "when quota is  (Unlimited)" do
+      it "returns 'Unlimited'" do
+        @mailbox.update(quota: 0)
+        expect(@mailbox.quota_mb_str).to eq "Unlimited"
+      end
+    end
+
+    context "when quota is -1 (Disabled)" do
+      it "returns 'Disabled'" do
+        @mailbox.update(quota: -1)
+        expect(@mailbox.quota_mb_str).to eq "Disabled"
+      end
+    end
   end
 
-  it "#quota_usage_str" do
-    expect(@mailbox.quota_usage_str).to eq "  75.0"
-    expect(@mailbox.quota_usage_str(format: "%.1f")).to eq "75.0"
+  describe "#quota_usage_str" do
+    it "returns quota usage string in MB" do
+      expect(@mailbox.quota_usage_str).to eq "  75.0"
+      expect(@mailbox.quota_usage_str(format: "%.1f")).to eq "75.0"
+    end
   end
 end
 
