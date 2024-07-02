@@ -105,8 +105,8 @@ RSpec.describe PostfixAdmin::CLI do
   end
 
   it "#show_alias" do
-    expect { capture(:stdout) { @cli.show_alias('example.com') } }.to_not raise_error
-    expect { capture(:stdout) { @cli.show_alias('unknown.example.com') } }.to raise_error Error
+    expect { capture(:stdout) { @cli.show_aliases('example.com') } }.to_not raise_error
+    expect { capture(:stdout) { @cli.show_aliases('unknown.example.com') } }.to raise_error Error
   end
 
   describe "change password" do
