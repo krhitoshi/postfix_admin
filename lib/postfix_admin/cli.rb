@@ -249,6 +249,17 @@ module PostfixAdmin
       puts_table(headings: headings, rows: rows)
     end
 
+    def show_forwards(domain_name)
+      domain_check(domain_name)
+
+      forwards = Domain.find(domain_name).rel_aliases.select { |a| a.mailbox? }
+      forwards.delete_if do |f|
+        f.address == f.goto
+      end
+
+      show_alias_base("Forwards", forwards)
+    end
+
     def show_aliases(domain_name=nil)
       domain_check(domain_name) if domain_name
 
@@ -258,17 +269,7 @@ module PostfixAdmin
                      db_aliases = Alias.all
                    end
 
-      forwards, aliases = db_aliases.partition { |a| a.mailbox? }
-
-      forwards.delete_if do |f|
-        f.address == f.goto
-      end
-
-      if domain_name
-        show_alias_base("Forwards", forwards)
-        puts
-      end
-
+      aliases = db_aliases.select { |a| !a.mailbox? }
       show_alias_base("Aliases",  aliases)
     end
 
@@ -459,6 +460,8 @@ module PostfixAdmin
       show_admins(domain_name)
       puts
       show_accounts(domain_name)
+      puts
+      show_forwards(domain_name)
       puts
       show_aliases(domain_name)
     end
