@@ -59,7 +59,7 @@ module PostfixAdmin
         # no argument: show all domains and admins
         show_domain
         puts
-        show_admin
+        show_admins
       end
     end
 
@@ -202,7 +202,7 @@ module PostfixAdmin
       puts_deleted(domain_name)
     end
 
-    def show_admin(domain_name = nil)
+    def show_admins(domain_name = nil)
       admins = domain_name ? Admin.select { |a| a.rel_domains.exists?(domain_name) } : Admin.all
       headings = ["No.", "Admin", "Domains", "Active", "Scheme Prefix"]
 
@@ -447,7 +447,7 @@ module PostfixAdmin
     end
 
     def show_domain_details(domain_name)
-      show_admin(domain_name)
+      show_admins(domain_name)
       puts
       show_accounts(domain_name)
       puts

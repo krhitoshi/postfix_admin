@@ -91,8 +91,8 @@ RSpec.describe PostfixAdmin::CLI do
     end
   end
 
-  it "#show_admin" do
-    expect { capture(:stdout) { @cli.show_admin } }.to_not raise_error
+  it "#show_admins" do
+    expect { capture(:stdout) { @cli.show_admins } }.to_not raise_error
   end
 
   it "#show_accounts" do
