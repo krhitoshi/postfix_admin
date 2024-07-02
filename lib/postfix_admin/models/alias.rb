@@ -35,6 +35,7 @@ module PostfixAdmin
     belongs_to :mailbox, foreign_key: :address, optional: true
 
     scope :pure, -> { joins("LEFT OUTER JOIN mailbox ON alias.address = mailbox.username").where("mailbox.username" => nil) }
+    scope :forward, -> { joins("LEFT OUTER JOIN mailbox ON alias.address = mailbox.username").where("mailbox.username <> alias.goto") }
 
     attribute :local_part, :string
 

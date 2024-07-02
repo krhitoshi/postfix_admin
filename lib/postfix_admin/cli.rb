@@ -252,7 +252,7 @@ module PostfixAdmin
     def show_forwards(domain_name)
       domain_check(domain_name)
 
-      forwards = Domain.find(domain_name).rel_aliases.select { |a| a.mailbox? }
+      forwards = Domain.find(domain_name).rel_aliases.forward.to_a
       forwards.delete_if do |f|
         f.address == f.goto
       end
