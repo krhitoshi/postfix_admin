@@ -249,6 +249,7 @@ RSpec.describe PostfixAdmin::Alias do
   it "#pure" do
     expect(Alias.pure.exists?("alias@example.com")).to be(true)
     expect(Alias.pure.exists?("user@example.com")).to be(false)
+    expect(Alias.pure.exists?("user2example.com")).to be(false)
   end
 
   it "forward" do

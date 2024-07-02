@@ -89,7 +89,7 @@ RSpec.describe PostfixAdmin::Runner do
     context "without argument" do
       it "shows list of domains and admins" do
         res = capture { Runner.start(["show"]) }
-        expect(res).to match /example.com[|\s]+1[|\s]+\/[|\s]+30[|\s]+1[|\s]+\/[|\s]+30[|\s]+100[|\s]+Active[|\s]+example.com Description/
+        expect(res).to match /example.com[|\s]+1[|\s]+\/[|\s]+30[|\s]+2[|\s]+\/[|\s]+30[|\s]+100[|\s]+Active[|\s]+example.com Description/
         expect(res).to match /admin@example.com[|\s]+1[|\s]+Active[|\s]+\{CRAM-MD5\}/
       end
 
@@ -524,7 +524,7 @@ RSpec.describe PostfixAdmin::Runner do
 
   describe "#add_account" do
     before do
-      @user = 'user2@example.com'
+      @user = 'user99@example.com'
       @args = ['add_account', @user, 'password']
       @name = 'Hitoshi Kurokawa'
     end
@@ -544,11 +544,11 @@ RSpec.describe PostfixAdmin::Runner do
 
     it "default scheme (CRAM-MD5) is applied" do
       expect(capture { Runner.start(@args) }).to match EX_REGISTERED
-      expect(Mailbox.find('user2@example.com').password).to eq CRAM_MD5_PASS
+      expect(Mailbox.find('user99@example.com').password).to eq CRAM_MD5_PASS
     end
 
     it "accepts a long password" do
-      res = capture { Runner.start(['add_account', 'user2@example.com',
+      res = capture { Runner.start(['add_account', 'user99@example.com',
                                     '{CRAM-MD5}9c5e77f2da26fc03e9fa9e13ccd77aeb50c85539a4d90b70812715aea9ebda1d']) }
       expect(res).to match EX_REGISTERED
     end
@@ -586,14 +586,14 @@ RSpec.describe PostfixAdmin::Runner do
           expect(Mailbox.find(@user).password).to match EX_BLF_CRYPT
         end
 
-        # doveadm pw -u user2@example.com -s DIGEST-MD5 -p password
+        # doveadm pw -u user99@example.com -s DIGEST-MD5 -p password
         # {DIGEST-MD5}0fe1fb25d6134c9df70eb79d88c91ff5
         it "'#{s_opt}' allows to set DIGEST-MD5 schema" do
           expect(capture {
             Runner.start(@args + [s_opt, "DIGEST-MD5"])
           }).to match EX_REGISTERED
           expect(Mailbox.find(@user).password).to \
-            eq "{DIGEST-MD5}0fe1fb25d6134c9df70eb79d88c91ff5"
+            eq "{DIGEST-MD5}283e6bed8077e3d3af59f5951beac646"
         end
 
         it "'#{s_opt}' requires argument" do
