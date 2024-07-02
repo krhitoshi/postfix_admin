@@ -1,3 +1,5 @@
+include FactoryBot::Syntax::Methods
+
 create(:domain, domain: "example.com", description: "example.com Description")
 create(:domain, domain: "example.org", description: "example.org Description")
 

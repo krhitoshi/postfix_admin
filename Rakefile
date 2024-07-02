@@ -53,7 +53,6 @@ namespace :db do
   end
 
   def establish_db_connection
-    include FactoryBot::Syntax::Methods
     FactoryBot.find_definitions
 
     PostfixAdmin::CLI.new.db_setup
