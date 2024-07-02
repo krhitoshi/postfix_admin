@@ -31,20 +31,14 @@ end
 namespace :db do
   desc "Loads the seed data from db/seeds.rb"
   task :seed do
-    include FactoryBot::Syntax::Methods
-    FactoryBot.find_definitions
-
-    PostfixAdmin::CLI.new.db_setup
+    establish_db_connection
     require_relative "db/seeds"
   end
 
   namespace :seed do
     desc "Truncates tables of each database for current environment and loads the seeds"
     task :replant do
-      include FactoryBot::Syntax::Methods
-      FactoryBot.find_definitions
-
-      PostfixAdmin::CLI.new.db_setup
+      establish_db_connection
 
       DomainAdmin.delete_all
       Mailbox.delete_all
@@ -56,5 +50,12 @@ namespace :db do
 
       require_relative "db/seeds"
     end
+  end
+
+  def establish_db_connection
+    include FactoryBot::Syntax::Methods
+    FactoryBot.find_definitions
+
+    PostfixAdmin::CLI.new.db_setup
   end
 end
