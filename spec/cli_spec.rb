@@ -21,7 +21,7 @@ RSpec.describe PostfixAdmin::CLI, "when config file does not exist" do
       $stderr = STDERR
       $stdout = STDOUT
     end.to raise_error SystemExit
-    expect(File.exist?(@file)).to be true
+    expect(File.exist?(@file)).to be(true)
     expect("%o" % File.stat(@file).mode).to eq "100600"
   end
 end
@@ -152,7 +152,7 @@ RSpec.describe PostfixAdmin::CLI do
   describe "#add_admin" do
     it "can add a new admin" do
       expect { capture(:stdout) { @cli.add_admin('new_admin@example.com', 'password') } }.to_not raise_error
-      expect(Admin.exists?('new_admin@example.com')).to be true
+      expect(Admin.exists?('new_admin@example.com')).to be(true)
     end
 
     it "can not add exist admin" do
@@ -167,18 +167,18 @@ RSpec.describe PostfixAdmin::CLI do
   describe "#delete_admin" do
     it "can delete an admin" do
       expect { capture(:stdout) { @cli.delete_admin('admin@example.com') } }.to_not raise_error
-      expect(Admin.exists?('admin@example.com')).to be false
+      expect(Admin.exists?('admin@example.com')).to be(false)
     end
 
     it "can delete a super admin" do
       expect { capture(:stdout) { @cli.delete_admin('all@example.com') } }.to_not raise_error
-      expect(Admin.exists?('all@example.com')).to be false
+      expect(Admin.exists?('all@example.com')).to be(false)
     end
 
     it "can delete an admin whish has multiple domains" do
       capture(:stdout) { @cli.add_admin_domain('admin@example.com', 'example.org') }
       expect { capture(:stdout) { @cli.delete_admin('admin@example.com') } }.to_not raise_error
-      expect(Admin.exists?('admin@example.com')).to be false
+      expect(Admin.exists?('admin@example.com')).to be(false)
     end
 
     it "can not delete unknown admin" do
@@ -192,17 +192,17 @@ RSpec.describe PostfixAdmin::CLI do
     expect { capture(:stdout) { @cli.delete_alias('unknown@example.com') } }.to raise_error Error
 
     expect { capture(:stdout) { @cli.add_alias('new_alias@example.com', 'goto@example.jp') } }.to_not raise_error
-    expect(Alias.exists?('new_alias@example.com')).to be true
+    expect(Alias.exists?('new_alias@example.com')).to be(true)
 
     expect { capture(:stdout) { @cli.delete_alias('new_alias@example.com') } }.to_not raise_error
-    expect(Alias.exists?('new_alias@example.com')).to be false
+    expect(Alias.exists?('new_alias@example.com')).to be(false)
   end
 
   describe "#add_account" do
     it "can add an account" do
       expect { capture(:stdout) { @cli.add_account('new_user@example.com', 'password') } }.to_not raise_error
-      expect(Mailbox.exists?('new_user@example.com')).to be true
-      expect(Alias.exists?('new_user@example.com')).to be true
+      expect(Mailbox.exists?('new_user@example.com')).to be(true)
+      expect(Alias.exists?('new_user@example.com')).to be(true)
     end
 
     it "can not add account of unknown domain" do
@@ -217,8 +217,8 @@ RSpec.describe PostfixAdmin::CLI do
   describe "#delete_accont" do
     it "can delete an account" do
       expect { capture(:stdout) { @cli.delete_account('user@example.com') } }.to_not raise_error
-      expect(Mailbox.exists?('user@example.com')).to be false
-      expect(Alias.exists?('user@example.com')).to be false
+      expect(Mailbox.exists?('user@example.com')).to be(false)
+      expect(Alias.exists?('user@example.com')).to be(false)
     end
 
     it "can not delete unknown account" do
@@ -233,7 +233,7 @@ RSpec.describe PostfixAdmin::CLI do
 
     it "upcase will convert to downcase" do
       expect { capture(:stdout) { @cli.add_domain('ExAmPle.NeT') } }.to_not raise_error
-      expect(Domain.exists?('example.net')).to be true
+      expect(Domain.exists?('example.net')).to be(true)
     end
 
     it "can not add exist domain" do
@@ -250,7 +250,7 @@ RSpec.describe PostfixAdmin::CLI do
       expect(domain.aliases).to eq 40
       expect(domain.mailboxes).to eq 40
       expect(domain.maxquota).to eq 400
-      expect(domain.active).to be false
+      expect(domain.active).to be(false)
     end
   end
 
@@ -276,29 +276,29 @@ RSpec.describe PostfixAdmin::CLI do
       expect { capture(:stdout) { @cli.edit_admin('admin@example.com',
                                                   { super: true, active: false }) } }.not_to raise_error
       admin = Admin.find('admin@example.com')
-      expect(admin.super_admin?).to be true
-      expect(admin.superadmin).to be true if admin.has_superadmin_column?
-      expect(admin.active).to be false
+      expect(admin.super_admin?).to be(true)
+      expect(admin.superadmin).to be(true) if admin.has_superadmin_column?
+      expect(admin.active).to be(false)
     end
 
     it "can disable super admin" do
       expect { capture(:stdout) { @cli.edit_admin('all@example.com',
                                                   { super: false }) } }.not_to raise_error
       admin = Admin.find('all@example.com')
-      expect(admin.super_admin?).to be false
-      expect(admin.superadmin).to be false if admin.has_superadmin_column?
+      expect(admin.super_admin?).to be(false)
+      expect(admin.superadmin).to be(false) if admin.has_superadmin_column?
     end
   end
 
   describe "#delete_domain" do
     it "can delete exist domain" do
       expect { capture(:stdout) { @cli.delete_domain('example.com') } }.to_not raise_error
-      expect(Domain.exists?('example.net')).to be false
+      expect(Domain.exists?('example.net')).to be(false)
     end
 
     it "upcase will convert to downcase" do
       expect { capture(:stdout) { @cli.delete_domain('eXaMplE.cOm') } }.to_not raise_error
-      expect(Domain.exists?('example.com')).to be false
+      expect(Domain.exists?('example.com')).to be(false)
     end
 
     it "can delete related admins, addresses and aliases" do
@@ -312,17 +312,17 @@ RSpec.describe PostfixAdmin::CLI do
       expect { capture(:stdout) { @cli.delete_domain('example.com') } }.to_not raise_error
 
       # `delete_domain` does not delete a admin user anymore
-      expect(Admin.exists?('admin@example.com')).to be true
-      expect(Admin.exists?('other_admin@example.com')).to be true
+      expect(Admin.exists?('admin@example.com')).to be(true)
+      expect(Admin.exists?('other_admin@example.com')).to be(true)
 
       # aliases should be removed
-      expect(Alias.exists?('alias@example.com')).to be false
-      expect(Alias.exists?('user@example.com')).to be false
-      expect(Alias.exists?('user99@example.com')).to be false
+      expect(Alias.exists?('alias@example.com')).to be(false)
+      expect(Alias.exists?('user@example.com')).to be(false)
+      expect(Alias.exists?('user99@example.com')).to be(false)
 
       # mailboxes should be removed
-      expect(Mailbox.exists?('user@example.com')).to be false
-      expect(Mailbox.exists?('user99@example.com')).to be false
+      expect(Mailbox.exists?('user@example.com')).to be(false)
+      expect(Mailbox.exists?('user99@example.com')).to be(false)
     end
   end
 

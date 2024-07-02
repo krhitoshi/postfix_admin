@@ -24,15 +24,15 @@ RSpec.describe PostfixAdmin::Base do
       expect(@base.config[:mailboxes]).to eq(30)
       expect(@base.config[:maxquota]).to eq(100)
       expect(@base.config[:scheme]).to eq("CRAM-MD5")
-      expect(@base.config[:passwordhash_prefix]).to be true
+      expect(@base.config[:passwordhash_prefix]).to be(true)
     end
 
     it "#config[:passwordhash_prefix]" do
-      expect(Base.new({}).config[:passwordhash_prefix]).to be true
+      expect(Base.new({}).config[:passwordhash_prefix]).to be(true)
       expect(Base.new({"passwordhash_prefix" => true})
-                 .config[:passwordhash_prefix]).to be true
+                 .config[:passwordhash_prefix]).to be(true)
       expect(Base.new({"passwordhash_prefix" => false})
-                 .config[:passwordhash_prefix]).to be false
+                 .config[:passwordhash_prefix]).to be(false)
     end
 
     it "#config[:database]" do
@@ -45,11 +45,11 @@ RSpec.describe PostfixAdmin::Base do
       expect {
         @base.add_domain("new-domain.test")
       }.to change { Domain.count }.by(1)
-      expect(Domain.exists?("new-domain.test")).to be true
+      expect(Domain.exists?("new-domain.test")).to be(true)
     end
 
     it "raises an error for an existing domain" do
-      expect(Domain.exists?("example.com")).to be true
+      expect(Domain.exists?("example.com")).to be(true)
       expect {
         @base.add_domain("example.com")
       }.to raise_error(PostfixAdmin::Error,
@@ -67,22 +67,22 @@ RSpec.describe PostfixAdmin::Base do
 
   describe "#delete_domain" do
     it "deletes a domain" do
-      expect(Domain.exists?("example.com")).to be true
-      expect(Admin.exists?("admin@example.com")).to be true
-      expect(DomainAdmin.exists?(username: "admin@example.com", domain: "example.com")).to be true
-      expect(Alias.exists?(domain: "example.com")).to be true
-      expect(Mailbox.exists?(domain: "example.com")).to be true
+      expect(Domain.exists?("example.com")).to be(true)
+      expect(Admin.exists?("admin@example.com")).to be(true)
+      expect(DomainAdmin.exists?(username: "admin@example.com", domain: "example.com")).to be(true)
+      expect(Alias.exists?(domain: "example.com")).to be(true)
+      expect(Mailbox.exists?(domain: "example.com")).to be(true)
 
       expect {
         @base.delete_domain("example.com")
       }.to change { Domain.count }.by(-1)
 
-      expect(Domain.exists?("example.com")).to be false
+      expect(Domain.exists?("example.com")).to be(false)
       # `delete_domain` does not delete a admin user anymore
-      expect(Admin.exists?("admin@example.com")).to be true
-      expect(DomainAdmin.exists?(username: "admin@example.com", domain: "example.com")).to be false
-      expect(Alias.exists?(domain: "example.com")).to be false
-      expect(Mailbox.exists?(domain: "example.com")).to be false
+      expect(Admin.exists?("admin@example.com")).to be(true)
+      expect(DomainAdmin.exists?(username: "admin@example.com", domain: "example.com")).to be(false)
+      expect(Alias.exists?(domain: "example.com")).to be(false)
+      expect(Mailbox.exists?(domain: "example.com")).to be(false)
     end
 
     it "raises an error for a non-existent domain name" do
@@ -96,7 +96,7 @@ RSpec.describe PostfixAdmin::Base do
     it "can add an new admin" do
       num_admins = Admin.count
       @base.add_admin('admin@example.net', 'password')
-      expect(Admin.exists?('admin@example.net')).to be true
+      expect(Admin.exists?('admin@example.net')).to be(true)
       expect(Admin.count - num_admins).to eq 1
     end
 
@@ -117,7 +117,7 @@ RSpec.describe PostfixAdmin::Base do
     it "#add_admin_domain" do
       @base.add_admin_domain('admin@example.com', 'example.org')
       d = Domain.find('example.org')
-      expect(Admin.find('admin@example.com').has_domain?(d)).to be true
+      expect(Admin.find('admin@example.com').has_domain?(d)).to be(true)
     end
 
     it "can not add unknown domain for an admin" do
@@ -137,7 +137,7 @@ RSpec.describe PostfixAdmin::Base do
     it "#delete_admin_domain" do
       d = Domain.find('example.org')
       expect { @base.delete_admin_domain('admin@example.com', 'example.com') }.to_not raise_error
-      expect(Admin.find('admin@example.com').has_domain?(d)).to be false
+      expect(Admin.find('admin@example.com').has_domain?(d)).to be(false)
     end
 
     it "can not delete not administrated domain" do
@@ -158,11 +158,11 @@ RSpec.describe PostfixAdmin::Base do
       expect {
         @base.add_account("new_account@example.com", CRAM_MD5_PASS)
       }.to change{ Mailbox.count }.by(1).and change{ Alias.count }.by(1)
-      expect(Mailbox.exists?("new_account@example.com")).to be true
-      expect(Alias.exists?("new_account@example.com")).to be true
+      expect(Mailbox.exists?("new_account@example.com")).to be(true)
+      expect(Alias.exists?("new_account@example.com")).to be(true)
 
       domain = Domain.find("example.com")
-      expect(domain.rel_mailboxes.exists?("new_account@example.com")).to be true
+      expect(domain.rel_mailboxes.exists?("new_account@example.com")).to be(true)
 
       mailbox = Mailbox.find("new_account@example.com")
       expect(mailbox.name).to eq("")
@@ -226,15 +226,15 @@ RSpec.describe PostfixAdmin::Base do
 
   describe "#delete_account" do
     it "deletes a Mailbox and an Alias" do
-      expect(Alias.exists?("user@example.com")).to be true
-      expect(Mailbox.exists?("user@example.com")).to be true
+      expect(Alias.exists?("user@example.com")).to be(true)
+      expect(Mailbox.exists?("user@example.com")).to be(true)
 
       expect {
         @base.delete_account("user@example.com")
       }.to change{ Mailbox.count }.by(-1).and change{ Alias.count }.by(-1)
 
-      expect(Alias.exists?("user@example.com")).to be false
-      expect(Mailbox.exists?("user@example.com")).to be false
+      expect(Alias.exists?("user@example.com")).to be(false)
+      expect(Mailbox.exists?("user@example.com")).to be(false)
     end
 
     it "raises an error for a non-existent account" do
@@ -249,7 +249,7 @@ RSpec.describe PostfixAdmin::Base do
       num_aliases = Alias.count
       expect { @base.add_alias('new_alias@example.com', 'goto@example.jp') }.to_not raise_error
       expect(Alias.count - num_aliases).to eq 1
-      expect(Alias.exists?('new_alias@example.com')).to be true
+      expect(Alias.exists?('new_alias@example.com')).to be(true)
     end
 
     it "can not add an alias which has a same name as a mailbox" do
@@ -269,7 +269,7 @@ RSpec.describe PostfixAdmin::Base do
   describe "#delete_alias" do
     it "can delete an alias" do
       expect { @base.delete_alias('alias@example.com') }.to_not raise_error
-      expect(Alias.exists?('alias@example.com')).to be false
+      expect(Alias.exists?('alias@example.com')).to be(false)
     end
 
     it "can not delete mailbox" do
@@ -284,7 +284,7 @@ RSpec.describe PostfixAdmin::Base do
   describe "#delete_admin" do
     it "can delete an admin" do
       expect { @base.delete_admin('admin@example.com') }.to_not raise_error
-      expect(Admin.exists?('admin@example.com')).to be false
+      expect(Admin.exists?('admin@example.com')).to be(false)
     end
 
     it "can not delete unknown admin" do

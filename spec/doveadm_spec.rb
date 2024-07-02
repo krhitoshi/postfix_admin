@@ -8,8 +8,8 @@ RSpec.describe PostfixAdmin::Doveadm do
     end
 
     it "return supported schemes" do
-      expect(Doveadm.schemes.include?("PLAIN")).to be true
-      expect(Doveadm.schemes.include?("CRAM-MD5")).to be true
+      expect(Doveadm.schemes.include?("PLAIN")).to be(true)
+      expect(Doveadm.schemes.include?("CRAM-MD5")).to be(true)
     end
   end
 
