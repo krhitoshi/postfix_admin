@@ -34,7 +34,10 @@ module PostfixAdmin
     belongs_to :rel_domain, class_name: "Domain", foreign_key: :domain
     belongs_to :mailbox, foreign_key: :address, optional: true
 
+    # aliases which do not belong to any mailbox
     scope :pure, -> { joins("LEFT OUTER JOIN mailbox ON alias.address = mailbox.username").where("mailbox.username" => nil) }
+
+    # aliases which belong to a mailbox and have forwardings to other addresses
     scope :forward, -> { joins("LEFT OUTER JOIN mailbox ON alias.address = mailbox.username").where("mailbox.username <> alias.goto") }
 
     attribute :local_part, :string
