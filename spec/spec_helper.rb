@@ -48,13 +48,7 @@ def setup_db_connection
 end
 
 def db_reset
-  DomainAdmin.delete_all
-  Mailbox.delete_all
-  Alias.delete_all
-  Domain.without_all.delete_all
-  Admin.delete_all
-  Quota2.delete_all
-  Log.delete_all
+  load File.join(__dir__, "..", "db", "reset.rb")
 end
 
 # Returns STDOUT and STDERR without rescuing SystemExit

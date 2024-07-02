@@ -40,14 +40,7 @@ namespace :db do
     task :replant do
       establish_db_connection
 
-      DomainAdmin.delete_all
-      Mailbox.delete_all
-      Alias.delete_all
-      Domain.without_all.delete_all
-      Admin.delete_all
-      Quota2.delete_all
-      Log.delete_all
-
+      require_relative "db/reset"
       require_relative "db/seeds"
     end
   end
