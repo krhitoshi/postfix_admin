@@ -249,13 +249,14 @@ module PostfixAdmin
       puts_table(headings: headings, rows: rows)
     end
 
-    def show_forwards(domain_name)
-      domain_check(domain_name)
+    def show_forwards(domain_name=nil)
+      domain_check(domain_name) if domain_name
 
-      forwards = Domain.find(domain_name).rel_aliases.forward.to_a
-      forwards.delete_if do |f|
-        f.address == f.goto
-      end
+      forwards = if domain_name
+                   Domain.find(domain_name).rel_aliases.forward
+                 else
+                   Alias.forward
+                 end
 
       show_alias_base("Forwards", forwards)
     end

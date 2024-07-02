@@ -50,6 +50,11 @@ module PostfixAdmin
       runner { @cli.show_aliases }
     end
 
+    desc "forwards", "List all forwards"
+    def forwards
+      runner { @cli.show_forwards }
+    end
+
     desc "setup example.com password", "Set up a domain (add a domain and an admin user for it)"
     method_option :scheme, type: :string, aliases: "-s", desc: "password scheme"
     method_option :rounds, type: :string, aliases: "-r", desc: "encryption rounds for BLF-CRYPT, SHA256-CRYPT and SHA512-CRYPT schemes"
