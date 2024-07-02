@@ -13,10 +13,11 @@ domain = Domain.find('example.com')
 domain.admins << admin
 domain.rel_aliases   << build(:alias, address: "alias@example.com")
 domain.rel_mailboxes << build(:mailbox, local_part: "user")
+domain.rel_mailboxes << build(:mailbox, local_part: "user2")
 domain.save!
 
 # forward
-user = Alias.find("user@example.com").update(goto: "user@example.com,forward@example.com")
+user = Alias.find("user2@example.com").update(goto: "user2@example.com,forward@example.com")
 
 create(:quota2, username: "user@example.com", bytes: 75 * PostfixAdmin::KB_TO_MB)
 

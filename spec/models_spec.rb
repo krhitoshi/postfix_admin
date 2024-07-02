@@ -119,7 +119,7 @@ RSpec.describe PostfixAdmin::Domain do
     end
 
     it "should not increase if you add an account" do
-      @base.add_account('user2@example.com', 'password')
+      @base.add_account('user99@example.com', 'password')
       expect(Alias.pure.count).to eq 1
       expect(Domain.find('example.com').pure_aliases.count).to eq 1
     end
@@ -253,6 +253,7 @@ RSpec.describe PostfixAdmin::Alias do
 
   it "forward" do
     expect(Alias.forward.exists?("alias@example.com")).to be(false)
-    expect(Alias.forward.exists?("user@example.com")).to be(true)
+    expect(Alias.forward.exists?("user@example.com")).to be(false)
+    expect(Alias.forward.exists?("user2@example.com")).to be(true)
   end
 end
