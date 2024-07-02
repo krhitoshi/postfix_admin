@@ -263,13 +263,12 @@ module PostfixAdmin
     def show_aliases(domain_name=nil)
       domain_check(domain_name) if domain_name
 
-      db_aliases = if domain_name
-                     Domain.find(domain_name).rel_aliases
-                   else
-                     db_aliases = Alias.all
-                   end
+      aliases = if domain_name
+                  Domain.find(domain_name).rel_aliases.pure
+                else
+                  db_aliases = Alias.pure
+                end
 
-      aliases = db_aliases.select { |a| !a.mailbox? }
       show_alias_base("Aliases",  aliases)
     end
 
