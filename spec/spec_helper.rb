@@ -1,5 +1,4 @@
-
-$:.unshift(File.join(File.dirname(__FILE__), "..", "lib"))
+$LOAD_PATH.push(File.join(__dir__, "..", "lib"))
 
 require 'fileutils'
 require 'bundler/setup'
@@ -49,7 +48,7 @@ include PostfixAdmin
 
 def db_initialize
   db_reset
-  load File.join(File.dirname(__FILE__), "..", "db", "seeds.rb")
+  load File.join(__dir__, "..", "db", "seeds.rb")
 end
 
 # common methods for tests and specs
