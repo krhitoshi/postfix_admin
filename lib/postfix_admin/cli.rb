@@ -222,7 +222,7 @@ module PostfixAdmin
       puts_table(headings: headings, rows: rows)
     end
 
-    def show_address(domain_name)
+    def show_accounts(domain_name)
       domain_check(domain_name)
 
       rows = []
@@ -230,9 +230,9 @@ module PostfixAdmin
       headings = ["No.", "Email", "Name", "Quota (MB)", "Active",
                   "Scheme Prefix", "Maildir"]
 
-      puts_title("Addresses")
+      puts_title("Accounts")
       if mailboxes.empty?
-        puts "No addresses"
+        puts "No accounts"
         return
       end
 
@@ -445,7 +445,7 @@ module PostfixAdmin
     def show_domain_details(domain_name)
       show_admin(domain_name)
       puts
-      show_address(domain_name)
+      show_accounts(domain_name)
       puts
       show_alias(domain_name)
     end

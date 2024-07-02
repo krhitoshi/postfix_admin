@@ -95,9 +95,9 @@ RSpec.describe PostfixAdmin::CLI do
     expect { capture(:stdout) { @cli.show_admin } }.to_not raise_error
   end
 
-  it "#show_address" do
-    expect { capture(:stdout) { @cli.show_address('example.com') } }.to_not raise_error
-    expect { capture(:stdout) { @cli.show_address('unknown.example.com') } }.to raise_error Error
+  it "#show_accounts" do
+    expect { capture(:stdout) { @cli.show_accounts('example.com') } }.to_not raise_error
+    expect { capture(:stdout) { @cli.show_accounts('unknown.example.com') } }.to raise_error Error
   end
 
   it "#show_admin_domain" do

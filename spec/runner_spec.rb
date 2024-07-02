@@ -110,7 +110,7 @@ RSpec.describe PostfixAdmin::Runner do
       it "when there are no admins, no aliases and no addresses" do
         res = capture { Runner.start(%w[show example.org]) }
         expect(res).to match /No admins/
-        expect(res).to match /No addresses/
+        expect(res).to match /No accounts/
         expect(res).to match /No aliases/
       end
     end

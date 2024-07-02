@@ -5,6 +5,8 @@
 # docker compose exec app bundle exec rake setup_test_db
 # docker compose exec app bundle exec rake test
 # docker compose exec app bundle exec rake spec
+#
+# rspec spec/runner_spec.rb
 
 services:
   app:
