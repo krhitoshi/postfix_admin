@@ -30,22 +30,6 @@ end
 
 include PostfixAdmin
 
-# [fixtures]
-# Domain:
-#  ALL
-#  example.com
-#  example.org
-#
-# Admin:
-#  all@example.com   Super Admin
-#  admin@example.com
-#
-# Mailbox, Alias:
-#  user@example.com
-#
-# Alias:
-#  alias@example.com -> goto@example.jp
-
 def db_initialize
   db_reset
   load File.join(__dir__, "..", "db", "seeds.rb")
