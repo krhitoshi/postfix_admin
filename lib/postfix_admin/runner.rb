@@ -35,6 +35,11 @@ module PostfixAdmin
       runner { @cli.show_admins }
     end
 
+    desc "domains", "List all domains"
+    def domains
+      runner { @cli.show_domains }
+    end
+
     desc "accounts", "List all accounts"
     def accounts
       runner { @cli.show_accounts }

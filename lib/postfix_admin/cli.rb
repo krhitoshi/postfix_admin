@@ -57,7 +57,7 @@ module PostfixAdmin
         show_domain_details(name)
       else
         # no argument: show all domains and admins
-        show_domain
+        show_domains
         puts
         show_admins
       end
@@ -133,7 +133,7 @@ module PostfixAdmin
       puts_table(rows: rows)
     end
 
-    def show_domain
+    def show_domains
       rows = []
       headings = ["No.", "Domain", "Aliases", "Mailboxes","Max Quota (MB)",
                   "Active", "Description"]

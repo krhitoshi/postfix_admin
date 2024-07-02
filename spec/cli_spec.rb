@@ -55,9 +55,9 @@ RSpec.describe PostfixAdmin::CLI do
     end
   end
 
-  it "#show_domain" do
-    expect { capture(:stdout) { @cli.show_domain } }.to_not raise_error
-    expect(capture(:stdout) { @cli.show_domain }).to_not match /ALL/
+  it "#show_domains" do
+    expect { capture(:stdout) { @cli.show_domains } }.to_not raise_error
+    expect(capture(:stdout) { @cli.show_domains }).to_not match /ALL/
   end
 
   describe "#show_account_details" do

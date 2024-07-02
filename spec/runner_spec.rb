@@ -745,6 +745,12 @@ RSpec.describe PostfixAdmin::Runner do
     end
   end
 
+  describe "#domains" do
+    it "does not raise an error" do
+      expect { silent { Runner.start(["domains"]) } }.not_to raise_error
+    end
+  end
+
   describe "#accounts" do
     it "does not raise an error" do
       expect { silent { Runner.start(["accounts"]) } }.not_to raise_error
