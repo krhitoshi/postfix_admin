@@ -28,7 +28,7 @@ module PostfixAdmin
 
     include HasPassword
 
-    attribute :quota_mb, :integer
+    # attribute :quota_mb, :integer
 
     validates :username, presence: true, uniqueness: { case_sensitive: false },
                          format: { with: RE_EMAIL_LIKE_WITH_ANCHORS,
@@ -40,11 +40,6 @@ module PostfixAdmin
     validates :quota, presence: true,
                       numericality: { only_integer: true,
                                       greater_than_or_equal_to: 0 }
-
-    # quota (MB), which actually doesn't exist in DB
-    validates :quota_mb, presence: true,
-                         numericality: { only_integer: true,
-                                         greater_than_or_equal_to: 0 }
 
     belongs_to :rel_domain, class_name: "Domain", foreign_key: :domain
     has_one :alias, foreign_key: :address, dependent: :destroy
@@ -67,11 +62,13 @@ module PostfixAdmin
     end
 
     validate do |mailbox|
+      next if mailbox.quota == -1
+
       domain = mailbox.rel_domain
 
       unless domain.maxquota.zero?
-        if mailbox.quota_mb.zero?
-          mailbox.errors.add(:quota_mb, "cannot be 0")
+        if mailbox.quota.zero?
+          mailbox.errors.add(:quota, "cannot be 0")
         elsif mailbox.quota_mb > domain.maxquota
           message = "must be less than or equal to #{domain.maxquota} (MB)"
           mailbox.errors.add(:quota_mb, message)
@@ -81,17 +78,22 @@ module PostfixAdmin
 
     before_validation do |mailbox|
       mailbox.name = "" if mailbox.name.nil?
-
-      if mailbox.quota_mb
-        mailbox.quota = mailbox.quota_mb * KB_TO_MB
-      elsif mailbox.quota
-        mailbox.quota_mb = mailbox.quota / KB_TO_MB
-      end
-
       mailbox.username = "#{mailbox.local_part}@#{mailbox.domain}"
       mailbox.maildir ||= "#{mailbox.domain}/#{mailbox.username}/"
       mailbox.build_alias(address: mailbox.username, goto: mailbox.username,
                           domain: mailbox.domain)
+    end
+
+    def quota_mb
+      raise Error, "quota is out of range: #{quota}" if quota < 0
+
+      quota / KB_TO_MB
+    end
+
+    def quota_mb=(value)
+      raise Error, "quota is out of range: #{value}" if value < 0
+
+      quota = value * KB_TO_MB
     end
 
     def quota_usage_str(format: "%6.1f")

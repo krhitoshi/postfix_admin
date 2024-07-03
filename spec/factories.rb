@@ -33,7 +33,7 @@ FactoryBot.define do
     domain { nil }
     password { SAMPLE_PASSWORD }
     name { "" }
-    quota_mb { 100 }
+    quota { 102_400_000 }
     active { true }
   end
 

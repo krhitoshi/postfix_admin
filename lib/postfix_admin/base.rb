@@ -100,7 +100,7 @@ module PostfixAdmin
         domain: domain_name,
         password: password,
         name: name,
-        quota_mb: @config[:maxquota]
+        quota: @config[:maxquota] * KB_TO_MB
       }
 
       # An Alias also will be added when a Mailbox is saved.
