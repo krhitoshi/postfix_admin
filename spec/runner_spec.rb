@@ -469,28 +469,36 @@ RSpec.describe PostfixAdmin::Runner do
 
   describe "#edit_account" do
     before do
-      @args = ['edit_account', 'user@example.com']
+      @user = "user@example.com"
+      @args = ["edit_account", @user]
     end
 
     it "when no options, shows usage" do
       expect(exit_capture { Runner.start(@args) }).to match /Use one or more options/
     end
 
-    it "updates quota limitation" do
-      res = capture { Runner.start(@args + ['--quota', '50', '--no-active']) }
-      expect(res).to match EX_UPDATED
-      expect(res).to match /Quota/
-      expect(res).not_to match /Password/
-      expect(res).to match /Active.+Inactive/
-    end
+    describe "quota option" do
+      it "updates quota limitation" do
+        res = capture { Runner.start(@args + ['--quota', '50', '--no-active']) }
+        expect(res).to match EX_UPDATED
+        mailbox = Mailbox.find(@user)
+        expect(mailbox.quota_mb).to eq(50)
+        expect(mailbox.active).to be(false)
+      end
 
-    it "can use alias -q option" do
-      res = capture { Runner.start(@args + ['-q', '50']) }
-      expect(res).to match EX_UPDATED
-    end
+      it "can use alias -q option" do
+        res = capture { Runner.start(@args + ['-q', '50']) }
+        expect(res).to match EX_UPDATED
+      end
 
-    it "-q option require an argument" do
-      expect(exit_capture { Runner.start(@args + ['-q']) }).to_not eq ""
+      context "with invalid value" do
+        %w[0 -1].each do |quota|
+          it "does not accept `#{quota}`" do
+            res = exit_capture { Runner.start(@args + ["--quota", quota]) }
+            expect(res).to match /Invalid Quota value: #{quota}/
+          end
+        end
+      end
     end
 
     it "updates name using --name option" do
