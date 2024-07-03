@@ -81,14 +81,13 @@ module PostfixAdmin
 
     before_validation do |mailbox|
       mailbox.name = "" if mailbox.name.nil?
+
       if mailbox.quota_mb
         mailbox.quota = mailbox.quota_mb * KB_TO_MB
       elsif mailbox.quota
         mailbox.quota_mb = mailbox.quota / KB_TO_MB
-      else
-        mailbox.quota_mb = 0
-        mailbox.quota = 0
       end
+
       mailbox.username = "#{mailbox.local_part}@#{mailbox.domain}"
       mailbox.maildir ||= "#{mailbox.domain}/#{mailbox.username}/"
       mailbox.build_alias(local_part: mailbox.local_part, goto: mailbox.username,
