@@ -303,7 +303,7 @@ RSpec.describe PostfixAdmin::CLI do
 
     it "can delete related admins, addresses and aliases" do
       capture(:stdout) do
-        @cli.add_account('user99@example.com', 'password')
+        @cli.add_account('new-user@example.com', 'password')
 
         @cli.add_admin('other_admin@example.com', 'password')
         @cli.add_admin_domain('other_admin@example.com', 'example.com')
@@ -318,11 +318,11 @@ RSpec.describe PostfixAdmin::CLI do
       # aliases should be removed
       expect(Alias.exists?('alias@example.com')).to be(false)
       expect(Alias.exists?('user@example.com')).to be(false)
-      expect(Alias.exists?('user99@example.com')).to be(false)
+      expect(Alias.exists?('new-user@example.com')).to be(false)
 
       # mailboxes should be removed
       expect(Mailbox.exists?('user@example.com')).to be(false)
-      expect(Mailbox.exists?('user99@example.com')).to be(false)
+      expect(Mailbox.exists?('new-user@example.com')).to be(false)
     end
   end
 
