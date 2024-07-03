@@ -154,23 +154,39 @@ RSpec.describe PostfixAdmin::Base do
   end
 
   describe "#add_account" do
-    it "adds a Mailbox and an Alias" do
+    before do
+      @user = "new-user@example.com"
+    end
+
+    it "adds an account (a Mailbox and an Alias)" do
+      expect(Mailbox.exists?(@user)).to be(false)
+      expect(Alias.exists?(@user)).to be(false)
+
       expect {
-        @base.add_account("new_account@example.com", CRAM_MD5_PASS)
+        @base.add_account(@user, CRAM_MD5_PASS)
       }.to change{ Mailbox.count }.by(1).and change{ Alias.count }.by(1)
-      expect(Mailbox.exists?("new_account@example.com")).to be(true)
-      expect(Alias.exists?("new_account@example.com")).to be(true)
+
+      expect(Mailbox.exists?(@user)).to be(true)
+      expect(Alias.exists?(@user)).to be(true)
 
       domain = Domain.find("example.com")
-      expect(domain.rel_mailboxes.exists?("new_account@example.com")).to be(true)
+      expect(domain.rel_mailboxes.exists?(@user)).to be(true)
 
-      mailbox = Mailbox.find("new_account@example.com")
-      expect(mailbox.name).to eq("")
-      expect(mailbox.username).to eq("new_account@example.com")
-      expect(mailbox.local_part).to eq("new_account")
-      expect(mailbox.maildir).to eq("example.com/new_account@example.com/")
+      mailbox = Mailbox.find(@user)
+      expect(mailbox.username).to eq(@user)
       expect(mailbox.password).to eq(CRAM_MD5_PASS)
+      expect(mailbox.maildir).to eq("example.com/new-user@example.com/")
+      expect(mailbox.local_part).to eq("new-user")
+      expect(mailbox.name).to eq("")
+      expect(mailbox.domain).to eq("example.com")
       expect(mailbox.quota).to eq(102_400_000)
+      expect(mailbox.active).to be(true)
+
+      new_alias = Alias.find(@user)
+      expect(new_alias.address).to eq(@user)
+      expect(new_alias.goto).to eq(@user)
+      expect(new_alias.domain).to eq("example.com")
+      expect(new_alias.active).to be(true)
     end
 
     context "with name" do
@@ -186,7 +202,7 @@ RSpec.describe PostfixAdmin::Base do
     it "raises an error for an empty password" do
       ["", nil].each do |empty_pass|
         expect {
-          @base.add_account("new_account@example.com", empty_pass)
+          @base.add_account("new-user@example.com", empty_pass)
         }.to raise_error(PostfixAdmin::Error, "Empty password")
         expect(Mailbox.count).to eq(Mailbox.count)
         expect(Alias.count).to eq(Alias.count)

@@ -543,8 +543,8 @@ RSpec.describe PostfixAdmin::Runner do
       expect(Alias.exists?(@user)).to be(true)
 
       mailbox = Mailbox.find(@user)
-      expected = "{CRAM-MD5}9186d855e11eba527a7a52ca82b313e180d62234f0acc9051b527243d41e2740"
-      expect(mailbox.password).to eq(expected)
+      expect(mailbox.username).to eq(@user)
+      expect(mailbox.password).to eq(CRAM_MD5_PASS)
       expect(mailbox.maildir).to eq("example.com/new-user@example.com/")
       expect(mailbox.local_part).to eq("new-user")
       expect(mailbox.name).to eq("")
