@@ -525,21 +525,38 @@ RSpec.describe PostfixAdmin::Runner do
   describe "#add_account" do
     before do
       @user = "new-user@example.com"
-      @args = ['add_account', @user, 'password']
-      @name = 'Hitoshi Kurokawa'
+      @args = ["add_account", @user, "password"]
+      @name = "Hitoshi Kurokawa"
     end
 
-    it "adds a Mailbox and an Alias" do
+    it "adds an account (a Mailbox and an Alias)" do
+      res = nil
+      expect(Mailbox.exists?(@user)).to be(false)
+      expect(Alias.exists?(@user)).to be(false)
+
       expect {
         res = capture { Runner.start(@args) }
-        expect(res).to match(%!"#{@user}" was successfully registered as an account!)
       }.to change{ Mailbox.count }.by(1).and change{ Alias.count }.by(1)
 
+      expect(res).to match(%!"#{@user}" was successfully registered as an account!)
       expect(Mailbox.exists?(@user)).to be(true)
       expect(Alias.exists?(@user)).to be(true)
+
       mailbox = Mailbox.find(@user)
       expected = "{CRAM-MD5}9186d855e11eba527a7a52ca82b313e180d62234f0acc9051b527243d41e2740"
       expect(mailbox.password).to eq(expected)
+      expect(mailbox.maildir).to eq("example.com/new-user@example.com/")
+      expect(mailbox.local_part).to eq("new-user")
+      expect(mailbox.name).to eq("")
+      expect(mailbox.domain).to eq("example.com")
+      expect(mailbox.quota).to eq(102_400_000)
+      expect(mailbox.active).to be(true)
+
+      new_alias = Alias.find(@user)
+      expect(new_alias.address).to eq(@user)
+      expect(new_alias.goto).to eq(@user)
+      expect(new_alias.domain).to eq("example.com")
+      expect(new_alias.active).to be(true)
     end
 
     it "default scheme (CRAM-MD5) is applied" do
@@ -548,8 +565,8 @@ RSpec.describe PostfixAdmin::Runner do
     end
 
     it "accepts a long password" do
-      res = capture { Runner.start(['add_account', 'new-user@example.com',
-                                    '{CRAM-MD5}9c5e77f2da26fc03e9fa9e13ccd77aeb50c85539a4d90b70812715aea9ebda1d']) }
+      res = capture { Runner.start(["add_account", "new-user@example.com",
+                                    "Z6hdw2t9i4NfPr3k8KzeYMTmAXbquHvU5gnajVF7LysCRDWBcEJSGxQpik5A3zdJVbagYm"]) }
       expect(res).to match EX_REGISTERED
     end
 
