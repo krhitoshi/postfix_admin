@@ -121,7 +121,7 @@ module PostfixAdmin
       domain = find_domain(domain_name)
 
       attributes = {
-        local_part: local_part,
+        address: address,
         goto: goto
       }
 

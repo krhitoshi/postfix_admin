@@ -40,14 +40,6 @@ module PostfixAdmin
     # aliases which belong to a mailbox and have forwardings to other addresses
     scope :forward, -> { joins("LEFT OUTER JOIN mailbox ON alias.address = mailbox.username").where("mailbox.username <> alias.goto") }
 
-    attribute :local_part, :string
-
-    before_validation do |a|
-      unless a.address
-        a.address = "#{a.local_part}@#{a.domain}" unless a.local_part.empty?
-      end
-    end
-
     def mailbox?
       !!mailbox
     end
