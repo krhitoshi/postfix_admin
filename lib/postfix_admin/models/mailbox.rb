@@ -93,7 +93,7 @@ module PostfixAdmin
     def quota_mb=(value)
       raise Error, "quota is out of range: #{value}" if value < 0
 
-      quota = value * KB_TO_MB
+      self.quota = value * KB_TO_MB
     end
 
     def quota_usage_str(format: "%6.1f")

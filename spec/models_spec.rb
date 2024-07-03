@@ -184,6 +184,22 @@ RSpec.describe PostfixAdmin::Mailbox do
     expect(@mailbox.scheme_prefix).to be nil
   end
 
+  describe "#quota_mb" do
+    it "returns quota in MB" do
+      expect(@mailbox.quota_mb).to eq 100
+      @mailbox.quota = 2048_000_000
+      expect(@mailbox.quota_mb).to eq 2000
+    end
+  end
+
+  describe "#quota_mb=" do
+    it "set quota in MB" do
+      @mailbox.quota_mb = 2000
+      expect(@mailbox.quota_mb).to eq 2000
+      expect(@mailbox.quota).to eq 2048_000_000
+    end
+  end
+
   describe "#quota_mb_str" do
     it "returns quota string in MB" do
       expect(@mailbox.quota_mb_str).to eq " 100.0"

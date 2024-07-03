@@ -336,7 +336,7 @@ module PostfixAdmin
       mailbox_check(address)
       mailbox = Mailbox.find(address)
       mailbox.name = options[:name] if options[:name]
-      mailbox.quota = quota * KB_TO_MB if quota
+      mailbox.quota_mb = quota if quota
       mailbox.active = options[:active] unless options[:active].nil?
       mailbox.save!
 
