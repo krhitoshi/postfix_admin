@@ -95,13 +95,11 @@ module PostfixAdmin
     end
 
     def quota_usage_str(format: "%6.1f")
-      usage_mb =
-        if quota_usage
-          usage_mb = quota_usage.bytes / KB_TO_MB.to_f
-
-        else
-          0.0
-        end
+      usage_mb = if quota_usage
+                   usage_mb = quota_usage.bytes / KB_TO_MB.to_f
+                 else
+                   0.0
+                 end
 
       format % usage_mb
     end
