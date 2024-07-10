@@ -1,3 +1,3 @@
 module PostfixAdmin
-  VERSION = "0.3.1.beta1"
+  VERSION = "0.3.1"
 end
