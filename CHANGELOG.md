@@ -1,6 +1,7 @@
 # CHANGELOG
 
 ## 0.3.1
+  + Added `admins`, `domains`, `accounts`, `aliases` and `forwards` subcommands
   * Added `teardown` subcommand for the opposite operation of `setup`
   * `delete_domain` subcommand removes logs associated with the domain
   * Added `-s` (scheme) and `-r` (rounds) options for subcommands that require password arguments
