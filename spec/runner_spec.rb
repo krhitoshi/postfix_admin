@@ -491,8 +491,18 @@ RSpec.describe PostfixAdmin::Runner do
         expect(res).to match EX_UPDATED
       end
 
+      it "can set quota to 0 (unlimited)" do
+        # Set domain maxquota to 0 (unlimited)
+        domain = Domain.find("example.com")
+        domain.update(maxquota: 0)
+        res = capture { Runner.start(@args + %w[--quota 0]) }
+
+        expect(res).to match EX_UPDATED
+        expect(Mailbox.find(@user).quota).to eq(0)
+      end
+
       context "with invalid value" do
-        %w[0 -1].each do |quota|
+        %w[-1 -2].each do |quota|
           it "does not accept `#{quota}`" do
             res = exit_capture { Runner.start(@args + ["--quota", quota]) }
             expect(res).to match /Invalid Quota value: #{quota}/

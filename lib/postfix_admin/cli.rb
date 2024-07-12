@@ -331,7 +331,7 @@ module PostfixAdmin
 
     def edit_account(address, options)
       quota = options[:quota]
-      raise "Invalid Quota value: #{quota}" if quota && quota <= 0
+      raise "Invalid Quota value: #{quota}" if quota && quota < 0
 
       mailbox_check(address)
       mailbox = Mailbox.find(address)
