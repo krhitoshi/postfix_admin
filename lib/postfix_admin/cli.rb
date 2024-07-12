@@ -377,7 +377,7 @@ module PostfixAdmin
     end
 
     def log(domain: nil, last: nil)
-      headings = %w[Timestamp Admin Domain Action Data]
+      headings = %w[No. Timestamp Admin Domain Action Data]
       rows = []
 
       logs = if domain
@@ -388,10 +388,11 @@ module PostfixAdmin
 
       logs = logs.last(last) if last
 
-      logs.each do |l|
+      logs.each_with_index do |l, i|
+        no = i + 1
         # TODO: Consider if zone should be included ('%Z').
         time = l.timestamp.strftime("%Y-%m-%d %X")
-        rows << [time, l.username, l.domain, l.action, l.data]
+        rows << [no, time, l.username, l.domain, l.action, l.data]
       end
 
       puts_table(headings: headings, rows: rows)
