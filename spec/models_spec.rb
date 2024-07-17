@@ -204,7 +204,14 @@ RSpec.describe PostfixAdmin::Mailbox do
       @mailbox.rel_domain.update!(maxquota: @maxquota_mb)
     end
 
-    it "can set quota to value within domain's maxquota" do
+    it "can set quota to domain's maxquota" do
+      new_quota = @maxquota_mb * PostfixAdmin::KB_TO_MB
+      expect(@mailbox.quota).not_to eq(new_quota)
+      expect { @mailbox.update!(quota: new_quota) }.not_to raise_error
+      expect(@mailbox.quota).to eq(new_quota)
+    end
+
+    it "can set quota to value which is less than domain's maxquota" do
       new_quota_mb = @maxquota_mb - 100
       new_quota = new_quota_mb * PostfixAdmin::KB_TO_MB
       expect { @mailbox.update!(quota: new_quota) }.not_to raise_error
