@@ -66,13 +66,14 @@ module PostfixAdmin
 
       domain = mailbox.rel_domain
 
-      unless domain.maxquota.zero?
-        if mailbox.quota.zero?
-          mailbox.errors.add(:quota, "cannot be 0")
-        elsif mailbox.quota_mb > domain.maxquota
-          message = "must be less than or equal to #{domain.maxquota} MB"
-          mailbox.errors.add(:quota, message)
-        end
+      next if domain.maxquota_unlimited?
+
+      # Quota limit
+      if mailbox.quota.zero?
+        mailbox.errors.add(:quota, "cannot be 0")
+      elsif mailbox.quota_mb > domain.maxquota
+        message = "must be less than or equal to #{domain.maxquota} MB"
+        mailbox.errors.add(:quota, message)
       end
     end
 
