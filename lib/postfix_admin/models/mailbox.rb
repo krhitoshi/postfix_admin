@@ -24,6 +24,7 @@ module PostfixAdmin
     # +----------------+--------------+------+-----+---------------------+-------+
 
     UNLIMITED_QUOTA = 0
+    DISABLED_QUOTA  = -1
 
     self.table_name = :mailbox
     self.primary_key = :username
@@ -64,7 +65,7 @@ module PostfixAdmin
     end
 
     validate do |mailbox|
-      next if mailbox.quota == -1
+      next if mailbox.quota == DISABLED_QUOTA
 
       domain = mailbox.rel_domain
 
@@ -116,10 +117,10 @@ module PostfixAdmin
 
     def quota_mb_str(format: "%6.1f")
       case quota
-      when -1
+      when DISABLED_QUOTA
         # It's not sure what 'disabled' means for quota.
         "Disabled"
-      when 0
+      when UNLIMITED_QUOTA
         "Unlimited"
       else
         quota_mb = quota / KB_TO_MB.to_f
