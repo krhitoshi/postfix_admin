@@ -212,7 +212,7 @@ RSpec.describe PostfixAdmin::Mailbox do
       expect(@mailbox.quota_mb_str(format: "%.1f")).to eq "100.0"
     end
 
-    context "when quota is  (Unlimited)" do
+    context "when quota is 0 (Unlimited)" do
       it "returns 'Unlimited'" do
         @mailbox.update(quota: 0)
         expect(@mailbox.quota_mb_str).to eq "Unlimited"
