@@ -73,7 +73,8 @@ module PostfixAdmin
 
       # Quota limit
       message = "must be less than or equal to #{domain.maxquota} MB"
-      if mailbox.quota.zero?
+      if mailbox.quota_unlimited?
+        # trying to set quota to 0 (unlimited) even when domain's maxquota is not unlimited
         mailbox.errors.add(:quota, "cannot be set to 0 (unlimited)")
         mailbox.errors.add(:quota, message)
       elsif mailbox.quota_mb > domain.maxquota
