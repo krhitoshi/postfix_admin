@@ -23,6 +23,8 @@ module PostfixAdmin
     # | token_validity | datetime     | NO   |     | 2000-01-01 00:00:00 |       |
     # +----------------+--------------+------+-----+---------------------+-------+
 
+    UNLIMITED_QUOTA = 0
+
     self.table_name = :mailbox
     self.primary_key = :username
 
@@ -84,6 +86,10 @@ module PostfixAdmin
       mailbox.maildir ||= "#{mailbox.domain}/#{mailbox.username}/"
       mailbox.build_alias(address: mailbox.username, goto: mailbox.username,
                           domain: mailbox.domain)
+    end
+
+    def quota_unlimited?
+      quota.zero?
     end
 
     def quota_mb

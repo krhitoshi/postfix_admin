@@ -159,6 +159,15 @@ RSpec.describe PostfixAdmin::Mailbox do
     expect(mailbox.maildir).to eq "example.com/non_active_user@example.com/"
   end
 
+  it "#quota_unlimited?" do
+    @domain.update!(maxquota: Domain::UNLIMITED_MAXQUOTA)
+    @mailbox.update!(quota: 1000 * PostfixAdmin::KB_TO_MB)
+    expect(@mailbox.quota_unlimited?).to be(false)
+
+    @mailbox.update!(quota: Mailbox::UNLIMITED_QUOTA)
+    expect(@mailbox.reload.quota_unlimited?).to be(true)
+  end
+
   it "can use long maildir" do
     @domain.rel_mailboxes << build(:mailbox, local_part: "long_maildir_user",
                                   maildir: "looooooooooooong_path/example.com/long_maildir_user@example.com/")
