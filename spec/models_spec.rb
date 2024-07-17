@@ -198,6 +198,38 @@ RSpec.describe PostfixAdmin::Mailbox do
     end
   end
 
+  context "set quota" do
+    before do
+      @maxquota_mb = 1000
+      @mailbox.rel_domain.update!(maxquota: @maxquota_mb)
+    end
+
+    it "can set quota to value within domain's maxquota" do
+      new_quota_mb = @maxquota_mb - 100
+      new_quota = new_quota_mb * PostfixAdmin::KB_TO_MB
+      expect { @mailbox.update!(quota: new_quota) }.not_to raise_error
+      expect(@mailbox.quota).to eq(new_quota)
+    end
+
+    it "cannot set quota to value greater than domain's maxquota" do
+      new_quota_mb = @maxquota_mb + 100
+      new_quota = new_quota_mb * PostfixAdmin::KB_TO_MB
+      expect { @mailbox.update!(quota: new_quota) }.to \
+        raise_error(ActiveRecord::RecordInvalid,
+                    "Validation failed: Quota must be less than or equal to 1000 MB")
+    end
+
+    context "when domain has unlimited maxquota" do
+      it "can set quota to any value such as 1 TB" do
+        @mailbox.rel_domain.update!(maxquota: Domain::UNLIMITED_MAXQUOTA)
+        new_quota_mb = 1000_000 # 1 TB
+        new_quota = new_quota_mb * PostfixAdmin::KB_TO_MB
+        expect { @mailbox.update!(quota: new_quota) }.not_to raise_error
+        expect(@mailbox.quota).to eq(new_quota)
+      end
+    end
+  end
+
   describe "#quota_mb=" do
     it "set quota in MB" do
       @mailbox.quota_mb = 2000
