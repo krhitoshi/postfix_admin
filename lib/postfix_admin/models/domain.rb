@@ -87,6 +87,10 @@ module PostfixAdmin
       rel_aliases.pure
     end
 
+    def mailbox_count
+      rel_mailboxes.count
+    end
+
     def aliases_str
       max_num_str(aliases)
     end

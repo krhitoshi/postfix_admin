@@ -89,7 +89,8 @@ end
 RSpec.describe PostfixAdmin::Domain do
   before do
     @base = PostfixAdmin::Base.new({'database' => 'sqlite::memory:'})
-    @domain = Domain.find("example.com")
+    @domain_name = "example.com"
+    @domain = Domain.find(@domain_name)
   end
 
   it ".exists?" do
@@ -104,6 +105,14 @@ RSpec.describe PostfixAdmin::Domain do
 
     create(:domain, domain: "non-active.example.com", active: false)
     expect(Domain.find('non-active.example.com').active).to be(false)
+  end
+
+  it "#mailbox_count" do
+    count = Mailbox.where(domain: @domain_name).count
+    expect(count).not_to eq(0)
+    expect(@domain.mailbox_count).to eq(count)
+    @domain.rel_mailboxes << build(:mailbox, local_part: "new-user")
+    expect(@domain.mailbox_count).to eql(count + 1)
   end
 
   it "#maxquota_unlimited?" do
