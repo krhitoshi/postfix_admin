@@ -1,5 +1,5 @@
-require 'active_record'
-require 'postfix_admin/models/concerns/existing_timestamp'
+require "active_record"
+require "postfix_admin/models/concerns/existing_timestamp"
 
 module PostfixAdmin
   class ApplicationRecord < ActiveRecord::Base

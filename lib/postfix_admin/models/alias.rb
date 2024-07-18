@@ -1,3 +1,5 @@
+require "postfix_admin/models/application_record"
+
 module PostfixAdmin
   class Alias < ApplicationRecord
     # version: 1841

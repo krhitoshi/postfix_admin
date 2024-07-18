@@ -1,5 +1,4 @@
 require File.join(__dir__, "..", "spec_helper")
-require "postfix_admin/models/application_record"
 require "postfix_admin/models/mailbox"
 
 RSpec.describe PostfixAdmin::Mailbox do

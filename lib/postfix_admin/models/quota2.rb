@@ -1,3 +1,5 @@
+require "postfix_admin/models/application_record"
+
 module PostfixAdmin
   class Quota2 < ApplicationRecord
     # version: 1841

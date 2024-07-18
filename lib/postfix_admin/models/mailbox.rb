@@ -1,4 +1,5 @@
-require 'postfix_admin/models/concerns/has_password'
+require "postfix_admin/models/application_record"
+require "postfix_admin/models/concerns/has_password"
 
 module PostfixAdmin
   class Mailbox < ApplicationRecord
