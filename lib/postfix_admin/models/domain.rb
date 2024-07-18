@@ -97,6 +97,10 @@ module PostfixAdmin
       pure_aliases.count
     end
 
+    def mailbox_usage_str
+      "%4d / %4s" % [mailbox_count, mailboxes_str]
+    end
+
     def aliases_str
       max_num_str(aliases)
     end
