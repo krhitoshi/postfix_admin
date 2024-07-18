@@ -199,10 +199,17 @@ RSpec.describe PostfixAdmin::CLI do
   end
 
   describe "#add_account" do
+    before do
+      @domain = Domain.find("example.com")
+      @user = "new-user@example.com"
+    end
+
     it "can add an account" do
-      expect { capture(:stdout) { @cli.add_account('new_user@example.com', 'password') } }.to_not raise_error
-      expect(Mailbox.exists?('new_user@example.com')).to be(true)
-      expect(Alias.exists?('new_user@example.com')).to be(true)
+      expect(Mailbox.exists?(@user)).to be(false)
+      expect(Alias.exists?(@user)).to be(false)
+      expect { capture(:stdout) { @cli.add_account(@user, 'password') } }.to_not raise_error
+      expect(Mailbox.exists?(@user)).to be(true)
+      expect(Alias.exists?(@user)).to be(true)
     end
 
     it "can not add account of unknown domain" do
