@@ -101,6 +101,10 @@ module PostfixAdmin
       "%4d / %4s" % [mailbox_count, mailboxes_str]
     end
 
+    def alias_usage_str
+      "%4d / %4s" % [pure_alias_count, aliases_str]
+    end
+
     def aliases_str
       max_num_str(aliases)
     end
