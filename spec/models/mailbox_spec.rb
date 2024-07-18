@@ -19,7 +19,7 @@ RSpec.describe PostfixAdmin::Mailbox do
   end
 
   it "#quota_unlimited?" do
-    @domain.update!(maxquota: Domain::UNLIMITED_MAXQUOTA)
+    @domain.update!(maxquota: Domain::UNLIMITED)
     @mailbox.update!(quota: 1000 * PostfixAdmin::KB_TO_MB)
     expect(@mailbox.quota_unlimited?).to be(false)
 
@@ -105,7 +105,7 @@ RSpec.describe PostfixAdmin::Mailbox do
 
     context "when domain has unlimited maxquota" do
       before do
-        @mailbox.rel_domain.update!(maxquota: Domain::UNLIMITED_MAXQUOTA)
+        @mailbox.rel_domain.update!(maxquota: Domain::UNLIMITED)
       end
 
       it "can set quota to any value such as 1 TB" do

@@ -20,8 +20,8 @@ module PostfixAdmin
     # | active      | tinyint(1)   | NO   |     | 1                   |       |
     # +-------------+--------------+------+-----+---------------------+-------+
 
-    UNLIMITED_MAXQUOTA = 0
-    DISABLED_MAXQUOTA  = -1
+    UNLIMITED = 0
+    DISABLED  = -1
 
     self.table_name = :domain
     self.primary_key = :domain
@@ -125,9 +125,9 @@ module PostfixAdmin
 
     def max_num_str(num)
       case num
-      when DISABLED_MAXQUOTA
+      when DISABLED
         "Disabled"
-      when UNLIMITED_MAXQUOTA
+      when UNLIMITED
         "Unlimited"
       else
         num.to_s
