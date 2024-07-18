@@ -21,7 +21,7 @@ module PostfixAdmin
     validate on: :create do |a|
       domain = a.rel_domain
       if domain.aliases.zero? || a.mailbox
-      elsif domain.rel_aliases.pure.count >= domain.aliases
+      elsif domain.pure_alias_count >= domain.aliases
         message = "already has the maximum number of aliases " \
                   "(maximum is #{domain.aliases} aliases)"
         a.errors.add(:domain, message)

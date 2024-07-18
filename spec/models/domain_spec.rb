@@ -36,6 +36,26 @@ RSpec.describe PostfixAdmin::Domain do
     expect(@domain.mailbox_count).to eq(0)
   end
 
+  it "#pure_alias_count" do
+    alias_count = Alias.where(domain: @domain_name).count
+    mailbox_count = Mailbox.where(domain: @domain_name).count
+    count = alias_count - mailbox_count
+    expect(count).not_to eq(0)
+    expect(@domain.pure_alias_count).to eq(count)
+
+    # Add a mailbox
+    @domain.rel_mailboxes << build(:mailbox, local_part: "new-user")
+    expect(@domain.pure_alias_count).to eq(count)
+
+    # Add an alias
+    @domain.rel_aliases   << build(:alias, address: "new-alias@#{@domain_name}")
+    expect(@domain.pure_alias_count).to eq(count + 1)
+
+    # Destroy all pure aliases
+    @domain.rel_aliases.pure.destroy_all
+    expect(@domain.pure_alias_count).to eq(0)
+  end
+
   it "#maxquota_unlimited?" do
     expect(@domain.maxquota_unlimited?).to be(false)
     @domain.update(maxquota: Domain::UNLIMITED_MAXQUOTA)
