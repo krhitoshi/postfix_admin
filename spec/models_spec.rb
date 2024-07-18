@@ -111,8 +111,14 @@ RSpec.describe PostfixAdmin::Domain do
     count = Mailbox.where(domain: @domain_name).count
     expect(count).not_to eq(0)
     expect(@domain.mailbox_count).to eq(count)
+
+    # Add a mailbox
     @domain.rel_mailboxes << build(:mailbox, local_part: "new-user")
-    expect(@domain.mailbox_count).to eql(count + 1)
+    expect(@domain.mailbox_count).to eq(count + 1)
+
+    # Delete all mailboxes
+    @domain.rel_mailboxes.delete_all
+    expect(@domain.mailbox_count).to eq(0)
   end
 
   it "#maxquota_unlimited?" do
