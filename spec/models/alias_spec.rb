@@ -1,8 +1,5 @@
-require File.expand_path(File.dirname(__FILE__) + "/spec_helper")
-require 'postfix_admin/models/alias'
-require 'postfix_admin/models/domain_admin'
-require 'postfix_admin/models/log'
-require 'postfix_admin/models/quota2'
+require File.join(__dir__, "..", "spec_helper")
+require "postfix_admin/models/alias"
 
 RSpec.describe PostfixAdmin::Alias do
   it "active" do
