@@ -50,9 +50,13 @@ module PostfixAdmin
 
     validate on: :create do |mailbox|
       domain = mailbox.rel_domain
-      if !domain.mailboxes.zero? && domain.mailbox_count >= domain.mailboxes
+
+      next if domain.mailboxes.zero? # unlimited
+
+      # Mailbox limit
+      if domain.mailbox_count >= domain.mailboxes
         message = "has already reached the maximum number of mailboxes " \
-                  "(maximum: #{domain.mailboxes})"
+          "(maximum: #{domain.mailboxes})"
         mailbox.errors.add(:domain, message)
       end
     end
