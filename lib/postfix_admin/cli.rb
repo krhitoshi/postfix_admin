@@ -152,6 +152,7 @@ module PostfixAdmin
                   "Active", "Description"]
 
       puts_title("Domains")
+
       if Domain.without_all.empty?
         puts "No domains"
         return
@@ -218,6 +219,7 @@ module PostfixAdmin
       headings = ["No.", "Admin", "Domains", "Active", "Scheme Prefix"]
 
       puts_title("Admins")
+
       if admins.empty?
         puts "No admins"
         return
@@ -246,6 +248,7 @@ module PostfixAdmin
                   "Scheme Prefix", "Maildir"]
 
       puts_title("Accounts")
+
       if mailboxes.empty?
         puts "No accounts"
         return
@@ -287,6 +290,7 @@ module PostfixAdmin
     def show_admin_domain(user_name)
       admin = Admin.find(user_name)
       puts_title("Admin Domains (#{user_name})")
+
       if admin.rel_domains.empty?
         puts "\nNo domains for #{user_name}"
         return
@@ -297,6 +301,7 @@ module PostfixAdmin
         no = i + 1
         rows << [no.to_s, d.domain]
       end
+
       puts_table(rows: rows, headings: %w[No. Domain])
     end
 
@@ -422,24 +427,28 @@ module PostfixAdmin
         puts [a.username, %Q!"#{a.password}"!, a.super_admin?, a.active].join(',')
       end
       puts
+
       puts "Domains"
       puts "Domain Name,Max Quota,Active"
       Domain.without_all.each do |d|
         puts [d.domain, d.maxquota, d.active].join(',')
       end
       puts
+
       puts "Mailboxes"
       puts "User Name,Name,Password,Quota,Maildir,Active"
       Mailbox.all.each do |m|
         puts [m.username, %Q!"#{m.name}"!, %Q!"#{m.password}"!, m.quota, %Q!"#{m.maildir}"!, m.active].join(',')
       end
       puts
+
       puts "Aliases"
       puts "Address,Go to,Active"
       Alias.all.select { |a| !a.mailbox? }.each do |a|
         puts [a.address, %Q!"#{a.goto}"!, a.active].join(',')
       end
       puts
+
       puts "Forwards"
       puts "Address,Go to,Active"
       Alias.all.select { |a| a.mailbox? && a.goto != a.address }.each do |a|
@@ -524,6 +533,7 @@ module PostfixAdmin
         puts "configure file: #{config_file} was generated.\nPlease execute after edit it."
         exit
       end
+
       open(config_file) do |f|
         YAML.load(f.read)
       end
