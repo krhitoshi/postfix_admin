@@ -196,7 +196,7 @@ RSpec.describe PostfixAdmin::Base do
         @domain.update!(mailboxes: count)
         expect { @base.add_account(@user, CRAM_MD5_PASS) }.to \
           raise_error(PostfixAdmin::Error,
-                      "Failed to save PostfixAdmin::Mailbox: Domain has already reached the maximum number of mailboxes (maximum: #{count} mailboxes)")
+                      "Failed to save PostfixAdmin::Mailbox: Domain has already reached the maximum number of mailboxes (maximum: #{count})")
       end
     end
 

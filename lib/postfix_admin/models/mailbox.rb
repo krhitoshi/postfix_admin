@@ -52,7 +52,7 @@ module PostfixAdmin
       domain = mailbox.rel_domain
       if !domain.mailboxes.zero? && domain.mailbox_count >= domain.mailboxes
         message = "has already reached the maximum number of mailboxes " \
-                  "(maximum: #{domain.mailboxes} mailboxes)"
+                  "(maximum: #{domain.mailboxes})"
         mailbox.errors.add(:domain, message)
       end
     end
