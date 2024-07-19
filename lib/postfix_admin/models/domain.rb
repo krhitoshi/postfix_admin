@@ -117,6 +117,10 @@ module PostfixAdmin
       max_num_str(maxquota)
     end
 
+    def mailbox_unlimited?
+      mailboxes == UNLIMITED
+    end
+
     def maxquota_unlimited?
       maxquota.zero?
     end

@@ -51,7 +51,7 @@ module PostfixAdmin
     validate on: :create do |mailbox|
       domain = mailbox.rel_domain
 
-      next if domain.mailboxes.zero? # unlimited
+      next if domain.mailbox_unlimited?
 
       # Mailbox limit
       if domain.mailbox_count >= domain.mailboxes
