@@ -74,6 +74,12 @@ RSpec.describe PostfixAdmin::Domain do
     expect(@domain.reload.mailbox_unlimited?).to be(true)
   end
 
+  it "#alias_unlimited?" do
+    expect(@domain.alias_unlimited?).to be(false)
+    @domain.update(aliases: Domain::UNLIMITED)
+    expect(@domain.reload.alias_unlimited?).to be(true)
+  end
+
   it "#maxquota_unlimited?" do
     expect(@domain.maxquota_unlimited?).to be(false)
     @domain.update(maxquota: Domain::UNLIMITED)

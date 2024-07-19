@@ -21,7 +21,7 @@ module PostfixAdmin
     validate on: :create do |a|
       domain = a.rel_domain
 
-      next if domain.aliases.zero? # unlimited
+      next if domain.alias_unlimited?
 
       # Alias limit
       if domain.pure_alias_count >= domain.aliases

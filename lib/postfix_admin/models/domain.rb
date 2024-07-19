@@ -121,6 +121,10 @@ module PostfixAdmin
       mailboxes == UNLIMITED
     end
 
+    def alias_unlimited?
+      aliases == UNLIMITED
+    end
+
     def maxquota_unlimited?
       maxquota.zero?
     end
