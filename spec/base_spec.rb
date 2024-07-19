@@ -272,11 +272,26 @@ RSpec.describe PostfixAdmin::Base do
   end
 
   describe "#add_alias" do
+    before do
+      @alias = "new-alias@example.com"
+      @domain = Domain.find("example.com")
+    end
+
     it "can add a new alias" do
       num_aliases = Alias.count
-      expect { @base.add_alias('new_alias@example.com', 'goto@example.jp') }.to_not raise_error
+      expect { @base.add_alias(@alias, "goto@example.jp") }.to_not raise_error
       expect(Alias.count - num_aliases).to eq 1
-      expect(Alias.exists?('new_alias@example.com')).to be(true)
+      expect(Alias.exists?(@alias)).to be(true)
+    end
+
+    context "when number of aliases has already reached maximum" do
+      it "can not add an account" do
+        count = @domain.pure_alias_count
+        @domain.update!(aliases: count)
+        expect { @base.add_alias(@alias, "goto@example.jp") }.to \
+          raise_error(PostfixAdmin::Error,
+                      "Failed to save PostfixAdmin::Alias: Domain has already reached the maximum number of aliases (maximum: #{count})")
+      end
     end
 
     it "can not add an alias which has a same name as a mailbox" do

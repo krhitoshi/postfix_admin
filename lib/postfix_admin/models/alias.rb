@@ -22,8 +22,8 @@ module PostfixAdmin
       domain = a.rel_domain
       if domain.aliases.zero? || a.mailbox
       elsif domain.pure_alias_count >= domain.aliases
-        message = "already has the maximum number of aliases " \
-                  "(maximum is #{domain.aliases} aliases)"
+        message = "has already reached the maximum number of aliases " \
+                  "(maximum: #{domain.aliases})"
         a.errors.add(:domain, message)
       end
     end

@@ -122,12 +122,13 @@ module PostfixAdmin
 
       attributes = {
         address: address,
-        goto: goto
+        goto: goto,
+        domain: domain_name
       }
 
-      domain.rel_aliases << Alias.new(attributes)
+      new_alias = Alias.new(attributes)
 
-      raise_save_error(domain) unless domain.save
+      raise_save_error(new_alias) unless new_alias.save
     end
 
     def delete_alias(address)
