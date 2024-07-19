@@ -60,6 +60,8 @@ module PostfixAdmin
         show_domains
         puts
         show_admins
+        puts
+        show_recent_logs
       end
     end
 
@@ -69,6 +71,17 @@ module PostfixAdmin
       else
         show_general_summary
       end
+    end
+
+    def show_recent_logs
+      if Log.count.zero?
+        puts "No logs"
+        return
+      end
+
+      logs = Log.last(10)
+      puts_title("Recent Logs")
+      puts_log_table(logs)
     end
 
     # Set up a domain
@@ -386,6 +399,12 @@ module PostfixAdmin
 
       logs = logs.last(last) if last
 
+      puts_log_table(logs)
+    end
+
+    def puts_log_table(logs)
+      headings = %w[No. Timestamp Admin Domain Action Data]
+      rows = []
       logs.each_with_index do |l, i|
         no = i + 1
         # TODO: Consider if zone should be included ('%Z').

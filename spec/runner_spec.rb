@@ -88,10 +88,11 @@ RSpec.describe PostfixAdmin::Runner do
 
   describe "#show" do
     context "without argument" do
-      it "shows list of domains and admins" do
+      it "shows list of domains, admins and logs" do
         res = capture { Runner.start(["show"]) }
         expect(res).to match /example.com[|\s]+1[|\s]+\/[|\s]+30[|\s]+2[|\s]+\/[|\s]+30[|\s]+100[|\s]+Active[|\s]+example.com Description/
         expect(res).to match /admin@example.com[|\s]+1[|\s]+Active[|\s]+\{CRAM-MD5\}/
+        expect(res).to match(/all@example\.com \(192\.0\.2\.1\)/)
       end
 
       it "when there are no domains and no admins" do
@@ -99,6 +100,7 @@ RSpec.describe PostfixAdmin::Runner do
         res = capture { Runner.start(["show"]) }
         expect(res).to match /No domains/
         expect(res).to match /No admins/
+        expect(res).to match /No logs/
       end
     end
 
