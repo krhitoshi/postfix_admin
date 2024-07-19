@@ -156,6 +156,7 @@ RSpec.describe PostfixAdmin::Base do
   describe "#add_account" do
     before do
       @user = "new-user@example.com"
+      @domain = Domain.find("example.com")
     end
 
     it "adds an account (a Mailbox and an Alias)" do
@@ -187,6 +188,16 @@ RSpec.describe PostfixAdmin::Base do
       expect(new_alias.goto).to eq(@user)
       expect(new_alias.domain).to eq("example.com")
       expect(new_alias.active).to be(true)
+    end
+
+    context "when number of mailboxes has already reached maximum" do
+      it "can not add an account" do
+        count = @domain.mailbox_count
+        @domain.update!(mailboxes: count)
+        expect { @base.add_account(@user, CRAM_MD5_PASS) }.to \
+          raise_error(PostfixAdmin::Error,
+                      "Failed to save PostfixAdmin::Mailbox: Domain has already reached the maximum number of mailboxes (maximum: #{count} mailboxes)")
+      end
     end
 
     context "with name" do
