@@ -60,6 +60,7 @@ RSpec.describe PostfixAdmin::Runner do
       expect(keys).to include("Admins")
       expect(keys).to include("Mailboxes")
       expect(keys).to include("Aliases")
+      expect(keys).to include("Logs")
     end
 
     context "with domain" do

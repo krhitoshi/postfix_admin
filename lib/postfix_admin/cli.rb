@@ -437,6 +437,7 @@ module PostfixAdmin
       rows << ["Admins", Admin.count]
       rows << ["Mailboxes", Mailbox.count]
       rows << ["Aliases", Alias.pure.count]
+      rows << ["Logs", Log.count]
 
       puts_title(title)
       puts_table(rows: rows)
