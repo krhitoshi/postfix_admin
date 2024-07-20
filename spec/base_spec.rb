@@ -301,19 +301,32 @@ RSpec.describe PostfixAdmin::Base do
     before do
       @alias = "new-alias@example.com"
       @domain = Domain.find("example.com")
+      @goto = "goto@example.jp"
     end
 
-    it "can add a new alias" do
-      num_aliases = Alias.count
-      expect { @base.add_alias(@alias, "goto@example.jp") }.to_not raise_error
-      expect(Alias.count - num_aliases).to eq 1
+    it "can add an alias" do
+      expect(Alias.exists?(@alias)).to be(false)
+      expect {
+        @base.add_alias(@alias, @goto)
+      }.to change{ Alias.count }.by(1)
       expect(Alias.exists?(@alias)).to be(true)
+    end
+
+    context "when domain has unlimited status for aliases" do
+      it "can add an alias" do
+        @domain.update!(aliases: Domain::UNLIMITED)
+        expect(Alias.exists?(@alias)).to be(false)
+        expect {
+          @base.add_alias(@alias, @goto)
+        }.to change{ Alias.count }.by(1)
+        expect(Alias.exists?(@alias)).to be(true)
+      end
     end
 
     context "when domain has disabled status for aliases" do
       it "can not add an alias" do
         @domain.update!(aliases: Domain::DISABLED)
-        expect { @base.add_alias(@alias, "goto@example.jp") }.to \
+        expect { @base.add_alias(@alias, @goto) }.to \
           raise_error(PostfixAdmin::Error,
                       "Failed to save PostfixAdmin::Alias: Domain has a disabled status for aliases")
       end
@@ -323,23 +336,23 @@ RSpec.describe PostfixAdmin::Base do
       it "can not add an alias" do
         count = @domain.pure_alias_count
         @domain.update!(aliases: count)
-        expect { @base.add_alias(@alias, "goto@example.jp") }.to \
+        expect { @base.add_alias(@alias, @goto) }.to \
           raise_error(PostfixAdmin::Error,
                       "Failed to save PostfixAdmin::Alias: Domain has already reached the maximum number of aliases (maximum: #{count})")
       end
     end
 
     it "can not add an alias which has a same name as a mailbox" do
-      expect { @base.add_alias('user@example.com', 'goto@example.jp') }.to raise_error Error
+      expect { @base.add_alias('user@example.com', @goto) }.to raise_error Error
     end
 
     it "can not add an alias which has a sama name as other alias" do
       @base.add_alias('new_alias@example.com', 'goto@example.jp')
-      expect { @base.add_alias('new_alias@example.com', 'goto@example.jp') }.to raise_error Error
+      expect { @base.add_alias('new_alias@example.com', @goto) }.to raise_error Error
     end
 
     it "can not add an alias of unknown domain" do
-      expect { @base.add_alias('new_alias@unknown.example.com', 'goto@example.jp') }.to raise_error Error
+      expect { @base.add_alias('new_alias@unknown.example.com', @goto) }.to raise_error Error
     end
   end
 
