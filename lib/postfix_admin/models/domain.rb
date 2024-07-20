@@ -133,6 +133,10 @@ module PostfixAdmin
       mailboxes == DISABLED
     end
 
+    def alias_disabled?
+      aliases == DISABLED
+    end
+
     private
 
     def max_num_str(num)

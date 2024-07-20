@@ -21,10 +21,13 @@ module PostfixAdmin
     validate on: :create do |a|
       domain = a.rel_domain
 
-      next if domain.alias_unlimited?
-
-      # Alias limit
-      if domain.pure_alias_count >= domain.aliases
+      if domain.alias_unlimited?
+        # unlimited: do nothing
+      elsif domain.alias_disabled?
+        # disabled
+        a.errors.add(:domain, "has a disabled status for aliases")
+      elsif domain.pure_alias_count >= domain.aliases
+        # exceeding alias limit
         message = "has already reached the maximum number of aliases " \
           "(maximum: #{domain.aliases})"
         a.errors.add(:domain, message)

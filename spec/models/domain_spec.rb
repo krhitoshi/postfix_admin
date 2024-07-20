@@ -96,6 +96,12 @@ RSpec.describe PostfixAdmin::Domain do
     expect(@domain.reload.mailbox_disabled?).to be(true)
   end
 
+  it "#alias_disabled?" do
+    expect(@domain.alias_disabled?).to be(false)
+    @domain.update(aliases: Domain::DISABLED)
+    expect(@domain.reload.alias_disabled?).to be(true)
+  end
+
   describe "#num_total_aliases and .num_total_aliases" do
     it "when only alias@example.com" do
       expect(Alias.pure.count).to eq 1

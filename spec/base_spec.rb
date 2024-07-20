@@ -310,8 +310,17 @@ RSpec.describe PostfixAdmin::Base do
       expect(Alias.exists?(@alias)).to be(true)
     end
 
+    context "when domain has disabled status for aliases" do
+      it "can not add an alias" do
+        @domain.update!(aliases: Domain::DISABLED)
+        expect { @base.add_alias(@alias, "goto@example.jp") }.to \
+          raise_error(PostfixAdmin::Error,
+                      "Failed to save PostfixAdmin::Alias: Domain has a disabled status for aliases")
+      end
+    end
+
     context "when number of aliases has already reached maximum" do
-      it "can not add an account" do
+      it "can not add an alias" do
         count = @domain.pure_alias_count
         @domain.update!(aliases: count)
         expect { @base.add_alias(@alias, "goto@example.jp") }.to \
