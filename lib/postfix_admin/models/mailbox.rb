@@ -51,6 +51,11 @@ module PostfixAdmin
     validate on: :create do |mailbox|
       domain = mailbox.rel_domain
 
+      if domain.mailboxes == Domain::DISABLED
+        mailbox.errors.add(:domain, "has a disabled status for mailboxes")
+        next
+      end
+
       next if domain.mailbox_unlimited?
 
       # Mailbox limit

@@ -156,7 +156,8 @@ RSpec.describe PostfixAdmin::Base do
   describe "#add_account" do
     before do
       @user = "new-user@example.com"
-      @domain = Domain.find("example.com")
+      @domain_name = "example.com"
+      @domain = Domain.find(@domain_name)
     end
 
     it "adds an account (a Mailbox and an Alias)" do
@@ -170,8 +171,7 @@ RSpec.describe PostfixAdmin::Base do
       expect(Mailbox.exists?(@user)).to be(true)
       expect(Alias.exists?(@user)).to be(true)
 
-      domain = Domain.find("example.com")
-      expect(domain.rel_mailboxes.exists?(@user)).to be(true)
+      expect(@domain.rel_mailboxes.exists?(@user)).to be(true)
 
       mailbox = Mailbox.find(@user)
       expect(mailbox.username).to eq(@user)
@@ -188,6 +188,32 @@ RSpec.describe PostfixAdmin::Base do
       expect(new_alias.goto).to eq(@user)
       expect(new_alias.domain).to eq("example.com")
       expect(new_alias.active).to be(true)
+    end
+
+    context "when domain has unlimited status for mailboxes" do
+      it "can add an account" do
+        @domain.update!(mailboxes: Domain::UNLIMITED)
+        expect(Mailbox.exists?(@user)).to be(false)
+        expect(Alias.exists?(@user)).to be(false)
+
+        expect {
+          @base.add_account(@user, CRAM_MD5_PASS)
+        }.to change{ Mailbox.count }.by(1).and change{ Alias.count }.by(1)
+
+        expect(Mailbox.exists?(@user)).to be(true)
+        expect(Alias.exists?(@user)).to be(true)
+
+        expect(@domain.rel_mailboxes.exists?(@user)).to be(true)
+      end
+    end
+
+    context "when domain has disabled status for mailboxes" do
+      it "can not add an account" do
+        @domain.update!(mailboxes: Domain::DISABLED)
+        expect { @base.add_account(@user, CRAM_MD5_PASS) }.to \
+          raise_error(PostfixAdmin::Error,
+                      "Failed to save PostfixAdmin::Mailbox: Domain has a disabled status for mailboxes")
+      end
     end
 
     context "when number of mailboxes has already reached maximum" do

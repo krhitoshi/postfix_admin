@@ -60,12 +60,16 @@ RSpec.describe PostfixAdmin::Domain do
     expect(@domain.mailbox_usage_display_str).to eq("   2 /   30")
     @domain.mailboxes = Domain::UNLIMITED
     expect(@domain.mailbox_usage_display_str).to eq("   2 / Unlimited")
+    @domain.mailboxes = Domain::DISABLED
+    expect(@domain.mailbox_usage_display_str).to eq("   2 / Disabled")
   end
 
   it "#alias_usage_str" do
     expect(@domain.alias_usage_display_str).to eq("   1 /   30")
     @domain.aliases = Domain::UNLIMITED
     expect(@domain.alias_usage_display_str).to eq("   1 / Unlimited")
+    @domain.aliases = Domain::DISABLED
+    expect(@domain.alias_usage_display_str).to eq("   1 / Disabled")
   end
 
   it "#mailbox_unlimited?" do
