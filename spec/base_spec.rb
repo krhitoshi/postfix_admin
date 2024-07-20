@@ -41,30 +41,36 @@ RSpec.describe PostfixAdmin::Base do
   end
 
   describe "#add_domain" do
-    it "can adds a new domain" do
+    it "can add a domain" do
       expect {
         @base.add_domain("new-domain.test")
       }.to change { Domain.count }.by(1)
+
       expect(Domain.exists?("new-domain.test")).to be(true)
       domain = Domain.find("new-domain.test")
       expect(domain.transport).to eq("virtual")
       expect(domain.description).to eq("")
+      expect(domain.aliases).to eq(@base.config[:aliases])
+      expect(domain.mailboxes).to eq(@base.config[:mailboxes])
+      expect(domain.maxquota).to eq(@base.config[:maxquota])
+      expect(domain.active).to be(true)
     end
 
     it "raises an error for an existing domain" do
       expect(Domain.exists?("example.com")).to be(true)
       expect {
         @base.add_domain("example.com")
-      }.to raise_error(PostfixAdmin::Error,
-                       "Domain has already been registered: example.com")
-      expect(Domain.count).to eq(Domain.count)
+      }.to change { Domain.count }.by(0).
+        and raise_error(PostfixAdmin::Error,
+                        "Domain has already been registered: example.com")
     end
 
-    it "raises an error for an invalid domain" do
+    it "raises an error for an invalid domain name" do
       expect {
-        @base.add_domain("invalid_domain")
-      }.to raise_error(PostfixAdmin::Error, "Invalid domain name: invalid_domain")
-      expect(Domain.count).to eq(Domain.count)
+        @base.add_domain("invalid_domain_name")
+      }.to change { Domain.count }.by(0).
+        and raise_error(PostfixAdmin::Error,
+                        "Invalid domain name: invalid_domain_name")
     end
   end
 
