@@ -154,7 +154,7 @@ module PostfixAdmin
         raise_error "Domain has already been registered: #{domain_name}"
       end
 
-      new_description = description || domain_name
+      new_description = description || ""
 
       domain = Domain.new
       domain.attributes = {

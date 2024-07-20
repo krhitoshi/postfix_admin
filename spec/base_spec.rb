@@ -46,6 +46,9 @@ RSpec.describe PostfixAdmin::Base do
         @base.add_domain("new-domain.test")
       }.to change { Domain.count }.by(1)
       expect(Domain.exists?("new-domain.test")).to be(true)
+      domain = Domain.find("new-domain.test")
+      expect(domain.transport).to eq("virtual")
+      expect(domain.description).to eq("")
     end
 
     it "raises an error for an existing domain" do
