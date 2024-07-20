@@ -57,6 +57,42 @@ RSpec.describe PostfixAdmin::Base do
       expect(domain.active).to be(true)
     end
 
+    context "when unlimited status for mailboxes, aliases and maxquota" do
+      it "can add a domain" do
+        params = { "aliases" => Domain::UNLIMITED,
+                   "mailboxes" => Domain::UNLIMITED,
+                   "maxquota" => Domain::UNLIMITED }
+        # `dup` does not inherit the frozen status
+        config = Base::DEFAULT_CONFIG.dup.update(params)
+        base = Base.new(config)
+        expect {
+          base.add_domain("new-domain.test")
+        }.to change { Domain.count }.by(1)
+
+        domain = Domain.find("new-domain.test")
+        expect(domain.alias_unlimited?).to be(true)
+        expect(domain.mailbox_unlimited?).to be(true)
+        expect(domain.maxquota_unlimited?).to be(true)
+      end
+    end
+
+    context "when disabled status for mailboxes, aliases" do
+      it "can add a domain" do
+        params = { "aliases" => Domain::DISABLED,
+                   "mailboxes" => Domain::DISABLED }
+        # `dup` does not inherit the frozen status
+        config = Base::DEFAULT_CONFIG.dup.update(params)
+        base = Base.new(config)
+        expect {
+          base.add_domain("new-domain.test")
+        }.to change { Domain.count }.by(1)
+
+        domain = Domain.find("new-domain.test")
+        expect(domain.alias_disabled?).to be(true)
+        expect(domain.mailbox_disabled?).to be(true)
+      end
+    end
+
     context "when domain has already been registered" do
       it "raises an error" do
         expect(Domain.exists?("example.com")).to be(true)
