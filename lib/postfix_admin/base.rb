@@ -207,7 +207,8 @@ module PostfixAdmin
     end
 
     def raise_save_error(obj)
-      raise_error "Failed to save #{obj.class}: #{obj.errors.full_messages.join(', ')}"
+      massage = obj.errors.full_messages.join(', ')
+      raise_error "Failed to save #{obj.class}: #{massage}"
     end
 
     def address_split(address)
