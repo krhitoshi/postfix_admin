@@ -57,6 +57,17 @@ RSpec.describe PostfixAdmin::Base do
       expect(domain.active).to be(true)
     end
 
+    context "with description" do
+      it "can add a domain" do
+        expect {
+          @base.add_domain("new-domain.test", description: "New Domain")
+        }.to change { Domain.count }.by(1)
+
+        domain = Domain.find("new-domain.test")
+        expect(domain.description).to eq("New Domain")
+      end
+    end
+
     context "when unlimited status for mailboxes, aliases and maxquota" do
       it "can add a domain" do
         params = { "aliases" => Domain::UNLIMITED,
