@@ -99,11 +99,11 @@ module PostfixAdmin
     end
 
     desc "edit_domain example.com", "Edit a domain"
-    method_option :aliases,   type: :numeric, aliases: "-a", desc: "Edit aliases limitation"
-    method_option :mailboxes, type: :numeric, aliases: "-m", desc: "Edit mailboxes limitation"
-    method_option :maxquota,  type: :numeric, aliases: "-q", desc: "Edit max quota limitation"
+    method_option :aliases,   type: :numeric, aliases: "-a", desc: "Update aliase limit"
+    method_option :mailboxes, type: :numeric, aliases: "-m", desc: "Update mailboxe limit"
+    method_option :maxquota,  type: :numeric, aliases: "-q", desc: "Update maximum quota limit (MB)"
     method_option :active, type: :boolean, desc: "Update active status"
-    method_option :description, type: :string, aliases: "-d", desc: "Edit description"
+    method_option :description, type: :string, aliases: "-d", desc: "Update description"
     def edit_domain(domain_name)
       runner do
         if options.size == 0
@@ -153,11 +153,11 @@ module PostfixAdmin
 
     desc "edit_account user@example.com", "Edit an account"
     method_option :goto,  type: :string,  aliases: "-g",
-                  desc: "mailboxes, addresses e-mails are delivered to"
+                  desc: "Update mailboxes, addresses emails are delivered to"
     method_option :quota, type: :numeric, aliases: "-q",
-                  desc: "quota limitation (MB)"
+                  desc: "Update quota limit (MB)"
     method_option :name,  type: :string,  aliases: "-n",
-                  desc: "full name"
+                  desc: "Update full name"
     method_option :active, type: :boolean,
                   desc: "Update active status"
     def edit_account(address)
