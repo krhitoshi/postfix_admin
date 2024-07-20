@@ -56,16 +56,18 @@ RSpec.describe PostfixAdmin::Base do
       expect(domain.active).to be(true)
     end
 
-    it "raises an error for an existing domain" do
-      expect(Domain.exists?("example.com")).to be(true)
-      expect {
-        @base.add_domain("example.com")
-      }.to change { Domain.count }.by(0).
-        and raise_error(PostfixAdmin::Error,
-                        "Domain has already been registered: example.com")
+    context "when domain has already been registered" do
+      it "raises an error" do
+        expect(Domain.exists?("example.com")).to be(true)
+        expect {
+          @base.add_domain("example.com")
+        }.to change { Domain.count }.by(0).
+          and raise_error(PostfixAdmin::Error,
+                          "Domain has already been registered: example.com")
+      end
     end
 
-    it "raises an error for an invalid domain name" do
+    it "does not accept an invalid domain name" do
       expect {
         @base.add_domain("invalid_domain_name")
       }.to change { Domain.count }.by(0).
@@ -94,10 +96,12 @@ RSpec.describe PostfixAdmin::Base do
       expect(Mailbox.exists?(domain: "example.com")).to be(false)
     end
 
-    it "raises an error for a non-existent domain name" do
+    it "does not accept a non-existent domain name" do
       expect {
         @base.delete_domain("non-existent.test")
-      }.to raise_error(PostfixAdmin::Error, "Could not find domain: non-existent.test")
+      }.to change { Domain.count }.by(0).
+        and raise_error(PostfixAdmin::Error,
+                        "Could not find domain: non-existent.test")
     end
   end
 
