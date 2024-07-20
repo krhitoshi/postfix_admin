@@ -129,6 +129,10 @@ module PostfixAdmin
       maxquota.zero?
     end
 
+    def mailbox_disabled?
+      mailboxes == DISABLED
+    end
+
     private
 
     def max_num_str(num)
