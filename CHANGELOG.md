@@ -1,8 +1,7 @@
 # CHANGELOG
 
 ## 0.3.2
-  * Improved some internal implementations
-  * Display recent logs in the `show` subcommand
+  * Added `-d` (description) option for the `setup` subcommand
 
 ## 0.3.1
   * Added `admins`, `domains`, `accounts`, `aliases` and `forwards` subcommands
