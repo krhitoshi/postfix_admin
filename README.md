@@ -44,7 +44,7 @@ Edit the file for your environment:
 
 The configuration file format is as follows:
 
-    database: <adapter>://<username>:<password>@<host>/<database>
+    database: mysql2://<username>:<password>@<host>/<database>
     aliases: Default maximum number of aliases allowed per domain
     mailboxes: Default maximum number of mailboxes allowed per domain
     maxquota: Default maximum quota (in MB) allowed per mailbox for a domain
