@@ -35,6 +35,20 @@ Execute the `postfix_admin` command to generate your config file at `~/.postfix_
 Edit the file for your environment:
 
     $ vi ~/.postfix_admin.conf
+    ---
+    database: mysql2://postfix:password@localhost/postfix
+    aliases: 30
+    mailboxes: 30
+    maxquota: 100
+    scheme: CRAM-MD5
+
+The configuration file format is as follows:
+
+    database: <adapter>://<username>:<password>@<host>/<database>
+    aliases: Default maximum number of aliases allowed per domain
+    mailboxes: Default maximum number of mailboxes allowed per domain
+    maxquota: Default maximum quota (in MB) allowed per mailbox for a domain
+    scheme: Default password scheme
 
 You can see the domains on your host if the `database` parameter is set properly:
 
