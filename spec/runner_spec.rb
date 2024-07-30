@@ -708,7 +708,8 @@ RSpec.describe PostfixAdmin::Runner do
 
   describe "#setup" do
     before do
-      @admin = "admin@new-domain.test"
+      @domain_name = "new-domain.test"
+      @admin = "admin@#{@domain_name}"
       @args = %w[setup new-domain.test password]
     end
     
@@ -725,10 +726,25 @@ RSpec.describe PostfixAdmin::Runner do
       expect(res).to match '"admin@new-domain.test" was successfully registered as an admin'
       expect(res).to match '"new-domain.test" was successfully registered as a domain of admin@new-domain.test'
 
-      expect(Domain.exists?("new-domain.test")).to be(true)
+      expect(Domain.exists?(@domain_name)).to be(true)
       expect(Admin.exists?(@admin)).to be(true)
       admin = Admin.find(@admin)
-      expect(admin.rel_domains.exists?("new-domain.test")).to be(true)
+      expect(admin.rel_domains.exists?(@domain_name)).to be(true)
+    end
+
+    context "with description option" do
+      it "adds a Domain with description" do
+        res = capture do
+          expect{
+            Runner.start(@args + ["-d", "New Domain"])
+          }.to change{ Admin.count }.by(1).and \
+               change{ Domain.count }.by(1).and \
+               change{ DomainAdmin.count }.by(1)
+        end
+
+        domain = Domain.find(@domain_name)
+        expect(domain.description).to eq("New Domain")
+      end
     end
 
     context "with scheme option" do
