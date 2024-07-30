@@ -55,7 +55,8 @@ module PostfixAdmin
       runner { @cli.show_forwards }
     end
 
-    desc "setup example.com password", "Set up a domain (add a domain and an admin user for it)"
+    desc "setup example.com password",
+         "Set up a domain (add a domain and an admin user for it)"
     method_option :scheme, type: :string, aliases: "-s", desc: "password scheme"
     method_option :rounds, type: :string, aliases: "-r", desc: "encryption rounds for BLF-CRYPT, SHA256-CRYPT and SHA512-CRYPT schemes"
     def setup(domain_name, password)
@@ -65,7 +66,8 @@ module PostfixAdmin
       end
     end
 
-    desc "teardown example.com", "Tear down a domain (delete a domain and an admin user for it)"
+    desc "teardown example.com",
+         "Tear down a domain (delete a domain and an admin user for it)"
     def teardown(domain_name)
       runner { @cli.teardown_domain(domain_name) }
     end
