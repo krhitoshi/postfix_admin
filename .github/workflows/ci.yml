@@ -42,7 +42,7 @@ jobs:
       - name: Copy my.cnf (for `rake setup_test_db`)
         run: cp ./spec/misc/ci.my.cnf ~/.my.cnf
       - name: docker-compose up
-        run: docker-compose up -d db
+        run: docker compose up -d db
       - name: Sleep (work around)
         # wait-for-it.sh doesn't work with docker compose port mapping
         run: sleep 10
