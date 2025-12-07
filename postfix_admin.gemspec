@@ -7,7 +7,7 @@ Gem::Specification.new do |gem|
   gem.email         = ["hitoshi@nextseed.jp"]
 
   gem.summary       = gem.description
-  gem.description   = %q{Command Line Tool for Postfix Admin}
+  gem.description   = %q{Command Line Tool for PostfixAdmin}
   gem.homepage      = "https://github.com/krhitoshi/postfix_admin"
 
   gem.required_ruby_version = ">= 2.7.0", "< 3.5"

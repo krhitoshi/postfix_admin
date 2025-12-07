@@ -2,16 +2,15 @@
 
 # postfix_admin
 
-Command Line Tool for Postfix Admin
+Command Line Tool for PostfixAdmin
 
 ## Description
 
-* Postfix Admin (Official Web-based Application)
-  + Web Site http://postfixadmin.sourceforge.net/
+* PostfixAdmin (Official Web-based Application)
   + GitHub https://github.com/postfixadmin/postfixadmin
   + Note: This CLI tool is a third-party implementation
 
-* Supports Postfix Admin 3.2
+* Supports PostfixAdmin 3.2
 
 * Supports MySQL/MariaDB
 
