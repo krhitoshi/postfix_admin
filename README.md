@@ -2,13 +2,14 @@
 
 # postfix_admin
 
-Command Line Tools for Postfix Admin
+Command Line Tool for Postfix Admin
 
 ## Description
 
-* Postfix Admin (Original Web-based Application)
+* Postfix Admin (Official Web-based Application)
   + Web Site http://postfixadmin.sourceforge.net/
   + GitHub https://github.com/postfixadmin/postfixadmin
+  + Note: This CLI tool is a third-party implementation
 
 * Supports Postfix Admin 3.2
 
@@ -18,7 +19,7 @@ Command Line Tools for Postfix Admin
 
 ## Requirements
 
-* Ruby 2.6 or higher
+* Ruby 2.7 - 3.4
 * MySQL/MariaDB
 * Dovecot (required for setting passwords using the `doveadm pw` subcommand)
 
