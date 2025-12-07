@@ -10,18 +10,18 @@ Gem::Specification.new do |gem|
   gem.description   = %q{Command Line Tools for Postfix Admin}
   gem.homepage      = "https://github.com/krhitoshi/postfix_admin"
 
-  gem.required_ruby_version = ">= 2.6.0"
+  gem.required_ruby_version = ">= 2.7.0", "< 3.5"
 
   gem.add_dependency "thor", "~> 1.3.1"
-  gem.add_dependency "activerecord", "~> 6.1.7"
+  gem.add_dependency "activerecord", "~> 7.0.0"
   gem.add_dependency "mysql2", "~> 0.5"
   gem.add_dependency "terminal-table", "~> 3.0.2"
-  gem.add_dependency "concurrent-ruby", "1.3.4"
   gem.add_development_dependency "pry"
   gem.add_development_dependency "factory_bot", "~> 6.3.0"
   gem.add_development_dependency "rake", "~> 13.2.1"
   gem.add_development_dependency "rubocop"
   gem.add_development_dependency "rspec", "~> 3.13.0"
+  gem.add_development_dependency "observer" # Required for Ruby 3.4+
 
   # Specify which files should be added to the gem when it is released.
   # The `git ls-files -z` loads the files in the RubyGem that have been added into git.

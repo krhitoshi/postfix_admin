@@ -1,4 +1,4 @@
-FROM ruby:2.6
+FROM ruby:2.7
 
 RUN apt-get update && \
     apt-get install -y dovecot-core iproute2 mariadb-client && \
@@ -9,6 +9,7 @@ WORKDIR /app
 COPY Gemfile postfix_admin.gemspec ./
 COPY ./lib/postfix_admin/version.rb ./lib/postfix_admin/version.rb
 
+# The last version of bundler (>= 0) to support your Ruby & RubyGems was 2.4.22.
 RUN gem install bundler -v 2.4.22 && bundle install
 
 COPY spec/postfix_admin.conf /root/.postfix_admin.conf

@@ -34,7 +34,9 @@ module PostfixAdmin
     has_many :rel_domains, through: :domain_admins
 
     attr_accessor :domain_ids
-    attribute :form_super_admin, :boolean, default: false
+    # TODO: Commented out due to ActiveRecord 7.0 compatibility
+    # ActiveRecord 7.0 requires DB connection when using attribute method at class loading time
+    # attribute :form_super_admin, :boolean, default: false
 
     # just in case
     validate on: :update do |admin|
