@@ -1,5 +1,9 @@
+# docker compose build app db
 # rm Gemfile.lock
 # docker compose up app db -d
+#
+# Build gem package (pkg/postfix_admin-x.x.x.gem)
+# docker compose exec app bundle exec rake build
 #
 # Run tests on service app
 # You may need to run tests on Docker because of its requirement of `doveadm` command.

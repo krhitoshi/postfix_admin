@@ -18,12 +18,13 @@ Command Line Tool for PostfixAdmin
 
 ## Requirements
 
-* Ruby 3.1 - 3.4
+* Ruby 3.2 - 3.4
 * MySQL/MariaDB
 * Dovecot (required for setting passwords using the `doveadm pw` subcommand)
 
 ## Version Notes
 
+* Version 0.7.x: Based on Active Record 8.0
 * Version 0.6.x: Based on Active Record 7.2
 * Version 0.5.x: Based on Active Record 7.1
 * Version 0.4.x: Based on Active Record 7.0
