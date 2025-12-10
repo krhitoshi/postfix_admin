@@ -24,6 +24,7 @@ Command Line Tool for PostfixAdmin
 
 ## Version Notes
 
+* Version 0.5.x: Based on Active Record 7.1
 * Version 0.4.x: Based on Active Record 7.0
 * Version 0.3.3: Based on Active Record 6.1
 
