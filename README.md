@@ -22,6 +22,11 @@ Command Line Tool for PostfixAdmin
 * MySQL/MariaDB
 * Dovecot (required for setting passwords using the `doveadm pw` subcommand)
 
+## Version Notes
+
+* Version 0.4.x: Based on Active Record 7.0
+* Version 0.3.3: Based on Active Record 6.1
+
 ## Installation
 
 Install `postfix_admin` using:
