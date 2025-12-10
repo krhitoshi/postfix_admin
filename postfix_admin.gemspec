@@ -10,12 +10,12 @@ Gem::Specification.new do |gem|
   gem.description   = %q{Command Line Tool for PostfixAdmin}
   gem.homepage      = "https://github.com/krhitoshi/postfix_admin"
 
-  gem.required_ruby_version = ">= 2.7.0", "< 3.5"
+  gem.required_ruby_version = ">= 3.2"
 
-  gem.add_dependency "thor", "~> 1.3.1"
+  gem.add_dependency "thor", "~> 1.4.0"
   gem.add_dependency "activerecord", "~> 8.1.0"
   gem.add_dependency "mysql2", "~> 0.5"
-  gem.add_dependency "terminal-table", "~> 3.0.2"
+  gem.add_dependency "terminal-table", "~> 4.0.0"
   gem.add_development_dependency "pry"
   gem.add_development_dependency "factory_bot", "~> 6.3.0"
   gem.add_development_dependency "rake", "~> 13.2.1"
